@@ -6,7 +6,7 @@ Read a PMS5003/PMS7003/PMSA003 sensor
 
 import time, struct
 from dataclasses import dataclass
-from typing import List, Tuple, Any, Union
+from typing import List, Union, Generator
 from serial import Serial
 
 
@@ -57,37 +57,34 @@ def decode(buffer: List[int]) -> Obs:
     return Obs(*msg[5:14])
 
 
-def read(device: str = "/dev/ttyUSB0") -> Obs:
+def read(device: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
     dev = Serial(device, 9600)  # , timeout=0)
-    if not dev.isOpen():
+    if not dev.is_open():
         dev.open()
-        dev.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
-        dev.flush()
-        while dev.in_waiting:
-            print(dev.read())
-
-    dev.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
+    dev.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
     dev.flush()
-    while dev.in_waiting < 32:
-        continue
-    return decode(dev.read(32))
+    dev.reset_input_buffer()
+
+    while dev.is_open():
+        dev.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
+        dev.flush()
+        while dev.in_waiting < 32:
+            continue
+
+        try:
+            yield decode(dev.read(32))
+        except AssertionError as e:
+            dev.reset_input_buffer()
+            print(e)
 
 
 def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
-    last_msg_time = time.time()
-    while True:
-        try:
-            pm = read(**kwargs)
-        except AssertionError as e:
-            print(e)
-            pass
-        else:
-            print(f"{pm}")
-            last_msg_time = pm.time
-        finally:
-            delay = int(read_delay) - (time.time() - last_msg_time)
-            if delay > 0:
-                time.sleep(delay)
+    for pm in read(**kwargs):
+        print(f"{pm}")
+
+        delay = int(read_delay) - (time.time() - pm.time)
+        if delay > 0:
+            time.sleep(delay)
 
 
 if __name__ == "__main__":
