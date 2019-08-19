@@ -9,33 +9,32 @@ from typing import Union
 import paho.mqtt.client as mqtt
 import pms
 
-MQTT_SERVER = "rpi3.local"
-MQTT_USER = "mqttuser"
-MQTT_PASSWORD = "mqttpassword"
 
-MQTT_CLIENT_ID = "test"
-MQTT_TOPIC_PMS = f"aqmon/{MQTT_CLIENT_ID}/%s/concentration"
-MQTT_TOPIC_STATE = f"aqmon/{MQTT_CLIENT_ID}/$online"
-MQTT_PUBLISH_DELAY = 60
+def setup(
+    server: str = "rpi3.local",
+    username: str = "mqttuser",
+    password: str = "mqttpassword",
+    topic: str = "aqmon/test",
+    **kwargs,
+):
+    c = mqtt.Client()
+    c.username_pw_set(username, password)
+    c.will_set(f"{topic}/$online", "false", 1, True)
+    c.on_connect = lambda client, userdata, flags, rc: client.publish(
+        f"{topic}/$online", "true", 1, True
+    )
 
-
-def on_connect(client, userdata, flags, rc):
-    client.publish(MQTT_TOPIC_STATE, "true", 1, True)
-
-
-def main(read_delay: Union[int, str] = MQTT_PUBLISH_DELAY, **kwargs) -> None:
-    c = mqtt.Client(MQTT_CLIENT_ID)
-    c.username_pw_set(MQTT_USER, MQTT_PASSWORD)
-    c.will_set(MQTT_TOPIC_STATE, "false", 1, True)
-    c.on_connect = on_connect
-
-    c.connect(MQTT_SERVER, 1883, 60)
+    c.connect(server, 1883, 60)
     c.loop_start()
+    return c, topic
 
+
+def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
+    mqtt, topic = setup(**kwargs)
     for pm in pms.read(**kwargs):
         for k, v in pm.__dict__.items():
             if k.startswith("pm"):
-                c.publish(MQTT_TOPIC_PMS % k, v, 1, True)
+                mqtt.publish(f"{topic}/{k}/concentration", v, 1, True)
 
         delay = int(read_delay) - (time.time() - pm.time)
         if delay > 0:
