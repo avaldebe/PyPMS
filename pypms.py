@@ -5,16 +5,47 @@ Read a PMS5003/PMS7003/PMSA003 sensor
 """
 
 import time, struct
-from collections import namedtuple
+from dataclasses import dataclass
+from typing import List, Tuple, Any, Union
 from serial import Serial
 
-PMS = namedtuple("PMS", "time pm01 pm25 pm10", module="PyPMS")
-PMS.str_time = lambda self: time.strftime("%F %T %Z", time.gmtime(self.time))
-PMS.str_pm = lambda self: f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3"
-PMS.__str__ = lambda self: f"{self.str_time()}: {self.str_pm()}"
+
+@dataclass
+class Obs:
+    pm01: int
+    pm25: int
+    pm10: int
+    time: int = int(time.time())
+
+    def timestamp(self):
+        return time.strftime("%F %T %Z", time.gmtime(self.time))
+
+    def str_pm(self):
+        return f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3"
+
+    def csv(self):
+        return f"{self.time}, {self.pm01}, {self.pm25}, {self.pm10}"
+
+    def __str__(self):
+        return f"{self.timestamp()}: {self.str_pm()}"
 
 
-def read_pms(device: str = "/dev/ttyUSB0") -> PMS:
+def decode(buffer: List[int]) -> Obs:
+    # print(buffer)
+    assert len(buffer) == 32, f"message len={len(buffer)}"
+
+    msg_len = len(buffer) // 2
+    msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
+    assert msg[0] == 0x424D, f"message header={msg[0]:#x}"
+    assert msg[1] == 28, f"body length={msg[1]}"
+
+    checksum = sum(buffer[:-2])
+    assert msg[-1] == checksum, f"checksum {msg[-1]:#x} != {checksum:#x}"
+
+    return Obs(*msg[5:8])
+
+
+def read(device: str = "/dev/ttyUSB0") -> Obs:
     dev = Serial(device, 9600)  # , timeout=0)
     if not dev.isOpen():
         dev.open()
@@ -23,28 +54,19 @@ def read_pms(device: str = "/dev/ttyUSB0") -> PMS:
         while dev.in_waiting:
             print(dev.read())
 
-    while dev.isOpen():
-        dev.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
-        dev.flush()
-        while dev.in_waiting < 32:
-            continue
+    dev.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
+    dev.flush()
+    while dev.in_waiting < 32:
+        continue
 
-        buffer = dev.read(32)
-        # print(buffer)
-        assert len(buffer) == 32, f"message len={len(buffer)}"
-        msg = struct.unpack(">HHHHHHHHHHHHHHHH", bytes(buffer))
-        assert msg[0] == 0x424D, f"message header={msg[0]:#x}"
-        assert msg[1] == 28, f"body length={msg[1]}"
-        cksum = sum(buffer[:-2])
-        assert msg[-1] == cksum, f"checksum {msg[-1]:#x} != {cksum:#x}"
-        return PMS(time.time(), *msg[5:8])
+    return decode(dev.read(32))
 
 
-def main(read_delay: int = 60, device: str = "/dev/ttyUSB0") -> None:
+def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
     last_msg_time = time.time()
     while True:
         try:
-            pm = read_pms(device)
+            pm = read(**kwargs)
         except AssertionError as e:
             print(e)
             pass
