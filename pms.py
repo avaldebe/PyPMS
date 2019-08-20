@@ -7,7 +7,7 @@ Read a PMS5003/PMS7003/PMSA003 sensor
 import time, struct
 from dataclasses import dataclass
 from typing import List, Union, Generator
-from serial import Serial
+from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
 
 @dataclass
@@ -57,25 +57,27 @@ def decode(buffer: List[int]) -> Obs:
     return Obs(*msg[5:14])
 
 
-def read(device: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
-    dev = Serial(device, 9600)  # , timeout=0)
-    if not dev.is_open():
-        dev.open()
-    dev.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
-    dev.flush()
-    dev.reset_input_buffer()
+def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
+    with Serial(  # 9600 8N1, 1.5s timeout
+        port,
+        baudrate=9600,
+        bytesize=EIGHTBITS,
+        parity=PARITY_NONE,
+        stopbits=STOPBITS_ONE,
+        timeout=1.5,
+    ) as ser:
+        ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
+        ser.flush()
+        ser.reset_input_buffer()
 
-    while dev.is_open():
-        dev.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
-        dev.flush()
-        while dev.in_waiting < 32:
-            continue
-
-        try:
-            yield decode(dev.read(32))
-        except AssertionError as e:
-            dev.reset_input_buffer()
-            print(e)
+        while ser.is_open():
+            ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
+            ser.flush()
+            try:
+                yield decode(ser.read(32))
+            except AssertionError as e:
+                ser.reset_input_buffer()
+                print(e)
 
 
 def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
