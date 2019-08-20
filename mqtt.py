@@ -2,10 +2,12 @@
 
 """
 Read PMS5003/PM7003/PMA003 and push measurements to MQTT server
+- Homie v2.0.0 MQTT convention, partial support
+  https://homieiot.github.io/specification/spec-core-v2_0_0/
 """
 
 import time
-from typing import Union
+from typing import Union, Callable, Any
 import paho.mqtt.client as mqtt
 import pms
 
@@ -31,6 +33,12 @@ def setup(
 
 def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
     publish = setup(**kwargs)
+    for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
+        publish(f"{k}/$type", v)
+        publish(f"{k}/$properties", "sensor,unit,concentration")
+        publish(f"{k}/sensor", "PMx003")
+        publish(f"{k}/unit", "ug/m3")
+
     for pm in pms.read(**kwargs):
         publish("pm01/concentration", pm.pm01)
         publish("pm25/concentration", pm.pm25)
