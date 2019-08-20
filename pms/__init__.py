@@ -5,11 +5,16 @@ Notes:
 - Needs Python 3.7+ for dataclasses
 """
 
-import time, struct, logging
+import time, struct, logging, os
 from typing import List, Generator, NamedTuple
 from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
+logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
+
+
+class PMSerialError(Exception):
+    pass
 
 
 class Obs(NamedTuple):
@@ -44,16 +49,20 @@ class Obs(NamedTuple):
 
 
 def decode(time: int, buffer: List[int]) -> Obs:
-    # print(buffer)
-    assert len(buffer) == 32, f"message len={len(buffer)}"
+    logger.debug(buffer)
+    if len(buffer) != 32:
+        raise PMSerialError(f"buffer len={len(buffer)}")
 
     msg_len = len(buffer) // 2
     msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
-    assert msg[0] == 0x424D, f"message header={msg[0]:#x}"
-    assert msg[1] == 28, f"body length={msg[1]}"
+    if msg[0] != 0x424D:
+        raise PMSerialError(f"message header={msg[0]:#x}")
+    if msg[1] != 28:
+        raise PMSerialError(f"body length={msg[1]}")
 
     checksum = sum(buffer[:-2])
-    assert msg[-1] == checksum, f"checksum {msg[-1]:#x} != {checksum:#x}"
+    if msg[-1] != checksum:
+        raise PMSerialError(f"checksum {msg[-1]:#x} != {checksum:#x}")
 
     return Obs(time, *msg[5:14])
 
@@ -74,9 +83,12 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
         while ser.is_open:
             ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             ser.flush()
+            while ser.in_waiting < 32:
+                continue
             try:
+                logger.debug(f"serail buffer #{ser.in_waiting}")
                 yield decode(int(time.time()), ser.read(32))
-            except AssertionError as e:
+            except PMSerialError as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
 
