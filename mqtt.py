@@ -16,7 +16,7 @@ def setup(
     password: str = "mqttpassword",
     topic: str = "aqmon/test",
     **kwargs,
-):
+) -> Callable[[str, Union[int, str]], Any]:
     c = mqtt.Client()
     c.username_pw_set(username, password)
     c.will_set(f"{topic}/$online", "false", 1, True)
@@ -26,15 +26,15 @@ def setup(
 
     c.connect(server, 1883, 60)
     c.loop_start()
-    return c, topic
+    return lambda k, v: c.publish(f"{topic}/{k}", v, 1, True)
 
 
 def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
-    mqtt, topic = setup(**kwargs)
+    publish = setup(**kwargs)
     for pm in pms.read(**kwargs):
-        for k, v in pm.__dict__.items():
-            if k.startswith("pm"):
-                mqtt.publish(f"{topic}/{k}/concentration", v, 1, True)
+        publish("pm01/concentration", pm.pm01)
+        publish("pm25/concentration", pm.pm25)
+        publish("pm10/concentration", pm.pm10)
 
         delay = int(read_delay) - (time.time() - pm.time)
         if delay > 0:
