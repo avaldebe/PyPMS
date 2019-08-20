@@ -1,14 +1,8 @@
-#!/usr/bin/env python3
 """
-Read a PMS5003/PMS7003/PMSA003 sensor
+Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
 
-Usage:
-    pms.py [options]
-
-Options:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -h, --help              display this help and exit
+Notes:
+- Needs Python 3.7+ for dataclasses
 """
 
 import time, struct
@@ -94,16 +88,3 @@ def main(interval: int, serial: str) -> None:
         delay = int(interval) - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
-
-
-if __name__ == "__main__":
-    from docopt import docopt
-
-    args = docopt(__doc__)
-    try:
-        main(interval=int(args["--interval"]), serial=args["--serial"])
-    except KeyboardInterrupt:
-        print()
-    except Exception as e:
-        print(__doc__)
-        print(e)

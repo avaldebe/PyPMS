@@ -1,29 +1,8 @@
-# PyPMS
-
-Python application for PM sensors with serial interface
-
-## Command line usage
-
-```man
-Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
-
-Usage:
-    python -m pms [options]
-
-Options:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -h, --help              display this help and exit
-
-Notes:
-- Needs Python 3.7+ for dataclasses
-```
-
-```man
+"""
 Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
 
 Usage:
-    python -m pms.mqtt [options]
+    pms.mqtt [options]
 
 Options:
     --mqtt_topic <topic>    MQTT topic [default: aqmon/test]
@@ -41,7 +20,24 @@ Notes:
 - Needs Python 3.7+ for dataclasses
 - Only partial support for Homie v2.0.0 MQTT convention 
   https://homieiot.github.io/specification/spec-core-v2_0_0/
+"""
 
+from docopt import docopt
+from . import main
 
-
-```
+args = docopt(__doc__)
+try:
+    main(
+        interval=int(args["--interval"]),
+        serial=args["--serial"],
+        host=args["--mqtt_host"],
+        port=args["--mqtt_port"],
+        username=args["--mqtt_user"],
+        password=args["--mqtt_pass"],
+        topic=args["--mqtt_topic"],
+    )
+except KeyboardInterrupt:
+    print()
+except Exception as e:
+    print(__doc__)
+    print(e)
