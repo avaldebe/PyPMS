@@ -5,7 +5,8 @@ Usage:
     pms.influxdb [options]
 
 Options:
-    --location <tag>        location tag [default: test]
+    --location <tag>        InfluxDB location tag [default: test]
+    --database <db>         InfluxDB database [default: homie]
     --host <host>           InfluxDB host server [default: influxdb]
     --port <port>           InfluxDB host port [default: 8086]
     --user <username>       InfluxDB username [default: root]
@@ -31,6 +32,7 @@ try:
         port=args["--port"],
         username=args["--user"],
         password=args["--pass"],
+        database=args["--database"],
     )
 except KeyboardInterrupt:
     print()

@@ -24,7 +24,7 @@ Usage:
     python -m pms.mqtt [options]
 
 Options:
-    --mqtt_topic <topic>    MQTT topic [default: aqmon/test]
+    --mqtt_topic <topic>    MQTT topic [default: homie/test]
     --mqtt_host <host>      MQTT host server [default: test.mosquitto.org]
     --mqtt_port <port>      MQTT host port [default: 1883]
     --mqtt_user <username>  MQTT username
@@ -47,7 +47,8 @@ Usage:
     python -m pms.influxdb [options]
 
 Options:
-    --location <tag>        location tag [default: test]
+    --location <tag>        InfluxDB location tag [default: test]
+    --database <db>         InfluxDB database [default: homie]
     --host <host>           InfluxDB host server [default: influxdb]
     --port <port>           InfluxDB host port [default: 8086]
     --user <username>       InfluxDB username [default: root]
