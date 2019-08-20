@@ -58,9 +58,9 @@ def decode(buffer: List[int]) -> Obs:
     return Obs(*msg[5:14])
 
 
-def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
+def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
     with Serial(  # 9600 8N1, 1.5s timeout
-        port or "/ser/ttyUSB0",
+        port or "/dev/ttyUSB0",
         baudrate=9600,
         bytesize=EIGHTBITS,
         parity=PARITY_NONE,
@@ -71,7 +71,7 @@ def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
         ser.flush()
         ser.reset_input_buffer()
 
-        while ser.is_open():
+        while ser.is_open:
             ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             ser.flush()
             try:

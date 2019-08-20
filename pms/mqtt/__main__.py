@@ -12,7 +12,7 @@ Options:
     --pass <password>       MQTT password
 
 Other:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -h, --help              display this help and exit
 
