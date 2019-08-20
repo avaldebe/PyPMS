@@ -59,7 +59,7 @@ def decode(buffer: List[int]) -> Obs:
 
 def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
     with Serial(  # 9600 8N1, 1.5s timeout
-        port,
+        port or "/ser/ttyUSB0",
         baudrate=9600,
         bytesize=EIGHTBITS,
         parity=PARITY_NONE,
@@ -80,8 +80,8 @@ def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
                 print(e)
 
 
-def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
-    for pm in read(**kwargs):
+def main(read_delay: Union[int, str] = 60, port: str = "/ser/ttyUSB0") -> None:
+    for pm in read(port):
         print(f"{pm}")
 
         delay = int(read_delay) - (time.time() - pm.time)

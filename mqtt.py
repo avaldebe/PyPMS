@@ -31,7 +31,9 @@ def setup(
     return lambda k, v: c.publish(f"{topic}/{k}", v, 1, True)
 
 
-def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
+def main(
+    read_delay: Union[int, str] = 60, port: str = "/ser/ttyUSB0", **kwargs
+) -> None:
     publish = setup(**kwargs)
     for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
         publish(f"{k}/$type", v)
@@ -39,7 +41,7 @@ def main(read_delay: Union[int, str] = 60, **kwargs) -> None:
         publish(f"{k}/sensor", "PMx003")
         publish(f"{k}/unit", "ug/m3")
 
-    for pm in pms.read(**kwargs):
+    for pm in pms.read(port):
         publish("pm01/concentration", pm.pm01)
         publish("pm25/concentration", pm.pm25)
         publish("pm10/concentration", pm.pm10)
