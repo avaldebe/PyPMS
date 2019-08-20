@@ -81,9 +81,12 @@ def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
                 print(e)
 
 
-def main(interval: int, serial: str) -> None:
+def main(interval: int, serial: str, csv: bool) -> None:
     for pm in read(serial):
-        print(f"{pm}")
+        if csv:
+            print(pm.csv())
+        else:
+            print(pm)
 
         delay = int(interval) - (time.time() - pm.time)
         if delay > 0:

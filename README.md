@@ -13,6 +13,7 @@ Usage:
 Options:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
+    --csv                   csv formatted output
     -h, --help              display this help and exit
 
 Notes:
@@ -38,10 +39,6 @@ Other:
     -h, --help              display this help and exit
 
 Notes:
-- Needs Python 3.7+ for dataclasses
 - Only partial support for Homie v2.0.0 MQTT convention 
   https://homieiot.github.io/specification/spec-core-v2_0_0/
-
-
-
 ```
