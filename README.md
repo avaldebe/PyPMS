@@ -5,7 +5,7 @@ Python application for PM sensors with serial interface
 ## Command line usage
 
 ```man
-Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
+Read a PMSx003 sensor and print PM measurements
 
 Usage:
     python -m pms [options]
@@ -21,7 +21,7 @@ Notes:
 ```
 
 ```man
-Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
+Read a PMSx003 sensor and push PM measurements to a MQTT server
 
 Usage:
     python -m pms.mqtt [options]
@@ -41,4 +41,23 @@ Other:
 Notes:
 - Only partial support for Homie v2.0.0 MQTT convention 
   https://homieiot.github.io/specification/spec-core-v2_0_0/
+```
+
+```man
+Read PMSx003 sensor and push PM measurements to an InfluxDB server
+
+Usage:
+    python -m pms.influxdb [options]
+
+Options:
+    --location <tag>        location tag [default: test]
+    --host <host>           InfluxDB host server [default: influxdb]
+    --port <port>           InfluxDB host port [default: 8086]
+    --user <username>       InfluxDB username [default: root]
+    --pass <password>       InfluxDB password [default: root]
+
+Other:
+    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -n, --interval <secs>   seconds to wait between updates [default: 60]
+    -h, --help              display this help and exit
 ```

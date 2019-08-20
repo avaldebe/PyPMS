@@ -1,15 +1,15 @@
 """
-Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
+Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
 
 Usage:
-    pms.mqtt [options]
+    pms.influxdb [options]
 
 Options:
-    --topic <topic>         MQTT topic [default: aqmon/test]
-    --host <host>           MQTT host server [default: test.mosquitto.org]
-    --port <port>           MQTT host port [default: 1883]
-    --user <username>       MQTT username
-    --pass <password>       MQTT password
+    --location <tag>        location tag [default: test]
+    --host <host>           InfluxDB host server [default: influxdb]
+    --port <port>           InfluxDB host port [default: 8086]
+    --user <username>       InfluxDB username [default: root]
+    --pass <password>       InfluxDB password [default: root]
 
 Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
@@ -18,8 +18,6 @@ Other:
 
 Notes:
 - Needs Python 3.7+ for dataclasses
-- Only partial support for Homie v2.0.0 MQTT convention 
-  https://homieiot.github.io/specification/spec-core-v2_0_0/
 """
 
 from docopt import docopt
@@ -30,11 +28,11 @@ try:
     main(
         interval=int(args["--interval"]),
         serial=args["--serial"],
+        location=args["--location"],
         host=args["--host"],
         port=args["--port"],
         username=args["--user"],
         password=args["--pass"],
-        topic=args["--topic"],
     )
 except KeyboardInterrupt:
     print()
