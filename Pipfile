@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 pyserial = ">=3.4"
 paho-mqtt = ">=1.4.0"
+docopt = ">=0.6.2"
 
 [requires]
 python_version = "3.7"

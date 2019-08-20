@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-
 """
 Read a PMS5003/PMS7003/PMSA003 sensor
+
+Usage:
+    pms.py [options]
+
+Options:
+    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -n, --interval <secs>   seconds to wait between updates [default: 60]
+    -h, --help              display this help and exit
 """
 
 import time, struct
 from dataclasses import dataclass
-from typing import List, Union, Generator
+from typing import List, Generator
 from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
 
@@ -80,19 +87,23 @@ def read(port: str = "/ser/ttyUSB0") -> Generator[Obs, None, None]:
                 print(e)
 
 
-def main(read_delay: Union[int, str] = 60, port: str = "/ser/ttyUSB0") -> None:
-    for pm in read(port):
+def main(interval: int, serial: str) -> None:
+    for pm in read(serial):
         print(f"{pm}")
 
-        delay = int(read_delay) - (time.time() - pm.time)
+        delay = int(interval) - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
 
 
 if __name__ == "__main__":
-    import sys
+    from docopt import docopt
 
+    args = docopt(__doc__)
     try:
-        main(*sys.argv[1:])
+        main(interval=int(args["--interval"]), serial=args["--serial"])
     except KeyboardInterrupt:
         print()
+    except Exception as e:
+        print(__doc__)
+        print(e)
