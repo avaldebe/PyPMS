@@ -17,7 +17,6 @@ Other:
     -h, --help              display this help and exit
 
 Notes:
-- Needs Python 3.7+ for dataclasses
 - Only partial support for Homie v2.0.0 MQTT convention 
   https://homieiot.github.io/specification/spec-core-v2_0_0/
 """

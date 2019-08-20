@@ -15,9 +15,6 @@ Other:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -h, --help              display this help and exit
-
-Notes:
-- Needs Python 3.7+ for dataclasses
 """
 
 from docopt import docopt

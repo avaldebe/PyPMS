@@ -6,13 +6,13 @@ Notes:
 """
 
 import time, struct
-from dataclasses import dataclass
-from typing import List, Generator
+from typing import List, Generator, NamedTuple
 from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
 
-@dataclass
-class Obs:
+class Obs(NamedTuple):
+    # seconds since epoch
+    time: int
     # pmX [ug/m3]: PM1.0, PM2.5 & PM10
     pm01: int
     pm25: int
@@ -24,8 +24,6 @@ class Obs:
     n2_5: int
     n5_0: int
     n10_0: int
-    # seconds since epoch
-    time: int = int(time.time())
 
     def timestamp(self):
         return time.strftime("%F %T %Z", time.gmtime(self.time))
@@ -43,7 +41,7 @@ class Obs:
         return f"{self.timestamp()}: {self.str_pm()}"
 
 
-def decode(buffer: List[int]) -> Obs:
+def decode(time: int, buffer: List[int]) -> Obs:
     # print(buffer)
     assert len(buffer) == 32, f"message len={len(buffer)}"
 
@@ -55,7 +53,7 @@ def decode(buffer: List[int]) -> Obs:
     checksum = sum(buffer[:-2])
     assert msg[-1] == checksum, f"checksum {msg[-1]:#x} != {checksum:#x}"
 
-    return Obs(*msg[5:14])
+    return Obs(time, *msg[5:14])
 
 
 def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
@@ -65,7 +63,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
         bytesize=EIGHTBITS,
         parity=PARITY_NONE,
         stopbits=STOPBITS_ONE,
-        timeout=1.5,
+        timeout=0,
     ) as ser:
         ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
         ser.flush()
@@ -75,7 +73,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
             ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             ser.flush()
             try:
-                yield decode(ser.read(32))
+                yield decode(int(time.time()), ser.read(32))
             except AssertionError as e:
                 ser.reset_input_buffer()
                 print(e)
