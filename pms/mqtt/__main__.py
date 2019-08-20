@@ -22,6 +22,7 @@ Notes:
 """
 
 from docopt import docopt
+from pms import logger
 from . import main
 
 args = docopt(__doc__)
@@ -39,4 +40,4 @@ except KeyboardInterrupt:
     print()
 except Exception as e:
     print(__doc__)
-    print(e)
+    logger.exception(e)

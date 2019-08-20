@@ -5,9 +5,11 @@ Notes:
 - Needs Python 3.7+ for dataclasses
 """
 
-import time, struct
+import time, struct, logging
 from typing import List, Generator, NamedTuple
 from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
+
+logger = logging.getLogger(__name__)
 
 
 class Obs(NamedTuple):
@@ -76,7 +78,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
                 yield decode(int(time.time()), ser.read(32))
             except AssertionError as e:
                 ser.reset_input_buffer()
-                print(e)
+                logger.debug(e)
 
 
 def main(interval: int, serial: str, csv: bool) -> None:
