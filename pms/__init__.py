@@ -1,8 +1,5 @@
 """
 Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
-
-Notes:
-- Needs Python 3.7+ for dataclasses
 """
 
 import time, struct, logging, os

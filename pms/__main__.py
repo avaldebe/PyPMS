@@ -23,4 +23,3 @@ except KeyboardInterrupt:
 except Exception as e:
     print(__doc__)
     logger.exception(e)
-
