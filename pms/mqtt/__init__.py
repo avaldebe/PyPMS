@@ -7,39 +7,40 @@ Notes:
 """
 
 import time
-from typing import Union, Callable, Any
-import paho.mqtt.client as mqtt
+from typing import Dict
+from paho.mqtt import publish
 import pms
 
 
-def setup(
-    host: str, port: int, username: str, password: str, topic: str
-) -> Callable[[str, Union[int, str]], Any]:
-    c = mqtt.Client()
-    if username:
-        c.username_pw_set(username, password)
-    c.will_set(f"{topic}/$online", "false", 1, True)
-    c.on_connect = lambda client, userdata, flags, rc: client.publish(
-        f"{topic}/$online", "true", 1, True
-    )
-
-    c.connect(host, 1883, 60)
-    c.loop_start()
-    return lambda k, v: c.publish(f"{topic}/{k}", v, 1, True)
+def pub(
+    data: Dict, root: str, host: str, port: int, username: str, password: str
+) -> None:
+    mesages = [(f"{root}/{k}", v, 1, True) for k, v in data.items()]
+    will = {"topic": f"{root}/$online", "payload": "false", "qos": 1, "retain": True}
+    auth = {"username": username, "password": password} if username else None
+    publish.multiple(mesages, hostname=host, port=port, will=will, auth=auth)
 
 
 def main(interval: int, serial: str, **kwargs) -> None:
-    publish = setup(**kwargs)
     for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
-        publish(f"{k}/$type", v)
-        publish(f"{k}/$properties", "sensor,unit,concentration")
-        publish(f"{k}/sensor", "PMx003")
-        publish(f"{k}/unit", "ug/m3")
-
+        pub(
+            {
+                f"{k}/$type": v,
+                f"{k}/$properties": "sensor,unit,concentration",
+                f"{k}/sensor": "PMx003",
+                f"{k}/unit": "ug/m3",
+            },
+            **kwargs,
+        )
     for pm in pms.read(serial):
-        publish("pm01/concentration", pm.pm01)
-        publish("pm25/concentration", pm.pm25)
-        publish("pm10/concentration", pm.pm10)
+        pub(
+            {
+                "pm01/concentration": pm.pm01,
+                "pm25/concentration": pm.pm25,
+                "pm10/concentration": pm.pm10,
+            },
+            **kwargs,
+        )
 
         delay = int(interval) - (time.time() - pm.time)
         if delay > 0:

@@ -24,7 +24,7 @@ Usage:
     python -m pms.mqtt [options]
 
 Options:
-    --topic <topic>         MQTT topic [default: homie/test]
+    --root <topic>          MQTT root topic [default: homie/test]
     --host <host>           MQTT host server [default: test.mosquitto.org]
     --port <port>           MQTT host port [default: 1883]
     --user <username>       MQTT username
