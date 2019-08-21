@@ -25,8 +25,8 @@ class Obs(NamedTuple):
     n5_0: int
     n10_0: int
 
-    def timestamp(self):
-        return time.strftime("%F %T %Z", time.gmtime(self.time))
+    def timestamp(self, fmt="%F %T %Z"):
+        return time.strftime(fmt, time.gmtime(self.time))
 
     def str_pm(self):
         return f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3"

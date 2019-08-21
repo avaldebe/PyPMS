@@ -29,10 +29,10 @@ try:
         serial=args["--serial"],
         location=args["--location"],
         host=args["--host"],
-        port=args["--port"],
+        port=int(args["--port"]),
         username=args["--user"],
         password=args["--pass"],
-        database=args["--database"],
+        db_name=args["--database"],
     )
 except KeyboardInterrupt:
     print()
