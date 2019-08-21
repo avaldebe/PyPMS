@@ -13,10 +13,6 @@ logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
 
 
-class PMSerialError(Exception):
-    pass
-
-
 class Obs(NamedTuple):
     # seconds since epoch
     time: int
@@ -51,18 +47,18 @@ class Obs(NamedTuple):
 def decode(time: int, buffer: List[int]) -> Obs:
     logger.debug(buffer)
     if len(buffer) != 32:
-        raise PMSerialError(f"buffer len={len(buffer)}")
+        raise UserWarning(f"message total length: {len(buffer)}")
 
     msg_len = len(buffer) // 2
     msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
     if msg[0] != 0x424D:
-        raise PMSerialError(f"message header={msg[0]:#x}")
+        raise UserWarning(f"message start header: {msg[0]:#x}")
     if msg[1] != 28:
-        raise PMSerialError(f"body length={msg[1]}")
+        raise UserWarning(f"message body length: {msg[1]}")
 
     checksum = sum(buffer[:-2])
     if msg[-1] != checksum:
-        raise PMSerialError(f"checksum {msg[-1]:#x} != {checksum:#x}")
+        raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
 
     return Obs(time, *msg[5:14])
 
@@ -88,7 +84,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
             try:
                 logger.debug(f"serail buffer #{ser.in_waiting}")
                 yield decode(int(time.time()), ser.read(32))
-            except PMSerialError as e:
+            except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
 
