@@ -4,7 +4,7 @@ Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
 
 import time, struct, logging, os
 from typing import List, Generator, NamedTuple
-from serial import Serial, EIGHTBITS, PARITY_NONE, STOPBITS_ONE
+from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
