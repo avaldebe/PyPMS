@@ -8,7 +8,7 @@ Python application for PM sensors with serial interface
 Read a PMSx003 sensor and print PM measurements
 
 Usage:
-    python -m pms [options]
+    python -m pms.serial [options]
 
 Options:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]

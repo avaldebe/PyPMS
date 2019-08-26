@@ -77,15 +77,3 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
             except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
-
-
-def main(interval: int, serial: str, csv: bool) -> None:
-    for pm in read(serial):
-        if csv:
-            print(pm.csv())
-        else:
-            print(pm)
-
-        delay = int(interval) - (time.time() - pm.time)
-        if delay > 0:
-            time.sleep(delay)
