@@ -1,5 +1,20 @@
 """
-Read a PMS5003/PMS7003/PMSA003 sensor and push the measurements to a MQTT server
+Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
+
+Usage:
+    pms.mqtt [options]
+
+Options:
+    --root <topic>          MQTT root topic [default: homie/test]
+    --host <host>           MQTT host server [default: test.mosquitto.org]
+    --port <port>           MQTT host port [default: 1883]
+    --user <username>       MQTT username
+    --pass <password>       MQTT password
+
+Other:
+    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
+    -n, --interval <secs>   seconds to wait between updates [default: 60]
+    -h, --help              display this help and exit
 
 Notes:
 - Only partial support for Homie v2.0.0 MQTT convention 
@@ -9,7 +24,19 @@ Notes:
 import time
 from typing import Dict
 from paho.mqtt import publish
-import pms
+from . import read, logger
+
+
+def parse_args(args: Dict) -> Dict:
+    return dict(
+        interval=int(args["--interval"]),
+        serial=args["--serial"],
+        host=args["--host"],
+        port=int(args["--port"]),
+        username=args["--user"],
+        password=args["--pass"],
+        root=args["--root"],
+    )
 
 
 def pub(
@@ -32,7 +59,7 @@ def main(interval: int, serial: str, **kwargs) -> None:
             },
             **kwargs,
         )
-    for pm in pms.read(serial):
+    for pm in read(serial):
         pub(
             {
                 "pm01/concentration": pm.pm01,
@@ -45,3 +72,16 @@ def main(interval: int, serial: str, **kwargs) -> None:
         delay = int(interval) - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
+
+
+if __name__ == "__main__":
+    from docopt import docopt
+
+    args = parse_args(docopt(__doc__))
+    try:
+        main(**args)
+    except KeyboardInterrupt:
+        print()
+    except Exception as e:
+        print(__doc__)
+        logger.exception(e)
