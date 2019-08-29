@@ -22,12 +22,12 @@ Notes:
 """
 
 import time
-from typing import Dict
+from typing import Dict, Union, Any
 from paho.mqtt import publish
 from . import read, logger
 
 
-def parse_args(args: Dict) -> Dict:
+def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
         interval=int(args["--interval"]),
         serial=args["--serial"],
@@ -40,7 +40,12 @@ def parse_args(args: Dict) -> Dict:
 
 
 def pub(
-    data: Dict, root: str, host: str, port: int, username: str, password: str
+    data: Dict[str, Union[int, str]],
+    root: str,
+    host: str,
+    port: int,
+    username: str,
+    password: str,
 ) -> None:
     mesages = [(f"{root}/{k}", v, 1, True) for k, v in data.items()]
     will = {"topic": f"{root}/$online", "payload": "false", "qos": 1, "retain": True}

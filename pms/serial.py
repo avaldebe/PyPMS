@@ -12,11 +12,11 @@ Options:
 """
 
 import time
-from typing import Dict
+from typing import Dict, Union, Any
 from . import read, logger
 
 
-def parse_args(args: Dict) -> Dict:
+def parse_args(args: Dict[str, Union[str, bool]]) -> Dict[str, Any]:
     return dict(
         interval=int(args["--interval"]), serial=args["--serial"], csv=args["--csv"]
     )

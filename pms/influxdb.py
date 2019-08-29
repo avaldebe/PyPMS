@@ -19,12 +19,12 @@ Other:
 """
 
 import time
-from typing import Dict
+from typing import Dict, Union, Any
 from influxdb import InfluxDBClient
 import pms
 
 
-def parse_args(args: Dict) -> Dict:
+def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
         interval=int(args["--interval"]),
         serial=args["--serial"],
@@ -48,7 +48,9 @@ def setup(
     return c
 
 
-def pub(client: InfluxDBClient, tags: Dict, time: str, data: Dict) -> None:
+def pub(
+    client: InfluxDBClient, tags: Dict[str, str], time: str, data: Dict[str, int]
+) -> None:
     client.write_points(
         [
             {"measurement": k, "tags": tags, "time": time, "fields": {"value": v}}
