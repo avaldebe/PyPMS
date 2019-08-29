@@ -1,10 +1,16 @@
 """
-Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
+Read a PMS5003/PMS7003/PMSA003 sensor
+
+NOTE:
+- Should work on a PMS1003 sensor, but has not been tested.
+- PMS3003 sensor is not supported.
+- Sensor are read on passive mode.
+- Active mode (sleep/wake) is not supported.
 """
 
 import struct, logging, os
 from datetime import datetime
-from typing import List, Generator, NamedTuple
+from typing import NamedTuple, List, Generator
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
@@ -12,6 +18,13 @@ logger = logging.getLogger(__name__)
 
 
 class Obs(NamedTuple):
+    """PMSx003 observations
+    
+    time                                    measurement time [seconds since epoch]
+    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
+    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations under X.Y um [#/100cc]
+    """
+
     # seconds since epoch
     time: int
     # pmX [ug/m3]: PM1.0, PM2.5 & PM10
@@ -28,13 +41,16 @@ class Obs(NamedTuple):
 
     @staticmethod
     def now() -> int:
+        """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
     @staticmethod
     def to_datetime(time: int) -> datetime:
+        """seconds since epoch to datetime"""
         return datetime.fromtimestamp(time)
 
     def timestamp(self, fmt: str = "%F %T"):
+        """measurement time as formatted string"""
         return self.to_datetime(self.time).strftime(fmt)
 
     def __format__(self, spec: str) -> str:
@@ -65,6 +81,10 @@ class Obs(NamedTuple):
 
 
 def decode(time: int, buffer: List[int]) -> Obs:
+    """Decode a PMSx003 message (32b long)
+    
+    PMS3003 messages are 24b long. PMS3003 is not supported.
+    """
     logger.debug(buffer)
     if len(buffer) != 32:
         raise UserWarning(f"message total length: {len(buffer)}")
@@ -84,6 +104,10 @@ def decode(time: int, buffer: List[int]) -> Obs:
 
 
 def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
+    """Read PMSx003 messages from serial port
+    
+    Passive mode reading. Active mode (sleep/wake) is not supported.
+    """
     with Serial(port, timeout=0) as ser:  # 9600 8N1 by default
         ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
         ser.flush()

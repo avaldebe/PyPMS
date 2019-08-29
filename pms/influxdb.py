@@ -82,5 +82,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print()
     except Exception as e:
-        print(__doc__)
         pms.logger.exception(e)
