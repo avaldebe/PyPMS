@@ -25,11 +25,11 @@ def parse_args(args: Dict) -> Dict:
 def main(interval: int, serial: str, csv: bool) -> None:
     for pm in read(serial):
         if csv:
-            print(pm.csv())
+            print(f"{pm:c}")
         else:
-            print(pm)
+            print(f"{pm:s}")
 
-        delay = int(interval) - (time.time() - pm.time)
+        delay = interval - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
 

@@ -4,7 +4,7 @@ Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
 
 import struct, logging, os
 from datetime import datetime
-from typing import Optional, List, Generator, NamedTuple
+from typing import List, Generator, NamedTuple
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
@@ -34,20 +34,28 @@ class Obs(NamedTuple):
     def to_datetime(time: int) -> datetime:
         return datetime.fromtimestamp(time)
 
-    def timestamp(self, fmt: Optional[str] = "%F %T %Z"):
+    def timestamp(self, fmt: str = "%F %T %Z"):
         return self.to_datetime(self.time).strftime(fmt)
 
-    def str_pm(self):
-        return f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3"
-
-    def str_nc(self):
-        return f"N0.3 {self.n0_3}, N0.5 {self.n0_5}, N1.0 {self.n1_0}, N2.5 {self.n2_5}, N5.0 {self.n5_0}, N10 {self.n10_0} #/100cc"
-
-    def csv(self):
-        return f"{self.time}, {self.pm01}, {self.pm25}, {self.pm10}, {self.n0_3}, {self.n0_5}, {self.n1_0}, {self.n2_5}, {self.n5_0}, {self.n10_0}"
+    def __format__(self, spec: str) -> str:
+        try:
+            return dict(
+                T=f"{self.timestamp()}",
+                t=f"{self.time}",
+                P=f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3",
+                p=f"{self.pm01}, {self.pm25}, {self.pm10}",
+                N=f"N0.3 {self.n0_3}, N0.5 {self.n0_5}, N1.0 {self.n1_0}, N2.5 {self.n2_5}, N5.0 {self.n5_0}, N10 {self.n10_0} #/100cc",
+                n=f"{self.n0_3}, {self.n0_5}, {self.n1_0}, {self.n2_5}, {self.n5_0}, {self.n10_0}",
+                s=f"{self.timestamp()}: PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3",
+                c=f"{self.time}, {self.pm01}, {self.pm25}, {self.pm10}, {self.n0_3}, {self.n0_5}, {self.n1_0}, {self.n2_5}, {self.n5_0}, {self.n10_0}",
+            )[spec[-1]]
+        except KeyError:
+            raise ValueError(
+                f"Unknown format code '{spec}' for object of type '{__name__}.Obs'"
+            )
 
     def __str__(self):
-        return f"{self.timestamp()}: {self.str_pm()}"
+        return self.__format__("s")
 
 
 def decode(time: int, buffer: List[int]) -> Obs:
