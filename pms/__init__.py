@@ -2,8 +2,9 @@
 Read a PMS5003/PMS7003/PMSA003 sensor and print the PM measurements
 """
 
-import time, struct, logging, os
-from typing import List, Generator, NamedTuple
+import struct, logging, os
+from datetime import datetime
+from typing import Optional, List, Generator, NamedTuple
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
@@ -25,8 +26,16 @@ class Obs(NamedTuple):
     n5_0: int
     n10_0: int
 
-    def timestamp(self, fmt="%F %T %Z"):
-        return time.strftime(fmt, time.gmtime(self.time))
+    @staticmethod
+    def now() -> int:
+        return int(datetime.now().timestamp())
+
+    @staticmethod
+    def to_datetime(time: int) -> datetime:
+        return datetime.fromtimestamp(time)
+
+    def timestamp(self, fmt: Optional[str] = "%F %T %Z"):
+        return self.to_datetime(self.time).strftime(fmt)
 
     def str_pm(self):
         return f"PM1 {self.pm01}, PM2.5 {self.pm25}, PM10 {self.pm10} ug/m3"
@@ -73,7 +82,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
                 continue
             try:
                 logger.debug(f"serail buffer #{ser.in_waiting}")
-                yield decode(int(time.time()), ser.read(32))
+                yield decode(Obs.now(), ser.read(32))
             except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
