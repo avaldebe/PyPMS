@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "<=5.0.1"
 
 [packages]
 pyserial = ">=3.4"
