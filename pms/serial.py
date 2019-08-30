@@ -7,7 +7,7 @@ Usage:
 Options:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
-    --csv                   csv formatted output
+    -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
     -h, --help              display this help and exit
 """
 
@@ -18,16 +18,15 @@ from . import read, logger
 
 def parse_args(args: Dict[str, Union[str, bool]]) -> Dict[str, Any]:
     return dict(
-        interval=int(args["--interval"]), serial=args["--serial"], csv=args["--csv"]
+        interval=int(args["--interval"]),
+        serial=args["--serial"],
+        format=args["--format"],
     )
 
 
-def main(interval: int, serial: str, csv: bool) -> None:
+def main(interval: int, serial: str, format: bool) -> None:
     for pm in read(serial):
-        if csv:
-            print(f"{pm:c}")
-        else:
-            print(f"{pm:s}")
+        print(f"{pm:{format}}")
 
         delay = interval - (time.time() - pm.time)
         if delay > 0:

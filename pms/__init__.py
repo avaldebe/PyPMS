@@ -54,21 +54,21 @@ class Obs(NamedTuple):
         return self.to_datetime(self.time).strftime(fmt)
 
     def __format__(self, spec: str) -> str:
-        if spec:
-            d = f"{spec[:-1]}d"
-        if spec.endswith("s"):
+        if spec.endswith("pm"):
+            d = spec.replace("pm", "d")
             return f"{self.timestamp()}: PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("c"):
+        if spec.endswith("csv"):
+            d = spec.replace("csv", "d")
             return (
                 f"{self.time}, "
                 f"{self.pm01:{d}}, {self.pm25:{d}}, {self.pm10:{d}}, "
                 f"{self.n0_3:{d}}, {self.n0_5:{d}}, {self.n1_0:{d}}, "
                 f"{self.n2_5:{d}}, {self.n5_0:{d}}, {self.n10_0:{d}}"
             )
-        if spec.endswith("m"):
-            return f"PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("n"):
+        if spec.endswith("num"):
+            d = spec.replace("num", "d")
             return (
+                f"{self.timestamp()}: "
                 f"N0.3 {self.n0_3:{d}}, N0.5 {self.n0_5:{d}}, N1.0 {self.n1_0:{d}}, "
                 f"N2.5 {self.n2_5:{d}}, N5.0 {self.n5_0:{d}}, N10 {self.n10_0:{d}} #/100cc"
             )
@@ -77,7 +77,7 @@ class Obs(NamedTuple):
         )
 
     def __str__(self):
-        return self.__format__("s")
+        return self.__format__("pm")
 
 
 def decode(time: int, buffer: List[int]) -> Obs:
