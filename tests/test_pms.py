@@ -33,3 +33,24 @@ def test_format():
             f"N2.5 {_fmt}, N5.0 {_fmt}, N10 {_fmt} #/100cc"
         ).format(*raw[3:])
         assert _obs == f"{_time}: {_raw}", f"format: '{fmt}num'"
+
+
+def test_decode():
+    sec = 1567201793
+    buffer = b"BM\x00\x1c\x00\x05\x00\r\x00\x16\x00\x05\x00\r\x00\x16\x02\xfd\x00\xfc\x00\x1d\x00\x0f\x00\x06\x00\x06\x97\x00\x03\xc5"
+    msg = (5, 13, 22, 765, 252, 29, 15, 6, 6)
+    assert pms.decode(sec, buffer) == pms.Obs(sec, *msg), "decode: known good data"
+
+    with pytest.raises(Exception) as e:
+        pms.decode(sec, buffer[:10])
+    assert str(e.value) == "message total length: 10", "decode: incomplete message"
+
+    with pytest.raises(Exception) as e:
+        buffer = b"BM\x00\x04\xe1\x00\x01tBM\x00\x1c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        pms.decode(sec, buffer)
+    assert str(e.value) == "message body length: 4", "decode: body length"
+
+    with pytest.raises(Exception) as e:
+        buffer = b"\x00\x00\x00\x00\x00\x00\x00\xabBM\x00\x1c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        pms.decode(sec, buffer)
+    assert str(e.value) == "message start header: 0x0", "decode: start header"
