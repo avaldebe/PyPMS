@@ -16,11 +16,22 @@ Other:
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
 
-Notes:
-- Only partial support for Homie v2.0.0 MQTT convention 
-  https://homieiot.github.io/specification/spec-core-v2_0_0/
+NOTE:
+Environment variables take precedence over command line options
+- PMS_MQTT_TOPIC    overrides -t, --topic
+- PMS_MQTT_HOST     overrides -h, --host
+- PMS_MQTT_PORT     overrides -p, --port
+- PMS_MQTT_USER     overrides -u, --user
+- PMS_MQTT_PASS     overrides -P, ---pass
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
+
+NOTE:
+Only partial support for Homie v2.0.0 MQTT convention
+https://homieiot.github.io/specification/spec-core-v2_0_0/
 """
 
+import os
 import time
 from typing import Dict, Union, Any
 from paho.mqtt import publish
@@ -28,14 +39,15 @@ from . import read, logger
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
+    """Extract options from docopt output"""
     return dict(
-        interval=int(args["--interval"]),
-        serial=args["--serial"],
-        host=args["--host"],
-        port=int(args["--port"]),
-        username=args["--user"],
-        password=args["--pass"],
-        topic=args["--topic"],
+        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
+        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
+        host=os.environ.get("PMS_MQTT_HOST", args["--host"]),
+        port=int(os.environ.get("PMS_MQTT_PORT", args["--port"])),
+        username=os.environ.get("PMS_MQTT_USER", args["--user"]),
+        password=os.environ.get("PMS_MQTT_PASS", args["--pass"]),
+        topic=os.environ.get("PMS_MQTT_TOPIC", args["--topic"]),
     )
 
 
@@ -74,7 +86,7 @@ def main(interval: int, serial: str, **kwargs) -> None:
             **kwargs,
         )
 
-        delay = int(interval) - (time.time() - pm.time)
+        delay = interval - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
 

@@ -9,8 +9,15 @@ Options:
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
     --help                  display this help and exit
+
+NOTE:
+Environment variables take precedence over command line options
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
+- PMS_FORMAT        overrides -f, --format
 """
 
+import os
 import time
 from typing import Dict, Union, Any
 from . import read, logger
@@ -18,9 +25,9 @@ from . import read, logger
 
 def parse_args(args: Dict[str, Union[str, bool]]) -> Dict[str, Any]:
     return dict(
-        interval=int(args["--interval"]),
-        serial=args["--serial"],
-        format=args["--format"],
+        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
+        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
+        format=os.environ.get("PMS_FORMAT", args["--format"]),
     )
 
 

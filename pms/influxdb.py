@@ -16,8 +16,20 @@ Other:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
+
+NOTE:
+Environment variables take precedence over command line options
+- PMS_INFLUX_DB     overrides -d, --database
+- PMS_INFLUX_TAGS   overrides -t, --tags
+- PMS_INFLUX_HOST   overrides -h, --host
+- PMS_INFLUX_PORT   overrides -p, --port
+- PMS_INFLUX_USER   overrides -u, --user
+- PMS_INFLUX_PASS   overrides -P, --pass
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
 """
 
+import os
 import time
 from typing import Dict, Union, Any
 import json
@@ -27,14 +39,14 @@ import pms
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
-        interval=int(args["--interval"]),
-        serial=args["--serial"],
-        tags=json.loads(args["--tags"]),
-        host=args["--host"],
-        port=int(args["--port"]),
-        username=args["--user"],
-        password=args["--pass"],
-        db_name=args["--database"],
+        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
+        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
+        tags=json.loads(os.environ.get("PMS_INFLUX_TAGS", args["--tags"])),
+        host=os.environ.get("PMS_INFLUX_HOST", args["--host"]),
+        port=int(os.environ.get("PMS_INFLUX_PORT", args["--port"])),
+        username=os.environ.get("PMS_INFLUX_USER", args["--user"]),
+        password=os.environ.get("PMS_INFLUX_PASS", args["--pass"]),
+        db_name=os.environ.get("PMS_INFLUX_DB", args["--database"]),
     )
 
 
@@ -74,7 +86,7 @@ def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
             {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
         )
 
-        delay = int(interval) - (time.time() - pm.time)
+        delay = interval - (time.time() - pm.time)
         if delay > 0:
             time.sleep(delay)
 

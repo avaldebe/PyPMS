@@ -15,6 +15,12 @@ Options:
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
     --help                  display this help and exit
+
+NOTE:
+Environment variables take precedence over command line options
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
+- PMS_FORMAT        overrides -f, --format
 ```
 
 ```man
@@ -35,9 +41,19 @@ Other:
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
 
-Notes:
-- Only partial support for Homie v2.0.0 MQTT convention 
-  https://homieiot.github.io/specification/spec-core-v2_0_0/
+NOTE:
+Environment variables take precedence over command line options
+- PMS_MQTT_TOPIC    overrides -t, --topic
+- PMS_MQTT_HOST     overrides -h, --host
+- PMS_MQTT_PORT     overrides -p, --port
+- PMS_MQTT_USER     overrides -u, --user
+- PMS_MQTT_PASS     overrides -P, ---pass
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
+
+NOTE:
+Only partial support for Homie v2.0.0 MQTT convention
+https://homieiot.github.io/specification/spec-core-v2_0_0/
 ```
 
 ```man
@@ -58,4 +74,15 @@ Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
+
+NOTE:
+Environment variables take precedence over command line options
+- PMS_INFLUX_DB     overrides -d, --database <db>
+- PMS_INFLUX_TAGS   overrides -t, --tags <dict>
+- PMS_INFLUX_HOST   overrides -h, --host <host>
+- PMS_INFLUX_PORT   overrides -p, --port <port>
+- PMS_INFLUX_USER   overrides -u, --user <username>
+- PMS_INFLUX_PASS   overrides -P, --pass <password>
+- PMS_INTERVAL      overrides -n, --interval
+- PMS_SERIAL        overrides -s, --serial
 ```
