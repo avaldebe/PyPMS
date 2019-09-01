@@ -47,12 +47,12 @@ Usage:
     python -m pms.influxdb [options]
 
 Options:
-    --location <tag>        InfluxDB location tag [default: test]
-    --database <db>         InfluxDB database [default: homie]
-    --host <host>           InfluxDB host server [default: influxdb]
-    --port <port>           InfluxDB host port [default: 8086]
-    --user <username>       InfluxDB username [default: root]
-    --pass <password>       InfluxDB password [default: root]
+    -d, --database <db>     InfluxDB database [default: homie]
+    -t, --tags <dict>       InfluxDB measurement tags [default: {"location":"test"}]
+    -h, --host <host>       InfluxDB host server [default: influxdb]
+    -p, --port <port>       InfluxDB host port [default: 8086]
+    -u, --user <username>   InfluxDB username [default: root]
+    -P, --pass <password>   InfluxDB password [default: root]
 
 Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]

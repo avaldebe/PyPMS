@@ -5,12 +5,12 @@ Usage:
     pms.influxdb [options]
 
 Options:
-    --location <tag>        InfluxDB location tag [default: test]
-    --database <db>         InfluxDB database [default: homie]
-    --host <host>           InfluxDB host server [default: influxdb]
-    --port <port>           InfluxDB host port [default: 8086]
-    --user <username>       InfluxDB username [default: root]
-    --pass <password>       InfluxDB password [default: root]
+    -d, --database <db>     InfluxDB database [default: homie]
+    -t, --tags <dict>       InfluxDB measurement tags [default: {"location":"test"}]
+    -h, --host <host>       InfluxDB host server [default: influxdb]
+    -p, --port <port>       InfluxDB host port [default: 8086]
+    -u, --user <username>   InfluxDB username [default: root]
+    -P, --pass <password>   InfluxDB password [default: root]
 
 Other:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
@@ -20,6 +20,7 @@ Other:
 
 import time
 from typing import Dict, Union, Any
+import json
 from influxdb import InfluxDBClient
 import pms
 
@@ -28,7 +29,7 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
         interval=int(args["--interval"]),
         serial=args["--serial"],
-        location=args["--location"],
+        tags=json.loads(args["--tags"]),
         host=args["--host"],
         port=int(args["--port"]),
         username=args["--user"],
@@ -59,13 +60,16 @@ def pub(
     )
 
 
-def main(interval: int, serial: str, location: str, **kwargs) -> None:
+def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
+    """
+    TODO: check pm.timestamp("%FT%TZ") actually returns UTC time
+    """
     client = setup(**kwargs)
 
     for pm in pms.read(serial):
         pub(
             client,
-            {"location": location},
+            tags,
             pm.timestamp("%FT%TZ"),
             {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
         )
