@@ -34,7 +34,7 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 import os
 import time
 from typing import Dict, Union, Any
-from paho.mqtt import publish
+import paho.mqtt.client as mqtt
 from . import read, logger
 
 
@@ -51,39 +51,50 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-def pub(
-    data: Dict[str, Union[int, str]],
-    topic: str,
-    host: str,
-    port: int,
-    username: str,
-    password: str,
-) -> None:
-    mesages = [(f"{topic}/{k}", v, 1, True) for k, v in data.items()]
-    will = {"topic": f"{topic}/$online", "payload": "false", "qos": 1, "retain": True}
-    auth = {"username": username, "password": password} if username else None
-    publish.multiple(mesages, hostname=host, port=port, will=will, auth=auth)
+def setup(
+    topic: str, host: str, port: int, username: str, password: str
+) -> mqtt.Client:
+
+    c = mqtt.Client(topic)
+    if username:
+        c.username_pw_set(username, password)
+    c.on_connect = lambda client, userdata, flags, rc: client.publish(
+        f"{topic}/$online", "true", 1, True
+    )
+    c.will_set(f"{topic}/$online", "false", 1, True)
+
+    c.connect(host, port, 60)
+    c.loop_start()
+    return c
 
 
-def main(interval: int, serial: str, **kwargs) -> None:
+def pub(client: mqtt.Client, data: Dict[str, Union[int, str]]) -> None:
+    for k, v in data.items():
+        client.publish(k, v, 1, True)
+
+
+def main(interval: int, serial: str, topic: str, **kwargs) -> None:
+    client = setup(topic, **kwargs)
+
     for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
         pub(
+            client,
             {
-                f"{k}/$type": v,
-                f"{k}/$properties": "sensor,unit,concentration",
-                f"{k}/sensor": "PMx003",
-                f"{k}/unit": "ug/m3",
+                f"{topic}/{k}/$type": v,
+                f"{topic}/{k}/$properties": "sensor,unit,concentration",
+                f"{topic}/{k}/sensor": "PMx003",
+                f"{topic}/{k}/unit": "ug/m3",
             },
-            **kwargs,
         )
+
     for pm in read(serial):
         pub(
+            client,
             {
-                "pm01/concentration": pm.pm01,
-                "pm25/concentration": pm.pm25,
-                "pm10/concentration": pm.pm10,
+                f"{topic}/pm01/concentration": pm.pm01,
+                f"{topic}/pm25/concentration": pm.pm25,
+                f"{topic}/pm10/concentration": pm.pm10,
             },
-            **kwargs,
         )
 
         delay = interval - (time.time() - pm.time)
