@@ -13,8 +13,8 @@ Usage:
 Options:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
-    --csv                   csv formatted output
-    -h, --help              display this help and exit
+    -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
+    --help                  display this help and exit
 ```
 
 ```man
@@ -33,7 +33,7 @@ Options:
 Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -h, --help              display this help and exit
+    --help                  display this help and exit
 
 Notes:
 - Only partial support for Homie v2.0.0 MQTT convention 
@@ -57,5 +57,5 @@ Options:
 Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -h, --help              display this help and exit
+    --help                  display this help and exit
 ```

@@ -8,7 +8,7 @@ Options:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
-    -h, --help              display this help and exit
+    --help                  display this help and exit
 """
 
 import time

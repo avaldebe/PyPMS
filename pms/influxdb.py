@@ -15,7 +15,7 @@ Options:
 Other:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -h, --help              display this help and exit
+    --help                  display this help and exit
 """
 
 import time
