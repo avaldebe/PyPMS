@@ -5,11 +5,11 @@ Usage:
     pms.mqtt [options]
 
 Options:
-    --root <topic>          MQTT root topic [default: homie/test]
-    --host <host>           MQTT host server [default: test.mosquitto.org]
-    --port <port>           MQTT host port [default: 1883]
-    --user <username>       MQTT username
-    --pass <password>       MQTT password
+    -t, --topic <topic>     MQTT root/topic [default: homie/test]
+    -h, --host <host>       MQTT host server [default: test.mosquitto.org]
+    -p, --port <port>       MQTT host port [default: 1883]
+    -u, --user <username>   MQTT username
+    -P, --pass <password>   MQTT password
 
 Other:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
@@ -35,20 +35,20 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
         port=int(args["--port"]),
         username=args["--user"],
         password=args["--pass"],
-        root=args["--root"],
+        topic=args["--topic"],
     )
 
 
 def pub(
     data: Dict[str, Union[int, str]],
-    root: str,
+    topic: str,
     host: str,
     port: int,
     username: str,
     password: str,
 ) -> None:
-    mesages = [(f"{root}/{k}", v, 1, True) for k, v in data.items()]
-    will = {"topic": f"{root}/$online", "payload": "false", "qos": 1, "retain": True}
+    mesages = [(f"{topic}/{k}", v, 1, True) for k, v in data.items()]
+    will = {"topic": f"{topic}/$online", "payload": "false", "qos": 1, "retain": True}
     auth = {"username": username, "password": password} if username else None
     publish.multiple(mesages, hostname=host, port=port, will=will, auth=auth)
 

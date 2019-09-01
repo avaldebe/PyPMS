@@ -24,11 +24,11 @@ Usage:
     python -m pms.mqtt [options]
 
 Options:
-    --root <topic>          MQTT root topic [default: homie/test]
-    --host <host>           MQTT host server [default: test.mosquitto.org]
-    --port <port>           MQTT host port [default: 1883]
-    --user <username>       MQTT username
-    --pass <password>       MQTT password
+    -t, --topic <topic>     MQTT root/topic [default: homie/test]
+    -h, --host <host>       MQTT host server [default: test.mosquitto.org]
+    -p, --port <port>       MQTT host port [default: 1883]
+    -u, --user <username>   MQTT username
+    -P, --pass <password>   MQTT password
 
 Other:
     -s, --serial <port>     serial port [default: /ser/ttyUSB0]
