@@ -12,6 +12,8 @@
         "mqttpassword",
         "mqttuser"
     ],
+    "python.testing.pytestEnabled": true,
     "editor.formatOnSave": true,
-    "python.testing.pytestEnabled": true
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "${env:HOME}/.local/bin/black"
 }

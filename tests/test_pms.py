@@ -1,11 +1,6 @@
 import sys
-from pathlib import Path
 import time
 import pytest
-
-# There must ba a better way
-PROJECTPATH = Path(__file__).parents[1]
-sys.path.append(str(PROJECTPATH))
 import pms
 
 
