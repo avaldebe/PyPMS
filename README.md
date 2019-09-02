@@ -5,13 +5,27 @@ Python application for PM sensors with serial interface
 ## Command line usage
 
 ```man
-Read a PMSx003 sensor and print PM measurements
+Read a PMS5003/PMS7003/PMSA003 sensor
 
 Usage:
-    python -m pms.serial [options]
+    python -m pms <command> [<args>...]
+    python -m pms <command> --help
+    python -m pms --help
+
+Commands:
+    serial      print PM measurements
+    mqtt        push PM measurements to a MQTT server
+    influxdb    push PM measurements to an InfluxDB server
+```
+
+```man
+Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
+
+Usage:
+     python -m pms serial [options]
 
 Options:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
     --help                  display this help and exit
@@ -24,10 +38,10 @@ Environment variables take precedence over command line options
 ```
 
 ```man
-Read a PMSx003 sensor and push PM measurements to a MQTT server
+Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
 
 Usage:
-    python -m pms.mqtt [options]
+    python -m pms mqtt [options]
 
 Options:
     -t, --topic <topic>     MQTT root/topic [default: homie/test]
@@ -37,7 +51,7 @@ Options:
     -P, --pass <password>   MQTT password
 
 Other:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
 
@@ -57,10 +71,10 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 ```
 
 ```man
-Read PMSx003 sensor and push PM measurements to an InfluxDB server
+Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
 
 Usage:
-    python -m pms.influxdb [options]
+    python -m pms influxdb [options]
 
 Options:
     -d, --database <db>     InfluxDB database [default: homie]
@@ -71,18 +85,18 @@ Options:
     -P, --pass <password>   InfluxDB password [default: root]
 
 Other:
-    -s, --serial <port>     serial port [default: /ser/ttyUSB0]
+    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
     -n, --interval <secs>   seconds to wait between updates [default: 60]
     --help                  display this help and exit
 
 NOTE:
 Environment variables take precedence over command line options
-- PMS_INFLUX_DB     overrides -d, --database <db>
-- PMS_INFLUX_TAGS   overrides -t, --tags <dict>
-- PMS_INFLUX_HOST   overrides -h, --host <host>
-- PMS_INFLUX_PORT   overrides -p, --port <port>
-- PMS_INFLUX_USER   overrides -u, --user <username>
-- PMS_INFLUX_PASS   overrides -P, --pass <password>
+- PMS_INFLUX_DB     overrides -d, --database
+- PMS_INFLUX_TAGS   overrides -t, --tags
+- PMS_INFLUX_HOST   overrides -h, --host
+- PMS_INFLUX_PORT   overrides -p, --port
+- PMS_INFLUX_USER   overrides -u, --user
+- PMS_INFLUX_PASS   overrides -P, --pass
 - PMS_INTERVAL      overrides -n, --interval
 - PMS_SERIAL        overrides -s, --serial
 ```

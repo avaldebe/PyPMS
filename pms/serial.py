@@ -2,7 +2,7 @@
 Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
 
 Usage:
-     pms.serial [options]
+     pms serial [options]
 
 Options:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
@@ -19,11 +19,12 @@ Environment variables take precedence over command line options
 
 import os
 import time
-from typing import Dict, Union, Any
-from . import read, logger
+from typing import Dict, List, Union, Any, Optional
+from docopt import docopt
+from pms import read
 
 
-def parse_args(args: Dict[str, Union[str, bool]]) -> Dict[str, Any]:
+def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
         interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
         serial=os.environ.get("PMS_SERIAL", args["--serial"]),
@@ -40,13 +41,6 @@ def main(interval: int, serial: str, format: bool) -> None:
             time.sleep(delay)
 
 
-if __name__ == "__main__":
-    from docopt import docopt
-
-    args = parse_args(docopt(__doc__))
-    try:
-        main(**args)
-    except KeyboardInterrupt:
-        print()
-    except Exception as e:
-        logger.exception(e)
+def cli(argv: Optional[List[str]] = None) -> None:
+    args = parse_args(docopt(__doc__, argv))
+    main(**args)

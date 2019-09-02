@@ -2,7 +2,7 @@
 Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
 
 Usage:
-    pms.influxdb [options]
+    pms influxdb [options]
 
 Options:
     -d, --database <db>     InfluxDB database [default: homie]
@@ -31,10 +31,11 @@ Environment variables take precedence over command line options
 
 import os
 import time
-from typing import Dict, Union, Any
+from typing import Dict, List, Optional, Union, Any
 import json
+from docopt import docopt
 from influxdb import InfluxDBClient
-import pms
+from pms import read
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -78,7 +79,7 @@ def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
     """
     client = setup(**kwargs)
 
-    for pm in pms.read(serial):
+    for pm in read(serial):
         pub(
             client,
             tags,
@@ -91,13 +92,6 @@ def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
             time.sleep(delay)
 
 
-if __name__ == "__main__":
-    from docopt import docopt
-
-    args = parse_args(docopt(__doc__))
-    try:
-        main(**args)
-    except KeyboardInterrupt:
-        print()
-    except Exception as e:
-        pms.logger.exception(e)
+def cli(argv: Optional[List[str]] = None) -> None:
+    args = parse_args(docopt(__doc__, argv))
+    main(**args)

@@ -2,7 +2,7 @@
 Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
 
 Usage:
-    pms.mqtt [options]
+    pms mqtt [options]
 
 Options:
     -t, --topic <topic>     MQTT root/topic [default: homie/test]
@@ -33,9 +33,10 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 
 import os
 import time
-from typing import Dict, Union, Any
+from typing import Dict, List, Optional, Union, Any
 import paho.mqtt.client as mqtt
-from . import read, logger
+from docopt import docopt
+from pms import read
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -102,13 +103,6 @@ def main(interval: int, serial: str, topic: str, **kwargs) -> None:
             time.sleep(delay)
 
 
-if __name__ == "__main__":
-    from docopt import docopt
-
-    args = parse_args(docopt(__doc__))
-    try:
-        main(**args)
-    except KeyboardInterrupt:
-        print()
-    except Exception as e:
-        logger.exception(e)
+def cli(argv: Optional[List[str]] = None) -> None:
+    args = parse_args(docopt(__doc__, argv))
+    main(**args)
