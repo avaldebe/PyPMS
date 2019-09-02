@@ -1,0 +1,17 @@
+{
+    "python.pythonPath": "/home/alvarov/.local/share/virtualenvs/PyPMS-xW7ddr2c",
+    "cSpell.words": [
+        "PMSA",
+        "dataclasses",
+        "influxdb",
+        "mosquitto",
+        "paho",
+        "pytest"
+    ],
+    "cSpell.ignoreWords": [
+        "mqttpassword",
+        "mqttuser"
+    ],
+    "editor.formatOnSave": true,
+    "python.testing.pytestEnabled": true
+}
