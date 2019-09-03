@@ -106,6 +106,8 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
     with Serial(port, timeout=0) as ser:  # 9600 8N1 by default
         ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
         ser.flush()
+        while ser.in_waiting < 7:
+            continue
         ser.reset_input_buffer()
 
         while ser.is_open:
