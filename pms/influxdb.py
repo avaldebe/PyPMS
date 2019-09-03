@@ -63,29 +63,22 @@ def setup(
 
 
 def pub(
-    client: InfluxDBClient, tags: Dict[str, str], time: str, data: Dict[str, int]
+    client: InfluxDBClient, tags: Dict[str, str], time: int, data: Dict[str, int]
 ) -> None:
     client.write_points(
         [
             {"measurement": k, "tags": tags, "time": time, "fields": {"value": v}}
             for k, v in data.items()
-        ]
+        ],
+        time_precision="s",
     )
 
 
 def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
-    """
-    TODO: check pm.timestamp("%FT%TZ") actually returns UTC time
-    """
     client = setup(**kwargs)
 
-    for pm in read(serial):
-        pub(
-            client,
-            tags,
-            pm.timestamp("%FT%TZ"),
-            {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
-        )
+    for pm in pms.read(serial):
+        pub(client, tags, pm.time, {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
 
         delay = interval - (time.time() - pm.time)
         if delay > 0:
