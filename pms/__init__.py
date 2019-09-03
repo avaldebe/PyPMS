@@ -44,14 +44,9 @@ class Obs(NamedTuple):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    @staticmethod
-    def to_datetime(time: int) -> datetime:
-        """seconds since epoch to datetime"""
-        return datetime.fromtimestamp(time)
-
     def timestamp(self, fmt: str = "%F %T"):
         """measurement time as formatted string"""
-        return self.to_datetime(self.time).strftime(fmt)
+        return datetime.fromtimestamp(self.time).strftime(fmt)
 
     def __format__(self, spec: str) -> str:
         if spec.endswith("pm"):

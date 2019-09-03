@@ -6,7 +6,8 @@
         "influxdb",
         "mosquitto",
         "paho",
-        "pytest"
+        "pytest",
+        "strftime"
     ],
     "cSpell.ignoreWords": [
         "mqttpassword",
