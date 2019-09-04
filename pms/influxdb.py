@@ -51,7 +51,7 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-def setup(
+def client(
     host: str, port: int, username: str, password: str, db_name: str
 ) -> InfluxDBClient:
     c = InfluxDBClient(host, port, username, password, None)
@@ -75,10 +75,10 @@ def pub(
 
 
 def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
-    client = setup(**kwargs)
+    c = client(**kwargs)
 
     for pm in read(serial):
-        pub(client, tags, pm.time, {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
+        pub(c, tags, pm.time, {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
 
         delay = interval - (time.time() - pm.time)
         if delay > 0:

@@ -52,7 +52,7 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-def setup(
+def client(
     topic: str, host: str, port: int, username: str, password: str
 ) -> mqtt.Client:
 
@@ -75,11 +75,11 @@ def pub(client: mqtt.Client, data: Dict[str, Union[int, str]]) -> None:
 
 
 def main(interval: int, serial: str, topic: str, **kwargs) -> None:
-    client = setup(topic, **kwargs)
+    c = client(topic, **kwargs)
 
     for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
         pub(
-            client,
+            c,
             {
                 f"{topic}/{k}/$type": v,
                 f"{topic}/{k}/$properties": "sensor,unit,concentration",
@@ -90,7 +90,7 @@ def main(interval: int, serial: str, topic: str, **kwargs) -> None:
 
     for pm in read(serial):
         pub(
-            client,
+            c,
             {
                 f"{topic}/pm01/concentration": pm.pm01,
                 f"{topic}/pm25/concentration": pm.pm25,
