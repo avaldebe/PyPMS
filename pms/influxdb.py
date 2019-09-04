@@ -77,7 +77,7 @@ def pub(
 def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
     client = setup(**kwargs)
 
-    for pm in pms.read(serial):
+    for pm in read(serial):
         pub(client, tags, pm.time, {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
 
         delay = interval - (time.time() - pm.time)

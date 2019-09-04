@@ -61,7 +61,7 @@ Environment variables take precedence over command line options
 - PMS_MQTT_HOST     overrides -h, --host
 - PMS_MQTT_PORT     overrides -p, --port
 - PMS_MQTT_USER     overrides -u, --user
-- PMS_MQTT_PASS     overrides -P, ---pass
+- PMS_MQTT_PASS     overrides -P, --pass
 - PMS_INTERVAL      overrides -n, --interval
 - PMS_SERIAL        overrides -s, --serial
 
