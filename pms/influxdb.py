@@ -63,7 +63,7 @@ def client(
 
 
 def pub(
-    client: InfluxDBClient, tags: Dict[str, str], time: int, data: Dict[str, int]
+    client: InfluxDBClient, tags: Dict[str, str], time: int, data: Dict[str, float]
 ) -> None:
     client.write_points(
         [

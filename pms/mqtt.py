@@ -33,7 +33,7 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 
 import os
 import time
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, List, Optional, Union, Any, Callable
 import paho.mqtt.client as mqtt
 from docopt import docopt
 from pms import read
@@ -53,16 +53,30 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def client(
-    topic: str, host: str, port: int, username: str, password: str
+    topic: str,
+    host: str,
+    port: int,
+    username: str,
+    password: str,
+    decode_msg_from_topic: Optional[Callable[[str, str], None]] = None,
 ) -> mqtt.Client:
 
     c = mqtt.Client(topic)
     if username:
         c.username_pw_set(username, password)
-    c.on_connect = lambda client, userdata, flags, rc: client.publish(
-        f"{topic}/$online", "true", 1, True
-    )
-    c.will_set(f"{topic}/$online", "false", 1, True)
+
+    if decode_msg_from_topic:
+        c.on_connect = lambda client, userdata, flags, rc: client.subscribe(
+            f"{topic}/#"
+        )
+        c.on_message = lambda client, userdata, msg: decode_msg_from_topic(
+            msg.topic, msg.payload
+        )
+    else:
+        c.on_connect = lambda client, userdata, flags, rc: pub(
+            client, {f"{topic}/$online": "true"}
+        )
+        c.will_set(f"{topic}/$online", "false", 1, True)
 
     c.connect(host, port, 60)
     c.loop_start()
