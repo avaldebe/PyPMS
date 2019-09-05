@@ -10,14 +10,14 @@ NOTE:
 
 import struct, logging, os
 from datetime import datetime
-from typing import NamedTuple, List, Generator
+from typing import NamedTuple, Optional, Generator
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
 
 
-class Obs(NamedTuple):
+class SensorData(NamedTuple):
     """PMSx003 observations
     
     time                                    measurement time [seconds since epoch]
@@ -38,11 +38,6 @@ class Obs(NamedTuple):
     n2_5: int
     n5_0: int
     n10_0: int
-
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())
 
     def timestamp(self, fmt: str = "%F %T"):
         """measurement time as formatted string"""
@@ -68,37 +63,45 @@ class Obs(NamedTuple):
                 f"N2.5 {self.n2_5:{d}}, N5.0 {self.n5_0:{d}}, N10 {self.n10_0:{d}} #/100cc"
             )
         raise ValueError(
-            f"Unknown format code '{spec}' for object of type '{__name__}.Obs'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.SensorData'"
         )
 
     def __str__(self):
         return self.__format__("pm")
 
+    @staticmethod
+    def now() -> int:
+        """current time as seconds since epoch"""
+        return int(datetime.now().timestamp())
 
-def decode(time: int, buffer: List[int]) -> Obs:
-    """Decode a PMSx003 message (32b long)
-    
-    PMS3003 messages are 24b long. PMS3003 is not supported.
-    """
-    logger.debug(buffer)
-    if len(buffer) != 32:
-        raise UserWarning(f"message total length: {len(buffer)}")
+    @classmethod
+    def decode(cls, buffer: bytes, *, time: Optional[int] = None) -> "SensorData":
+        """Decode a PMSx003 message (32b long)
+        
+        PMS3003 messages are 24b long. PMS3003 is not supported.
+        """
+        if not time:
+            time = cls.now()
 
-    msg_len = len(buffer) // 2
-    msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
-    if msg[0] != 0x424D:
-        raise UserWarning(f"message start header: {msg[0]:#x}")
-    if msg[1] != 28:
-        raise UserWarning(f"message body length: {msg[1]}")
+        logger.debug(buffer)
+        if len(buffer) != 32:
+            raise UserWarning(f"message total length: {len(buffer)}")
 
-    checksum = sum(buffer[:-2])
-    if msg[-1] != checksum:
-        raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
+        msg_len = len(buffer) // 2
+        msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
+        if msg[0] != 0x424D:
+            raise UserWarning(f"message start header: {msg[0]:#x}")
+        if msg[1] != 28:
+            raise UserWarning(f"message body length: {msg[1]}")
 
-    return Obs(time, *msg[5:14])
+        checksum = sum(buffer[:-2])
+        if msg[-1] != checksum:
+            raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
+
+        return cls(time, *msg[5:14])
 
 
-def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
+def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
     """Read PMSx003 messages from serial port
     
     Passive mode reading. Active mode (sleep/wake) is not supported.
@@ -117,7 +120,7 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[Obs, None, None]:
                 continue
             try:
                 logger.debug(f"serail buffer #{ser.in_waiting}")
-                yield decode(Obs.now(), ser.read(32))
+                yield SensorData.decode(ser.read(32))
             except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
