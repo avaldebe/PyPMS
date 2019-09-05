@@ -1,6 +1,21 @@
+"""
+Choose one of the following strategies
+
+Run pytest as a module
+$ python3 -m pytest test/
+
+Install locally before testing
+$ pip install -e .
+$ pytest test/
+"""
 import time
 import pytest
-from pms.mqtt import SensorData
+
+try:
+    from pms.mqtt import SensorData
+except ModuleNotFoundError as e:
+    print(__doc__)
+    raise
 
 
 def test_decode():
