@@ -8,9 +8,9 @@ Python application for PM sensors with serial interface
 Read a PMS5003/PMS7003/PMSA003 sensor
 
 Usage:
-    python -m pms <command> [<args>...]
-    python -m pms <command> --help
-    python -m pms --help
+    pms <command> [<args>...]
+    pms <command> --help
+    pms --help
 
 Commands:
     serial      print PM measurements
@@ -22,7 +22,7 @@ Commands:
 Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
 
 Usage:
-     python -m pms serial [options]
+     pms serial [options]
 
 Options:
     -s, --serial <port>     serial port [default: /dev/ttyUSB0]
@@ -41,7 +41,7 @@ Environment variables take precedence over command line options
 Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to a MQTT server
 
 Usage:
-    python -m pms mqtt [options]
+    pms mqtt [options]
 
 Options:
     -t, --topic <topic>     MQTT root/topic [default: homie/test]
@@ -74,7 +74,7 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
 
 Usage:
-    python -m pms influxdb [options]
+    pms influxdb [options]
 
 Options:
     -d, --database <db>     InfluxDB database [default: homie]

@@ -10,5 +10,6 @@ setup(
         "docopt>=0.6.2",
         "influxdb>=5.2.1",
     ],
+    entry_points={"console_scripts": ["pms = pms.__main__:cli"]},
 )
 
