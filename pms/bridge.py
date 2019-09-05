@@ -5,8 +5,8 @@ Usage:
     pms.bridge [options]
 
 Options:
-    --MQTT_topic <topic>        MQTT root/topic [default: homie]
-    --MQTT_host <host>          MQTT host server [default: test.mosquitto.org]
+    --MQTT_topic <topic>        MQTT root/topic [default: homie/+/+/+]
+    --MQTT_host <host>          MQTT host server [default: mqtt.eclipse.org]
     --MQTT_port <port>          MQTT host port [default: 1883]
     --MQTT_user <username>      MQTT username
     --MQTT_pass <password>      MQTT password

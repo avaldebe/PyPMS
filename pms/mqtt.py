@@ -6,7 +6,7 @@ Usage:
 
 Options:
     -t, --topic <topic>     MQTT root/topic [default: homie/test]
-    -h, --host <host>       MQTT host server [default: test.mosquitto.org]
+    -h, --host <host>       MQTT host server [default: mqtt.eclipse.org]
     -p, --port <port>       MQTT host port [default: 1883]
     -u, --user <username>   MQTT username
     -P, --pass <password>   MQTT password
@@ -67,9 +67,7 @@ def client(
         c.username_pw_set(username, password)
 
     if decode_msg_from_topic:
-        c.on_connect = lambda client, userdata, flags, rc: client.subscribe(
-            f"{topic}/#"
-        )
+        c.on_connect = lambda client, userdata, flags, rc: client.subscribe(topic)
         c.on_message = lambda client, userdata, msg: decode_msg_from_topic(
             msg.topic, msg.payload
         )
