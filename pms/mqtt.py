@@ -36,7 +36,7 @@ import time
 from typing import Dict, List, Optional, Union, Any, Callable
 import paho.mqtt.client as mqtt
 from docopt import docopt
-from pms import read
+from pms import read, logger
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -62,6 +62,7 @@ def client(
 ) -> mqtt.Client:
 
     c = mqtt.Client(topic)
+    c.enable_logger(logger)
     if username:
         c.username_pw_set(username, password)
 
