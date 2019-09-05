@@ -34,11 +34,9 @@ Environment variables take precedence over command line options
 - PMS_INFLUX_PASS   overrides --InfluxDB_pass
 """
 
-import re
-from typing import Dict, List, Optional, Union, Any, NamedTuple
-from datetime import datetime
+from typing import Dict, List, Optional, Union, Any
 from docopt import docopt
-from pms.mqtt import parse_args as mqtt_args, client as mqtt_client
+from pms.mqtt import parse_args as mqtt_args, client as mqtt_client, SensorData
 from pms.influxdb import (
     parse_args as influxdb_args,
     client as influxdb_client,
@@ -61,36 +59,6 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-class SensorData(NamedTuple):
-    location: str
-    measurement: str
-    value: float
-    time: int
-
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())
-
-
-def _parse_mqtt_message(topic: str, payload: str) -> Optional[SensorData]:
-    time = SensorData.now()
-    match = re.match(r"home/([^/]+)/([^/]+)/([^/]+)", topic)
-    if not match:
-        return None
-
-    location = match.group(1)
-    measurement = match.group(2)
-    if measurement.startswith("$"):
-        return None
-
-    try:
-        value = float(payload)
-    except ValueError:
-        return None
-    return SensorData(location, measurement, value, time)
-
-
 def _publish_sensor_data(client, obs: Optional[SensorData] = None) -> None:
     if not obs:
         return
@@ -106,7 +74,7 @@ def main(mqtt: Dict[str, Any], influxdb: Dict[str, Any]) -> None:
     influxdb = influxdb_client(**influxdb)
 
     def decode_msg_from_topic(topic: str, payload: str) -> None:
-        _publish_sensor_data(influxdb, _parse_mqtt_message(topic, payload))
+        _publish_sensor_data(influxdb, SensorData.decode(topic, payload))
 
     mqtt_client(decode_msg_from_topic=decode_msg_from_topic, **mqtt)
 

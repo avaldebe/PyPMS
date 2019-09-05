@@ -32,8 +32,10 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 """
 
 import os
+import re
+from datetime import datetime
 import time
-from typing import Dict, List, Optional, Union, Any, Callable
+from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
 import paho.mqtt.client as mqtt
 from docopt import docopt
 from pms import read, logger
@@ -80,6 +82,47 @@ def client(
     c.connect(host, port, 60)
     c.loop_start()
     return c
+
+
+class SensorData(NamedTuple):
+    time: int
+    location: str
+    measurement: str
+    value: float
+
+    @staticmethod
+    def now() -> int:
+        """current time as seconds since epoch"""
+        return int(datetime.now().timestamp())
+
+    @classmethod
+    def decode(
+        cls, topic: str, payload: str, *, time: Optional[int] = None
+    ) -> Optional["SensorData"]:
+        """Decode a MQTT message
+        
+        For example
+        >>> decode("homie/test/pm10/concentration", "27")
+        >>> SensorData(now(), "test", "pm10", 27)
+        """
+        if not time:
+            time = cls.now()
+
+        match = re.match(r"([^/]+)/([^/]+)/([^/]+)/([^/]+)", topic)
+        if not match:
+            return None
+
+        location = match.group(1)
+        measurement = match.group(2)
+        if measurement.startswith("$"):
+            return None
+
+        try:
+            value = float(payload)
+        except ValueError:
+            return None
+        else:
+            return cls(time, location, measurement, value)
 
 
 def pub(client: mqtt.Client, data: Dict[str, Union[int, str]]) -> None:
