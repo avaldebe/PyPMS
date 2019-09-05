@@ -32,7 +32,6 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 """
 
 import os
-import re
 from datetime import datetime
 import time
 from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
@@ -98,7 +97,7 @@ class SensorData(NamedTuple):
     @classmethod
     def decode(
         cls, topic: str, payload: str, *, time: Optional[int] = None
-    ) -> Optional["SensorData"]:
+    ) -> "SensorData":
         """Decode a MQTT message
         
         For example
@@ -108,19 +107,17 @@ class SensorData(NamedTuple):
         if not time:
             time = cls.now()
 
-        match = re.match(r"([^/]+)/([^/]+)/([^/]+)/([^/]+)", topic)
-        if not match:
-            return None
-
-        location = match.group(1)
-        measurement = match.group(2)
-        if measurement.startswith("$"):
-            return None
+        fields = topic.split("/")
+        if len(fields) != 4:
+            raise UserWarning(f"topic total length: {len(fields)}")
+        if any([f.startswith("$") for f in fields]):
+            raise UserWarning(f"system topic: {topic}")
+        location, measurement = fields[1:3]
 
         try:
             value = float(payload)
         except ValueError:
-            return None
+            raise UserWarning(f"non numeric payload: {payload}")
         else:
             return cls(time, location, measurement, value)
 

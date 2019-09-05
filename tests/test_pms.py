@@ -1,4 +1,3 @@
-import sys
 import time
 import pytest
 from pms import SensorData

@@ -36,12 +36,9 @@ Environment variables take precedence over command line options
 
 from typing import Dict, List, Optional, Union, Any
 from docopt import docopt
+from pms import logger
 from pms.mqtt import parse_args as mqtt_args, client as mqtt_client, SensorData
-from pms.influxdb import (
-    parse_args as influxdb_args,
-    client as influxdb_client,
-    pub as influxdb_pub,
-)
+from pms.influxdb import parse_args as db_args, client as db_client, pub as db_pub
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -54,34 +51,31 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
         return d
 
     return dict(
-        mqtt=mqtt_args(get_opts("--MQTT_")),
-        influxdb=influxdb_args(get_opts("--InfluxDB_")),
+        mqtt=mqtt_args(get_opts("--MQTT_")), db=db_args(get_opts("--InfluxDB_"))
     )
 
 
-def _publish_sensor_data(client, obs: Optional[SensorData] = None) -> None:
-    if not obs:
-        return
-    influxdb_pub(
-        client,
-        time=obs.time,
-        tags={"location": obs.location},
-        data={obs.measurement: obs.value},
-    )
-
-
-def main(mqtt: Dict[str, Any], influxdb: Dict[str, Any]) -> None:
-    influxdb = influxdb_client(**influxdb)
+def main(mqtt: Dict[str, Any], db: Dict[str, Any]) -> None:
+    client = db_client(**db)
 
     def decode_msg_from_topic(topic: str, payload: str) -> None:
-        _publish_sensor_data(influxdb, SensorData.decode(topic, payload))
+        try:
+            data = SensorData.decode(topic, payload)
+        except UserWarning as e:
+            logger.debug(e)
+        else:
+            db_pub(
+                client,
+                time=data.time,
+                tags={"location": data.location},
+                data={data.measurement: data.value},
+            )
 
     mqtt_client(decode_msg_from_topic=decode_msg_from_topic, **mqtt)
 
 
 def cli(argv: Optional[List[str]] = None) -> None:
     args = parse_args(docopt(__doc__, argv))
-    exit(args)
     main(**args)
 
 
