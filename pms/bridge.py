@@ -95,7 +95,10 @@ def _publish_sensor_data(client, obs: Optional[SensorData] = None) -> None:
     if not obs:
         return
     influxdb_pub(
-        client, {"location": obs.location}, obs.time, {obs.measurement: obs.value}
+        client,
+        time=obs.time,
+        tags={"location": obs.location},
+        data={obs.measurement: obs.value},
     )
 
 

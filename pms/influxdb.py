@@ -63,7 +63,7 @@ def client(
 
 
 def pub(
-    client: InfluxDBClient, tags: Dict[str, str], time: int, data: Dict[str, float]
+    client: InfluxDBClient, time: int, tags: Dict[str, str], data: Dict[str, float]
 ) -> None:
     client.write_points(
         [
@@ -78,7 +78,12 @@ def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
     c = client(**kwargs)
 
     for pm in read(serial):
-        pub(c, tags, pm.time, {"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
+        pub(
+            c,
+            time=pm.time,
+            tags=tags,
+            data={"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
+        )
 
         delay = interval - (time.time() - pm.time)
         if delay > 0:
