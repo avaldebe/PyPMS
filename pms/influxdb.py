@@ -1,5 +1,5 @@
 """
-Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
+Read a PMSx003 sensor and push PM measurements to an InfluxDB server
 
 Usage:
     pms influxdb [options]

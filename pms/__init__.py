@@ -2,15 +2,15 @@
 Read a PMS5003/PMS7003/PMSA003 sensor
 
 NOTE:
-- Should work on a PMS1003 sensor, but has not been tested.
-- PMS3003 sensor is not supported.
 - Sensor are read on passive mode.
 - Active mode (sleep/wake) is not supported.
+- Should work on a PMS1003 sensor, but has not been tested.
+- Should work on a PMS3003 sensor, but has not been tested.
 """
 
 import struct, logging, os
 from datetime import datetime
-from typing import NamedTuple, Optional, Generator
+from typing import NamedTuple, Optional, Tuple, Generator
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
@@ -32,39 +32,34 @@ class SensorData(NamedTuple):
     pm25: int
     pm10: int
     # nX_Y [#/100cc]: number concentrations under X.Y um
-    n0_3: int
-    n0_5: int
-    n1_0: int
-    n2_5: int
-    n5_0: int
-    n10_0: int
+    n0_3: Optional[int] = None
+    n0_5: Optional[int] = None
+    n1_0: Optional[int] = None
+    n2_5: Optional[int] = None
+    n5_0: Optional[int] = None
+    n10_0: Optional[int] = None
 
     def timestamp(self, fmt: str = "%F %T"):
         """measurement time as formatted string"""
         return datetime.fromtimestamp(self.time).strftime(fmt)
 
     def __format__(self, spec: str) -> str:
+        d = f = None
         if spec.endswith("pm"):
             d = spec.replace("pm", "d")
-            return f"{self.timestamp()}: PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
+            f = f"{self.timestamp()}: PM1 {{1}}, PM2.5 {{2}}, PM10 {{3}} ug/m3"
         if spec.endswith("csv"):
             d = spec.replace("csv", "d")
-            return (
-                f"{self.time}, "
-                f"{self.pm01:{d}}, {self.pm25:{d}}, {self.pm10:{d}}, "
-                f"{self.n0_3:{d}}, {self.n0_5:{d}}, {self.n1_0:{d}}, "
-                f"{self.n2_5:{d}}, {self.n5_0:{d}}, {self.n10_0:{d}}"
-            )
+            f = f"{self.time}, {{1}}, {{2}}, {{3}}, {{4}}, {{5}}, {{6}}, {{7}}, {{8}}, {{9}}"
         if spec.endswith("num"):
             d = spec.replace("num", "d")
-            return (
-                f"{self.timestamp()}: "
-                f"N0.3 {self.n0_3:{d}}, N0.5 {self.n0_5:{d}}, N1.0 {self.n1_0:{d}}, "
-                f"N2.5 {self.n2_5:{d}}, N5.0 {self.n5_0:{d}}, N10 {self.n10_0:{d}} #/100cc"
+            f = f"{self.timestamp()}: N0.3 {{4}}, N0.5 {{5}}, N1.0 {{6}}, N2.5 {{7}}, N5.0 {{8}}, N10 {{9}} #/100cc"
+        if d and f:
+            return f.format(*tuple(f"{x:{d}}" if x is not None else "" for x in self))
+        else:
+            raise ValueError(
+                f"Unknown format code '{spec}' for object of type '{__name__}.SensorData'"
             )
-        raise ValueError(
-            f"Unknown format code '{spec}' for object of type '{__name__}.SensorData'"
-        )
 
     def __str__(self):
         return self.__format__("pm")
@@ -76,29 +71,35 @@ class SensorData(NamedTuple):
 
     @classmethod
     def decode(cls, buffer: bytes, *, time: Optional[int] = None) -> "SensorData":
-        """Decode a PMSx003 message (32b long)
+        """Decode a PMSx003 message (24b or 32b long)
         
-        PMS3003 messages are 24b long. PMS3003 is not supported.
+        PMS3003 messages are 24b long. All other PMSx003 messages are 32b long
         """
         if not time:
             time = cls.now()
 
-        logger.debug(buffer)
-        if len(buffer) != 32:
-            raise UserWarning(f"message total length: {len(buffer)}")
+        logger.debug(f"buffer={buffer}")
+        try:
+            header = buffer[:4]
+            msg_len = {
+                b"\x42\x4D\x00\x1c": 32,  # PMS1003, PMS5003, PMS7003, PMSA003
+                b"\x42\x4D\x00\x14": 24,  # PMS3003
+            }[header]
+        except KeyError as e:
+            raise UserWarning(f"message header: {header}") from e
 
-        msg_len = len(buffer) // 2
-        msg = struct.unpack(f">{'H'*msg_len}", bytes(buffer))
-        if msg[0] != 0x424D:
-            raise UserWarning(f"message start header: {msg[0]:#x}")
-        if msg[1] != 28:
-            raise UserWarning(f"message body length: {msg[1]}")
+        if len(buffer) != msg_len:
+            raise UserWarning(f"message length: {len(buffer)}")
 
+        msg = struct.unpack(f">{'H'*(msg_len//2)}", buffer)
         checksum = sum(buffer[:-2])
         if msg[-1] != checksum:
             raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
 
-        return cls(time, *msg[5:14])
+        if msg_len == 32:
+            return cls(time, *msg[5:14])
+        else:
+            return cls(time, *msg[5:8])
 
 
 def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
@@ -109,18 +110,24 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
     with Serial(port, timeout=0) as ser:  # 9600 8N1 by default
         ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
         ser.flush()
-        while ser.in_waiting < 7:
-            continue
         ser.reset_input_buffer()
+        while ser.in_waiting < 8:
+            continue
+        if ser.read(8) == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
+            logger.debug(f"Assume PMS1003|PMS5003|PMS7003|PMSA003")
+            msg_len = 32
+        else:
+            logger.debug(f"Assume PMS3003")
+            msg_len = 24
+        logger.debug(f"Inferred message length {msg_len}")
 
         while ser.is_open:
             ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             ser.flush()
-            while ser.in_waiting < 32:
+            while ser.in_waiting < msg_len:
                 continue
             try:
-                logger.debug(f"serail buffer #{ser.in_waiting}")
-                yield SensorData.decode(ser.read(32))
+                yield SensorData.decode(ser.read(msg_len))
             except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)

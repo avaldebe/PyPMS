@@ -1,5 +1,5 @@
 """
-Read a PMS5003/PMS7003/PMSA003 sensor and print PM measurements
+Read a PMSx003 sensor and print PM measurements
 
 Usage:
      pms serial [options]
