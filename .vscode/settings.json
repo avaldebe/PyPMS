@@ -1,21 +1,26 @@
 {
-    "python.pythonPath": "/home/alvarov/.local/share/virtualenvs/PyPMS-xW7ddr2c",
+    "python.pythonPath": "${env:HOME}/.local/share/virtualenvs/PyPMS-xW7ddr2c",
     "cSpell.words": [
-        "PMSA",
         "dataclasses",
         "influxdb",
         "mosquitto",
         "paho",
+        "plantower",
         "pyserial",
         "pytest",
         "strftime"
     ],
     "cSpell.ignoreWords": [
+        "pmsa",
+        "aqmd",
         "mqttpassword",
-        "mqttuser"
+        "mqttuser",
+        "lcsc"
     ],
-    "python.testing.pytestEnabled": true,
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
-    "python.formatting.blackPath": "${env:HOME}/.local/bin/black"
+    "python.formatting.blackPath": "${env:HOME}/.local/bin/black",
+    "python.testing.pytestEnabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "${env:HOME}/.local/bin/mypy"
 }
