@@ -115,19 +115,16 @@ def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
             continue
         if ser.read(8) == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             logger.debug(f"Assume PMS1003|PMS5003|PMS7003|PMSA003")
-            msg_len = 32
         else:
             logger.debug(f"Assume PMS3003")
-            msg_len = 24
-        logger.debug(f"Inferred message length {msg_len}")
 
         while ser.is_open:
             ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             ser.flush()
-            while ser.in_waiting < msg_len:
+            while ser.in_waiting < 24:
                 continue
             try:
-                yield SensorData.decode(ser.read(msg_len))
+                yield SensorData.decode(ser.read(ser.in_waiting))
             except UserWarning as e:
                 ser.reset_input_buffer()
                 logger.debug(e)
