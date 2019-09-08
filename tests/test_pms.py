@@ -8,10 +8,11 @@ Install locally before testing
 $ pip install -e .
 $ pytest test/
 """
-import time
+import os, time
 import pytest
 
 try:
+    os.environ["LEVEL"] = "DEBUG"
     from pms import SensorData
 except ModuleNotFoundError as e:
     print(__doc__)
@@ -46,21 +47,27 @@ def test_format():
 
 def test_decode():
     sec = 1567201793
-    buffer = b"\x42\x4D\x00\x1c\x00\x05\x00\r\x00\x16\x00\x05\x00\r\x00\x16\x02\xfd\x00\xfc\x00\x1d\x00\x0f\x00\x06\x00\x06\x97\x00\x03\xc5"
+    hex = "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5"
+    buffer = bytes.fromhex(hex)
     msg = (5, 13, 22, 765, 252, 29, 15, 6, 6)
+    # known good data
     assert SensorData.decode(buffer, time=sec) == SensorData(sec, *msg)
+    # known good data, at the end of the buffer
+    assert SensorData.decode(buffer[:16] + buffer, time=sec) == SensorData(sec, *msg)
 
     with pytest.raises(Exception) as e:
         msg_len = 10
         SensorData.decode(buffer[:msg_len], time=sec)
-    assert str(e.value).startswith("message length")
+    assert str(e.value) == f"message length: {msg_len}"
 
     with pytest.raises(Exception) as e:
-        buffer = b"\x42\x4D\x00\x04\xe1\x00\x01t\x42\x4D\x00\x1c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        header = "424d0000"
+        buffer = bytes.fromhex(header + hex[len(header) :])
         SensorData.decode(buffer, time=sec)
-    assert str(e.value).startswith("message header")
+    assert str(e.value) == f"message header: {buffer[:4]}"
 
     with pytest.raises(Exception) as e:
-        buffer = b"\x42\x4D\x00\x1c\x00\x05\x00\r\x00\x16\x00\x05\x00\r\x00\x16\x02\xfd\x00\xfc\x00\x1d\x00\x0f\x00\x06\x00\x06\x97\x00\x00\x00"
+        checksum = "0000"
+        buffer = bytes.fromhex(hex[:-4] + checksum)
         SensorData.decode(buffer, time=sec)
-    assert str(e.value).startswith("message checksum")
+    assert str(e.value) == f"message checksum {int(checksum)} != {sum(buffer[:-2])}"

@@ -84,30 +84,28 @@ class SensorData(NamedTuple):
             b"\x42\x4D\x00\x14": 24,  # PMS3003
         }
         if header not in msg_desc or msg_desc[header] < len(buffer):
-            logger.debug(f"message header:{header}, message length:{len(buffer)}")
+            logger.debug(f"message raw: {buffer.hex()}")
             for header, msg_len in msg_desc.items():
                 # search last complete message on buffer
                 start = buffer.rfind(header, 0, 4 - msg_len)
-                if start:  # found complete message
+                if start >= 0:  # found complete message
                     buffer = buffer[start : start + msg_len]  # last complete message
+                    logger.debug(f"message hex: {buffer.hex()}")
                     break
 
         try:
             header = buffer[:4]
             msg_len = msg_desc[header]
         except KeyError as e:
-            logger.debug(f"message hex: {buffer.hex()}")
             raise UserWarning(f"message header: {header}") from e
 
         if len(buffer) != msg_len:
-            logger.debug(f"message hex: {buffer.hex()}")
             raise UserWarning(f"message length: {len(buffer)}")
 
         msg = struct.unpack(f">{(msg_len//2)}H", buffer)
         checksum = sum(buffer[:-2])
         if msg[-1] != checksum:
-            logger.debug(f"message hex: {buffer.hex()}")
-            raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
+            raise UserWarning(f"message checksum {msg[-1]} != {checksum}")
 
         if msg_len == 32:
             return cls(time, *msg[5:14])

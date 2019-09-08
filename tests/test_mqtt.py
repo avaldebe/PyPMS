@@ -8,10 +8,11 @@ Install locally before testing
 $ pip install -e .
 $ pytest test/
 """
-import time
+import os, time
 import pytest
 
 try:
+    os.environ["LEVEL"] = "DEBUG"
     from pms.mqtt import SensorData
 except ModuleNotFoundError as e:
     print(__doc__)
