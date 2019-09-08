@@ -91,7 +91,7 @@ class SensorData(NamedTuple):
         if len(buffer) != msg_len:
             raise UserWarning(f"message length: {len(buffer)}")
 
-        msg = struct.unpack(f">{'H'*(msg_len//2)}", buffer)
+        msg = struct.unpack(f">{(msg_len//2)}H", buffer)
         checksum = sum(buffer[:-2])
         if msg[-1] != checksum:
             raise UserWarning(f"message checksum {msg[-1]:#x} != {checksum:#x}")
