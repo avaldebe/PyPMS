@@ -8,6 +8,7 @@
         "plantower",
         "pyserial",
         "pytest",
+        "rfind",
         "strftime"
     ],
     "cSpell.ignoreWords": [

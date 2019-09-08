@@ -79,12 +79,26 @@ class SensorData(NamedTuple):
             time = cls.now()
 
         logger.debug(f"buffer={buffer}")
+
+        msg_desc = {  # header: length
+            b"\x42\x4D\x00\x1c": 32,  # PMS1003, PMS5003, PMS7003, PMSA003
+            b"\x42\x4D\x00\x14": 24,  # PMS3003
+        }
+        for header, msg_len in msg_desc.items():
+            # well formatted message, nothing to do
+            if buffer.startswith(header) and len(buffer) == msg_len:
+                break
+
+            # search header on buffer
+            start = buffer.rfind(header, 0, len(header) - msg_len)
+            if start < 0:  # header not found or incomplete message
+                continue
+            buffer = buffer[start : start + msg_len]  # trim message
+            break
+
         try:
             header = buffer[:4]
-            msg_len = {
-                b"\x42\x4D\x00\x1c": 32,  # PMS1003, PMS5003, PMS7003, PMSA003
-                b"\x42\x4D\x00\x14": 24,  # PMS3003
-            }[header]
+            msg_len = msg_desc[header]
         except KeyError as e:
             raise UserWarning(f"message header: {header}") from e
 
