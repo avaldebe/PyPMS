@@ -8,7 +8,7 @@ Install locally before testing
 $ pip install -e .
 $ pytest test/
 """
-import os, time
+import os
 import pytest
 
 try:
@@ -19,34 +19,29 @@ except ModuleNotFoundError as e:
     raise
 
 
-def test_decode():
-    sec = 1567201793
-    location, measurement, value = "test", "pm10", 27
-    topic = f"homie/{location}/{measurement}/concentration"
-    payload = f"{value:.2f}"
+@pytest.mark.parametrize(
+    "location,measurement,value",
+    [("test", "pm01", 5), ("test", "pm25", 10), ("test", "pm10", 27)],
+)
+def test_decode(location, measurement, value, secs=1567201793):
+    assert SensorData(secs, location, measurement, value) == SensorData.decode(
+        f"homie/{location}/{measurement}/concentration", f"{value:.2f}", time=secs
+    )
 
-    assert SensorData.decode(topic, payload, time=sec) == SensorData(
-        sec, location, measurement, value
-    ), "decode: known good data"
 
+@pytest.mark.parametrize(
+    "topic,payload,error",
+    [
+        ("short/topic", "27.00", "topic total length: 2"),
+        ("too/long/topic/+/+/+", "27.00", "topic total length: 6"),
+        ("sneaky/system/topic/$+", "27.00", "system topic: sneaky/system/topic/$+"),
+        ("other/$system/topic/+", "27.00", "system topic: other/$system/topic/+"),
+        ("non/numeric/payload/+", "OK", "non numeric payload: OK"),
+        ("non/numeric/payload/+", "value27", "non numeric payload: value27"),
+        ("non/numeric/payload/+", "27,00", "non numeric payload: 27,00"),
+    ],
+)
+def test_decode_error(topic, payload, error, secs=1567201793):
     with pytest.raises(Exception) as e:
-        topic = "short/topic"
-        SensorData.decode(topic, payload, time=sec)
-    assert str(e.value) == "topic total length: 2"
-
-    with pytest.raises(Exception) as e:
-        topic = "too/long/topic/+/+/+"
-        SensorData.decode(topic, payload, time=sec)
-    assert str(e.value) == "topic total length: 6"
-
-    with pytest.raises(Exception) as e:
-        topic = "sneaky/system/topic/$online"
-        SensorData.decode(topic, payload, time=sec)
-    assert str(e.value) == f"system topic: {topic}"
-
-    with pytest.raises(Exception) as e:
-        topic = "non/numeric/payload/status"
-        payload = "ok"
-        SensorData.decode(topic, payload, time=sec)
-    assert str(e.value) == f"non numeric payload: {payload}"
-
+        SensorData.decode(topic, payload, time=secs)
+    assert str(e.value) == error
