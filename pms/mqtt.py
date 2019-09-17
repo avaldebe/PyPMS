@@ -53,34 +53,26 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-def client(
-    topic: str,
-    host: str,
-    port: int,
-    username: str,
-    password: str,
-    decode_msg_from_topic: Optional[Callable[[str, str], None]] = None,
-) -> mqtt.Client:
-
+def client_pub(
+    topic: str, host: str, port: int, username: str, password: str
+) -> Callable[[Dict[str, Union[int, str]]], None]:
     c = mqtt.Client(topic)
     c.enable_logger(logger)
     if username:
         c.username_pw_set(username, password)
 
-    if decode_msg_from_topic:
-        c.on_connect = lambda client, userdata, flags, rc: client.subscribe(topic)
-        c.on_message = lambda client, userdata, msg: decode_msg_from_topic(
-            msg.topic, msg.payload
-        )
-    else:
-        c.on_connect = lambda client, userdata, flags, rc: pub(
-            client, {f"{topic}/$online": "true"}
-        )
-        c.will_set(f"{topic}/$online", "false", 1, True)
-
+    c.on_connect = lambda client, userdata, flags, rc: client.publish(
+        f"{topic}/$online", "true", 1, True
+    )
+    c.will_set(f"{topic}/$online", "false", 1, True)
     c.connect(host, port, 60)
     c.loop_start()
-    return c
+
+    def pub(data: Dict[str, Union[int, str]]) -> None:
+        for k, v in data.items():
+            c.publish(f"{topic}/{k}", v, 1, True)
+
+    return pub
 
 
 class SensorData(NamedTuple):
@@ -127,28 +119,26 @@ def pub(client: mqtt.Client, data: Dict[str, Union[int, str]]) -> None:
         client.publish(k, v, 1, True)
 
 
-def main(interval: int, serial: str, topic: str, **kwargs) -> None:
-    c = client(topic, **kwargs)
+def main(interval: int, serial: str, **kwargs) -> None:
+    pub = client_pub(**kwargs)
 
     for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
         pub(
-            c,
             {
-                f"{topic}/{k}/$type": v,
-                f"{topic}/{k}/$properties": "sensor,unit,concentration",
-                f"{topic}/{k}/sensor": "PMx003",
-                f"{topic}/{k}/unit": "ug/m3",
-            },
+                f"{k}/$type": v,
+                f"{k}/$properties": "sensor,unit,concentration",
+                f"{k}/sensor": "PMx003",
+                f"{k}/unit": "ug/m3",
+            }
         )
 
     for pm in read(serial):
         pub(
-            c,
             {
-                f"{topic}/pm01/concentration": pm.pm01,
-                f"{topic}/pm25/concentration": pm.pm25,
-                f"{topic}/pm10/concentration": pm.pm10,
-            },
+                f"pm01/concentration": pm.pm01,
+                f"pm25/concentration": pm.pm25,
+                f"pm10/concentration": pm.pm10,
+            }
         )
 
         delay = interval - (time.time() - pm.time)
