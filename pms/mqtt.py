@@ -114,9 +114,32 @@ class SensorData(NamedTuple):
             return cls(time, location, measurement, value)
 
 
-def pub(client: mqtt.Client, data: Dict[str, Union[int, str]]) -> None:
-    for k, v in data.items():
-        client.publish(k, v, 1, True)
+def client_sub(
+    topic: str,
+    host: str,
+    port: int,
+    username: str,
+    password: str,
+    *,
+    on_sensordata: Callable[[SensorData], None],
+):
+    def on_message(client, userdata, msg):
+        try:
+            data = SensorData.decode(msg.topic, msg.payload)
+        except UserWarning as e:
+            logger.debug(e)
+        else:
+            on_sensordata(data)
+
+    c = mqtt.Client(topic)
+    c.enable_logger(logger)
+    if username:
+        c.username_pw_set(username, password)
+
+    c.on_connect = lambda client, userdata, flags, rc: client.subscribe(topic)
+    c.on_message = on_message
+    c.connect(host, port, 60)
+    c.loop_forever()
 
 
 def main(interval: int, serial: str, **kwargs) -> None:

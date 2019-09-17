@@ -37,7 +37,7 @@ Environment variables take precedence over command line options
 from typing import Dict, List, Optional, Union, Any
 from docopt import docopt
 from pms import logger
-from pms.mqtt import parse_args as mqtt_args, client as mqtt_client, SensorData
+from pms.mqtt import parse_args as mqtt_args, client_sub as mqtt_sub, SensorData
 from pms.influxdb import parse_args as db_args, client as db_client, pub as db_pub
 
 
@@ -56,22 +56,17 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def main(mqtt: Dict[str, Any], db: Dict[str, Any]) -> None:
-    client = db_client(**db)
+    db = db_client(**db)
 
-    def decode_msg_from_topic(topic: str, payload: str) -> None:
-        try:
-            data = SensorData.decode(topic, payload)
-        except UserWarning as e:
-            logger.debug(e)
-        else:
-            db_pub(
-                client,
-                time=data.time,
-                tags={"location": data.location},
-                data={data.measurement: data.value},
-            )
+    def on_sensordata(data: SensorData) -> None:
+        db_pub(
+            db,
+            time=data.time,
+            tags={"location": data.location},
+            data={data.measurement: data.value},
+        )
 
-    mqtt_client(decode_msg_from_topic=decode_msg_from_topic, **mqtt)
+    mqtt_sub(on_sensordata=on_sensordata, **mqtt)
 
 
 def cli(argv: Optional[List[str]] = None) -> None:
