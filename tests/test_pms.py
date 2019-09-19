@@ -65,9 +65,9 @@ def test_decode(hex, msg, secs=1567201793):
 @pytest.mark.parametrize(
     "hex,error",
     [
-        ("424d001c0005000d0016", "message length: 10"),
+        ("424d001c0005000d00bd", "message length: 10"),
         (
-            "424d00000005000d00160005000d001602fd00fc001d000f00060006970003c5",
+            "424d00000005000d00160005000d001602fd00fc001d000f00060006970003a9",
             r"message header: b'BM\x00\x00'",
         ),
         (
