@@ -17,6 +17,48 @@ logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
 
 
+class SensorMessage(NamedTuple):
+    header: bytes
+    payload: bytes
+    checksum: int
+    length: int
+
+    @classmethod
+    def _decode(cls, message: bytes) -> "SensorMessage":
+        header, payload, checksum = message[:4], message[4:-2], message[-2:]
+        return cls(header, payload, cls._unpack(checksum)[0], len(message))
+
+    @classmethod
+    def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
+        if message[:4] == header and len(message) == length:
+            return cls._decode(message)
+
+        # search last complete message on buffer
+        start = message.rfind(header, 0, 4 - length)
+        if start >= 0:  # found complete message
+            logger.debug(f"message full: {message.hex()}")
+            message = message[start : start + length]  # last complete message
+            logger.debug(f"message trim: {message.hex()}")
+            return cls._decode(message)
+
+        # No match found
+        return cls._decode(message)
+
+    @staticmethod
+    def _unpack(message: bytes) -> Tuple[int, ...]:
+        return struct.unpack(f">{len(message)//2}H", message)
+
+    def _checksum(self) -> int:
+        return sum(self.header) + sum(self.payload)
+
+    def __bool__(self) -> bool:
+        return self.checksum == self._checksum()
+
+    @property
+    def data(self) -> Tuple[int, ...]:
+        return self._unpack(self.payload)
+
+
 class SensorData(NamedTuple):
     """PMSx003 observations
     
@@ -78,39 +120,30 @@ class SensorData(NamedTuple):
         if not time:
             time = cls.now()
 
-        header = buffer[:4]
         msg_desc = {  # header: length
             b"\x42\x4D\x00\x1c": 32,  # PMS1003, PMS5003, PMS7003, PMSA003
             b"\x42\x4D\x00\x14": 24,  # PMS3003
         }
-        if header not in msg_desc or msg_desc[header] < len(buffer):
-            logger.debug(f"message raw: {buffer.hex()}")
-            for header, msg_len in msg_desc.items():
-                # search last complete message on buffer
-                start = buffer.rfind(header, 0, 4 - msg_len)
-                if start >= 0:  # found complete message
-                    buffer = buffer[start : start + msg_len]  # last complete message
-                    logger.debug(f"message hex: {buffer.hex()}")
-                    break
+        for header, length in msg_desc.items():
+            msg = SensorMessage.decode(buffer, header, length)
+            if msg:
+                break
 
         try:
-            header = buffer[:4]
-            msg_len = msg_desc[header]
+            length = msg_desc[msg.header]
         except KeyError as e:
-            raise UserWarning(f"message header: {header}") from e
+            raise UserWarning(f"message header: {msg.header}")
 
-        if len(buffer) != msg_len:
-            raise UserWarning(f"message length: {len(buffer)}")
+        if msg.length != length:
+            raise UserWarning(f"message length: {msg.length}")
 
-        msg = struct.unpack(f">{(msg_len//2)}H", buffer)
-        checksum = sum(buffer[:-2])
-        if msg[-1] != checksum:
-            raise UserWarning(f"message checksum {msg[-1]} != {checksum}")
+        if not msg:
+            raise UserWarning(f"message checksum {msg.checksum} != {msg._checksum()}")
 
-        if msg_len == 32:
-            return cls(time, *msg[5:14])
+        if msg.length == 32:
+            return cls(time, *msg.data[3:12])
         else:
-            return cls(time, *msg[5:8])
+            return cls(time, *msg.data[3:6])
 
 
 def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
