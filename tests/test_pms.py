@@ -48,13 +48,15 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
 @pytest.mark.parametrize(
     "hex,msg",
     [
-        (  # known good data
+        pytest.param(
             "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 765, 252, 29, 15, 6, 6),
+            id="known good data",
         ),
-        (  # known good data, at the end of the buffer
+        pytest.param(
             "02fd00fc001d000f00060006970003c5424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 765, 252, 29, 15, 6, 6),
+            id="good data at the end of the buffer",
         ),
     ],
 )
@@ -65,18 +67,21 @@ def test_decode(hex, msg, secs=1567201793, sensor=SensorType.PMSx003):
 @pytest.mark.parametrize(
     "hex,error",
     [
-        ("424d001c0005000d00bd", "message length: 10"),
-        (
+        pytest.param("424d001c0005000d00bd", "message length: 10", id="short message"),
+        pytest.param(
             "424d00000005000d00160005000d001602fd00fc001d000f00060006970003a9",
             r"message header: b'BM\x00\x00'",
+            id="wrong header",
         ),
-        (
+        pytest.param(
             "424d001c0005000d00160005000d001602fd00fc001d000f0006000697000000",
             "message checksum 0 != 965",
+            id="wrong checksum",
         ),
-        (
+        pytest.param(
             "424d001c000000000000000000000000000000000000000000000000000000ab",
             "message empty: warming up sensor",
+            id="empty message",
         ),
     ],
 )
