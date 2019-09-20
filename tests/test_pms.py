@@ -74,6 +74,10 @@ def test_decode(hex, msg, secs=1567201793, sensor=SensorType.PMSx003):
             "424d001c0005000d00160005000d001602fd00fc001d000f0006000697000000",
             "message checksum 0 != 965",
         ),
+        (
+            "424d001c000000000000000000000000000000000000000000000000000000ab",
+            "message empty: warming up sensor",
+        ),
     ],
 )
 def test_decode_error(hex, error, secs=1567201793, sensor=SensorType.PMSx003):

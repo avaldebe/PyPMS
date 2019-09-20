@@ -30,7 +30,7 @@ class SensorMessage(NamedTuple):
         msg = cls(header, payload, cls._unpack(checksum)[0], len(message))
         if not msg:
             raise UserWarning(f"message checksum {msg.checksum} != {msg._checksum()}")
-        if msg.payload == b"\x00" * len(msg.payload):
+        if sum(msg.payload) == 0:
             raise UserWarning(f"message empty: warming up sensor")
         return msg
 
