@@ -48,12 +48,11 @@ class SensorMessage(NamedTuple):
             return cls._decode(message)
 
         # No match found
-        msg = cls._decode(message)
-        if msg.header != header:
-            raise UserWarning(f"message header: {msg.header}")
-        if msg.length != length:
-            raise UserWarning(f"message length: {msg.length}")
-        return msg
+        if message[:4] != header:
+            raise UserWarning(f"message header: {message[:4]}")
+        if len(message) != length:
+            raise UserWarning(f"message length: {len(message)}")
+        return cls._decode(message)
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:

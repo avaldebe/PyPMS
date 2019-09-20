@@ -60,6 +60,18 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
             (5, 13, 22, 765, 252, 29, 15, 6, 6),
             id="good data at the end of the buffer",
         ),
+        pytest.param(
+            SensorType.PMS3003,
+            "424d00140051006A007700350046004F33D20F28003F041A",
+            (53, 70, 79),
+            id="known good data",
+        ),
+        pytest.param(
+            SensorType.PMS3003,
+            "33D20F28003F041A424d00140051006A007700350046004F33D20F28003F041A",
+            (53, 70, 79),
+            id="good data at the end of the buffer",
+        ),
     ],
 )
 def test_decode(sensor, hex, msg, secs=1567201793):
@@ -71,7 +83,7 @@ def test_decode(sensor, hex, msg, secs=1567201793):
     [
         pytest.param(
             SensorType.PMSx003,
-            "424d001c0005000d00bd",
+            "424d001c0005000d0016",
             "message length: 10",
             id="short message",
         ),
@@ -90,6 +102,30 @@ def test_decode(sensor, hex, msg, secs=1567201793):
         pytest.param(
             SensorType.PMSx003,
             "424d001c000000000000000000000000000000000000000000000000000000ab",
+            "message empty: warming up sensor",
+            id="empty message",
+        ),
+        pytest.param(
+            SensorType.PMS3003,
+            "424d00140051006A0077",
+            "message length: 10",
+            id="short message",
+        ),
+        pytest.param(
+            SensorType.PMS3003,
+            "424d00000051006A007700350046004F33D20F28003F0406",
+            r"message header: b'BM\x00\x00'",
+            id="wrong header",
+        ),
+        pytest.param(
+            SensorType.PMS3003,
+            "424d00140051006A007700350046004F33D20F28003F0000",
+            "message checksum 0 != 1050",
+            id="wrong checksum",
+        ),
+        pytest.param(
+            SensorType.PMS3003,
+            "424d001400000000000000000000000000000000000000a3",
             "message empty: warming up sensor",
             id="empty message",
         ),
