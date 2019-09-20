@@ -149,6 +149,10 @@ class SensorType(Enum):
     def has_number_concentration(self) -> bool:
         return self == self.__class__.PMSx003
 
+    @property
+    def accept_commands(self) -> bool:
+        return self != self.__class__.PMS3003
+
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> SensorData:
         """Decode a PMSx003/PMS3003 message"""
         if not time:
@@ -164,7 +168,16 @@ class SensorType(Enum):
 
 
 class PMSerial:
-    """Read PMSx003 messages from serial port"""
+    """Read PMSx003 messages from serial port
+    
+    The sensor is woken up after opening the serial port,
+    and put to sleep when before closing the port.
+    While the serial port is open, the sensor is read in passive mode.
+
+    PMS3003 sensors do not accept serial commands, such as wake/sleep
+    or passive mode read. Valid messages are extracted from the serail buffer.
+    Support for this sensor is experimental.
+    """
 
     def __init__(self, port: str = "/dev/ttyUSB0") -> None:
         """Configure serial port"""
@@ -174,21 +187,24 @@ class PMSerial:
         self.sensor = SensorType.Default  # updated later
 
     def _cmd(self, command: str) -> bytes:
-        """PMSx003 commands (except PMS3003)"""
-
-        cmd, length = dict(
-            passive_mode=(b"\x42\x4D\xE1\x00\x00\x01\x70", 8),
-            passive_read=(b"\x42\x4D\xE2\x00\x00\x01\x71", self.sensor.length),
-            active_mode=(b"\x42\x4D\xE1\x00\x01\x01\x71", 8),
-            sleep=(b"\x42\x4D\xE4\x00\x00\x01\x73", 8),
-            wake=(b"\x42\x4D\xE4\x00\x01\x01\x74", 8),
-        )[command]
+        """PMSx003 serial commands (except PMS3003)"""
 
         # send command
-        self.serial.write(cmd)
-        self.serial.flush()
+        if self.sensor.accept_commands:
+            cmd = dict(
+                passive_mode=b"\x42\x4D\xE1\x00\x00\x01\x70",
+                passive_read=b"\x42\x4D\xE2\x00\x00\x01\x71",
+                active_mode=b"\x42\x4D\xE1\x00\x01\x01\x71",
+                sleep=b"\x42\x4D\xE4\x00\x00\x01\x73",
+                wake=b"\x42\x4D\xE4\x00\x01\x01\x74",
+            )[command]
+            self.serial.write(cmd)
+            self.serial.flush()
+        elif command.endswith("read"):
+            self.serial.reset_input_buffer()
 
         # wait for answer
+        length = self.sensor.length if command.endswith("read") else 8
         while self.serial.in_waiting < length:
             continue
 
@@ -222,10 +238,7 @@ class PMSerial:
         self.serial.close()
 
     def __call__(self, interval: int = 0) -> Generator[SensorData, None, None]:
-        """Passive mode reading.
-        
-        Active mode (sleep/wake) is not supported.
-        """
+        """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             # passive mode read
             buffer = self._cmd("passive_read")
