@@ -46,46 +46,56 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
 
 
 @pytest.mark.parametrize(
-    "hex,msg",
+    "sensor,hex,msg",
     [
         pytest.param(
+            SensorType.PMSx003,
             "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 765, 252, 29, 15, 6, 6),
             id="known good data",
         ),
         pytest.param(
+            SensorType.PMSx003,
             "02fd00fc001d000f00060006970003c5424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 765, 252, 29, 15, 6, 6),
             id="good data at the end of the buffer",
         ),
     ],
 )
-def test_decode(hex, msg, secs=1567201793, sensor=SensorType.PMSx003):
+def test_decode(sensor, hex, msg, secs=1567201793):
     assert sensor.decode(bytes.fromhex(hex), time=secs) == SensorData(secs, *msg)
 
 
 @pytest.mark.parametrize(
-    "hex,error",
+    "sensor,hex,error",
     [
-        pytest.param("424d001c0005000d00bd", "message length: 10", id="short message"),
         pytest.param(
+            SensorType.PMSx003,
+            "424d001c0005000d00bd",
+            "message length: 10",
+            id="short message",
+        ),
+        pytest.param(
+            SensorType.PMSx003,
             "424d00000005000d00160005000d001602fd00fc001d000f00060006970003a9",
             r"message header: b'BM\x00\x00'",
             id="wrong header",
         ),
         pytest.param(
+            SensorType.PMSx003,
             "424d001c0005000d00160005000d001602fd00fc001d000f0006000697000000",
             "message checksum 0 != 965",
             id="wrong checksum",
         ),
         pytest.param(
+            SensorType.PMSx003,
             "424d001c000000000000000000000000000000000000000000000000000000ab",
             "message empty: warming up sensor",
             id="empty message",
         ),
     ],
 )
-def test_decode_error(hex, error, secs=1567201793, sensor=SensorType.PMSx003):
+def test_decode_error(sensor, hex, error, secs=1567201793):
     with pytest.raises(Exception) as e:
         sensor.decode(bytes.fromhex(hex), time=secs)
     assert str(e.value) == error
