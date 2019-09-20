@@ -30,12 +30,11 @@ Environment variables take precedence over command line options
 """
 
 import os
-import time
 from typing import Dict, List, Optional, Union, Any
 import json
 from docopt import docopt
 from influxdb import InfluxDBClient
-from pms import read
+from pms import PMSerial
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -77,17 +76,14 @@ def pub(
 def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
     c = client(**kwargs)
 
-    for pm in read(serial):
-        pub(
-            c,
-            time=pm.time,
-            tags=tags,
-            data={"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
-        )
-
-        delay = interval - (time.time() - pm.time)
-        if delay > 0:
-            time.sleep(delay)
+    with PMSerial(serial) as read:
+        for pm in read(interval):
+            pub(
+                c,
+                time=pm.time,
+                tags=tags,
+                data={"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
+            )
 
 
 def cli(argv: Optional[List[str]] = None) -> None:

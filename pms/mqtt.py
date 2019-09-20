@@ -33,11 +33,10 @@ https://homieiot.github.io/specification/spec-core-v2_0_0/
 
 import os
 from datetime import datetime
-import time
 from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
 import paho.mqtt.client as mqtt
 from docopt import docopt
-from pms import read, logger
+from pms import PMSerial, logger
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -155,18 +154,15 @@ def main(interval: int, serial: str, **kwargs) -> None:
             }
         )
 
-    for pm in read(serial):
-        pub(
-            {
-                f"pm01/concentration": pm.pm01,
-                f"pm25/concentration": pm.pm25,
-                f"pm10/concentration": pm.pm10,
-            }
-        )
-
-        delay = interval - (time.time() - pm.time)
-        if delay > 0:
-            time.sleep(delay)
+    with PMSerial(serial) as read:
+        for pm in read(interval):
+            pub(
+                {
+                    f"pm01/concentration": pm.pm01,
+                    f"pm25/concentration": pm.pm25,
+                    f"pm10/concentration": pm.pm10,
+                }
+            )
 
 
 def cli(argv: Optional[List[str]] = None) -> None:

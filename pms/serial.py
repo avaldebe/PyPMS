@@ -18,10 +18,9 @@ Environment variables take precedence over command line options
 """
 
 import os
-import time
 from typing import Dict, List, Union, Any, Optional
 from docopt import docopt
-from pms import read
+from pms import PMSerial
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -33,12 +32,9 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def main(interval: int, serial: str, format: bool) -> None:
-    for pm in read(serial):
-        print(f"{pm:{format}}")
-
-        delay = interval - (time.time() - pm.time)
-        if delay > 0:
-            time.sleep(delay)
+    with PMSerial(serial) as read:
+        for pm in read(interval):
+            print(f"{pm:{format}}")
 
 
 def cli(argv: Optional[List[str]] = None) -> None:

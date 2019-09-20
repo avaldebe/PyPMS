@@ -8,9 +8,9 @@ NOTE:
 - Should work on a PMS3003 sensor, but has not been tested.
 """
 
-import struct, logging, os
+import struct, logging, os, time
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple, Generator
+from typing import NamedTuple, Optional, Tuple, Callable, Generator
 from serial import Serial
 
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
@@ -146,31 +146,55 @@ class SensorData(NamedTuple):
             return cls(time, *msg.data[3:6])
 
 
-def read(port: str = "/dev/ttyUSB0") -> Generator[SensorData, None, None]:
-    """Read PMSx003 messages from serial port
-    
-    Passive mode reading. Active mode (sleep/wake) is not supported.
-    """
-    with Serial(port, timeout=0) as ser:  # 9600 8N1 by default
-        ser.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
-        ser.flush()
-        ser.reset_input_buffer()
-        while ser.in_waiting < 8:
+class PMSerial:
+    """Read PMSx003 messages from serial port"""
+
+    def __init__(self, port: str = "/dev/ttyUSB0"):
+        """Configure serial port"""
+        self.serial = Serial()
+        self.serial.port = port
+        self.serial.timeout = 0
+
+    def __enter__(self) -> Callable[[int], Generator[SensorData, None, None]]:
+        """Open serial port"""
+        if not self.serial.is_open:
+            self.serial.open()
+        self.serial.write(b"\x42\x4D\xE1\x00\x00\x01\x70")  # set passive mode
+        self.serial.flush()
+        self.serial.reset_input_buffer()
+        while self.serial.in_waiting < 8:
             continue
-        if ser.read(8) == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
+        if self.serial.read(8) == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             logger.debug(f"Assume PMS1003|PMS5003|PMS7003|PMSA003")
-            msg_len = 32
+            self.msg_len = 32
         else:
             logger.debug(f"Assume PMS3003")
-            msg_len = 24
+            self.msg_len = 24
+        return self
 
-        while ser.is_open:
-            ser.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
-            ser.flush()
-            while ser.in_waiting < msg_len:
+    def __exit__(self, exception_type, exception_value, traceback):
+        """Close serial port"""
+        self.serial.close()
+
+    def __call__(self, interval: int = 0) -> Generator[SensorData, None, None]:
+        """Passive mode reading.
+        
+        Active mode (sleep/wake) is not supported.
+        """
+        while self.serial.is_open:
+            self.serial.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
+            self.serial.flush()
+            while self.serial.in_waiting < self.msg_len:
                 continue
+            buffer = self.serial.read(self.serial.in_waiting)
+
             try:
-                yield SensorData.decode(ser.read(ser.in_waiting))
+                obs = SensorData.decode(buffer)
             except UserWarning as e:
-                ser.reset_input_buffer()
+                self.serial.reset_input_buffer()
                 logger.debug(e)
+            else:
+                yield obs
+                delay = interval - (time.time() - obs.time)
+                if delay > 0:
+                    time.sleep(delay)
