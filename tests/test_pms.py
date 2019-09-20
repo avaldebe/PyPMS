@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms import SensorData
+    from pms import SensorData, SensorType
 except ModuleNotFoundError as e:
     print(__doc__)
     raise
@@ -58,8 +58,8 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
         ),
     ],
 )
-def test_decode(hex, msg, secs=1567201793):
-    assert SensorData.decode(bytes.fromhex(hex), time=secs) == SensorData(secs, *msg)
+def test_decode(hex, msg, secs=1567201793, sensor=SensorType.PMSx003):
+    assert sensor.decode(bytes.fromhex(hex), time=secs) == SensorData(secs, *msg)
 
 
 @pytest.mark.parametrize(
@@ -76,7 +76,7 @@ def test_decode(hex, msg, secs=1567201793):
         ),
     ],
 )
-def test_decode_error(hex, error, secs=1567201793):
+def test_decode_error(hex, error, secs=1567201793, sensor=SensorType.PMSx003):
     with pytest.raises(Exception) as e:
-        SensorData.decode(bytes.fromhex(hex), time=secs)
+        sensor.decode(bytes.fromhex(hex), time=secs)
     assert str(e.value) == error

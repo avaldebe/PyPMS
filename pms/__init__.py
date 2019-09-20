@@ -10,6 +10,7 @@ NOTE:
 
 import struct, logging, os, time
 from datetime import datetime
+from enum import Enum
 from typing import NamedTuple, Optional, Tuple, Callable, Generator
 from serial import Serial
 
@@ -26,23 +27,31 @@ class SensorMessage(NamedTuple):
     @classmethod
     def _decode(cls, message: bytes) -> "SensorMessage":
         header, payload, checksum = message[:4], message[4:-2], message[-2:]
-        return cls(header, payload, cls._unpack(checksum)[0], len(message))
+        msg = cls(header, payload, cls._unpack(checksum)[0], len(message))
+        if not msg:
+            raise UserWarning(f"message checksum {msg.checksum} != {msg._checksum()}")
+        return msg
 
     @classmethod
     def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
+        logger.debug(f"message full: {message.hex()}")
         if message[:4] == header and len(message) == length:
             return cls._decode(message)
 
         # search last complete message on buffer
         start = message.rfind(header, 0, 4 - length)
         if start >= 0:  # found complete message
-            logger.debug(f"message full: {message.hex()}")
             message = message[start : start + length]  # last complete message
             logger.debug(f"message trim: {message.hex()}")
             return cls._decode(message)
 
         # No match found
-        return cls._decode(message)
+        msg = cls._decode(message)
+        if msg.header != header:
+            raise UserWarning(f"message header: {msg.header}")
+        if msg.length != length:
+            raise UserWarning(f"message length: {msg.length}")
+        return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
@@ -100,7 +109,8 @@ class SensorData(NamedTuple):
             return f.format(*tuple(f"{x:{d}}" if x is not None else "" for x in self))
         else:
             raise ValueError(
-                f"Unknown format code '{spec}' for object of type '{__name__}.SensorData'"
+                f"Unknown format code '{spec}' "
+                f"for object of type '{__name__}.{self.__class__.__name__}'"
             )
 
     def __str__(self):
@@ -111,39 +121,46 @@ class SensorData(NamedTuple):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    @classmethod
-    def decode(cls, buffer: bytes, *, time: Optional[int] = None) -> "SensorData":
-        """Decode a PMSx003 message (24b or 32b long)
-        
-        PMS3003 messages are 24b long. All other PMSx003 messages are 32b long
+
+class SensorType(Enum):
+    """Supported PM sensors
+    """
+    class MessageSignature(NamedTuple):
         """
+        PMS3003 messages are 24b long.
+        All other PMSx003 messages are 32b long
+        """
+        header: bytes
+        length: int
+
+    PMSx003 = MessageSignature(b"\x42\x4D\x00\x1c", 32)
+    PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
+    PMS3003 = MessageSignature(b"\x42\x4D\x00\x14", 24)
+
+    @property
+    def header(self) -> bytes:
+        return self.value.header
+
+    @property
+    def length(self) -> int:
+        return self.value.length
+
+    @property
+    def has_number_concentration(self) -> bool:
+        return self == self.__class__.PMSx003
+
+    def decode(self, buffer: bytes, *, time: Optional[int] = None) -> SensorData:
+        """Decode a PMSx003/PMS3003 message"""
         if not time:
-            time = cls.now()
+            time = SensorData.now()
 
-        msg_desc = {  # header: length
-            b"\x42\x4D\x00\x1c": 32,  # PMS1003, PMS5003, PMS7003, PMSA003
-            b"\x42\x4D\x00\x14": 24,  # PMS3003
-        }
-        for header, length in msg_desc.items():
-            msg = SensorMessage.decode(buffer, header, length)
-            if msg:
-                break
+        msg = SensorMessage.decode(buffer, self.header, self.length)
+        logger.debug(f"message data: {msg.data}")
 
-        try:
-            length = msg_desc[msg.header]
-        except KeyError as e:
-            raise UserWarning(f"message header: {msg.header}")
-
-        if msg.length != length:
-            raise UserWarning(f"message length: {msg.length}")
-
-        if not msg:
-            raise UserWarning(f"message checksum {msg.checksum} != {msg._checksum()}")
-
-        if msg.length == 32:
-            return cls(time, *msg.data[3:12])
+        if self.has_number_concentration:
+            return SensorData(time, *msg.data[3:12])
         else:
-            return cls(time, *msg.data[3:6])
+            return SensorData(time, *msg.data[3:6])
 
 
 class PMSerial:
@@ -166,10 +183,10 @@ class PMSerial:
             continue
         if self.serial.read(8) == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             logger.debug(f"Assume PMS1003|PMS5003|PMS7003|PMSA003")
-            self.msg_len = 32
+            self.sensor = SensorType.PMSx003
         else:
             logger.debug(f"Assume PMS3003")
-            self.msg_len = 24
+            self.sensor = SensorType.PMS3003
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
@@ -184,12 +201,12 @@ class PMSerial:
         while self.serial.is_open:
             self.serial.write(b"\x42\x4D\xE2\x00\x00\x01\x71")  # passive mode read
             self.serial.flush()
-            while self.serial.in_waiting < self.msg_len:
+            while self.serial.in_waiting < self.sensor.length:
                 continue
             buffer = self.serial.read(self.serial.in_waiting)
 
             try:
-                obs = SensorData.decode(buffer)
+                obs = self.sensor.decode(buffer)
             except UserWarning as e:
                 self.serial.reset_input_buffer()
                 logger.debug(e)
