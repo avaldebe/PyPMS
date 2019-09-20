@@ -21,15 +21,15 @@ logger = logging.getLogger(__name__)
 class SensorMessage(NamedTuple):
     header: bytes
     payload: bytes
-    checksum: int
-    length: int
+    checksum: bytes
 
     @classmethod
-    def _decode(cls, message: bytes) -> "SensorMessage":
-        header, payload, checksum = message[:4], message[4:-2], message[-2:]
-        msg = cls(header, payload, cls._unpack(checksum)[0], len(message))
-        if not msg:
-            raise UserWarning(f"message checksum {msg.checksum} != {msg._checksum()}")
+    def _validate(cls, message: bytes) -> "SensorMessage":
+        msg = cls(message[:4], message[4:-2], message[-2:])
+        checksum, = cls._unpack(msg.checksum)
+        checksum_ = sum(msg.header) + sum(msg.payload)
+        if checksum != checksum_:
+            raise UserWarning(f"message checksum {checksum} != {checksum_}")
         if sum(msg.payload) == 0:
             raise UserWarning(f"message empty: warming up sensor")
         return msg
@@ -38,31 +38,25 @@ class SensorMessage(NamedTuple):
     def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
         logger.debug(f"message full: {message.hex()}")
         if message[:4] == header and len(message) == length:
-            return cls._decode(message)
+            return cls._validate(message)
 
         # search last complete message on buffer
         start = message.rfind(header, 0, 4 - length)
         if start >= 0:  # found complete message
             message = message[start : start + length]  # last complete message
             logger.debug(f"message trim: {message.hex()}")
-            return cls._decode(message)
+            return cls._validate(message)
 
         # No match found
         if message[:4] != header:
             raise UserWarning(f"message header: {message[:4]}")
         if len(message) != length:
             raise UserWarning(f"message length: {len(message)}")
-        return cls._decode(message)
+        return cls._validate(message)
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
         return struct.unpack(f">{len(message)//2}H", message)
-
-    def _checksum(self) -> int:
-        return sum(self.header) + sum(self.payload)
-
-    def __bool__(self) -> bool:
-        return self.checksum == self._checksum()
 
     @property
     def data(self) -> Tuple[int, ...]:
@@ -107,7 +101,7 @@ class SensorData(NamedTuple):
             d = spec.replace("num", "d")
             f = f"{self.timestamp()}: N0.3 {{4}}, N0.5 {{5}}, N1.0 {{6}}, N2.5 {{7}}, N5.0 {{8}}, N10 {{9}} #/100cc"
         if d and f:
-            return f.format(*tuple(f"{x:{d}}" if x is not None else "" for x in self))
+            return f.format(*(f"{x:{d}}" if x is not None else "" for x in self))
         else:
             raise ValueError(
                 f"Unknown format code '{spec}' "
@@ -161,9 +155,11 @@ class SensorType(Enum):
         logger.debug(f"message data: {msg.data}")
 
         if self.has_number_concentration:
-            return SensorData(time, *msg.data[3:12])
+            data = msg.data[3:12]  # 9 records: 3 pm, 6 num
         else:
-            return SensorData(time, *msg.data[3:6])
+            data = msg.data[3:6]  # 3 records: 3 pm
+
+        return SensorData(time, *data)
 
 
 class PMSerial:
