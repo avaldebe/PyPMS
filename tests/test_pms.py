@@ -147,7 +147,7 @@ def test_decode_error(sensor, hex, error, secs=1567201793):
             id="wrong header length",
         ),
         pytest.param(
-            SensorType.PMSx003.header*2,
+            SensorType.PMSx003.header * 2,
             SensorType.PMSx003.length,
             "wrong header length 8",
             id="wrong header length",
