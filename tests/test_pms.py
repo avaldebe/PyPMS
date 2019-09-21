@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms import SensorData, SensorType
+    from pms import SensorData, SensorType, SensorMessage
 except ModuleNotFoundError as e:
     print(__doc__)
     raise
@@ -134,4 +134,58 @@ def test_decode(sensor, hex, msg, secs=1567201793):
 def test_decode_error(sensor, hex, error, secs=1567201793):
     with pytest.raises(Exception) as e:
         sensor.decode(bytes.fromhex(hex), time=secs)
+    assert str(e.value) == error
+
+
+@pytest.mark.parametrize(
+    "header,length,error",
+    [
+        pytest.param(
+            SensorType.PMSx003.header[:3],
+            SensorType.PMSx003.length,
+            "wrong header length 3",
+            id="wrong header length",
+        ),
+        pytest.param(
+            SensorType.PMSx003.header*2,
+            SensorType.PMSx003.length,
+            "wrong header length 8",
+            id="wrong header length",
+        ),
+        pytest.param(
+            b"BN\x00\x1c",
+            SensorType.PMSx003.length,
+            r"wrong header start b'BN\x00\x1c'",
+            id="wrong header start",
+        ),
+        pytest.param(
+            b"\x00\x1c\x00\x1c",
+            SensorType.PMSx003.length,
+            r"wrong header start b'\x00\x1c\x00\x1c'",
+            id="wrong header start",
+        ),
+        pytest.param(
+            SensorType.PMSx003.header,
+            SensorType.PMS3003.length,
+            "wrong payload length 24",
+            id="wrong payload length",
+        ),
+        pytest.param(
+            SensorType.PMS3003.header,
+            SensorType.PMSx003.length,
+            "wrong payload length 32",
+            id="wrong payload length",
+        ),
+    ],
+)
+def test_validate_error(
+    header,
+    length,
+    error,
+    message=bytes.fromhex(
+        "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5"
+    ),
+):
+    with pytest.raises(Exception) as e:
+        SensorMessage._validate(message, header, length)
     assert str(e.value) == error

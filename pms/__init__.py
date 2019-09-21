@@ -24,8 +24,19 @@ class SensorMessage(NamedTuple):
     checksum: bytes
 
     @classmethod
-    def _validate(cls, message: bytes) -> "SensorMessage":
+    def _validate(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
+        # consistency check: bug in message singnature
+        assert len(header) == 4, f"wrong header length {len(header)}"
+        assert header[:2] == b"BM", f"wrong header start {header}"
+        len_payload, = cls._unpack(header[-2:])
+        assert length == len(header) + len_payload, f"wrong payload length {length}"
+
+        # validate message: recoverable errors (throw away observation)
         msg = cls(message[:4], message[4:-2], message[-2:])
+        if msg.header != header:
+            raise UserWarning(f"message header: {msg.header}")
+        if len(message) != length:
+            raise UserWarning(f"message length: {len(message)}")
         checksum, = cls._unpack(msg.checksum)
         checksum_ = sum(msg.header) + sum(msg.payload)
         if checksum != checksum_:
@@ -36,23 +47,17 @@ class SensorMessage(NamedTuple):
 
     @classmethod
     def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
-        logger.debug(f"message full: {message.hex()}")
-        if message[:4] == header and len(message) == length:
-            return cls._validate(message)
-
-        # search last complete message on buffer
-        start = message.rfind(header, 0, 4 - length)
-        if start >= 0:  # found complete message
+        try:
+            logger.debug(f"message full: {message.hex()}")
+            return cls._validate(message, header, length)
+        except UserWarning as e:
+            # search last complete message on buffer
+            start = message.rfind(header, 0, 4 - length)
+            if start < 0:  # No match found
+                raise
             message = message[start : start + length]  # last complete message
             logger.debug(f"message trim: {message.hex()}")
-            return cls._validate(message)
-
-        # No match found
-        if message[:4] != header:
-            raise UserWarning(f"message header: {message[:4]}")
-        if len(message) != length:
-            raise UserWarning(f"message length: {len(message)}")
-        return cls._validate(message)
+            return cls._validate(message, header, length)
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
