@@ -17,6 +17,23 @@ from serial import Serial
 logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)
 
+class SensorWarning(UserWarning):
+    """Recoverable errors"""
+    pass
+
+class WrongMessageFormat(SensorWarning):
+    """Wrongly formattted message: throw away observation"""
+    pass
+
+class WrongMessageChecksum(SensorWarning):
+    """Failed message checksum: throw away observation"""
+    pass
+
+
+class SensorWarmingUp(SensorWarning):
+    """Empty message: throw away observation and wait until sensor warms up"""
+    pass
+
 
 class SensorMessage(NamedTuple):
     header: bytes
@@ -34,15 +51,15 @@ class SensorMessage(NamedTuple):
         # validate message: recoverable errors (throw away observation)
         msg = cls(message[:4], message[4:-2], message[-2:])
         if msg.header != header:
-            raise UserWarning(f"message header: {msg.header}")
+            raise WrongMessageFormat(f"message header: {msg.header}")
         if len(message) != length:
-            raise UserWarning(f"message length: {len(message)}")
+            raise WrongMessageFormat(f"message length: {len(message)}")
         checksum, = cls._unpack(msg.checksum)
         checksum_ = sum(msg.header) + sum(msg.payload)
         if checksum != checksum_:
-            raise UserWarning(f"message checksum {checksum} != {checksum_}")
+            raise WrongMessageChecksum(f"message checksum {checksum} != {checksum_}")
         if sum(msg.payload) == 0:
-            raise UserWarning(f"message empty: warming up sensor")
+            raise SensorWarmingUp(f"message empty: warming up sensor")
         return msg
 
     @classmethod
@@ -50,7 +67,7 @@ class SensorMessage(NamedTuple):
         try:
             logger.debug(f"message full: {message.hex()}")
             return cls._validate(message, header, length)
-        except UserWarning as e:
+        except WrongMessageFormat as e:
             # search last complete message on buffer
             start = message.rfind(header, 0, 4 - length)
             if start < 0:  # No match found
@@ -245,12 +262,12 @@ class PMSerial:
 
             try:
                 obs = self.sensor.decode(buffer)
-            except UserWarning as e:
+            except SensorWarmingUp as e:
                 logger.debug(e)
-                if str(e).endswith("warming up sensor"):
-                    time.sleep(1)
-                else:
-                    self.serial.reset_input_buffer()
+                time.sleep(1)
+            except SensorWarning as e:
+                logger.debug(e)
+                self.serial.reset_input_buffer()
             else:
                 yield obs
                 delay = interval - (time.time() - obs.time)

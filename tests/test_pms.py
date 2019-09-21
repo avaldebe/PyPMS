@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms import SensorData, SensorType, SensorMessage
+    from pms import SensorData, SensorType, SensorMessage, SensorWarning
 except ModuleNotFoundError as e:
     print(__doc__)
     raise
@@ -132,7 +132,7 @@ def test_decode(sensor, hex, msg, secs=1567201793):
     ],
 )
 def test_decode_error(sensor, hex, error, secs=1567201793):
-    with pytest.raises(Exception) as e:
+    with pytest.raises(SensorWarning) as e:
         sensor.decode(bytes.fromhex(hex), time=secs)
     assert str(e.value) == error
 
@@ -186,6 +186,6 @@ def test_validate_error(
         "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5"
     ),
 ):
-    with pytest.raises(Exception) as e:
+    with pytest.raises(AssertionError) as e:
         SensorMessage._validate(message, header, length)
     assert str(e.value) == error
