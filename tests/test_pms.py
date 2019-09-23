@@ -20,9 +20,23 @@ except ModuleNotFoundError as e:
 
 
 @pytest.mark.parametrize(
-    "fmt", ["csv", "4csv", "04csv", "pm", "4pm", "04pm", "num", "4num", "04num"]
+    "fmt",
+    [
+        "csv",
+        "4csv",
+        "04csv",
+        "pm",
+        "4pm",
+        "04pm",
+        "num",
+        "4num",
+        "04num",
+        "cf",
+        ".2cf",
+        "4.2cf",
+    ],
 )
-def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
+def test_format(fmt, raw=tuple(range(1, 13)), secs=1567198523):
     obs = SensorData(secs, *raw)
     obs = f"{obs:{fmt}}"
 
@@ -33,14 +47,20 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
     elif fmt.endswith("pm"):
         secs = time.strftime("%F %T:", time.localtime(secs))
         fmt = "{:" + fmt[:-2] + "d}"
-        raw = f"PM1 {fmt}, PM2.5 {fmt}, PM10 {fmt} ug/m3".format(*raw[:4])
+        raw = f"PM1 {fmt}, PM2.5 {fmt}, PM10 {fmt} ug/m3".format(*raw[3:6])
     elif fmt.endswith("num"):
         secs = time.strftime("%F %T:", time.localtime(secs))
         fmt = "{:" + fmt[:-3] + "d}"
         raw = (
             f"N0.3 {fmt}, N0.5 {fmt}, N1.0 {fmt}, "
             f"N2.5 {fmt}, N5.0 {fmt}, N10 {fmt} #/100cc"
-        ).format(*raw[3:])
+        ).format(*raw[6:])
+    elif fmt.endswith("cf"):
+        secs = time.strftime("%F %T:", time.localtime(secs))
+        fmt = "{:" + (fmt[:-2] or ".1") + "f}"
+        raw = f"CF1 {fmt}, CF2.5 {fmt}, CF10 {fmt}".format(
+            raw[3] / raw[0], raw[4] / raw[1], raw[5] / raw[2]
+        )
 
     assert obs == f"{secs} {raw}"
 
@@ -51,25 +71,25 @@ def test_format(fmt, raw=tuple(range(9)), secs=1567198523):
         pytest.param(
             SensorType.PMSx003,
             "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
-            (5, 13, 22, 765, 252, 29, 15, 6, 6),
+            (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
             id="known good data",
         ),
         pytest.param(
             SensorType.PMSx003,
             "02fd00fc001d000f00060006970003c5424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
-            (5, 13, 22, 765, 252, 29, 15, 6, 6),
+            (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
             id="good data at the end of the buffer",
         ),
         pytest.param(
             SensorType.PMS3003,
             "424d00140051006A007700350046004F33D20F28003F041A",
-            (53, 70, 79),
+            (81, 106, 119, 53, 70, 79),
             id="known good data",
         ),
         pytest.param(
             SensorType.PMS3003,
             "33D20F28003F041A424d00140051006A007700350046004F33D20F28003F041A",
-            (53, 70, 79),
+            (81, 106, 119, 53, 70, 79),
             id="good data at the end of the buffer",
         ),
     ],

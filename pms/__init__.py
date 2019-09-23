@@ -96,12 +96,17 @@ class SensorData(NamedTuple):
     """PMSx003 observations
     
     time                                    measurement time [seconds since epoch]
+    raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
     n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations under X.Y um [#/100cc]
     """
 
     # seconds since epoch
     time: int
+    # rawX [ug/m3]: raw (cf=1) PM1.0, PM2.5 & PM10 estimate
+    raw01: int
+    raw25: int
+    raw10: int
     # pmX [ug/m3]: PM1.0, PM2.5 & PM10
     pm01: int
     pm25: int
@@ -114,21 +119,38 @@ class SensorData(NamedTuple):
     n5_0: Optional[int] = None
     n10_0: Optional[int] = None
 
-    def timestamp(self, fmt: str = "%F %T"):
+    def timestamp(self, fmt: str = "%F %T") -> str:
         """measurement time as formatted string"""
         return datetime.fromtimestamp(self.time).strftime(fmt)
+
+    @property
+    def cf01(self) -> float:
+        return self.pm01 / self.raw01 if self.raw01 else 0
+
+    @property
+    def cf25(self) -> float:
+        return self.pm25 / self.raw25 if self.raw25 else 0
+
+    @property
+    def cf10(self) -> float:
+        return self.pm10 / self.raw10 if self.raw10 else 0
 
     def __format__(self, spec: str) -> str:
         d = f = None
         if spec.endswith("pm"):
-            d = spec.replace("pm", "d")
-            f = f"{self.timestamp()}: PM1 {{1}}, PM2.5 {{2}}, PM10 {{3}} ug/m3"
+            d = spec[:-2] + "d"
+            f = f"{self.timestamp()}: PM1 {{:{d}}}, PM2.5 {{:{d}}}, PM10 {{:{d}}} ug/m3"
+            return f.format(self.pm01, self.pm25, self.pm10)
         if spec.endswith("csv"):
-            d = spec.replace("csv", "d")
-            f = f"{self.time}, {{1}}, {{2}}, {{3}}, {{4}}, {{5}}, {{6}}, {{7}}, {{8}}, {{9}}"
-        if spec.endswith("num"):
-            d = spec.replace("num", "d")
-            f = f"{self.timestamp()}: N0.3 {{4}}, N0.5 {{5}}, N1.0 {{6}}, N2.5 {{7}}, N5.0 {{8}}, N10 {{9}} #/100cc"
+            d = spec[:-3] + "d"
+            f = f"{self.time}, {{1}}, {{2}}, {{3}}, {{4}}, {{5}}, {{6}}, {{7}}, {{8}}, {{9}}, {{10}}, {{11}}, {{12}}"
+        elif spec.endswith("num"):
+            d = spec[:-3] + "d"
+            f = f"{self.timestamp()}: N0.3 {{7}}, N0.5 {{8}}, N1.0 {{9}}, N2.5 {{10}}, N5.0 {{11}}, N10 {{12}} #/100cc"
+        elif spec.endswith("cf"):
+            d = (spec[:-2] or ".1") + "f"
+            f = f"{self.timestamp()}: CF1 {{:{d}}}, CF2.5 {{:{d}}}, CF10 {{:{d}}}"
+            return f.format(self.cf01, self.cf25, self.cf10)
         if d and f:
             return f.format(*(f"{x:{d}}" if x is not None else "" for x in self))
         else:
@@ -180,15 +202,15 @@ class SensorType(Enum):
         if not time:
             time = SensorData.now()
 
-        msg = SensorMessage.decode(buffer, self.header, self.length)
-        logger.debug(f"message data: {msg.data}")
+        data = SensorMessage.decode(buffer, self.header, self.length).data
+        logger.debug(f"message data: {data}")
 
         if self.has_number_concentration:
-            data = msg.data[3:12]  # 9 records: 3 pm, 6 num
+            records = 12  # 3 cf, 3 pm, 6 num
         else:
-            data = msg.data[3:6]  # 3 records: 3 pm
+            records = 6  # 3 cf and 3 pm
 
-        return SensorData(time, *data)
+        return SensorData(time, *data[:records])
 
 
 class PMSerial:
