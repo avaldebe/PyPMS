@@ -119,9 +119,10 @@ class SensorData(NamedTuple):
     n5_0: Optional[int] = None
     n10_0: Optional[int] = None
 
-    def timestamp(self, fmt: str = "%F %T") -> str:
-        """measurement time as formatted string"""
-        return datetime.fromtimestamp(self.time).strftime(fmt)
+    @property
+    def date(self) -> datetime:
+        """measurement time as datetime object"""
+        return datetime.fromtimestamp(self.time)
 
     @property
     def cf01(self) -> float:
@@ -139,18 +140,16 @@ class SensorData(NamedTuple):
         d = f = None
         if spec.endswith("pm"):
             d = spec[:-2] + "d"
-            f = f"{self.timestamp()}: PM1 {{:{d}}}, PM2.5 {{:{d}}}, PM10 {{:{d}}} ug/m3"
-            return f.format(self.pm01, self.pm25, self.pm10)
+            return f"{self.date:%F %T}: PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
         if spec.endswith("csv"):
             d = spec[:-3] + "d"
             f = f"{self.time}, {{1}}, {{2}}, {{3}}, {{4}}, {{5}}, {{6}}, {{7}}, {{8}}, {{9}}, {{10}}, {{11}}, {{12}}"
         elif spec.endswith("num"):
             d = spec[:-3] + "d"
-            f = f"{self.timestamp()}: N0.3 {{7}}, N0.5 {{8}}, N1.0 {{9}}, N2.5 {{10}}, N5.0 {{11}}, N10 {{12}} #/100cc"
+            f = f"{self.date:%F %T}: N0.3 {{7}}, N0.5 {{8}}, N1.0 {{9}}, N2.5 {{10}}, N5.0 {{11}}, N10 {{12}} #/100cc"
         elif spec.endswith("cf"):
             d = (spec[:-2] or ".1") + "f"
-            f = f"{self.timestamp()}: CF1 {{:{d}}}, CF2.5 {{:{d}}}, CF10 {{:{d}}}"
-            return f.format(self.cf01, self.cf25, self.cf10)
+            return f"{self.date:%F %T}: CF1 {self.cf01:{d}}, CF2.5 {self.cf25:{d}}, CF10 {self.cf10:{d}}"
         if d and f:
             return f.format(*(f"{x:{d}}" if x is not None else "" for x in self))
         else:
