@@ -56,6 +56,7 @@ class SensorMessage(NamedTuple):
         assert length == len(header) + len_payload, f"wrong payload length {length}"
 
         # validate message: recoverable errors (throw away observation)
+        logger.debug(f"message hex: {message.hex()}")
         msg = cls(message[:4], message[4:-2], message[-2:])
         if msg.header != header:
             raise WrongMessageFormat(f"message header: {msg.header}")
@@ -72,16 +73,15 @@ class SensorMessage(NamedTuple):
     @classmethod
     def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
         try:
-            logger.debug(f"message full: {message.hex()}")
+            # validate full message
             return cls._validate(message, header, length)
         except WrongMessageFormat as e:
             # search last complete message on buffer
             start = message.rfind(header, 0, 4 - length)
             if start < 0:  # No match found
                 raise
-            message = message[start : start + length]  # last complete message
-            logger.debug(f"message trim: {message.hex()}")
-            return cls._validate(message, header, length)
+            # validate last complete message
+            return cls._validate(message[start : start + length], header, length)
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
