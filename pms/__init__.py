@@ -71,17 +71,17 @@ class SensorMessage(NamedTuple):
         return msg
 
     @classmethod
-    def decode(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
+    def decode(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
         try:
             # validate full message
-            return cls._validate(message, header, length)
+            return cls._validate(message, header, length).data
         except WrongMessageFormat as e:
             # search last complete message on buffer
             start = message.rfind(header, 0, 4 - length)
             if start < 0:  # No match found
                 raise
             # validate last complete message
-            return cls._validate(message[start : start + length], header, length)
+            return cls._validate(message[start : start + length], header, length).data
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
@@ -181,11 +181,11 @@ class SensorType(Enum):
     Default = (b"", 0)
 
     @property
-    def header(self) -> bytes:
+    def message_header(self) -> bytes:
         return self.value[0]
 
     @property
-    def length(self) -> int:
+    def message_length(self) -> int:
         return self.value[1]
 
     @property
@@ -208,7 +208,7 @@ class SensorType(Enum):
         if not time:
             time = SensorData.now()
 
-        data = SensorMessage.decode(buffer, self.header, self.length).data
+        data = SensorMessage.decode(buffer, self.message_header, self.message_length)
         logger.debug(f"message data: {data}")
 
         if self.has_number_concentration:
@@ -274,7 +274,9 @@ class PMSerial:
             self.sensor = SensorType.PMSx003
         else:
             self.sensor = SensorType.PMS3003
-        logger.debug(f"Assume {self.sensor.name}, #{self.sensor.length}b message")
+        logger.debug(
+            f"Assume {self.sensor.name}, #{self.sensor.message_length}b message"
+        )
 
         return self
 
