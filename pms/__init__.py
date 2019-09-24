@@ -206,6 +206,16 @@ class SensorType(Enum):
             )[command]
         return cmd, self.message_length if command.endswith("read") else 8
 
+    @classmethod
+    def guess(cls, buffer: bytes) -> "SensorType":
+        """Guess sensor type from buffer contents"""
+        if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
+            sensor = cls.PMSx003
+        else:
+            sensor = cls.PMS3003
+        logger.debug(f"Assume {sensor.name}, #{sensor.message_length}b message")
+        return sensor
+
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> SensorData:
         """Decode a PMSx003/PMS3003 message"""
         if not time:
@@ -263,22 +273,13 @@ class PMSerial:
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             self.serial.open()
+            self.serial.reset_input_buffer()
 
-        # wake sensor
-        self.serial.reset_input_buffer()
-        buffer = self._cmd("wake")
-
-        # set passive mode
-        buffer += self._cmd("passive_mode")
+        # wake sensor and set passive mode
+        buffer = self._cmd("wake") + self._cmd("passive_mode")
 
         # guess sensor type from answer
-        if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
-            self.sensor = SensorType.PMSx003
-        else:
-            self.sensor = SensorType.PMS3003
-        logger.debug(
-            f"Assume {self.sensor.name}, #{self.sensor.message_length}b message"
-        )
+        self.sensor = SensorType.guess(buffer)
 
         return self
 
