@@ -178,7 +178,7 @@ class SensorType(Enum):
     PMSx003 = (b"\x42\x4D\x00\x1c", 32)
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     PMS3003 = (b"\x42\x4D\x00\x14", 24)
-    Default = (b"", 0)
+    Default = PMSx003
 
     @property
     def message_header(self) -> bytes:
@@ -192,19 +192,22 @@ class SensorType(Enum):
     def has_number_concentration(self) -> bool:
         return self == self.__class__.PMSx003
 
-    def command(self, command: str) -> Tuple[bytes, int]:
-        """PMSx003 serial commands (except PMS3003)"""
-        if self == self.__class__.PMS3003:
-            cmd = b""
-        else:
-            cmd = dict(
+    def command(self, command: str) -> bytes:
+        """Serial commands (except PMS3003)"""
+        return {
+            "PMS3003": b"",
+            "PMSx003": dict(
                 passive_mode=b"\x42\x4D\xE1\x00\x00\x01\x70",
                 passive_read=b"\x42\x4D\xE2\x00\x00\x01\x71",
                 active_mode=b"\x42\x4D\xE1\x00\x01\x01\x71",
                 sleep=b"\x42\x4D\xE4\x00\x00\x01\x73",
                 wake=b"\x42\x4D\xE4\x00\x01\x01\x74",
-            )[command]
-        return cmd, self.message_length if command.endswith("read") else 8
+            )[command],
+        }[self.name]
+
+    def answer_length(self, command: str) -> int:
+        """Expected answer length to serial command"""
+        return self.message_length if command.endswith("read") else 8
 
     @classmethod
     def guess(cls, buffer: bytes) -> "SensorType":
@@ -255,7 +258,7 @@ class PMSerial:
         """Write command to sensor and return answer"""
 
         # send command
-        cmd, length = self.sensor.command(command)
+        cmd = self.sensor.command(command)
         if cmd:
             self.serial.write(cmd)
             self.serial.flush()
@@ -263,6 +266,7 @@ class PMSerial:
             self.serial.reset_input_buffer()
 
         # wait for answer
+        length = self.sensor.answer_length(command)
         while self.serial.in_waiting < length:
             continue
 
