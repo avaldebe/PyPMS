@@ -155,20 +155,21 @@ class SensorType(Enum):
         return self.value[1]
 
     @property
-    def has_number_concentration(self) -> bool:
-        return self == self.__class__.PMSx003
+    def message_records(self) -> int:
+        """Data records in message"""
+        return {"PMS3003": 6, "PMSx003": 12}[self.name]
 
     def command(self, command: str) -> bytes:
         """Serial commands (except PMS3003)"""
         return {
             "PMS3003": b"",
-            "PMSx003": dict(
-                passive_mode=b"\x42\x4D\xE1\x00\x00\x01\x70",
-                passive_read=b"\x42\x4D\xE2\x00\x00\x01\x71",
-                active_mode=b"\x42\x4D\xE1\x00\x01\x01\x71",
-                sleep=b"\x42\x4D\xE4\x00\x00\x01\x73",
-                wake=b"\x42\x4D\xE4\x00\x01\x01\x74",
-            )[command],
+            "PMSx003": {
+                "passive_mode": b"\x42\x4D\xE1\x00\x00\x01\x70",
+                "passive_read": b"\x42\x4D\xE2\x00\x00\x01\x71",
+                "active_mode": b"\x42\x4D\xE1\x00\x01\x01\x71",
+                "sleep": b"\x42\x4D\xE4\x00\x00\x01\x73",
+                "wake": b"\x42\x4D\xE4\x00\x01\x01\x74",
+            }[command],
         }[self.name]
 
     def answer_length(self, command: str) -> int:
@@ -193,9 +194,4 @@ class SensorType(Enum):
         data = SensorMessage.decode(buffer, self.message_header, self.message_length)
         logger.debug(f"message data: {data}")
 
-        if self.has_number_concentration:
-            records = 12  # 3 cf, 3 pm, 6 num
-        else:
-            records = 6  # 3 cf and 3 pm
-
-        return SensorData(time, *data[:records])
+        return SensorData(time, *data[:self.message_records])
