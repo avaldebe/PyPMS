@@ -2,7 +2,7 @@
 Bridge between MQTT server/topic and InfluxDB server/database
 
 Usage:
-    pms.bridge [options]
+    pms bridge [options]
 
 Options:
     --MQTT_topic <topic>        MQTT root/topic [default: homie/+/+/+]
