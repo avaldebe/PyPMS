@@ -192,16 +192,19 @@ class SensorType(Enum):
     def has_number_concentration(self) -> bool:
         return self == self.__class__.PMSx003
 
-    def command(self, command: str) -> Optional[bytes]:
+    def command(self, command: str) -> Tuple[bytes, int]:
+        """PMSx003 serial commands (except PMS3003)"""
         if self == self.__class__.PMS3003:
-            return None
-        return dict(
-            passive_mode=b"\x42\x4D\xE1\x00\x00\x01\x70",
-            passive_read=b"\x42\x4D\xE2\x00\x00\x01\x71",
-            active_mode=b"\x42\x4D\xE1\x00\x01\x01\x71",
-            sleep=b"\x42\x4D\xE4\x00\x00\x01\x73",
-            wake=b"\x42\x4D\xE4\x00\x01\x01\x74",
-        )[command]
+            cmd = b""
+        else:
+            cmd = dict(
+                passive_mode=b"\x42\x4D\xE1\x00\x00\x01\x70",
+                passive_read=b"\x42\x4D\xE2\x00\x00\x01\x71",
+                active_mode=b"\x42\x4D\xE1\x00\x01\x01\x71",
+                sleep=b"\x42\x4D\xE4\x00\x00\x01\x73",
+                wake=b"\x42\x4D\xE4\x00\x01\x01\x74",
+            )[command]
+        return cmd, self.message_length if command.endswith("read") else 8
 
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> SensorData:
         """Decode a PMSx003/PMS3003 message"""
@@ -239,10 +242,10 @@ class PMSerial:
         self.sensor = SensorType.Default  # updated later
 
     def _cmd(self, command: str) -> bytes:
-        """PMSx003 serial commands (except PMS3003)"""
+        """Write command to sensor and return answer"""
 
         # send command
-        cmd = self.sensor.command(command)
+        cmd, length = self.sensor.command(command)
         if cmd:
             self.serial.write(cmd)
             self.serial.flush()
@@ -250,7 +253,6 @@ class PMSerial:
             self.serial.reset_input_buffer()
 
         # wait for answer
-        length = self.sensor.length if command.endswith("read") else 8
         while self.serial.in_waiting < length:
             continue
 
