@@ -11,6 +11,7 @@ pyserial = ">=3.4"
 paho-mqtt = ">=1.4.0"
 docopt = ">=0.6.2"
 influxdb = ">=5.2.1"
+mypy-extensions = "*"
 
 [requires]
 python_version = "3.7"

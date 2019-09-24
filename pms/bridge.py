@@ -55,11 +55,10 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def main(mqtt_: Dict[str, Any], db_: Dict[str, Any]) -> None:
-    db = db.client(**db_)
+    pub = db.client_pub(**db_)
 
     def on_sensordata(data: mqtt.Data) -> None:
-        db.pub(
-            db,
+        pub(
             time=data.time,
             tags={"location": data.location},
             data={data.measurement: data.value},

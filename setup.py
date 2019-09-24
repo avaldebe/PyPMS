@@ -9,6 +9,7 @@ setup(
         "paho-mqtt>=1.4.0",
         "docopt>=0.6.2",
         "influxdb>=5.2.1",
+        "mypy_extensions",
     ],
     entry_points={"console_scripts": ["pms = pms.__main__:cli"]},
 )

@@ -29,9 +29,9 @@ Environment variables take precedence over command line options
 - PMS_SERIAL        overrides -s, --serial
 """
 
-import os
-from typing import Dict, List, Optional, Union, Any
-import json
+import os, json
+from typing import Dict, List, Optional, Any, Callable
+from mypy_extensions import NamedArg
 from docopt import docopt
 from influxdb import InfluxDBClient
 from pms import PMSerial
@@ -50,36 +50,40 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     )
 
 
-def client(
+def client_pub(
     host: str, port: int, username: str, password: str, db_name: str
-) -> InfluxDBClient:
+) -> Callable[
+    [
+        NamedArg(int, "time"),
+        NamedArg(Dict[str, str], "tags"),
+        NamedArg(Dict[str, float], "data"),
+    ],
+    None,
+]:
     c = InfluxDBClient(host, port, username, password, None)
     databases = c.get_list_database()
     if len(list(filter(lambda x: x["name"] == db_name, databases))) == 0:
         c.create_database(db_name)
     c.switch_database(db_name)
-    return c
 
+    def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+        c.write_points(
+            [
+                {"measurement": k, "tags": tags, "time": time, "fields": {"value": v}}
+                for k, v in data.items()
+            ],
+            time_precision="s",
+        )
 
-def pub(
-    client: InfluxDBClient, time: int, tags: Dict[str, str], data: Dict[str, float]
-) -> None:
-    client.write_points(
-        [
-            {"measurement": k, "tags": tags, "time": time, "fields": {"value": v}}
-            for k, v in data.items()
-        ],
-        time_precision="s",
-    )
+    return pub
 
 
 def main(interval: int, serial: str, tags: Dict[str, str], **kwargs) -> None:
-    c = client(**kwargs)
+    pub = client_pub(**kwargs)
 
     with PMSerial(serial) as read:
         for pm in read(interval):
             pub(
-                c,
                 time=pm.time,
                 tags=tags,
                 data={"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10},
