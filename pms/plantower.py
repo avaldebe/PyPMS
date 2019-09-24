@@ -9,13 +9,13 @@ from typing import NamedTuple, Optional, Tuple
 from .logging import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 
 
-class SensorMessage(NamedTuple):
+class Message(NamedTuple):
     header: bytes
     payload: bytes
     checksum: bytes
 
     @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> "SensorMessage":
+    def _validate(cls, message: bytes, header: bytes, length: int) -> "Message":
         # consistency check: bug in message singnature
         assert len(header) == 4, f"wrong header length {len(header)}"
         assert header[:2] == b"BM", f"wrong header start {header}"
@@ -58,7 +58,7 @@ class SensorMessage(NamedTuple):
         return struct.unpack(f">{len(message)//2}H", message)
 
 
-class SensorData(NamedTuple):
+class Data(NamedTuple):
     """PMSx003 observations
     
     time                                    measurement time [seconds since epoch]
@@ -133,7 +133,7 @@ class SensorData(NamedTuple):
         return int(datetime.now().timestamp())
 
 
-class SensorType(Enum):
+class Sensor(Enum):
     """Supported PM sensors
     
     message signature: header, length
@@ -177,7 +177,7 @@ class SensorType(Enum):
         return self.message_length if command.endswith("read") else 8
 
     @classmethod
-    def guess(cls, buffer: bytes) -> "SensorType":
+    def guess(cls, buffer: bytes) -> "Sensor":
         """Guess sensor type from buffer contents"""
         if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             sensor = cls.PMSx003
@@ -186,12 +186,12 @@ class SensorType(Enum):
         logger.debug(f"Assume {sensor.name}, #{sensor.message_length}b message")
         return sensor
 
-    def decode(self, buffer: bytes, *, time: Optional[int] = None) -> SensorData:
+    def decode(self, buffer: bytes, *, time: Optional[int] = None) -> Data:
         """Decode a PMSx003/PMS3003 message"""
         if not time:
-            time = SensorData.now()
+            time = Data.now()
 
-        data = SensorMessage.decode(buffer, self.message_header, self.message_length)
+        data = Message.decode(buffer, self.message_header, self.message_length)
         logger.debug(f"message data: {data}")
 
-        return SensorData(time, *data[:self.message_records])
+        return Data(time, *data[: self.message_records])

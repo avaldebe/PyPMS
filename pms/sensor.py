@@ -12,7 +12,7 @@ import time
 from typing import Callable, Generator
 from serial import Serial
 from .logging import logger, SensorWarning, SensorWarmingUp
-from .plantower import SensorType, SensorData
+from . import plantower
 
 
 class PMSerial:
@@ -32,7 +32,7 @@ class PMSerial:
         self.serial = Serial()
         self.serial.port = port
         self.serial.timeout = 0
-        self.sensor = SensorType.Default  # updated later
+        self.sensor = plantower.Sensor.Default  # updated later
 
     def _cmd(self, command: str) -> bytes:
         """Write command to sensor and return answer"""
@@ -53,7 +53,7 @@ class PMSerial:
         # return full buffer
         return self.serial.read(self.serial.in_waiting)
 
-    def __enter__(self) -> Callable[[int], Generator[SensorData, None, None]]:
+    def __enter__(self) -> Callable[[int], Generator[plantower.Data, None, None]]:
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             self.serial.open()
@@ -63,7 +63,7 @@ class PMSerial:
         buffer = self._cmd("wake") + self._cmd("passive_mode")
 
         # guess sensor type from answer
-        self.sensor = SensorType.guess(buffer)
+        self.sensor = plantower.Sensor.guess(buffer)
 
         return self
 
@@ -72,7 +72,7 @@ class PMSerial:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self, interval: int = 0) -> Generator[SensorData, None, None]:
+    def __call__(self, interval: int = 0) -> Generator[plantower.Data, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             # passive mode read
