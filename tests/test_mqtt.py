@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms.mqtt import SensorData
+    from pms import mqtt
 except ModuleNotFoundError as e:
     print(__doc__)
     raise
@@ -28,7 +28,7 @@ except ModuleNotFoundError as e:
     ],
 )
 def test_decode(location, measurement, value, secs=1567201793):
-    assert SensorData(secs, location, measurement, value) == SensorData.decode(
+    assert mqtt.Data(secs, location, measurement, value) == mqtt.Data.decode(
         f"homie/{location}/{measurement}/concentration", f"{value:.2f}", time=secs
     )
 
@@ -71,5 +71,5 @@ def test_decode(location, measurement, value, secs=1567201793):
 )
 def test_decode_error(topic, payload, error, secs=1567201793):
     with pytest.raises(Exception) as e:
-        SensorData.decode(topic, payload, time=secs)
+        mqtt.Data.decode(topic, payload, time=secs)
     assert str(e.value) == error

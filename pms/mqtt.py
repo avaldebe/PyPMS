@@ -74,7 +74,7 @@ def client_pub(
     return pub
 
 
-class SensorData(NamedTuple):
+class Data(NamedTuple):
     time: int
     location: str
     measurement: str
@@ -86,14 +86,12 @@ class SensorData(NamedTuple):
         return int(datetime.now().timestamp())
 
     @classmethod
-    def decode(
-        cls, topic: str, payload: str, *, time: Optional[int] = None
-    ) -> "SensorData":
+    def decode(cls, topic: str, payload: str, *, time: Optional[int] = None) -> "Data":
         """Decode a MQTT message
         
         For example
         >>> decode("homie/test/pm10/concentration", "27")
-        >>> SensorData(now(), "test", "pm10", 27)
+        >>> Data(now(), "test", "pm10", 27)
         """
         if not time:
             time = cls.now()
@@ -120,11 +118,11 @@ def client_sub(
     username: str,
     password: str,
     *,
-    on_sensordata: Callable[[SensorData], None],
-):
+    on_sensordata: Callable[[Data], None],
+) -> None:
     def on_message(client, userdata, msg):
         try:
-            data = SensorData.decode(msg.topic, msg.payload)
+            data = Data.decode(msg.topic, msg.payload)
         except UserWarning as e:
             logger.debug(e)
         else:

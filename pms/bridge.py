@@ -36,9 +36,7 @@ Environment variables take precedence over command line options
 
 from typing import Dict, List, Optional, Union, Any
 from docopt import docopt
-from pms import logger
-from pms.mqtt import parse_args as mqtt_args, client_sub as mqtt_sub, SensorData
-from pms.influxdb import parse_args as db_args, client as db_client, pub as db_pub
+from pms import logger, mqtt, influxdb as db
 
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
@@ -51,22 +49,23 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
         return d
 
     return dict(
-        mqtt=mqtt_args(get_opts("--MQTT_")), db=db_args(get_opts("--InfluxDB_"))
+        mqtt_=mqtt.parse_args(get_opts("--MQTT_")),
+        db_=db.parse_args(get_opts("--InfluxDB_")),
     )
 
 
-def main(mqtt: Dict[str, Any], db: Dict[str, Any]) -> None:
-    db = db_client(**db)
+def main(mqtt_: Dict[str, Any], db_: Dict[str, Any]) -> None:
+    db = db.client(**db_)
 
-    def on_sensordata(data: SensorData) -> None:
-        db_pub(
+    def on_sensordata(data: mqtt.Data) -> None:
+        db.pub(
             db,
             time=data.time,
             tags={"location": data.location},
             data={data.measurement: data.value},
         )
 
-    mqtt_sub(on_sensordata=on_sensordata, **mqtt)
+    mqtt.client_sub(on_sensordata=on_sensordata, **mqtt_)
 
 
 def cli(argv: Optional[List[str]] = None) -> None:
