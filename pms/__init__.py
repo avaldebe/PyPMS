@@ -74,22 +74,21 @@ class SensorMessage(NamedTuple):
     def decode(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
         try:
             # validate full message
-            return cls._validate(message, header, length).data
+            msg = cls._validate(message, header, length)
         except WrongMessageFormat as e:
             # search last complete message on buffer
             start = message.rfind(header, 0, 4 - length)
             if start < 0:  # No match found
                 raise
             # validate last complete message
-            return cls._validate(message[start : start + length], header, length).data
+            msg = cls._validate(message[start : start + length], header, length)
+
+        # data: unpacked payload
+        return cls._unpack(msg.payload)
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
         return struct.unpack(f">{len(message)//2}H", message)
-
-    @property
-    def data(self) -> Tuple[int, ...]:
-        return self._unpack(self.payload)
 
 
 class SensorData(NamedTuple):
