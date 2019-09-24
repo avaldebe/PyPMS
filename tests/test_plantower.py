@@ -13,7 +13,8 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms import SensorData, SensorType, SensorMessage, SensorWarning
+    from pms.plantower import SensorData, SensorType, SensorMessage
+    from pms.logging import SensorWarning
 except ModuleNotFoundError as e:
     print(__doc__)
     raise
