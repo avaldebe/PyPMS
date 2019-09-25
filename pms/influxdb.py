@@ -39,14 +39,14 @@ from pms import PMSerial
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
-        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
-        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
-        tags=json.loads(os.environ.get("PMS_INFLUX_TAGS", args["--tags"])),
-        host=os.environ.get("PMS_INFLUX_HOST", args["--host"]),
-        port=int(os.environ.get("PMS_INFLUX_PORT", args["--port"])),
-        username=os.environ.get("PMS_INFLUX_USER", args["--user"]),
-        password=os.environ.get("PMS_INFLUX_PASS", args["--pass"]),
-        db_name=os.environ.get("PMS_INFLUX_DB", args["--database"]),
+        interval=int(os.getenv("PMS_INTERVAL", args["--interval"])),
+        serial=os.getenv("PMS_SERIAL", args["--serial"]),
+        tags=json.loads(os.getenv("PMS_INFLUX_TAGS", args["--tags"])),
+        host=os.getenv("PMS_INFLUX_HOST", args["--host"]),
+        port=int(os.getenv("PMS_INFLUX_PORT", args["--port"])),
+        username=os.getenv("PMS_INFLUX_USER", args["--user"]),
+        password=os.getenv("PMS_INFLUX_PASS", args["--pass"]),
+        db_name=os.getenv("PMS_INFLUX_DB", args["--database"]),
     )
 
 

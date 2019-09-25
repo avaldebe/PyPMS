@@ -4,6 +4,7 @@
         "Datasheet",
         "dataclasses",
         "extensions",
+        "getenv",
         "influxdb",
         "mosquitto",
         "mypy",

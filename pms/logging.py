@@ -4,7 +4,7 @@ Logging and recoverable errors
 
 import logging, os
 
-logging.basicConfig(level=os.environ.get("LEVEL", "WARNING"))
+logging.basicConfig(level=os.getenv("LEVEL", "WARNING"))
 logger = logging.getLogger("pms")
 
 

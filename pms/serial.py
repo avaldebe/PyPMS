@@ -25,9 +25,9 @@ from pms import PMSerial
 
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     return dict(
-        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
-        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
-        format=os.environ.get("PMS_FORMAT", args["--format"]),
+        interval=int(os.getenv("PMS_INTERVAL", args["--interval"])),
+        serial=os.getenv("PMS_SERIAL", args["--serial"]),
+        format=os.getenv("PMS_FORMAT", args["--format"]),
     )
 
 

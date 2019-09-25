@@ -42,13 +42,13 @@ from pms import PMSerial, logger
 def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
     """Extract options from docopt output"""
     return dict(
-        interval=int(os.environ.get("PMS_INTERVAL", args["--interval"])),
-        serial=os.environ.get("PMS_SERIAL", args["--serial"]),
-        host=os.environ.get("PMS_MQTT_HOST", args["--host"]),
-        port=int(os.environ.get("PMS_MQTT_PORT", args["--port"])),
-        username=os.environ.get("PMS_MQTT_USER", args["--user"]),
-        password=os.environ.get("PMS_MQTT_PASS", args["--pass"]),
-        topic=os.environ.get("PMS_MQTT_TOPIC", args["--topic"]),
+        interval=int(os.getenv("PMS_INTERVAL", args["--interval"])),
+        serial=os.getenv("PMS_SERIAL", args["--serial"]),
+        host=os.getenv("PMS_MQTT_HOST", args["--host"]),
+        port=int(os.getenv("PMS_MQTT_PORT", args["--port"])),
+        username=os.getenv("PMS_MQTT_USER", args["--user"]),
+        password=os.getenv("PMS_MQTT_PASS", args["--pass"]),
+        topic=os.getenv("PMS_MQTT_TOPIC", args["--topic"]),
     )
 
 
