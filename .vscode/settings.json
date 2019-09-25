@@ -1,9 +1,12 @@
 {
     "python.pythonPath": "${env:HOME}/.local/share/virtualenvs/PyPMS-xW7ddr2c",
     "cSpell.words": [
+        "Datasheet",
         "dataclasses",
+        "extensions",
         "influxdb",
         "mosquitto",
+        "mypy",
         "paho",
         "plantower",
         "pyserial",

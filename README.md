@@ -4,13 +4,13 @@ Python application for PM sensors with serial interface
 
 ## Sensors
 
-[Plantower][]      | Tested Works | Doesn't Work | Not Tested  | Datasheet | Notes
------------------- | :----------: | :----------: | :---------: | --------- | -----
-PMS1003 (aka G1)   |    |   | X | [en][g1_aqmd],  [cn][g1_lcsc] |
-PMS3003 (aka G3)   |    |   | X | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read
-PMS5003 (aka G5)   |    |   | X | [en][g5_aqmd],  [cn][g5_lcsc] |
-PMS7003 (aka G7)   |    |   | X |                 [cn][g7_lcsc] |
-PMSA003 (aka G10)  |  X |   |   |                 [cn][gA_lcsc] |
+| [Plantower][]     | Tested Works | Doesn't Work | Not Tested | Datasheet                     | Notes                |
+| ----------------- | :----------: | :----------: | :--------: | ----------------------------- | -------------------- |
+| PMS1003 (aka G1)  |              |              |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
+| PMS3003 (aka G3)  |              |              |     X      | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
+| PMS5003 (aka G5)  |              |              |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
+| PMS7003 (aka G7)  |              |              |     X      | [cn][g7_lcsc]                 |
+| PMSA003 (aka G10) |      X       |              |            | [cn][gA_lcsc]                 |
 
 [plantower]: http://www.plantower.com/
 [g1_aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
@@ -29,7 +29,7 @@ PMSA003 (aka G10)  |  X |   |   |                 [cn][gA_lcsc] |
 Read a PMSx003 sensor
 
 Usage:
-    pms <command> [<args>...]
+    pms [--debug] <command> [<args>...]
     pms <command> --help
     pms --help
 
@@ -38,6 +38,10 @@ Commands:
     mqtt        push PM measurements to a MQTT server
     influxdb    push PM measurements to an InfluxDB server
     bridge      MQTT to InfluxDB bridge
+
+Options:
+    --debug     print DEBUG/logging messages
+    --help      display this help and exit
 ```
 
 ```man
