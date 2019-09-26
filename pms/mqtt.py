@@ -1,55 +1,8 @@
-"""
-Read a PMSx003 sensor and push PM measurements to a MQTT server
-
-Usage:
-    pms mqtt [options]
-
-Options:
-    -t, --topic <topic>     MQTT root/topic [default: homie/test]
-    -h, --host <host>       MQTT host server [default: mqtt.eclipse.org]
-    -p, --port <port>       MQTT host port [default: 1883]
-    -u, --user <username>   MQTT username
-    -P, --pass <password>   MQTT password
-
-Other:
-    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    --help                  display this help and exit
-
-NOTE:
-Environment variables take precedence over command line options
-- PMS_MQTT_TOPIC    overrides -t, --topic
-- PMS_MQTT_HOST     overrides -h, --host
-- PMS_MQTT_PORT     overrides -p, --port
-- PMS_MQTT_USER     overrides -u, --user
-- PMS_MQTT_PASS     overrides -P, --pass
-- PMS_INTERVAL      overrides -n, --interval
-- PMS_SERIAL        overrides -s, --serial
-
-NOTE:
-Only partial support for Homie v2.0.0 MQTT convention
-https://homieiot.github.io/specification/spec-core-v2_0_0/
-"""
-
-import os
 from datetime import datetime
 from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
 import paho.mqtt.client as mqtt
-from docopt import docopt
+from invoke import task
 from pms import PMSerial, logger
-
-
-def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
-    """Extract options from docopt output"""
-    return dict(
-        interval=int(os.getenv("PMS_INTERVAL", args["--interval"])),
-        serial=os.getenv("PMS_SERIAL", args["--serial"]),
-        host=os.getenv("PMS_MQTT_HOST", args["--host"]),
-        port=int(os.getenv("PMS_MQTT_PORT", args["--port"])),
-        username=os.getenv("PMS_MQTT_USER", args["--user"]),
-        password=os.getenv("PMS_MQTT_PASS", args["--pass"]),
-        topic=os.getenv("PMS_MQTT_TOPIC", args["--topic"]),
-    )
 
 
 def client_pub(
@@ -139,30 +92,61 @@ def client_sub(
     c.loop_forever()
 
 
-def main(interval: int, serial: str, **kwargs) -> None:
-    pub = client_pub(**kwargs)
+@task(
+    name="mqtt",
+    help={
+        "serial": "serial port [default: /dev/ttyUSB0]",
+        "interval": "seconds to wait between updates [default: 60]",
+        "topic": "mqtt root/topic [default: homie/test]",
+        "mqtt-host": "mqtt server [default: mqtt.eclipse.org]",
+        "mqtt-port": "server port [default: 1883]",
+        "mqtt-user": "server username",
+        "mqtt-pass": "server password",
+        "debug": "print DEBUG/logging messages",
+    },
+)
+def main(
+    context,
+    serial="/dev/ttyUSB0",
+    interval=60,
+    topic="homie/test",
+    mqtt_host="mqtt.eclipse.org",
+    mqtt_port=1883,
+    mqtt_user=None,
+    mqtt_pass=None,
+    debug=False,
+):
+    """Read PMSx003 sensor and push PM measurements to a MQTT server"""
+    if debug:
+        logger.setLevel("DEBUG")
+    pub = client_pub(
+        topic=topic,
+        host=mqtt_host,
+        port=mqtt_port,
+        username=mqtt_user,
+        password=mqtt_pass,
+    )
 
-    for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
-        pub(
-            {
-                f"{k}/$type": v,
-                f"{k}/$properties": "sensor,unit,concentration",
-                f"{k}/sensor": "PMx003",
-                f"{k}/unit": "ug/m3",
-            }
-        )
-
-    with PMSerial(serial) as read:
-        for pm in read(interval):
+    try:
+        for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
             pub(
                 {
-                    f"pm01/concentration": pm.pm01,
-                    f"pm25/concentration": pm.pm25,
-                    f"pm10/concentration": pm.pm10,
+                    f"{k}/$type": v,
+                    f"{k}/$properties": "sensor,unit,concentration",
+                    f"{k}/sensor": "PMx003",
+                    f"{k}/unit": "ug/m3",
                 }
             )
-
-
-def cli(argv: Optional[List[str]] = None) -> None:
-    args = parse_args(docopt(__doc__, argv))
-    main(**args)
+        with PMSerial(serial) as read:
+            for pm in read(interval):
+                pub(
+                    {
+                        f"pm01/concentration": pm.pm01,
+                        f"pm25/concentration": pm.pm25,
+                        f"pm10/concentration": pm.pm10,
+                    }
+                )
+    except KeyboardInterrupt:
+        print()
+    except Exception as e:
+        logger.warn(e)

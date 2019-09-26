@@ -1,5 +1,6 @@
 from typing import Callable
 from invoke import Program, Collection
-from pms import __version__, tasks
+from pms import __version__, serial, mqtt, influxdb, bridge
 
-cli = Program(namespace=Collection.from_module(tasks), version=__version__)
+ns = Collection(serial.main, mqtt.main, influxdb.main, bridge.main)
+cli = Program(namespace=ns, version=__version__)
