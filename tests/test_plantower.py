@@ -44,7 +44,7 @@ def test_format(fmt, raw=tuple(range(1, 13)), secs=1567198523):
         ).format(*raw[6:])
     elif fmt.endswith("cf"):
         secs = time.strftime("%F %T:", time.localtime(secs))
-        fmt = "{:" + (fmt[:-2] or ".1") + "f}"
+        fmt = "{:" + (fmt[:-2] or ".0") + "%}"
         raw = f"CF1 {fmt}, CF2.5 {fmt}, CF10 {fmt}".format(
             raw[3] / raw[0], raw[4] / raw[1], raw[5] / raw[2]
         )

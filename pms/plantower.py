@@ -114,7 +114,7 @@ class Data(NamedTuple):
             d = spec[:-3] + "d"
             f = f"{self.date:%F %T}: N0.3 {{7}}, N0.5 {{8}}, N1.0 {{9}}, N2.5 {{10}}, N5.0 {{11}}, N10 {{12}} #/100cc"
         elif spec.endswith("cf"):
-            d = (spec[:-2] or ".1") + "f"
+            d = (spec[:-2] or ".0") + "%"
             return f"{self.date:%F %T}: CF1 {self.cf01:{d}}, CF2.5 {self.cf25:{d}}, CF10 {self.cf10:{d}}"
         if d and f:
             return f.format(*(f"{x:{d}}" if x is not None else "" for x in self))
