@@ -90,17 +90,25 @@ class Data(NamedTuple):
         """measurement time as datetime object"""
         return datetime.fromtimestamp(self.time)
 
+    @staticmethod
+    def _safe_div(x: int, y: int) -> float:
+        if y:
+            return x / y
+        if x == y == 0:
+            return 1
+        return 0
+
     @property
     def cf01(self) -> float:
-        return self.pm01 / self.raw01 if self.raw01 else 0
+        return self._safe_div(self.pm01, self.raw01)
 
     @property
     def cf25(self) -> float:
-        return self.pm25 / self.raw25 if self.raw25 else 0
+        return self._safe_div(self.pm25, self.raw25)
 
     @property
     def cf10(self) -> float:
-        return self.pm10 / self.raw10 if self.raw10 else 0
+        return self._safe_div(self.pm10, self.raw10)
 
     def __format__(self, spec: str) -> str:
         d = f = None
