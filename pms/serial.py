@@ -22,4 +22,4 @@ def main(context, serial="/dev/ttyUSB0", interval=60, format="pm", debug=False):
     except KeyboardInterrupt:
         print()
     except Exception as e:
-        logger.warn(e)
+        logger.exception(e)

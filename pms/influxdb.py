@@ -83,4 +83,4 @@ def main(
     except KeyboardInterrupt:
         print()
     except Exception as e:
-        logger.warn(e)
+        logger.exception(e)
