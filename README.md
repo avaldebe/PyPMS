@@ -25,140 +25,92 @@ Python application for PM sensors with serial interface
 
 ## Command line usage
 
-```man
-Read a PMSx003 sensor
+The command line utility is build using [invoke][], so we can use the [tab-completion][]
+as follows:
 
-Usage:
-    pms [--debug] <command> [<args>...]
-    pms <command> --help
-    pms --help
+[invoke]: https://www.pyinvoke.org/
+[tab-completion]: http://docs.pyinvoke.org/en/latest/invoke.html#tab-completion
 
-Commands:
-    serial      print PM measurements
-    mqtt        push PM measurements to a MQTT server
-    influxdb    push PM measurements to an InfluxDB server
-    bridge      MQTT to InfluxDB bridge
-
-Options:
-    --debug     print DEBUG/logging messages
-    --help      display this help and exit
+```bash
+source <(pms --print-completion-script bash)
 ```
 
 ```man
-Read a PMSx003 sensor and print PM measurements
+Usage: pms [--core-opts] <subcommand> [--subcommand-opts] ...
 
-Usage:
-     pms serial [options]
+Core options:
+  ... core options here, minus task-related ones ...
+  
+Subcommands:
 
-Options:
-    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    -f, --format <fmt>      (pm|num|csv)formatted output  [default: pm]
-    --help                  display this help and exit
-
-NOTE:
-Environment variables take precedence over command line options
-- PMS_INTERVAL      overrides -n, --interval
-- PMS_SERIAL        overrides -s, --serial
-- PMS_FORMAT        overrides -f, --format
+  bridge     Bridge between MQTT server/topic and InfluxDB server/database
+  influxdb   Read PMSx003 sensor and push PM measurements to an InfluxDB server
+  mqtt       Read PMSx003 sensor and push PM measurements to a MQTT server
+  serial     Read PMSx003 sensor and print PM measurements
 ```
 
 ```man
-Read a PMSx003 sensor and push PM measurements to a MQTT server
+Usage: pms [--core-opts] serial [--options] [other tasks here ...]
 
-Usage:
-    pms mqtt [options]
+Docstring:
+  Read PMSx003 sensor and print PM measurements
 
 Options:
-    -t, --topic <topic>     MQTT root/topic [default: homie/test]
-    -h, --host <host>       MQTT host server [default: test.mosquitto.org]
-    -p, --port <port>       MQTT host port [default: 1883]
-    -u, --user <username>   MQTT username
-    -P, --pass <password>   MQTT password
+  -d, --debug                  print DEBUG/logging messages
+  -f STRING, --format=STRING   (pm|num|csv)formatted output  [default: pm]
+  -i INT, --interval=INT       seconds to wait between updates [default: 60]
+  -s STRING, --serial=STRING   serial port [default: /dev/ttyUSB0]```
 
-Other:
-    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    --help                  display this help and exit
+```man
+Usage: pms [--core-opts] mqtt [--options] [other tasks here ...]
 
-NOTE:
-Environment variables take precedence over command line options
-- PMS_MQTT_TOPIC    overrides -t, --topic
-- PMS_MQTT_HOST     overrides -h, --host
-- PMS_MQTT_PORT     overrides -p, --port
-- PMS_MQTT_USER     overrides -u, --user
-- PMS_MQTT_PASS     overrides -P, --pass
-- PMS_INTERVAL      overrides -n, --interval
-- PMS_SERIAL        overrides -s, --serial
+Docstring:
+  Read PMSx003 sensor and push PM measurements to a MQTT server
 
-NOTE:
-Only partial support for Homie v2.0.0 MQTT convention
-https://homieiot.github.io/specification/spec-core-v2_0_0/
+Options:
+  --=STRING, --mqtt-user=STRING   server username
+  -d, --debug                     print DEBUG/logging messages
+  -i INT, --interval=INT          seconds to wait between updates [default: 60]
+  -m STRING, --mqtt-host=STRING   mqtt server [default: mqtt.eclipse.org]
+  -p STRING, --mqtt-pass=STRING   server password
+  -q INT, --mqtt-port=INT         server port [default: 1883]
+  -s STRING, --serial=STRING      serial port [default: /dev/ttyUSB0]
+  -t STRING, --topic=STRING       mqtt root/topic [default: homie/test]
 ```
 
 ```man
-Read a PMS5003/PMS7003/PMSA003 sensor and push PM measurements to an InfluxDB server
+Usage: pms [--core-opts] influxdb [--options] [other tasks here ...]
 
-Usage:
-    pms influxdb [options]
+Docstring:
+  Read PMSx003 sensor and push PM measurements to an InfluxDB server
 
 Options:
-    -d, --database <db>     InfluxDB database [default: homie]
-    -t, --tags <dict>       InfluxDB measurement tags [default: {"location":"test"}]
-    -h, --host <host>       InfluxDB host server [default: influxdb]
-    -p, --port <port>       InfluxDB host port [default: 8086]
-    -u, --user <username>   InfluxDB username [default: root]
-    -P, --pass <password>   InfluxDB password [default: root]
-
-Other:
-    -s, --serial <port>     serial port [default: /dev/ttyUSB0]
-    -n, --interval <secs>   seconds to wait between updates [default: 60]
-    --help                  display this help and exit
-
-NOTE:
-Environment variables take precedence over command line options
-- PMS_INFLUX_DB     overrides -d, --database
-- PMS_INFLUX_TAGS   overrides -t, --tags
-- PMS_INFLUX_HOST   overrides -h, --host
-- PMS_INFLUX_PORT   overrides -p, --port
-- PMS_INFLUX_USER   overrides -u, --user
-- PMS_INFLUX_PASS   overrides -P, --pass
-- PMS_INTERVAL      overrides -n, --interval
-- PMS_SERIAL        overrides -s, --serial
+  --=STRING, --db-user=STRING   server username [default: root]
+  -b INT, --db-port=INT         server port [default: 8086]
+  -d STRING, --db-host=STRING   database server [default: influxdb]
+  -e, --debug                   print DEBUG/logging messages
+  -i INT, --interval=INT        seconds to wait between updates [default: 60]
+  -n STRING, --db-name=STRING   database name [default: homie]
+  -p STRING, --db-pass=STRING   server password [default: root]
+  -s STRING, --serial=STRING    serial port [default: /dev/ttyUSB0]
+  -t STRING, --tags=STRING      measurement tags [default: {'location':'test'}]
 ```
 
 ```man
-Bridge between MQTT server/topic and InfluxDB server/database
+Usage: pms [--core-opts] bridge [--options] [other tasks here ...]
 
-Usage:
-    pms bridge [options]
+Docstring:
+  Bridge between MQTT server/topic and InfluxDB server/database
 
 Options:
-    --MQTT_topic <topic>        MQTT root/topic [default: homie/+/+/+]
-    --MQTT_host <host>          MQTT host server [default: mqtt.eclipse.org]
-    --MQTT_port <port>          MQTT host port [default: 1883]
-    --MQTT_user <username>      MQTT username
-    --MQTT_pass <password>      MQTT password
-    --InfluxDB_database <db>    InfluxDB database [default: homie]
-    --InfluxDB_tags <dict>      InfluxDB measurement tags [default: {}]
-    --InfluxDB_host <host>      InfluxDB host server [default: influxdb]
-    --InfluxDB_port <port>      InfluxDB host port [default: 8086]
-    --InfluxDB_user <username>  InfluxDB username [default: root]
-    --InfluxDB_pass <password>  InfluxDB password [default: root]
-    --help                      display this help and exit
-
-
-NOTE:
-Environment variables take precedence over command line options
-- PMS_MQTT_TOPIC    overrides --MQTT_topic
-- PMS_MQTT_HOST     overrides --MQTT_host
-- PMS_MQTT_PORT     overrides --MQTT_port
-- PMS_MQTT_USER     overrides --MQTT_user
-- PMS_MQTT_PASS     overrides --MQTT_pass
-- PMS_INFLUX_DB     overrides --InfluxDB_database
-- PMS_INFLUX_TAGS   overrides --InfluxDB_tags
-- PMS_INFLUX_HOST   overrides --InfluxDB_host
-- PMS_INFLUX_PORT   overrides --InfluxDB_port
-- PMS_INFLUX_USER   overrides --InfluxDB_user
-- PMS_INFLUX_PASS   overrides --InfluxDB_pass
+  --=STRING, --mqtt-pass=STRING   server password
+  -b INT, --db-port=INT           server port [default: 8086]
+  -d STRING, --db-host=STRING     database server [default: influxdb]
+  -e, --debug                     print DEBUG/logging messages
+  -m STRING, --mqtt-host=STRING   mqtt server [default: mqtt.eclipse.org]
+  -n STRING, --db-name=STRING     database name [default: homie]
+  -p STRING, --db-pass=STRING     server password [default: root]
+  -q INT, --mqtt-port=INT         server port [default: 1883]
+  -t STRING, --mqtt-user=STRING   server username
+  -u STRING, --db-user=STRING     server username [default: root]
 ```

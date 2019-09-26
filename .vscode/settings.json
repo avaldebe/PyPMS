@@ -13,7 +13,9 @@
         "pyserial",
         "pytest",
         "rfind",
-        "strftime"
+        "strftime",
+        "subcommand",
+        "subcommands"
     ],
     "cSpell.ignoreWords": [
         "pmsa",
