@@ -7,9 +7,10 @@ setup(
     install_requires=[
         "pyserial>=3.4",
         "paho-mqtt>=1.4.0",
-        "docopt>=0.6.2",
-        "influxdb>=5.2.1",
-        "mypy_extensions",
+        "docopt>=0.6.0",
+        "influxdb>=5.2.0",
+        "mypy-extensions>=0.4.0",
+        "invoke>=1.3.0",
     ],
     entry_points={"console_scripts": ["pms = pms.__main__:cli"]},
 )
