@@ -51,7 +51,7 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def client_pub(
-    host: str, port: int, username: str, password: str, db_name: str
+    *, host: str, port: int, username: str, password: str, db_name: str
 ) -> Callable[
     [
         NamedArg(int, "time"),

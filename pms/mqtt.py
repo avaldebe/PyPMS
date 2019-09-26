@@ -53,7 +53,7 @@ def parse_args(args: Dict[str, str]) -> Dict[str, Any]:
 
 
 def client_pub(
-    topic: str, host: str, port: int, username: str, password: str
+    *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[Dict[str, Union[int, str]]], None]:
     c = mqtt.Client(topic)
     c.enable_logger(logger)
