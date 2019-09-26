@@ -12,6 +12,6 @@ setup(
         "mypy-extensions>=0.4.0",
         "invoke>=1.3.0",
     ],
-    entry_points={"console_scripts": ["pms = pms.__main__:cli"]},
+    entry_points={"console_scripts": ["pms = pms.main:cli.run"]},
 )
 
