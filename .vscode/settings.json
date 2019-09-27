@@ -18,11 +18,13 @@
         "subcommands"
     ],
     "cSpell.ignoreWords": [
-        "pmsa",
         "aqmd",
+        "avaldebe",
+        "gmail",
+        "lcsc",
         "mqttpassword",
         "mqttuser",
-        "lcsc"
+        "pmsa"
     ],
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
