@@ -4,7 +4,6 @@ Plantower PMSx003 sensors
 
 import struct
 from datetime import datetime
-from enum import Enum
 from typing import NamedTuple, Optional, Tuple
 from .logging import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 
@@ -51,6 +50,7 @@ class Message(NamedTuple):
             msg = cls._validate(message[start : start + length], header, length)
 
         # data: unpacked payload
+        logger.debug(f"message payload: {msg.payload.hex()}")
         return cls._unpack(msg.payload)
 
     @staticmethod
@@ -139,84 +139,3 @@ class Data(NamedTuple):
     def now() -> int:
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
-
-
-class Sensor(Enum):
-    """Supported PM sensors
-    
-    message signature: header, length
-    - PMS3003 messages are 24b long;
-    - All other PMSx003 messages are 32b long.
-    """
-
-    PMSx003 = (b"\x42\x4D\x00\x1c", 32)
-    PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
-    PMS3003 = (b"\x42\x4D\x00\x14", 24)
-    Default = PMSx003
-    G1 = PMS1003
-    G3 = PMS3003
-    G5 = PMS5003
-    G7 = PMS7003
-    G10 = PMSA003
-
-    @property
-    def message_header(self) -> bytes:
-        return self.value[0]
-
-    @property
-    def message_length(self) -> int:
-        return self.value[1]
-
-    @property
-    def message_records(self) -> int:
-        """Data records in message"""
-        return {"PMS3003": 6, "PMSx003": 12}[self.name]
-
-    def command(self, command: str) -> bytes:
-        """Serial commands (except PMS3003)"""
-        return {
-            "PMS3003": b"",
-            "PMSx003": {
-                "passive_mode": b"\x42\x4D\xE1\x00\x00\x01\x70",
-                "passive_read": b"\x42\x4D\xE2\x00\x00\x01\x71",
-                "active_mode": b"\x42\x4D\xE1\x00\x01\x01\x71",
-                "sleep": b"\x42\x4D\xE4\x00\x00\x01\x73",
-                "wake": b"\x42\x4D\xE4\x00\x01\x01\x74",
-            }[command],
-        }[self.name]
-
-    def answer_length(self, command: str) -> int:
-        """Expected answer length to serial command"""
-        return {
-            "PMS3003": self.message_length,
-            "PMSx003": {
-            "passive_mode": 8,
-            "passive_read": self.message_length,
-            "active_mode": self.message_length,
-            "sleep": 8,
-            "wake": self.message_length,
-        }[command],
-        }[self.name]
-
-    @classmethod
-    def guess(cls, buffer: bytes) -> "Sensor":
-        """Guess sensor type from buffer contents"""
-        if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
-            sensor = cls.PMSx003
-        elif buffer:
-            sensor = cls.PMS3003
-        else:
-            sensor = cls.PMSx003
-            logger.debug(f"Sensor returned empty buffer, assume {sensor.name} on  sleep mode")
-        logger.debug(f"Guess {sensor.name}, #{sensor.message_length}b message")
-        return sensor
-
-    def decode(self, buffer: bytes, *, time: Optional[int] = None) -> Data:
-        """Decode a PMSx003/PMS3003 message"""
-        if not time:
-            time = Data.now()
-
-        data = Message.decode(buffer, self.message_header, self.message_length)
-        logger.debug(f"message data: {data}")
-
-        return Data(time, *data[: self.message_records])

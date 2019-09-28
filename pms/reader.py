@@ -6,17 +6,18 @@ NOTE:
 - Active mode (sleep/wake) is not supported.
 - Should work on a PMS1003 sensor, but has not been tested.
 - Should work on a PMS3003 sensor, but has not been tested.
+- Experimental support for SDS011
 """
 
 import sys, time
-from typing import Callable, Generator, Optional
+from typing import NamedTuple, Callable, Generator, Optional
 from serial import Serial
 from .logging import logger, SensorWarning, SensorWarmingUp
-from . import plantower
+from .sensor import Sensor
 
 
 class PMSerial:
-    """Read PMSx003 messages from serial port
+    """Read sensor messages from serial port
     
     The sensor is woken up after opening the serial port,
     and put to sleep when before closing the port.
@@ -31,7 +32,7 @@ class PMSerial:
         self, sensor: str = "PMSx003", port: str = "/dev/ttyUSB0", interval: int = 60
     ) -> None:
         """Configure serial port"""
-        self.sensor = plantower.Sensor[sensor]
+        self.sensor = Sensor[sensor]
         self.serial = Serial()
         self.serial.port = port
         self.serial.timeout = 5  # max time to wake up sensor
@@ -52,7 +53,7 @@ class PMSerial:
         length = self.sensor.answer_length(command)
         return self.serial.read(max(length, self.serial.in_waiting))
 
-    def __enter__(self) -> Callable[[int], Generator[plantower.Data, None, None]]:
+    def __enter__(self) -> Callable[[int], Generator[NamedTuple, None, None]]:
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             self.serial.open()
@@ -77,7 +78,7 @@ class PMSerial:
 
     def __call__(
         self, interval: Optional[int] = None
-    ) -> Generator[plantower.Data, None, None]:
+    ) -> Generator[NamedTuple, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:
