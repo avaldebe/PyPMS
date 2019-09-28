@@ -1,8 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
 import paho.mqtt.client as mqtt
-from invoke import task
-from pms import PMSerial, logger
+from .logging import logger
 
 
 def client_pub(
@@ -90,63 +89,3 @@ def client_sub(
     c.on_message = on_message
     c.connect(host, port, 60)
     c.loop_forever()
-
-
-@task(
-    name="mqtt",
-    help={
-        "serial": "serial port [default: /dev/ttyUSB0]",
-        "interval": "seconds to wait between updates [default: 60]",
-        "topic": "mqtt root/topic [default: homie/test]",
-        "mqtt-host": "mqtt server [default: mqtt.eclipse.org]",
-        "mqtt-port": "server port [default: 1883]",
-        "mqtt-user": "server username",
-        "mqtt-pass": "server password",
-        "debug": "print DEBUG/logging messages",
-    },
-)
-def main(
-    context,
-    serial="/dev/ttyUSB0",
-    interval=60,
-    topic="homie/test",
-    mqtt_host="mqtt.eclipse.org",
-    mqtt_port=1883,
-    mqtt_user=None,
-    mqtt_pass=None,
-    debug=False,
-):
-    """Read PMSx003 sensor and push PM measurements to a MQTT server"""
-    if debug:
-        logger.setLevel("DEBUG")
-    pub = client_pub(
-        topic=topic,
-        host=mqtt_host,
-        port=mqtt_port,
-        username=mqtt_user,
-        password=mqtt_pass,
-    )
-
-    try:
-        for k, v in [("pm01", "PM1"), ("pm25", "PM2.5"), ("pm10", "PM10")]:
-            pub(
-                {
-                    f"{k}/$type": v,
-                    f"{k}/$properties": "sensor,unit,concentration",
-                    f"{k}/sensor": "PMx003",
-                    f"{k}/unit": "ug/m3",
-                }
-            )
-        with PMSerial(serial) as read:
-            for pm in read(interval):
-                pub(
-                    {
-                        f"pm01/concentration": pm.pm01,
-                        f"pm25/concentration": pm.pm25,
-                        f"pm10/concentration": pm.pm10,
-                    }
-                )
-    except KeyboardInterrupt:
-        print()
-    except Exception as e:
-        logger.exception(e)

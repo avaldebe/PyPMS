@@ -5,35 +5,40 @@ Python application for PM sensors with serial interface
 ## Command line interface
 
 ```man
-Usage: pms [--core-opts] <subcommand> [--subcommand-opts] ...
+Usage: pms [OPTIONS] COMMAND [ARGS]...
 
-Core options:
-  ... core options here, minus task-related ones ...
-  
-Subcommands:
+  Read PMSx003 sensor
 
-  bridge     Bridge between MQTT server/topic and InfluxDB server/database
-  influxdb   Read PMSx003 sensor and push PM measurements to an InfluxDB server
-  mqtt       Read PMSx003 sensor and push PM measurements to a MQTT server
-  serial     Read PMSx003 sensor and print PM measurements
-```
+Options:
+  -s, --serial-port PATH  serial port  [default: /dev/ttyUSB0]
+  -i, --interval INTEGER  seconds to wait between updates  [default: 60]
+  --debug                 print DEBUG/logging messages
+  --help                  Show this message and exit.
 
-For details on the subcommands and subcommand options
+Commands:
+  bridge    Bridge between MQTT and InfluxDB servers
+  influxdb  Read sensor and push PM measurements to an InfluxDB server
+  mqtt      Read sensor and push PM measurements to a MQTT server
+  serial    Read sensor and print PM measurements
+
+For details on a particular command and their options
 
 ```bash
-pms --help <subcommand>
+pms COMMAND --help
 ```
 
 ### Tab completion
 
-The command line utility is build around [invoke][], so we can setup [tab completion][] as follows:
+Commands:
+  bridge    Bridge between MQTT and InfluxDB servers
+  influxdb  Read sensor and push PM measurements to an InfluxDB server
+  mqtt      Read sensor and push PM measurements to a MQTT server
+  serial    Read sensor and print PM measurements
 
-[invoke]: https://www.pyinvoke.org/
-[tab completion]: http://docs.pyinvoke.org/en/latest/invoke.html#tab-completion
+For details on a particular command and their options
 
 ```bash
-# bash completion
-source <(pms --print-completion-script bash)
+pms COMMAND --help
 ```
 
 ## Sensors
