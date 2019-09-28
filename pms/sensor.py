@@ -9,7 +9,7 @@ NOTE:
 """
 
 import time
-from typing import Callable, Generator
+from typing import Callable, Generator, Optional
 from serial import Serial
 from .logging import logger, SensorWarning, SensorWarmingUp
 from . import plantower
@@ -27,12 +27,13 @@ class PMSerial:
     Support for this sensor is experimental.
     """
 
-    def __init__(self, port: str = "/dev/ttyUSB0") -> None:
+    def __init__(self, port: str = "/dev/ttyUSB0", interval: int = 60) -> None:
         """Configure serial port"""
         self.serial = Serial()
         self.serial.port = port
         self.serial.timeout = 0
         self.sensor = plantower.Sensor.Default  # updated later
+        self.interval = interval
 
     def _cmd(self, command: str) -> bytes:
         """Write command to sensor and return answer"""
@@ -72,22 +73,29 @@ class PMSerial:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self, interval: int = 0) -> Generator[plantower.Data, None, None]:
+    def __call__(
+        self, interval: Optional[int] = None
+    ) -> Generator[plantower.Data, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
-            # passive mode read
-            buffer = self._cmd("passive_read")
-
             try:
-                obs = self.sensor.decode(buffer)
-            except SensorWarmingUp as e:
-                logger.debug(e)
-                time.sleep(1)
-            except SensorWarning as e:
-                logger.debug(e)
-                self.serial.reset_input_buffer()
-            else:
-                yield obs
-                delay = interval - (time.time() - obs.time)
-                if delay > 0:
-                    time.sleep(delay)
+                buffer = self._cmd("passive_read")
+
+                try:
+                    obs = self.sensor.decode(buffer)
+                except SensorWarmingUp as e:
+                    logger.debug(e)
+                    time.sleep(1)
+                except SensorWarning as e:
+                    logger.debug(e)
+                    self.serial.reset_input_buffer()
+                else:
+                    yield obs
+                    if interval is None:
+                        interval = self.interval
+                    delay = interval - (time.time() - obs.time)
+                    if delay > 0:
+                        time.sleep(delay)
+            except KeyboardInterrupt:
+                print()
+                break
