@@ -8,7 +8,7 @@ NOTE:
 - Should work on a PMS3003 sensor, but has not been tested.
 """
 
-import time
+import sys, time
 from typing import Callable, Generator, Optional
 from serial import Serial
 from .logging import logger, SensorWarning, SensorWarmingUp
@@ -27,12 +27,14 @@ class PMSerial:
     Support for this sensor is experimental.
     """
 
-    def __init__(self, port: str = "/dev/ttyUSB0", interval: int = 60) -> None:
+    def __init__(
+        self, sensor: str = "PMSx003", port: str = "/dev/ttyUSB0", interval: int = 60
+    ) -> None:
         """Configure serial port"""
+        self.sensor = plantower.Sensor[sensor]
         self.serial = Serial()
         self.serial.port = port
-        self.serial.timeout = 0
-        self.sensor = plantower.Sensor.Default  # updated later
+        self.serial.timeout = 5  # max time to wake up sensor
         self.interval = interval
 
     def _cmd(self, command: str) -> bytes:
@@ -46,13 +48,9 @@ class PMSerial:
         elif command.endswith("read"):
             self.serial.reset_input_buffer()
 
-        # wait for answer
-        length = self.sensor.answer_length(command)
-        while self.serial.in_waiting < length:
-            continue
-
         # return full buffer
-        return self.serial.read(self.serial.in_waiting)
+        length = self.sensor.answer_length(command)
+        return self.serial.read(max(length, self.serial.in_waiting))
 
     def __enter__(self) -> Callable[[int], Generator[plantower.Data, None, None]]:
         """Open serial port and sensor setup"""
@@ -62,9 +60,13 @@ class PMSerial:
 
         # wake sensor and set passive mode
         buffer = self._cmd("wake") + self._cmd("passive_mode")
+        logger.debug(f"buffer length: {len(buffer)}")
 
-        # guess sensor type from answer
-        self.sensor = plantower.Sensor.guess(buffer)
+        # check against sensor type derived from buffer
+        guess = self.sensor.guess(buffer)
+        if self.sensor != guess:
+            logger.error(f"Sensor is not {self.sensor.name}, try with {guess.name}")
+            sys.exit(1)
 
         return self
 

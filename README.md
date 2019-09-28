@@ -10,16 +10,18 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Read PMSx003 sensor
 
 Options:
-  -s, --serial-port PATH  serial port  [default: /dev/ttyUSB0]
-  -i, --interval INTEGER  seconds to wait between updates  [default: 60]
-  --debug                 print DEBUG/logging messages
-  --help                  Show this message and exit.
+  -m, --sensor-model TEXT  sensor model  [default: PMSx003]
+  -s, --serial-port PATH   serial port  [default: /dev/ttyUSB0]
+  -i, --interval INTEGER   seconds to wait between updates  [default: 60]
+  --debug                  print DEBUG/logging messages
+  --help                   Show this message and exit.
 
 Commands:
   bridge    Bridge between MQTT and InfluxDB servers
   influxdb  Read sensor and push PM measurements to an InfluxDB server
   mqtt      Read sensor and push PM measurements to a MQTT server
   serial    Read sensor and print PM measurements
+```
 
 For details on a particular command and their options
 

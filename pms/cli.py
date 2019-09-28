@@ -1,11 +1,20 @@
 import click
 from .logging import logger
+from .plantower import Sensor
 from .sensor import PMSerial
 from .mqtt import client_pub as mqtt_pub, client_sub as mqtt_sub, Data as MqttData
 from .influxdb import client_pub as db_pub
 
 
 @click.group()
+@click.option(
+    "--sensor-model",
+    "-m",
+    type=click.Choice([s.name for s in Sensor]),
+    help="sensor model",
+    default=Sensor.Default.name,
+    show_default=True,
+)
 @click.option(
     "--serial-port",
     "-s",
@@ -24,11 +33,11 @@ from .influxdb import client_pub as db_pub
 )
 @click.option("--debug", is_flag=True, help="print DEBUG/logging messages")
 @click.pass_context
-def main(ctx, serial_port, interval, debug):
+def main(ctx, sensor_model, serial_port, interval, debug):
     """Read PMSx003 sensor"""
     if debug:
         logger.setLevel("DEBUG")
-    ctx.obj = dict(sensor=PMSerial(serial_port, interval))
+    ctx.obj = dict(sensor=PMSerial(sensor_model, serial_port, interval))
 
 
 @main.command()

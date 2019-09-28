@@ -153,6 +153,11 @@ class Sensor(Enum):
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     PMS3003 = (b"\x42\x4D\x00\x14", 24)
     Default = PMSx003
+    G1 = PMS1003
+    G3 = PMS3003
+    G5 = PMS5003
+    G7 = PMS7003
+    G10 = PMSA003
 
     @property
     def message_header(self) -> bytes:
@@ -182,16 +187,28 @@ class Sensor(Enum):
 
     def answer_length(self, command: str) -> int:
         """Expected answer length to serial command"""
-        return self.message_length if command.endswith("read") else 8
+        return {
+            "PMS3003": self.message_length,
+            "PMSx003": {
+            "passive_mode": 8,
+            "passive_read": self.message_length,
+            "active_mode": self.message_length,
+            "sleep": 8,
+            "wake": self.message_length,
+        }[command],
+        }[self.name]
 
     @classmethod
     def guess(cls, buffer: bytes) -> "Sensor":
         """Guess sensor type from buffer contents"""
         if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             sensor = cls.PMSx003
-        else:
+        elif buffer:
             sensor = cls.PMS3003
-        logger.debug(f"Assume {sensor.name}, #{sensor.message_length}b message")
+        else:
+            sensor = cls.PMSx003
+            logger.debug(f"Sensor returned empty buffer, assume {sensor.name} on  sleep mode")
+        logger.debug(f"Guess {sensor.name}, #{sensor.message_length}b message")
         return sensor
 
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> Data:
