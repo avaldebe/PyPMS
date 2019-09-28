@@ -1,7 +1,7 @@
 import click
 from .logging import logger
 from .plantower import Sensor
-from .sensor import PMSerial
+from .reader import PMSerial
 from .mqtt import client_pub as mqtt_pub, client_sub as mqtt_sub, Data as MqttData
 from .influxdb import client_pub as db_pub
 
