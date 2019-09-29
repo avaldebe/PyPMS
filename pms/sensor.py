@@ -2,16 +2,15 @@ from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
 from . import message
-from .plantower import Data as PlantowerData
-from .novafitness import Data as NovaFitnessData
+from . import obsdata
 
 
 class Sensor(Enum):
     """Supported PM sensors"""
 
-    PMSx003 = (auto(), PlantowerData)
-    PMS3003 = (auto(), PlantowerData)
-    SDS01x = (auto(), NovaFitnessData)
+    PMSx003 = auto()
+    PMS3003 = auto()
+    SDS01x = auto()
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
@@ -25,7 +24,7 @@ class Sensor(Enum):
 
     @property
     def Data(self):
-        return self.value[1]
+        return getattr(obsdata, self.name)
 
     @property
     def message_records(self) -> int:
