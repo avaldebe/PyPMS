@@ -25,21 +25,19 @@ class BaseMessage(ABC):
     def decode(
         cls, message: bytes, header: Optional[bytes] = None, length: Optional[int] = None
     ) -> Tuple[int, ...]:
-        if header is None:
-            header = cls.message_header
-        if length is None:
-            length = cls.message_length
+        header_: bytes = header if header is not None else cls.message_header
+        length_: int = length if length is not None else cls.message_length
 
         try:
             # validate full message
-            msg = cls._validate(message, header, length)
+            msg = cls._validate(message, header_, length_)
         except WrongMessageFormat as e:
             # search last complete message on buffer
-            start = message.rfind(header, 0, 4 - length)
+            start = message.rfind(header_, 0, 4 - length_)
             if start < 0:  # No match found
                 raise
             # validate last complete message
-            msg = cls._validate(message[start : start + length], header, length)
+            msg = cls._validate(message[start : start + length_], header_, length_)
 
         # data: unpacked payload
         payload = msg.payload
@@ -48,13 +46,15 @@ class BaseMessage(ABC):
 
     @property
     @classmethod
+    @abstractmethod
     def message_header(cls) -> bytes:
-        raise NotImplementedError
+        pass
 
     @property
     @classmethod
+    @abstractmethod
     def message_length(cls) -> int:
-        raise NotImplementedError
+        pass
 
     @property
     @abstractmethod
