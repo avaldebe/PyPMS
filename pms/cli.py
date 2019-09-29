@@ -1,7 +1,7 @@
 import click
 from pms import logger
 from .sensor import Sensor
-from .reader import PMSerial
+from .reader import SensorReader
 from .mqtt import client_pub as mqtt_pub, client_sub as mqtt_sub, Data as MqttData
 from .influxdb import client_pub as db_pub
 
@@ -34,10 +34,10 @@ from .influxdb import client_pub as db_pub
 @click.option("--debug", is_flag=True, help="print DEBUG/logging messages")
 @click.pass_context
 def main(ctx, sensor_model, serial_port, interval, debug):
-    """Read PMSx003 sensor"""
+    """Read serial sensor"""
     if debug:
         logger.setLevel("DEBUG")
-    ctx.obj = dict(sensor=PMSerial(sensor_model, serial_port, interval))
+    ctx.obj = {"reader": SensorReader(sensor_model, serial_port, interval)}
 
 
 @main.command()
@@ -51,10 +51,10 @@ def main(ctx, sensor_model, serial_port, interval, debug):
 )
 @click.pass_context
 def serial(ctx, format):
-    """Read sensor and print PM measurements"""
-    with ctx.obj["sensor"] as sensor:
-        for pm in sensor():
-            print(f"{pm:{format}}")
+    """Read sensor and print measurements"""
+    with ctx.obj["reader"] as reader:
+        for obs in reader():
+            print(f"{obs:{format}}")
 
 
 @main.command()
@@ -78,17 +78,17 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
             {
                 f"{k}/$type": v,
                 f"{k}/$properties": "sensor,unit,concentration",
-                f"{k}/sensor": "PMx003",
+                f"{k}/sensor": reader.sensor.name,
                 f"{k}/unit": "ug/m3",
             }
         )
-    with ctx.obj["sensor"] as sensor:
-        for pm in sensor():
+    with ctx.obj["reader"] as reader:
+        for obs in reader():
             pub(
                 {
-                    f"pm01/concentration": pm.pm01,
-                    f"pm25/concentration": pm.pm25,
-                    f"pm10/concentration": pm.pm10,
+                    f"pm01/concentration": obs.pm01,
+                    f"pm25/concentration": obs.pm25,
+                    f"pm10/concentration": obs.pm10,
                 }
             )
 
@@ -105,9 +105,13 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
     pub = db_pub(host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name)
     tags = json.loads(tags)
 
-    with ctx.obj["sensor"] as sensor:
-        for pm in sensor():
-            pub(time=pm.time, tags=tags, data={"pm01": pm.pm01, "pm25": pm.pm25, "pm10": pm.pm10})
+    with ctx.obj["reader"] as reader:
+        for obs in reader():
+            pub(
+                time=obs.time,
+                tags=tags,
+                data={"pm01": obs.pm01, "pm25": obs.pm25, "pm10": obs.pm10},
+            )
 
 
 @main.command()

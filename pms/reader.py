@@ -16,7 +16,7 @@ from pms import logger, SensorWarning, SensorWarmingUp
 from .sensor import Sensor
 
 
-class PMSerial:
+class SensorReader:
     """Read sensor messages from serial port
     
     The sensor is woken up after opening the serial port,
@@ -53,7 +53,7 @@ class PMSerial:
         length = self.sensor.answer_length(command)
         return self.serial.read(max(length, self.serial.in_waiting))
 
-    def __enter__(self) -> Callable[[int], Generator[NamedTuple, None, None]]:
+    def __enter__(self) -> "SensorReader":
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             self.serial.open()
@@ -76,7 +76,7 @@ class PMSerial:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self, interval: Optional[int] = None) -> Generator[NamedTuple, None, None]:
+    def __call__(self, *, interval: Optional[int] = None) -> Generator[NamedTuple, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:
