@@ -8,56 +8,6 @@ from typing import NamedTuple, Optional, Tuple
 from pms import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 
 
-class Message(NamedTuple):
-    header: bytes
-    payload: bytes
-    checksum: bytes
-
-    @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> "Message":
-        # consistency check: bug in message singnature
-        assert len(header) == 4, f"wrong header length {len(header)}"
-        assert header[:2] == b"BM", f"wrong header start {header}"
-        len_payload, = cls._unpack(header[-2:])
-        assert length == len(header) + len_payload, f"wrong payload length {length}"
-
-        # validate message: recoverable errors (throw away observation)
-        logger.debug(f"message hex: {message.hex()}")
-        msg = cls(message[:4], message[4:-2], message[-2:])
-        if msg.header != header:
-            raise WrongMessageFormat(f"message header: {msg.header}")
-        if len(message) != length:
-            raise WrongMessageFormat(f"message length: {len(message)}")
-        checksum, = cls._unpack(msg.checksum)
-        checksum_ = sum(msg.header) + sum(msg.payload)
-        if checksum != checksum_:
-            raise WrongMessageChecksum(f"message checksum {checksum} != {checksum_}")
-        if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
-        return msg
-
-    @classmethod
-    def decode(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
-        try:
-            # validate full message
-            msg = cls._validate(message, header, length)
-        except WrongMessageFormat as e:
-            # search last complete message on buffer
-            start = message.rfind(header, 0, 4 - length)
-            if start < 0:  # No match found
-                raise
-            # validate last complete message
-            msg = cls._validate(message[start : start + length], header, length)
-
-        # data: unpacked payload
-        logger.debug(f"message payload: {msg.payload.hex()}")
-        return cls._unpack(msg.payload)
-
-    @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f">{len(message)//2}H", message)
-
-
 class Data(NamedTuple):
     """PMSx003 observations
     

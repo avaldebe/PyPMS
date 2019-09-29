@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms.plantower import Data as SensorData, Message as SensorMessage
+    from pms.plantower import Data as SensorData
     from pms.sensor import Sensor
     from pms import SensorWarning
 except ModuleNotFoundError as e:
@@ -48,55 +48,3 @@ def test_format(fmt, raw=tuple(range(1, 13)), secs=1567198523):
         )
 
     assert obs == f"{secs} {raw}"
-
-
-@pytest.mark.parametrize(
-    "header,length,error",
-    [
-        pytest.param(
-            Sensor.PMSx003.message_header[:3],
-            Sensor.PMSx003.message_length,
-            "wrong header length 3",
-            id="wrong header length",
-        ),
-        pytest.param(
-            Sensor.PMSx003.message_header * 2,
-            Sensor.PMSx003.message_length,
-            "wrong header length 8",
-            id="wrong header length",
-        ),
-        pytest.param(
-            b"BN\x00\x1c",
-            Sensor.PMSx003.message_length,
-            r"wrong header start b'BN\x00\x1c'",
-            id="wrong header start",
-        ),
-        pytest.param(
-            b"\x00\x1c\x00\x1c",
-            Sensor.PMSx003.message_length,
-            r"wrong header start b'\x00\x1c\x00\x1c'",
-            id="wrong header start",
-        ),
-        pytest.param(
-            Sensor.PMSx003.message_header,
-            Sensor.PMS3003.message_length,
-            "wrong payload length 24",
-            id="wrong payload length",
-        ),
-        pytest.param(
-            Sensor.PMS3003.message_header,
-            Sensor.PMSx003.message_length,
-            "wrong payload length 32",
-            id="wrong payload length",
-        ),
-    ],
-)
-def test_validate_error(
-    header,
-    length,
-    error,
-    message=bytes.fromhex("424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5"),
-):
-    with pytest.raises(AssertionError) as e:
-        SensorMessage._validate(message, header, length)
-    assert str(e.value) == error

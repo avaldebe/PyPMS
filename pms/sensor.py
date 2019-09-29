@@ -1,46 +1,31 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
-from .plantower import Message as PlantowerMessage, Data as PlantowerData
-from .novafitness import Message as NovaFitnessMessage, Data as NovaFitnessData
+from . import message
+from .plantower import Data as PlantowerData
+from .novafitness import Data as NovaFitnessData
 
 
 class Sensor(Enum):
-    """Supported PM sensors
-    
-    message signature: header, length
-    - All SDS01x messages are 10b long;
-    - PMS3003 messages are 24b long;
-    - All other PMSx003 messages are 32b long;
-    """
+    """Supported PM sensors"""
 
-    PMSx003 = (b"\x42\x4D\x00\x1c", 32, PlantowerMessage, PlantowerData)
+    PMSx003 = (auto(), PlantowerData)
+    PMS3003 = (auto(), PlantowerData)
+    SDS01x = (auto(), NovaFitnessData)
+
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
-    PMS3003 = (b"\x42\x4D\x00\x14", 24, PlantowerMessage, PlantowerData)
-    Default = PMSx003
-    G1 = PMS1003
-    G3 = PMS3003
-    G5 = PMS5003
-    G7 = PMS7003
-    G10 = PMSA003
-    SDS01x = (b"\xAA\xC0", 10, NovaFitnessMessage, NovaFitnessData)
+    G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
     SDS011 = SDS018 = SDS01x
 
-    @property
-    def message_header(self) -> bytes:
-        return self.value[0]
-
-    @property
-    def message_length(self) -> int:
-        return self.value[1]
+    Default = PMSx003
 
     @property
     def Message(self):
-        return self.value[2]
+        return getattr(message, self.name)
 
     @property
     def Data(self):
-        return self.value[3]
+        return self.value[1]
 
     @property
     def message_records(self) -> int:
@@ -84,16 +69,17 @@ class Sensor(Enum):
 
     def answer_length(self, command: str) -> int:
         """Expected answer length to serial command"""
+        length = self.Message.message_length
         return {
             "PMSx003": {
                 "passive_mode": 8,
-                "passive_read": self.message_length,
-                "active_mode": self.message_length,
+                "passive_read": length,
+                "active_mode": length,
                 "sleep": 8,
-                "wake": self.message_length,
+                "wake": length,
             }[command],
-            "PMS3003": self.message_length,
-            "SDS01x": self.message_length,
+            "PMS3003": length,
+            "SDS01x": length,
         }[self.name]
 
     @classmethod
@@ -108,7 +94,7 @@ class Sensor(Enum):
         else:
             sensor = cls.PMSx003
             logger.debug(f"Sensor returned empty buffer, assume {sensor.name} on sleep mode")
-        logger.debug(f"Guess {sensor.name}, #{sensor.message_length}b message")
+        logger.debug(f"Guess {sensor.name} from buffer contents")
         return sensor
 
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> NamedTuple:
@@ -116,7 +102,7 @@ class Sensor(Enum):
         if not time:
             time = self.Data.now()
 
-        data = self.Message.decode(buffer, self.message_header, self.message_length)
+        data = self.Message.decode(buffer)
         logger.debug(f"message data: {data}")
 
         return self.Data(time, *data[: self.message_records])

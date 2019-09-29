@@ -7,58 +7,6 @@ The SDS198 PM100 sensor is not supported
 import struct
 from datetime import datetime
 from typing import NamedTuple, Optional, Tuple
-from pms import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-
-
-class Message(NamedTuple):
-    header: bytes
-    payload: bytes
-    checksum: int
-    tail: int
-
-    @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> "Message":
-        # consistency check: bug in message singnature
-        assert len(header) == 2, f"wrong header length {len(header)}"
-        assert header[:1] == b"\xAA", f"wrong header start {header}"
-        assert length == 10, f"wrong payload length {length}"
-
-        # validate message: recoverable errors (throw away observation)
-        logger.debug(f"message hex: {message.hex()}")
-        msg = cls(message[:2], message[2:-2], message[-2], message[-1])
-        if msg.header != header:
-            raise WrongMessageFormat(f"message header: {msg.header}")
-        if msg.tail != 0xAB:
-            raise WrongMessageFormat(f"message tail: {msg.tail:#x}")
-        if len(message) != length:
-            raise WrongMessageFormat(f"message length: {len(message)}")
-        checksum = sum(msg.payload) % 0x100
-        if msg.checksum != checksum:
-            raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
-        if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
-        return msg
-
-    @classmethod
-    def decode(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
-        try:
-            # validate full message
-            msg = cls._validate(message, header, length)
-        except WrongMessageFormat as e:
-            # search last complete message on buffer
-            start = message.rfind(header, 0, 4 - length)
-            if start < 0:  # No match found
-                raise
-            # validate last complete message
-            msg = cls._validate(message[start : start + length], header, length)
-
-        # data: unpacked payload
-        logger.debug(f"message payload: {msg.payload.hex()}")
-        return cls._unpack(msg.payload)
-
-    @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f"<{len(message)//2}H", message)
 
 
 class Data(NamedTuple):
