@@ -6,7 +6,7 @@ Extract measurements from
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple
+from typing import NamedTuple, Optional, Tuple, Dict
 
 
 class PMSx003(NamedTuple):
@@ -35,6 +35,9 @@ class PMSx003(NamedTuple):
     n2_5: Optional[int] = None
     n5_0: Optional[int] = None
     n10_0: Optional[int] = None
+
+    def pm(self) -> Dict[str, int]:
+        return {"pm01": self.pm01, "pm25": self.pm25, "pm10": self.pm10}
 
     @property
     def date(self) -> datetime:
@@ -108,6 +111,9 @@ class SDS01x(NamedTuple):
     # rawX [0.1 ug/m3]: PM2.5*10 & PM10*10
     raw25: int
     raw10: int
+
+    def pm(self) -> Dict[str, float]:
+        return {"pm25": self.pm25, "pm10": self.pm10}
 
     @property
     def pm25(self) -> float:

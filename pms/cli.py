@@ -78,19 +78,13 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
             {
                 f"{k}/$type": v,
                 f"{k}/$properties": "sensor,unit,concentration",
-                f"{k}/sensor": reader.sensor.name,
+                f"{k}/sensor": ctx.obj["reader"].sensor.name,
                 f"{k}/unit": "ug/m3",
             }
         )
     with ctx.obj["reader"] as reader:
         for obs in reader():
-            pub(
-                {
-                    f"pm01/concentration": obs.pm01,
-                    f"pm25/concentration": obs.pm25,
-                    f"pm10/concentration": obs.pm10,
-                }
-            )
+            pub({f"{k}/concentration": v for k, v in obs.pm().items()})
 
 
 @main.command()
@@ -107,11 +101,7 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
 
     with ctx.obj["reader"] as reader:
         for obs in reader():
-            pub(
-                time=obs.time,
-                tags=tags,
-                data={"pm01": obs.pm01, "pm25": obs.pm25, "pm10": obs.pm10},
-            )
+            pub(time=obs.time, tags=tags, data=obs.pm())
 
 
 @main.command()
