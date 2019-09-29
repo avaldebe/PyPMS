@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
 import paho.mqtt.client as mqtt
-from .logging import logger
+from pms import logger
 
 
 def client_pub(

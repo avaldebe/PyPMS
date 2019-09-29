@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import NamedTuple, Optional
-from .logging import logger
+from pms import logger
 from .plantower import Message as PlantowerMessage, Data as PlantowerData
 from .novafitness import Message as NovaFitnessMessage, Data as NovaFitnessData
 

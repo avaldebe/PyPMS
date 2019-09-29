@@ -5,7 +5,7 @@ Plantower PMSx003 sensors
 import struct
 from datetime import datetime
 from typing import NamedTuple, Optional, Tuple
-from .logging import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 
 
 class Message(NamedTuple):

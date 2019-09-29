@@ -12,7 +12,7 @@ NOTE:
 import sys, time
 from typing import NamedTuple, Callable, Generator, Optional
 from serial import Serial
-from .logging import logger, SensorWarning, SensorWarmingUp
+from pms import logger, SensorWarning, SensorWarmingUp
 from .sensor import Sensor
 
 

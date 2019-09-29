@@ -15,7 +15,7 @@ try:
     os.environ["LEVEL"] = "DEBUG"
     from pms.novafitness import Data as SensorData, Message as SensorMessage
     from pms.sensor import Sensor
-    from pms.logging import SensorWarning
+    from pms import SensorWarning
 except ModuleNotFoundError as e:
     print(__doc__)
     raise

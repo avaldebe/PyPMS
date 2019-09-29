@@ -7,7 +7,7 @@ The SDS198 PM100 sensor is not supported
 import struct
 from datetime import datetime
 from typing import NamedTuple, Optional, Tuple
-from .logging import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import logger, WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 
 
 class Message(NamedTuple):
