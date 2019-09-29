@@ -37,9 +37,7 @@ def test_decode(location, measurement, value, secs=1567201793):
     "topic,payload,error",
     [
         pytest.param("short/topic", "27.00", "topic total length: 2", id="short topic"),
-        pytest.param(
-            "too/long/topic/+/+/+", "27.00", "topic total length: 6", id="long topic"
-        ),
+        pytest.param("too/long/topic/+/+/+", "27.00", "topic total length: 6", id="long topic"),
         pytest.param(
             "sneaky/system/topic/$+",
             "27.00",
@@ -52,20 +50,12 @@ def test_decode(location, measurement, value, secs=1567201793):
             "system topic: other/$system/topic/+",
             id="system topic",
         ),
+        pytest.param("non/numeric/payload/+", "OK", "non numeric payload: OK", id="NaN payload"),
         pytest.param(
-            "non/numeric/payload/+", "OK", "non numeric payload: OK", id="NaN payload"
+            "non/numeric/payload/+", "value27", "non numeric payload: value27", id="NaN payload"
         ),
         pytest.param(
-            "non/numeric/payload/+",
-            "value27",
-            "non numeric payload: value27",
-            id="NaN payload",
-        ),
-        pytest.param(
-            "non/numeric/payload/+",
-            "27,00",
-            "non numeric payload: 27,00",
-            id="NaN payload",
+            "non/numeric/payload/+", "27,00", "non numeric payload: 27,00", id="NaN payload"
         ),
     ],
 )

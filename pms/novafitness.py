@@ -93,9 +93,7 @@ class Data(NamedTuple):
         d = f = None
         if spec.endswith("pm"):
             d = (spec[:-2] or ".1") + "f"
-            return (
-                f"{self.date:%F %T}: PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-            )
+            return f"{self.date:%F %T}: PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
         if spec.endswith("csv"):
             d = (spec[:-3] or ".1") + "f"
             return f"{self.time}, {self.pm25:{d}}, {self.pm10:{d}}"

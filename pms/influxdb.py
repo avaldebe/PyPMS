@@ -7,11 +7,7 @@ from influxdb import InfluxDBClient
 def client_pub(
     *, host: str, port: int, username: str, password: str, db_name: str
 ) -> Callable[
-    [
-        NamedArg(int, "time"),
-        NamedArg(Dict[str, str], "tags"),
-        NamedArg(Dict[str, float], "data"),
-    ],
+    [NamedArg(int, "time"), NamedArg(Dict[str, str], "tags"), NamedArg(Dict[str, float], "data")],
     None,
 ]:
     c = InfluxDBClient(host, port, username, password, None)

@@ -107,9 +107,7 @@ class Sensor(Enum):
             sensor = cls.PMS3003
         else:
             sensor = cls.PMSx003
-            logger.debug(
-                f"Sensor returned empty buffer, assume {sensor.name} on sleep mode"
-            )
+            logger.debug(f"Sensor returned empty buffer, assume {sensor.name} on sleep mode")
         logger.debug(f"Guess {sensor.name}, #{sensor.message_length}b message")
         return sensor
 

@@ -47,9 +47,7 @@ except ModuleNotFoundError as e:
             (81, 106, 119, 53, 70, 79),
             id="good data at the end of the buffer",
         ),
-        pytest.param(
-            Sensor.SDS011, "AAC0D4043A0AA1601DAB", (1236, 2618), id="known good data"
-        ),
+        pytest.param(Sensor.SDS011, "AAC0D4043A0AA1601DAB", (1236, 2618), id="known good data"),
         pytest.param(
             Sensor.SDS011,
             "3A0AA1601DABAAC0D4043A0AA1601DAB",
@@ -66,10 +64,7 @@ def test_decode(sensor, hex, msg, secs=1567201793):
     "sensor,hex,error",
     [
         pytest.param(
-            Sensor.PMSx003,
-            "424d001c0005000d0016",
-            "message length: 10",
-            id="short message",
+            Sensor.PMSx003, "424d001c0005000d0016", "message length: 10", id="short message"
         ),
         pytest.param(
             Sensor.PMSx003,
@@ -90,10 +85,7 @@ def test_decode(sensor, hex, msg, secs=1567201793):
             id="empty message",
         ),
         pytest.param(
-            Sensor.PMS3003,
-            "424d00140051006A0077",
-            "message length: 10",
-            id="short message",
+            Sensor.PMS3003, "424d00140051006A0077", "message length: 10", id="short message"
         ),
         pytest.param(
             Sensor.PMS3003,
@@ -113,23 +105,13 @@ def test_decode(sensor, hex, msg, secs=1567201793):
             "message empty: warming up sensor",
             id="empty message",
         ),
+        pytest.param(Sensor.SDS011, "AAC0D4041DAB", "message length: 6", id="short message"),
         pytest.param(
-            Sensor.SDS011, "AAC0D4041DAB", "message length: 6", id="short message"
+            Sensor.SDS011, "ABC0D4043A0AA1601DAA", r"message header: b'\xab\xc0'", id="wrong header"
         ),
+        pytest.param(Sensor.SDS011, "AAC0D4043A0AA1601DAA", "message tail: 0xaa", id="wrong tail"),
         pytest.param(
-            Sensor.SDS011,
-            "ABC0D4043A0AA1601DAA",
-            r"message header: b'\xab\xc0'",
-            id="wrong header",
-        ),
-        pytest.param(
-            Sensor.SDS011, "AAC0D4043A0AA1601DAA", "message tail: 0xaa", id="wrong tail"
-        ),
-        pytest.param(
-            Sensor.SDS011,
-            "AAC0D4043A0AA16000AB",
-            "message checksum 0 != 29",
-            id="wrong checksum",
+            Sensor.SDS011, "AAC0D4043A0AA16000AB", "message checksum 0 != 29", id="wrong checksum"
         ),
         pytest.param(
             Sensor.SDS011,

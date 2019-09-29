@@ -76,9 +76,7 @@ class PMSerial:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(
-        self, interval: Optional[int] = None
-    ) -> Generator[NamedTuple, None, None]:
+    def __call__(self, interval: Optional[int] = None) -> Generator[NamedTuple, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:

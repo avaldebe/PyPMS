@@ -80,14 +80,7 @@ def test_format(fmt, raw=(12, 13), secs=1567198523):
         ),
     ],
 )
-def test_validate_error(
-    header,
-    length,
-    error,
-    message=bytes.fromhex(
-        "AAC0D4043A0AA1601DAB"
-    ),
-):
+def test_validate_error(header, length, error, message=bytes.fromhex("AAC0D4043A0AA1601DAB")):
     with pytest.raises(AssertionError) as e:
         SensorMessage._validate(message, header, length)
     assert str(e.value) == error
