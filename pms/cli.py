@@ -84,7 +84,7 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
         )
     with ctx.obj["reader"] as reader:
         for obs in reader():
-            pub({f"{k}/concentration": v for k, v in obs.pm().items()})
+            pub({f"{k}/concentration": v for k, v in obs.subset("pm").items()})
 
 
 @main.command()
@@ -101,7 +101,7 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
 
     with ctx.obj["reader"] as reader:
         for obs in reader():
-            pub(time=obs.time, tags=tags, data=obs.pm())
+            pub(time=obs.time, tags=tags, data=obs.subset("pm"))
 
 
 @main.command()

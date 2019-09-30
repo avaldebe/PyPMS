@@ -36,8 +36,19 @@ class PMSx003(NamedTuple):
     n5_0: Optional[int] = None
     n10_0: Optional[int] = None
 
-    def pm(self) -> Dict[str, int]:
-        return {"pm01": self.pm01, "pm25": self.pm25, "pm10": self.pm10}
+    def subset(self, spec: str) -> Dict[str, float]:
+        if spec == "pm":
+            return {"pm01": self.pm01, "pm25": self.pm25, "pm10": self.pm10}
+        if spec == "cf":
+            return {
+                "cf01": self._safe_div(self.pm01, self.raw01),
+                "cf25": self._safe_div(self.pm25, self.raw25),
+                "cf10": self._safe_div(self.pm10, self.raw10),
+            }
+        raise ValueError(
+            f"Unknown subset code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
 
     @property
     def date(self) -> datetime:
@@ -52,18 +63,6 @@ class PMSx003(NamedTuple):
             return 1
         return 0
 
-    @property
-    def cf01(self) -> float:
-        return self._safe_div(self.pm01, self.raw01)
-
-    @property
-    def cf25(self) -> float:
-        return self._safe_div(self.pm25, self.raw25)
-
-    @property
-    def cf10(self) -> float:
-        return self._safe_div(self.pm10, self.raw10)
-
     def __format__(self, spec: str) -> str:
         d = f = None
         if spec.endswith("pm"):
@@ -77,7 +76,9 @@ class PMSx003(NamedTuple):
             f = f"{self.date:%F %T}: N0.3 {{7}}, N0.5 {{8}}, N1.0 {{9}}, N2.5 {{10}}, N5.0 {{11}}, N10 {{12}} #/100cc"
         elif spec.endswith("cf"):
             d = (spec[:-2] or ".0") + "%"
-            return f"{self.date:%F %T}: CF1 {self.cf01:{d}}, CF2.5 {self.cf25:{d}}, CF10 {self.cf10:{d}}"
+            return f"{self.date:%F %T}: CF1 {{cf01:{d}}}, CF2.5 {{cf25:{d}}}, CF10 {{cf10:{d}}}".format_map(
+                self.subset("cf")
+            )
         if d and f:
             return f.format(*(f"{x:{d}}" if x is not None else "" for x in self))
         else:
@@ -103,7 +104,7 @@ class SDS01x(NamedTuple):
     """SDS01x observations
     
     time                                    measurement time [seconds since epoch]
-    pm25, pm10                              PM2.5, PM10 [ug/m3]
+    raw25, raw10                            PM2.5*10, PM10*10 [ug/m3]
     """
 
     # seconds since epoch
@@ -112,18 +113,13 @@ class SDS01x(NamedTuple):
     raw25: int
     raw10: int
 
-    def pm(self) -> Dict[str, float]:
-        return {"pm25": self.pm25, "pm10": self.pm10}
-
-    @property
-    def pm25(self) -> float:
-        """extract PM2.5 (float) from raw25 (int)"""
-        return self.raw25 / 10
-
-    @property
-    def pm10(self) -> float:
-        """extract PM10 (float) from raw25 (int)"""
-        return self.raw10 / 10
+    def subset(self, spec: str) -> Dict[str, float]:
+        if spec == "pm":
+            return {"pm25": self.raw25 / 10, "pm10": self.raw10 / 10}
+        raise ValueError(
+            f"Unknown subset code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
 
     @property
     def date(self) -> datetime:
@@ -134,10 +130,12 @@ class SDS01x(NamedTuple):
         d = f = None
         if spec.endswith("pm"):
             d = (spec[:-2] or ".1") + "f"
-            return f"{self.date:%F %T}: PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
+            return f"{self.date:%F %T}: PM2.5 {{pm25:{d}}}, PM10 {{pm10:{d}}} ug/m3".format_map(
+                self.subset("pm")
+            )
         if spec.endswith("csv"):
             d = (spec[:-3] or ".1") + "f"
-            return f"{self.time}, {self.pm25:{d}}, {self.pm10:{d}}"
+            return f"{self.time}, {{pm25:{d}}}, {{pm10:{d}}}".format_map(self.subset("pm"))
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
