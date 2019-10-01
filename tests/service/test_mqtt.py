@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms import mqtt
+    from pms.service import mqtt
 except ModuleNotFoundError as e:
     print(__doc__)
     raise

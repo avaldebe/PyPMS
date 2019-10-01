@@ -1,9 +1,7 @@
 import click
-from pms import logger
+from pms import logger, service
 from .sensor import Sensor
 from .reader import SensorReader
-from .mqtt import client_pub as mqtt_pub, client_sub as mqtt_sub, Data as MqttData
-from .influxdb import client_pub as db_pub
 
 
 @click.group()
@@ -70,7 +68,7 @@ def serial(ctx, format):
 @click.pass_context
 def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
     """Read sensor and push PM measurements to a MQTT server"""
-    pub = mqtt_pub(
+    pub = service.mqtt.client_pub(
         topic=topic, host=mqtt_host, port=mqtt_port, username=mqtt_user, password=mqtt_pass
     )
     for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
@@ -93,11 +91,15 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
 @click.option("--db-user", type=str, help="server username", default="root", show_default=True)
 @click.option("--db-pass", type=str, help="server password", default="root", show_default=True)
 @click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
-@click.option("--tags", type=str, help="measurement tags", default="{'location':'test'}", show_default=True)
+@click.option(
+    "--tags", type=str, help="measurement tags", default="{'location':'test'}", show_default=True
+)
 @click.pass_context
 def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
     """Read sensor and push PM measurements to an InfluxDB server"""
-    pub = db_pub(host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name)
+    pub = service.influxdb.client_pub(
+        host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name
+    )
     tags = json.loads(tags)
 
     with ctx.obj["reader"] as reader:
@@ -119,12 +121,14 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
 @click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
 def bridge(mqtt_host, mqtt_port, mqtt_user, mqtt_pass, db_host, db_port, db_user, db_pass, db_name):
     """Bridge between MQTT and InfluxDB servers"""
-    pub = db_pub(host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name)
+    pub = service.influxdb.client_pub(
+        host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name
+    )
 
-    def on_sensordata(data: MqttData) -> None:
+    def on_sensordata(data: service.mqtt.Data) -> None:
         pub(time=data.time, tags={"location": data.location}, data={data.measurement: data.value})
 
-    mqtt_sub(
+    setvice.mqtt.client_sub(
         topic=topic,
         host=mqtt_host,
         port=mqtt_port,
