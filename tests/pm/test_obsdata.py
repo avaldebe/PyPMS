@@ -13,7 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms.obsdata import PMSx003, SDS01x
+    from pms.pm.obsdata import PMSx003, SDS01x
     from pms import SensorWarning
 except ModuleNotFoundError as e:
     print(__doc__)

@@ -1,16 +1,14 @@
 import click
-from pms import logger, service
-from .sensor import Sensor
-from .reader import SensorReader
+from pms import logger, service, pm
 
 
 @click.group()
 @click.option(
     "--sensor-model",
     "-m",
-    type=click.Choice([s.name for s in Sensor]),
+    type=click.Choice(pm.SUPPORTED),
     help="sensor model",
-    default=Sensor.Default.name,
+    default=pm.DEFAULT,
     show_default=True,
 )
 @click.option(
@@ -35,7 +33,7 @@ def main(ctx, sensor_model, serial_port, interval, debug):
     """Read serial sensor"""
     if debug:
         logger.setLevel("DEBUG")
-    ctx.obj = {"reader": SensorReader(sensor_model, serial_port, interval)}
+    ctx.obj = {"reader": pm.SensorReader(sensor_model, serial_port, interval)}
 
 
 @main.command()
