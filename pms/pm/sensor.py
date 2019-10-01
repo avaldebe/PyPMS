@@ -2,6 +2,7 @@ from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
 from . import message, obsdata
+from . import commands
 
 
 class Sensor(Enum):
@@ -25,55 +26,8 @@ class Sensor(Enum):
     def Data(self):
         return getattr(obsdata, self.name)
 
-    def command(self, command: str) -> bytes:
-        """Serial commands (except PMS3003)"""
-        return {
-            "PMSx003": {
-                "passive_mode": b"\x42\x4D\xE1\x00\x00\x01\x70",
-                "passive_read": b"\x42\x4D\xE2\x00\x00\x01\x71",
-                "active_mode": b"\x42\x4D\xE1\x00\x01\x01\x71",
-                "sleep": b"\x42\x4D\xE4\x00\x00\x01\x73",
-                "wake": b"\x42\x4D\xE4\x00\x01\x01\x74",
-            },
-            "PMS3003": {
-                "passive_mode": b"",
-                "passive_read": b"",
-                "active_mode": b"",
-                "sleep": b"",
-                "wake": b"",
-            },
-            "SDS01x": {
-                "passive_mode": b"\xAA\xB4\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-                "passive_read": b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-                "active_mode": b"\xAA\xB4\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x01\xAB",
-                "sleep": b"\xAA\xB4\x06\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x05\xAB",
-                "wake": b"\xAA\xB4\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x06\xAB",
-                # active mode: report every 1 sec
-                # b"\xAA\xB4\x08\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x07\xAB"
-                # active mode: report every 1 min
-                # b"\xAA\xB4\x08\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x08\xAB"
-                # ...
-                # active mode: report every 30 min
-                # b"\xAA\xB4\x08\x01\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x25\xAB"
-                # firmware version
-                # b"\xAA\xB4\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x05\xAB"
-            },
-        }[self.name][command]
-
-    def answer_length(self, command: str) -> int:
-        """Expected answer length to serial command"""
-        length = self.Message.message_length
-        return {
-            "PMSx003": {
-                "passive_mode": 8,
-                "passive_read": length,
-                "active_mode": length,
-                "sleep": 8,
-                "wake": length,
-            }[command],
-            "PMS3003": length,
-            "SDS01x": length,
-        }[self.name]
+    def command(self, cmd: str) -> commands.BaseCmd:
+        return getattr(commands, self.name)[cmd]
 
     @classmethod
     def guess(cls, buffer: bytes) -> "Sensor":

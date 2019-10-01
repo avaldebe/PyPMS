@@ -43,15 +43,14 @@ class SensorReader:
 
         # send command
         cmd = self.sensor.command(command)
-        if cmd:
-            self.serial.write(cmd)
+        if cmd.command:
+            self.serial.write(cmd.command)
             self.serial.flush()
         elif command.endswith("read"):
             self.serial.reset_input_buffer()
 
         # return full buffer
-        length = self.sensor.answer_length(command)
-        return self.serial.read(max(length, self.serial.in_waiting))
+        return self.serial.read(max(cmd.answer_length, self.serial.in_waiting))
 
     def __enter__(self) -> "SensorReader":
         """Open serial port and sensor setup"""
