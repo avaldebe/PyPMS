@@ -90,11 +90,6 @@ class PMSx003(NamedTuple):
     def __str__(self):
         return self.__format__("pm")
 
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())
-
 
 class PMS3003(PMSx003):
     pass
@@ -143,8 +138,3 @@ class SDS01x(NamedTuple):
 
     def __str__(self):
         return self.__format__("pm")
-
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())

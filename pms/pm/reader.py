@@ -1,12 +1,11 @@
 """
-Read Plantower PMSx003 sensors
+Read PM sensors
 
 NOTE:
 - Sensor are read on passive mode.
-- Active mode (sleep/wake) is not supported.
 - Should work on a PMS1003 sensor, but has not been tested.
 - Should work on a PMS3003 sensor, but has not been tested.
-- Experimental support for SDS011
+- Experimental support for NovaFitness sensors
 """
 
 import sys, time
@@ -19,13 +18,11 @@ from .sensor import Sensor
 class SensorReader:
     """Read sensor messages from serial port
     
-    The sensor is woken up after opening the serial port,
-    and put to sleep when before closing the port.
+    The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
     While the serial port is open, the sensor is read in passive mode.
 
-    PMS3003 sensors do not accept serial commands, such as wake/sleep
-    or passive mode read. Valid messages are extracted from the serail buffer.
-    Support for this sensor is experimental.
+    PMS3003 sensors do not accept serial commands, such as wake/sleep or passive mode read.
+    Valid messages are extracted from the serail buffer. Support for this sensor is experimental.
     """
 
     def __init__(

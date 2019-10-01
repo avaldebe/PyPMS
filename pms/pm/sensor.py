@@ -1,8 +1,13 @@
+"""
+Access supported PM sensors from a single object
+"""
+
+
+from datetime import datetime
 from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
-from . import message, obsdata
-from . import commands
+from . import message, obsdata, commands
 
 
 class Sensor(Enum):
@@ -26,8 +31,9 @@ class Sensor(Enum):
     def Data(self):
         return getattr(obsdata, self.name)
 
-    def command(self, cmd: str) -> commands.BaseCmd:
-        return getattr(commands, self.name)[cmd]
+    @property
+    def Commands(self):
+        return getattr(commands, self.name)
 
     @classmethod
     def guess(cls, buffer: bytes) -> "Sensor":
@@ -44,10 +50,19 @@ class Sensor(Enum):
         logger.debug(f"Guess {sensor.name} from buffer contents")
         return sensor
 
+    @staticmethod
+    def now() -> int:
+        """current time as seconds since epoch"""
+        return int(datetime.now().timestamp())
+
+    def command(self, cmd: str) -> commands.BaseCmd:
+        """Serial command for sensor"""
+        return self.Commands[cmd]
+
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> NamedTuple:
-        """Decode a serial message"""
+        """Exract observations from serial buffer"""
         if not time:
-            time = self.Data.now()
+            time = self.now()
 
         data = self.Message.decode(buffer)
         return self.Data(time, *data)
