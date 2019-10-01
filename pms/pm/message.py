@@ -22,33 +22,28 @@ class BaseMessage(ABC):
         self.message = message
 
     @classmethod
-    def unpack(
-        cls, message: bytes, header: Optional[bytes] = None, length: Optional[int] = None
-    ) -> Tuple[int, ...]:
-        header_: bytes = header or cls.message_header  # type: ignore
-        length_: int = length or cls.message_length  # type: ignore
-
+    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
         try:
             # validate full message
-            msg = cls._validate(message, header_, length_)
+            msg = cls._validate(message, header, length)
         except WrongMessageFormat as e:
             # search last complete message on buffer
-            start = message.rfind(header_, 0, 4 - length_)
+            start = message.rfind(header, 0, 4 - length)
             if start < 0:  # No match found
                 raise
             # validate last complete message
-            msg = cls._validate(message[start : start + length_], header_, length_)
+            msg = cls._validate(message[start : start + length], header, length)
 
         # data: unpacked payload
-        payload = msg.payload
-        logger.debug(f"message payload: {payload.hex()}")
-        return cls._unpack(payload)
+        payload = cls._unpack(msg.payload)
+        logger.debug(f"message payload: {payload}")
+        return payload
 
     @classmethod
     def decode(cls, message: bytes) -> Tuple[int, ...]:
-        data = cls.unpack(message)[cls.data_records]  # type: ignore
-        logger.debug(f"message data: {data}")
-        return data
+        header: bytes = cls.message_header  # type: ignore
+        length: int = cls.message_length  # type: ignore
+        return cls.unpack(message, header, length)[cls.data_records]  # type: ignore
 
     @property
     @classmethod
