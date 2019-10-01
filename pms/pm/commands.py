@@ -10,8 +10,10 @@ from enum import EnumMeta
 from typing import Tuple
 from . import message
 
+
 class BaseMeta(EnumMeta, ABCMeta):
     pass
+
 
 class BaseCmd(BaseMeta):
     @property

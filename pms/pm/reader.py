@@ -93,7 +93,7 @@ class SensorReader:
                     yield obs
                     if interval is None:
                         interval = self.interval
-                    delay = interval - (time.time() - obs.time)
+                    delay = interval - (time.time() - obs.time)  # type: ignore
                     if delay > 0:
                         time.sleep(delay)
             except KeyboardInterrupt:

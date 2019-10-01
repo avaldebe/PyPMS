@@ -25,8 +25,8 @@ class BaseMessage(ABC):
     def decode(
         cls, message: bytes, header: Optional[bytes] = None, length: Optional[int] = None
     ) -> Tuple[int, ...]:
-        header_: bytes = header if header is not None else cls.message_header
-        length_: int = length if length is not None else cls.message_length
+        header_: bytes = header if header is not None else cls.message_header  # type: ignore
+        length_: int = length if length is not None else cls.message_length  # type: ignore
 
         try:
             # validate full message
