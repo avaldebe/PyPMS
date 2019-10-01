@@ -38,11 +38,16 @@ class Sensor(Enum):
 
     @classmethod
     def guess(cls, buffer: bytes) -> "Sensor":
-        """Guess sensor type from buffer contents"""
+        """Guess sensor type from buffer contents
+        
+        Need to issue the correct commands for a given sensor.
+        Otherwise, the sensor will not wake up...
+        """
         if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
             sensor = cls.PMSx003
         elif buffer[-10:-4] == b"\xAA\xC5\x02\x01\x01\x00":
-            sensor = cls.SDS01x
+            if sensor != cls.SDS198:  # SDS01x/SDS198 use the same commands
+                sensor = cls.SDS01x
         elif buffer:
             sensor = cls.PMS3003
         else:
