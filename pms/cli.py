@@ -93,6 +93,7 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
 @click.option("--db-user", type=str, help="server username", default="root", show_default=True)
 @click.option("--db-pass", type=str, help="server password", default="root", show_default=True)
 @click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
+@click.option("--tags", type=str, help="measurement tags", default="{'location':'test'}", show_default=True)
 @click.pass_context
 def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
     """Read sensor and push PM measurements to an InfluxDB server"""

@@ -1,8 +1,7 @@
 """
 PyPMS logging and recoverable errors
 """
-
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 import logging, os
