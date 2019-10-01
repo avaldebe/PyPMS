@@ -20,7 +20,7 @@ except ModuleNotFoundError as e:
     raise
 
 
-@pytest.mark.parametrize("sensor", ["PMSx003", "PMS3003", "SDS01x"])
+@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
 @pytest.mark.parametrize("attr", ["Message", "Data", "Commands"])
 def test_sensor_attrs(sensor, attr):
     assert getattr(Sensor[sensor], attr)

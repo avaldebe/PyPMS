@@ -1,13 +1,12 @@
 """
 Serial messages from
 - Plantower PMSx003 PM1/PM2.5/PM10 sensors
-- NovaFitness SDS01x PM2.5/PM10 sensors
-- The SDS198 PM100 sensor is not supported
+- NovaFitness SDS01x PM2.5/PM10 sensors and SDS198 PM100 sensor
 
 message signature: header, length
 - PMS3003 messages are 24b long;
 - All other PMSx003 messages are 32b long;
-- All SDS01x messages are 10b long.
+- All SDS01x/SDS198 messages are 10b long.
 """
 
 import struct
@@ -192,3 +191,9 @@ class SDS01x(BaseMessage):
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
         return struct.unpack(f"<{len(message)//2}H", message)
+
+
+class SDS198(SDS01x):
+    """NovaFitness SDS198 messages"""
+
+    data_records = slice(1, 2)

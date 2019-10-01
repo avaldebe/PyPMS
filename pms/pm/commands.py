@@ -1,8 +1,7 @@
 """
 Serial commands for
 - Plantower PMSx003 PM1/PM2.5/PM10 sensors
-- NovaFitness SDS01x PM2.5/PM10 sensors
-- The SDS198 PM100 sensor is not supported
+- NovaFitness SDS01x PM2.5/PM10 sensors and SDS198 PM100 sensor
 """
 
 from enum import Enum
@@ -100,3 +99,9 @@ class SDS01x(Enum):
         assert 0 <= minutes <= 30, f"out of range: 0 <= {minutes} <= 30"
         hex = f"AAB40801{minutes:02X}00000000000000000000FFFF{minutes+7:02X}AB"
         return _Cmd(bytes.fromhex(hex), message.SDS01x.message_length)
+
+
+class SDS198(Enum):
+    """NovaFitness SDS198 commands"""
+
+    pass

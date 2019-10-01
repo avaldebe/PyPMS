@@ -10,7 +10,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Read PMSx003 sensor
 
 Options:
-  -m, --sensor-model [PMSx003|PMS3003|SDS01x]
+  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198]
                                   sensor model  [default: PMSx003]
   -s, --serial-port PATH          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -31,20 +31,6 @@ For details on a particular command and their options
 pms COMMAND --help
 ```
 
-### Tab completion
-
-Commands:
-  bridge    Bridge between MQTT and InfluxDB servers
-  influxdb  Read sensor and push PM measurements to an InfluxDB server
-  mqtt      Read sensor and push PM measurements to a MQTT server
-  serial    Read sensor and print PM measurements
-
-For details on a particular command and their options
-
-```bash
-pms COMMAND --help
-```
-
 ## Sensors
 
 | [Plantower][]     | Tested Works | Doesn't Work | Not Tested | Datasheet                     | Notes                 |
@@ -52,7 +38,7 @@ pms COMMAND --help
 | PMS1003 (aka G1)  |              |              |     X      | [en][g1_aqmd],  [cn][g1_lcsc] | Include number counts |
 | PMS3003 (aka G3)  |              |              |     X      | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read  |
 | PMS5003 (aka G5)  |              |              |     X      | [en][g5_aqmd],  [cn][g5_lcsc] | Include number counts |
-| PMS7003 (aka G7)  |              |              |     X      | [cn][g7_lcsc]                 | Include number counts |
+| PMS7003 (aka G7)  |      X       |              |            | [cn][g7_lcsc]                 | Include number counts |
 | PMSA003 (aka G10) |      X       |              |            | [cn][gA_lcsc]                 | Include number counts |
 
 [plantower]: http://www.plantower.com/
@@ -70,7 +56,7 @@ pms COMMAND --help
 | --------------- | :----------: | :-----------: | :--------: | ------------ | ------------------- |
 | SDS011          |              |               |     X      | [en][SDS011] | only PM2.5 and PM10 |
 | SDS018          |              |               |     X      | [en][SDS018] | only PM2.5 and PM10 |
-| SDS198          |              | Not supported |            | [en][SDS198] | only PM100          |
+| SDS198          |              |               |     X      | [en][SDS198] | only PM100          |
 
 [NovaFitness]: http://inovafitness.com/en/a/index.html
 [SDS011]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS011%20laser%20PM2.5%20sensor%20specification-V1.3.pdf

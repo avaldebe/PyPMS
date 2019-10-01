@@ -1,8 +1,7 @@
 """
 Extract measurements from
 - Plantower PMSx003 PM1/PM2.5/PM10 sensors
-- NovaFitness SDS01x PM2.5/PM10 sensors
-- The SDS198 PM100 sensor is not supported
+- NovaFitness SDS01x PM2.5/PM10 sensors and SDS198 PM100 sensor
 """
 
 from datetime import datetime
@@ -131,6 +130,48 @@ class SDS01x(NamedTuple):
         if spec.endswith("csv"):
             d = (spec[:-3] or ".1") + "f"
             return f"{self.time}, {{pm25:{d}}}, {{pm10:{d}}}".format_map(self.subset("pm"))
+        raise ValueError(
+            f"Unknown format code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
+
+    def __str__(self):
+        return self.__format__("pm")
+
+
+class SDS198(NamedTuple):
+    """SDS198 observations
+    
+    time                                    measurement time [seconds since epoch]
+    pm100                                   PM100 [ug/m3]
+    """
+
+    # seconds since epoch
+    time: int
+    # rawX [ug/m3]: PM100
+    pm100: int
+
+    def subset(self, spec: str) -> Dict[str, float]:
+        if spec == "pm":
+            return {"pm100": self.pm100}
+        raise ValueError(
+            f"Unknown subset code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
+
+    @property
+    def date(self) -> datetime:
+        """measurement time as datetime object"""
+        return datetime.fromtimestamp(self.time)
+
+    def __format__(self, spec: str) -> str:
+        d = f = None
+        if spec.endswith("pm"):
+            d = (spec[:-2] or ".1") + "f"
+            return f"{self.date:%F %T}: PM100 {self.pm100:{d}}"
+        if spec.endswith("csv"):
+            d = (spec[:-3] or ".1") + "f"
+            return f"{self.time}, {self.pm100:{d}}"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
