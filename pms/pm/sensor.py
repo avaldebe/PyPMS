@@ -1,8 +1,7 @@
 from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
-from . import message
-from . import obsdata
+from . import message, obsdata
 
 
 class Sensor(Enum):
@@ -25,11 +24,6 @@ class Sensor(Enum):
     @property
     def Data(self):
         return getattr(obsdata, self.name)
-
-    @property
-    def message_records(self) -> int:
-        """Data records in message"""
-        return {"PMS3003": 6, "PMSx003": 12, "SDS01x": 2}[self.name]
 
     def command(self, command: str) -> bytes:
         """Serial commands (except PMS3003)"""
@@ -104,4 +98,4 @@ class Sensor(Enum):
         data = self.Message.decode(buffer)
         logger.debug(f"message data: {data}")
 
-        return self.Data(time, *data[: self.message_records])
+        return self.Data(time, *data[self.Message.data_records])

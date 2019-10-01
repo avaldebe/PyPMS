@@ -57,6 +57,12 @@ class BaseMessage(ABC):
         pass
 
     @property
+    @classmethod
+    @abstractmethod
+    def data_records(cls) -> slice:
+        pass
+
+    @property
     @abstractmethod
     def header(self) -> bytes:
         pass
@@ -87,6 +93,7 @@ class PMSx003(BaseMessage):
 
     message_header = b"\x42\x4D\x00\x1c"
     message_length = 32
+    data_records = slice(12)
 
     @property
     def header(self) -> bytes:
@@ -132,6 +139,7 @@ class PMS3003(PMSx003):
 
     message_header = b"\x42\x4D\x00\x14"
     message_length = 24
+    data_records = slice(6)
 
 
 class SDS01x(BaseMessage):
@@ -139,6 +147,7 @@ class SDS01x(BaseMessage):
 
     message_header = b"\xAA\xC0"
     message_length = 10
+    data_records = slice(2)
 
     @property
     def header(self) -> bytes:
