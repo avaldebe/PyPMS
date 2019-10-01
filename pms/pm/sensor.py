@@ -50,6 +50,4 @@ class Sensor(Enum):
             time = self.Data.now()
 
         data = self.Message.decode(buffer)
-        logger.debug(f"message data: {data}")
-
-        return self.Data(time, *data[self.Message.data_records])
+        return self.Data(time, *data)

@@ -22,7 +22,7 @@ class BaseMessage(ABC):
         self.message = message
 
     @classmethod
-    def decode(
+    def unpack(
         cls, message: bytes, header: Optional[bytes] = None, length: Optional[int] = None
     ) -> Tuple[int, ...]:
         header_: bytes = header if header is not None else cls.message_header  # type: ignore
@@ -43,6 +43,12 @@ class BaseMessage(ABC):
         payload = msg.payload
         logger.debug(f"message payload: {payload.hex()}")
         return cls._unpack(payload)
+
+    @classmethod
+    def decode(cls, message: bytes) -> Tuple[int, ...]:
+        data = cls.unpack(message)[cls.data_records]  # type: ignore
+        logger.debug(f"message data: {data}")
+        return data
 
     @property
     @classmethod

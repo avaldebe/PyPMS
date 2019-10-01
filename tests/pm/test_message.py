@@ -74,9 +74,9 @@ except ModuleNotFoundError as e:
         ),
     ],
 )
-def test_decode_error(sensor, hex, error):
+def test_unpack_error(sensor, hex, error):
     with pytest.raises(SensorWarning) as e:
-        sensor.decode(bytes.fromhex(hex))
+        sensor.unpack(bytes.fromhex(hex))
     assert str(e.value) == error
 
 
