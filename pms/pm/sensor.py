@@ -55,7 +55,7 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> commands.BaseCmd:
+    def command(self, cmd: str) -> Enum:
         """Serial command for sensor"""
         return self.Commands[cmd]
 

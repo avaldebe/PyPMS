@@ -33,7 +33,9 @@
     "python.linting.mypyEnabled": true,
     "python.linting.mypyPath": "${env:HOME}/.local/bin/mypy",
     "python.formatting.blackArgs": [
-        "--line-length 100",
-        "--target-version py36"
+        "--line-length",
+        "100",
+        "--target-version",
+        "py36"
     ]
 }
