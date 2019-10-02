@@ -42,6 +42,7 @@ pms COMMAND --help
 |                 | PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
 | [NovaFitness][] | SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS011]                  |
 |                 | SDS018            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS018]                  |
+|                 | SDS021            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS021]                  |
 |                 | SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
 | [Honeywell][]   | HPMA115S0         | `HPMA115S0`      |       |   X   |       |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
 |                 | HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
@@ -61,6 +62,7 @@ pms COMMAND --help
 [NovaFitness]: http://inovafitness.com/en/a/index.html
 [SDS011]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS011%20laser%20PM2.5%20sensor%20specification-V1.3.pdf
 [SDS018]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS018%20Laser%20PM2.5%20Product%20Spec%20V1.5.pdf
+[SDS021]: https://cdn.sparkfun.com/assets/parts/1/2/2/7/5/SDS021_laser_PM2.5_sensor_specification-V1.0.pdf
 [SDS198]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS198%20laser%20PM100%20sensor%20specification-V1.2.pdf
 
 [Honeywell]: https://sensing.honeywell.com/sensors/particle-sensors/hpm-series
