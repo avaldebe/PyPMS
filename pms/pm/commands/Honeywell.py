@@ -1,19 +1,32 @@
 """
 Serial commands for Honeywell sensors
+
 - HPMA115S0/HPMA115C0 use the same commands, but answer to passive_mode have different leghts
 """
 
-from enum import Enum
-from typing import Tuple, NamedTuple
+from typing import Tuple
+from .base import Cmd, BaseCmd
 from .. import message
 
 
-class _Cmd(NamedTuple):
-    command: bytes
-    answer_length: int
+class HPMA(BaseCmd):
+    @staticmethod
+    def write_cf(cf: int = 0) -> Tuple[bytes, int]:
+        """
+        Set Customer Adjustment Coefficient
+
+        HPM Series, Particulate Matter Sensors, 32322550 Issue F, Table 4 and Table 6
+        https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
+
+        cf: 30 ~ 200 (Default, 100)
+        """
+
+        assert 30 <= cf <= 200, f"out of range: 30 <= {cf} <= 200"
+        h = f"680208{cf:02X}{(0xff8e-cf)%0x100:02X}"
+        return Cmd(bytes.fromhex(h), 2)
 
 
-class HPMA115S0(Enum):
+class HPMA115S0(HPMA):
     """Honeywell HPMA115S0 commands
     
     passive mode message is 8b long (message.HPMA115S0.message_length)
@@ -30,31 +43,8 @@ class HPMA115S0(Enum):
     wake = (b"\x68\x01\x01\x96", 2)  # Start Particle Measurement
     read_cf = (b"\x68\x01\x10\x87", 5)  # Read Customer Adjustment Coefficient
 
-    @property
-    def command(self) -> bytes:
-        return self.value[0]
 
-    @property
-    def answer_length(self) -> int:
-        return self.value[1]
-
-    @staticmethod
-    def write_cf(cf: int = 0) -> Tuple[bytes, int]:
-        """
-        Set Customer Adjustment Coefficient
-
-        HPM Series, Particulate Matter Sensors, 32322550 Issue F, Table 4 and Table 6
-        https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
-
-        cf: 30 ~ 200 (Default, 100)
-        """
-
-        assert 30 <= cf <= 200, f"out of range: 30 <= {cf} <= 200"
-        h = f"680208{cf:02X}{(0xff8e-cf)%0x100:02X}"
-        return _Cmd(bytes.fromhex(h), 2)
-
-
-class HPMA115C0(Enum):
+class HPMA115C0(HPMA):
     """Honeywell HPMA115C0 commands
     
     passive mode message is 16b long (message.HPMA115C0.message_length)
@@ -70,26 +60,3 @@ class HPMA115C0(Enum):
     sleep = (b"\x68\x01\x02\x95", 2)  # Stop Particle Measurement
     wake = (b"\x68\x01\x01\x96", 2)  # Start Particle Measurement
     read_cf = (b"\x68\x01\x10\x87", 5)  # Read Customer Adjustment Coefficient
-
-    @property
-    def command(self) -> bytes:
-        return self.value[0]
-
-    @property
-    def answer_length(self) -> int:
-        return self.value[1]
-
-    @staticmethod
-    def write_cf(cf: int = 0) -> Tuple[bytes, int]:
-        """
-        Set Customer Adjustment Coefficient
-
-        HPM Series, Particulate Matter Sensors, 32322550 Issue F, Table 4 and Table 6
-        https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
-
-        cf: 30 ~ 200 (Default, 100)
-        """
-
-        assert 30 <= cf <= 200, f"out of range: 30 <= {cf} <= 200"
-        h = f"680208{cf:02X}{(0xff8e-cf)%0x100:02X}"
-        return _Cmd(bytes.fromhex(h), 2)

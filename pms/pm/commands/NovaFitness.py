@@ -1,20 +1,17 @@
 """
 Serial commands NovaFitness sensors
-- SDS01x/SDS198 sensors support active/passive mode and sleep/wake
+
+- SDS01x/SDS198 have the same commands
+- Support active/passive mode and sleep/wake
 - Also support periodic wake/sleep cycles
 """
 
-from enum import Enum
 from typing import Tuple, NamedTuple
+from .base import Cmd, BaseCmd
 from .. import message
 
 
-class _Cmd(NamedTuple):
-    command: bytes
-    answer_length: int
-
-
-class SDS01x(Enum):
+class SDS01x(BaseCmd):
     """NovaFitness SDS01x commands"""
 
     passive_mode = (
@@ -42,14 +39,6 @@ class SDS01x(Enum):
         message.SDS01x.message_length,
     )
 
-    @property
-    def command(self) -> bytes:
-        return self.value[0]
-
-    @property
-    def answer_length(self) -> int:
-        return self.value[1]
-
     @staticmethod
     def work_period(minutes: int = 0) -> Tuple[bytes, int]:
         """"
@@ -65,10 +54,8 @@ class SDS01x(Enum):
 
         assert 0 <= minutes <= 30, f"out of range: 0 <= {minutes} <= 30"
         hex = f"AAB40801{minutes:02X}00000000000000000000FFFF{minutes+7:02X}AB"
-        return _Cmd(bytes.fromhex(hex), message.SDS01x.message_length)
+        return Cmd(bytes.fromhex(hex), message.SDS01x.message_length)
 
 
-class SDS198(Enum):
-    """NovaFitness SDS198 commands"""
-
-    pass
+# NovaFitness SDS198 commands are the same as the SDS011/SDS018/SDS021
+SDS198 = SDS01x

@@ -25,6 +25,11 @@ except ModuleNotFoundError as e:
 def test_sensor_attrs(sensor, attr):
     assert getattr(Sensor[sensor], attr)
 
+@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+@pytest.mark.parametrize("command", "passive_mode passive_read active_mode sleep wake".split())
+def test_commands(sensor, command):
+    assert command in Sensor[sensor].Commands.__members__
+
 
 @pytest.mark.parametrize(
     "sensor,hex,msg",
@@ -83,6 +88,7 @@ def test_sensor_attrs(sensor, attr):
 )
 def test_decode(sensor, hex, msg, secs=1567201793):
     assert Sensor[sensor].decode(bytes.fromhex(hex), time=secs) == Sensor[sensor].Data(secs, *msg)
+
 
 
 @pytest.mark.parametrize(

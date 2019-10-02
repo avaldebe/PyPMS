@@ -37,6 +37,7 @@ setup(
         "influxdb>=5.2.0",
         "mypy-extensions>=0.4.0",
         "click>=7.0",
+        "aenum>=2.2.0",
     ],
     entry_points={"console_scripts": ["pms = pms.cli:main"]},
 )

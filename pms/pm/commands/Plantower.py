@@ -4,12 +4,12 @@ Serial commands for Plantower sensors
 - PMS3003 sensors do not support commands
 """
 
-from enum import Enum
-from typing import Tuple, NamedTuple
+from typing import Tuple
+from .base import BaseCmd
 from .. import message
 
 
-class PMSx003(Enum):
+class PMSx003(BaseCmd):
     """Plantower PMSx003 commands"""
 
     passive_mode = (b"\x42\x4D\xE1\x00\x00\x01\x70", 8)
@@ -18,30 +18,9 @@ class PMSx003(Enum):
     sleep = (b"\x42\x4D\xE4\x00\x00\x01\x73", 8)
     wake = (b"\x42\x4D\xE4\x00\x01\x01\x74", message.PMSx003.message_length)
 
-    @property
-    def command(self) -> bytes:
-        return self.value[0]
 
-    @property
-    def answer_length(self) -> int:
-        return self.value[1]
-
-
-class PMS3003(Enum):
+class PMS3003(BaseCmd):
     """Plantower PMS3003 commands"""
 
     active_read = (b"", message.PMS3003.message_length)
     passive_read = passive_mode = active_mode = sleep = wake = active_read
-
-    @property
-    def command(self) -> bytes:
-        return self.value[0]
-
-    @property
-    def answer_length(self) -> int:
-        return self.value[1]
-
-
-class _Cmd(NamedTuple):
-    command: bytes
-    answer_length: int
