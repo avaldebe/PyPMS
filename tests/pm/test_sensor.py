@@ -33,32 +33,51 @@ def test_sensor_attrs(sensor, attr):
             "PMSx003",
             "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
-            id="known good data",
+            id="PMSx003 good data",
         ),
         pytest.param(
             "PMSx003",
             "02fd00fc001d000f00060006970003c5424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
             (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
-            id="good data at the end of the buffer",
+            id="PMSx003 data at the end of the buffer",
         ),
         pytest.param(
             "PMS3003",
             "424d00140051006A007700350046004F33D20F28003F041A",
             (81, 106, 119, 53, 70, 79),
-            id="known good data",
+            id="PMS3003 good data",
         ),
         pytest.param(
             "PMS3003",
             "33D20F28003F041A424d00140051006A007700350046004F33D20F28003F041A",
             (81, 106, 119, 53, 70, 79),
-            id="good data at the end of the buffer",
+            id="PMS3003 data at the end of the buffer",
         ),
-        pytest.param("SDS01x", "AAC0D4043A0AA1601DAB", (1236, 2618), id="known good data"),
+        pytest.param("SDS01x", "AAC0D4043A0AA1601DAB", (1236, 2618), id="SDS01x good data"),
         pytest.param(
             "SDS01x",
             "3A0AA1601DABAAC0D4043A0AA1601DAB",
             (1236, 2618),
-            id="good data at the end of the buffer",
+            id="SDS01x data at the end of the buffer",
+        ),
+        pytest.param("HPMA115S0", "4005040030003156", (48, 49), id="HPMA115S0 good data"),
+        pytest.param(
+            "HPMA115S0",
+            "A5A54005040030003156",
+            (48, 49),
+            id="HPMA115S0 data at the end of the buffer",
+        ),
+        pytest.param(
+            "HPMA115C0",
+            "400504003000310032003300000000F1",
+            (48, 49, 50, 51),
+            id="HPMA115C0 good data",
+        ),
+        pytest.param(
+            "HPMA115C0",
+            "A5A5400504003000310032003300000000F1",
+            (48, 49, 50, 51),
+            id="HPMA115C0 data at the end of the buffer",
         ),
     ],
 )
@@ -90,6 +109,10 @@ def test_decode(sensor, hex, msg, secs=1567201793):
         pytest.param(
             "SDS01x", "wake", "AAB406010100000000000000000000FFFF06AB", 10, id="SDS01x wake"
         ),
+        pytest.param("HPMA115S0", "passive_read", "68010493", 8, id="HPMA115S0 read"),
+        pytest.param("HPMA115S0", "sleep", "68010295", 2, id="HPMA115S0 sleep"),
+        pytest.param("HPMA115S0", "wake", "68010196", 2, id="HPMA115S0 wake"),
+        pytest.param("HPMA115C0", "passive_read", "68010493", 16, id="HPMA115C0 read"),
     ],
 )
 def test_command(sensor, command, hex, length):
@@ -108,5 +131,19 @@ def test_command(sensor, command, hex, length):
 )
 def test_command_work_period(minutes, hex, length, sensor="SDS01x"):
     cmd = Sensor[sensor].Commands.work_period(minutes)
+    assert cmd.command == bytes.fromhex(hex)
+    assert cmd.answer_length == length
+
+
+@pytest.mark.parametrize(
+    "cf,hex,length",
+    [
+        pytest.param(30, "6802081E70", 2, id="cf 30"),
+        pytest.param(100, "680208642A", 2, id="cf 100"),
+        pytest.param(200, "680208C8C6", 2, id="cf 200"),
+    ],
+)
+def test_command_write_cf(cf, hex, length, sensor="HPMA115S0"):
+    cmd = Sensor[sensor].Commands.write_cf(cf)
     assert cmd.command == bytes.fromhex(hex)
     assert cmd.answer_length == length

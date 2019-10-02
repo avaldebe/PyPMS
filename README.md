@@ -10,7 +10,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Read PMSx003 sensor
 
 Options:
-  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198]
+  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198|HPMA115S0|HPMA115C0]
                                   sensor model  [default: PMSx003]
   -s, --serial-port PATH          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -43,8 +43,8 @@ pms COMMAND --help
 | [NovaFitness][] | SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS011]                  |
 |                 | SDS018            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS018]                  |
 |                 | SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
-| [Honeywell][]   | HAMA115S0         |                  |       |   X   |       |   X   |           |                       |              | Not supported |            | [en][HPMA115]                 |
-|                 | HPMA115C0         |                  |   X   |   X   |   X   |   X   |           |                       |              | Not supported |            | [en][HPMA115]                 |
+| [Honeywell][]   | HPMA115S0         | `HPMA115S0`      |       |   X   |       |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
+|                 | HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
 | [Senserion][]   | SPS30             |                  |   X   |   X   |   X   |   X   |     5     | typical particle size |              | Not supported |            | [en][SPS30]                   |
 
 [plantower]: http://www.plantower.com/

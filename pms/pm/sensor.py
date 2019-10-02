@@ -17,6 +17,8 @@ class Sensor(Enum):
     PMS3003 = auto()
     SDS01x = auto()
     SDS198 = auto()
+    HPMA115S0 = auto()
+    HPMA115C0 = auto()
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003

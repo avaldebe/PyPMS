@@ -23,7 +23,7 @@ except ModuleNotFoundError as e:
 @pytest.mark.parametrize(
     "fmt,sensor",
     [(fmt, PMSx003) for fmt in "csv 4csv 04csv pm 4pm 04pm num 4num 04num cf .2cf 4.2cf".split()]
-    + [(fmt, SDS01x) for fmt in "csv .2csv 4.2csv pm .2pm 4.2pm".split()],
+    + [(fmt, SDS01x) for fmt in "csv .2csv 4.2csv pm .2pm 4.2pm".split()],  # type: ignore
 )
 def test_format(fmt, sensor, raw=tuple(range(1, 13)), secs=1567198523):
 
