@@ -10,7 +10,7 @@ setup(
     version=__version__,
     author="Alvaro Valdebenito",
     author_email="avaldebe@gmail.com",
-    description="Read PM sensors with serial interface, data acquisition and logging",
+    description="Data acquisition and logging tool for PM sensors with UART interface",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/avaldebe/PyPMS",

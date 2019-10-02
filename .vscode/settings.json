@@ -15,16 +15,19 @@
         "rfind",
         "strftime",
         "subcommand",
-        "subcommands"
+        "subcommands",
+        "uart"
     ],
     "cSpell.ignoreWords": [
         "aqmd",
         "avaldebe",
         "gmail",
+        "hpma",
         "lcsc",
         "mqttpassword",
         "mqttuser",
-        "pmsa"
+        "pmsa",
+        "senserion"
     ],
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
