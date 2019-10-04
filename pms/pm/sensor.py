@@ -35,7 +35,7 @@ class Sensor(Enum):
         return getattr(obsdata, self.name)
 
     @property
-    def Commands(self):
+    def Commands(self) -> commands.Commands:
         return getattr(commands, self.name)
 
     @classmethod
@@ -63,9 +63,9 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> Enum:
+    def command(self, cmd: str) -> commands.Cmd:
         """Serial command for sensor"""
-        return self.Commands[cmd]
+        return getattr(self.Commands, cmd)
 
     def decode(self, buffer: bytes, *, time: Optional[int] = None) -> NamedTuple:
         """Exract observations from serial buffer"""
