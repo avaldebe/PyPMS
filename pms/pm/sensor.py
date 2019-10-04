@@ -27,7 +27,7 @@ class Sensor(Enum):
     Default = PMSx003
 
     @property
-    def Message(self):
+    def Message(self) -> message.Message:
         return getattr(message, self.name)
 
     @property
@@ -72,5 +72,5 @@ class Sensor(Enum):
         if not time:
             time = self.now()
 
-        data = self.Message.decode(buffer)
+        data = self.Message.decode(buffer, self.Commands.passive_read)
         return self.Data(time, *data)

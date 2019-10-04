@@ -9,14 +9,12 @@ message signature: header, length
 import struct
 from typing import Tuple
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .base import BaseMessage
+from .base import Message
 
 
-class PMSx003(BaseMessage):
+class PMSx003(Message):
     """Plantower PMSx003 messages"""
 
-    message_header = b"\x42\x4D\x00\x1c"
-    message_length = 32
     data_records = slice(12)
 
     @property
@@ -32,7 +30,7 @@ class PMSx003(BaseMessage):
         return self._unpack(self.message[-2:])[0]
 
     @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> BaseMessage:
+    def _validate(cls, message: bytes, header: bytes, length: int) -> Message:
 
         # consistency check: bug in message singnature
         assert len(header) == 4, f"wrong header length {len(header)}"
@@ -61,6 +59,4 @@ class PMSx003(BaseMessage):
 class PMS3003(PMSx003):
     """Plantower PMS3003 messages"""
 
-    message_header = b"\x42\x4D\x00\x14"
-    message_length = 24
     data_records = slice(6)

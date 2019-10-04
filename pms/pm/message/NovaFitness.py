@@ -8,14 +8,12 @@ message signature: header, length
 import struct
 from typing import Tuple
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .base import BaseMessage
+from .base import Message
 
 
-class SDS01x(BaseMessage):
+class SDS01x(Message):
     """NovaFitness SDS01x messages"""
 
-    message_header = b"\xAA\xC0"
-    message_length = 10
     data_records = slice(2)
 
     @property
@@ -35,7 +33,7 @@ class SDS01x(BaseMessage):
         return self.message[-1]
 
     @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> BaseMessage:
+    def _validate(cls, message: bytes, header: bytes, length: int) -> Message:
 
         # consistency check: bug in message singnature
         assert len(header) == 2, f"wrong header length {len(header)}"

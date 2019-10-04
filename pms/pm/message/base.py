@@ -5,9 +5,10 @@ Base class for serial messages from PM sensors
 from abc import ABC, abstractmethod
 from typing import Tuple
 from pms import logger, WrongMessageFormat
+from .. import commands
 
 
-class BaseMessage(ABC):
+class Message(ABC):
     def __init__(self, message: bytes) -> None:
         logger.debug(f"message hex: {message.hex()}")
         self.message = message
@@ -31,22 +32,10 @@ class BaseMessage(ABC):
         return payload
 
     @classmethod
-    def decode(cls, message: bytes) -> Tuple[int, ...]:
-        header: bytes = cls.message_header  # type: ignore
-        length: int = cls.message_length  # type: ignore
+    def decode(cls, message: bytes, command: commands.Cmd) -> Tuple[int, ...]:
+        header = command.answer_header
+        length = command.answer_length
         return cls.unpack(message, header, length)[cls.data_records]  # type: ignore
-
-    @property
-    @classmethod
-    @abstractmethod
-    def message_header(cls) -> bytes:
-        pass
-
-    @property
-    @classmethod
-    @abstractmethod
-    def message_length(cls) -> int:
-        pass
 
     @property
     @classmethod
@@ -71,7 +60,7 @@ class BaseMessage(ABC):
 
     @classmethod
     @abstractmethod
-    def _validate(self, message: bytes, header: bytes, length: int) -> "BaseMessage":
+    def _validate(self, message: bytes, header: bytes, length: int) -> "Message":
         pass
 
     @staticmethod

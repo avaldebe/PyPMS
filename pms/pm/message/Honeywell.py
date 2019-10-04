@@ -11,12 +11,12 @@ message signature: header, length
 import struct
 from typing import Tuple
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .base import BaseMessage
+from .base import Message
 
 
-class HPMA115S0(BaseMessage):
-    message_header = b"\x40\x05\x04"
-    message_length = 8
+class HPMA115S0(Message):
+    """Honeywell HPMA115S0 messages"""
+
     data_records = slice(2)
 
     @property
@@ -32,7 +32,7 @@ class HPMA115S0(BaseMessage):
         return self.message[-1]
 
     @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> BaseMessage:
+    def _validate(cls, message: bytes, header: bytes, length: int) -> Message:
 
         # consistency check: bug in message singnature
         assert len(header) == 3, f"wrong header length {len(header)}"
@@ -58,5 +58,6 @@ class HPMA115S0(BaseMessage):
 
 
 class HPMA115C0(HPMA115S0):
-    message_length: int = 16
+    """Honeywell HPMA115C0 messages"""
+
     data_records = slice(4)
