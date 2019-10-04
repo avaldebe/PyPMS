@@ -125,31 +125,3 @@ def test_command(sensor, command, hex, length):
     cmd = Sensor[sensor].command(command)
     assert cmd.command == bytes.fromhex(hex)
     assert cmd.answer_length == length
-
-
-@pytest.mark.parametrize(
-    "minutes,hex,length",
-    [
-        pytest.param(0, "AAB408010000000000000000000000FFFF07AB", 10, id="continuous mode"),
-        pytest.param(1, "AAB408010100000000000000000000FFFF08AB", 10, id="1 min"),
-        pytest.param(30, "AAB408011e00000000000000000000FFFF25AB", 10, id="30 min"),
-    ],
-)
-def test_command_work_period(minutes, hex, length, sensor="SDS01x"):
-    cmd = Sensor[sensor].Commands.work_period(minutes)
-    assert cmd.command == bytes.fromhex(hex)
-    assert cmd.answer_length == length
-
-
-@pytest.mark.parametrize(
-    "cf,hex,length",
-    [
-        pytest.param(30, "6802081E70", 2, id="cf 30"),
-        pytest.param(100, "680208642A", 2, id="cf 100"),
-        pytest.param(200, "680208C8C6", 2, id="cf 200"),
-    ],
-)
-def test_command_write_cf(cf, hex, length, sensor="HPMA115S0"):
-    cmd = Sensor[sensor].Commands.write_cf(cf)
-    assert cmd.command == bytes.fromhex(hex)
-    assert cmd.answer_length == length
