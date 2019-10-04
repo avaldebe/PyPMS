@@ -14,7 +14,7 @@ class Message(ABC):
         self.message = message
 
     @classmethod
-    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[int, ...]:
+    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[float, ...]:
         try:
             # validate full message
             msg = cls._validate(message, header, length)
@@ -32,7 +32,7 @@ class Message(ABC):
         return payload
 
     @classmethod
-    def decode(cls, message: bytes, command: commands.Cmd) -> Tuple[int, ...]:
+    def decode(cls, message: bytes, command: commands.Cmd) -> Tuple[float, ...]:
         header = command.answer_header
         length = command.answer_length
         return cls.unpack(message, header, length)[cls.data_records]  # type: ignore
@@ -65,5 +65,5 @@ class Message(ABC):
 
     @staticmethod
     @abstractmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
+    def _unpack(message: bytes) -> Tuple[float, ...]:
         pass
