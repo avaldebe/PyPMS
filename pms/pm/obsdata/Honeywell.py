@@ -1,5 +1,6 @@
 """
 Observations Honeywell sensors
+
 - HPMA115S0 PM2.5/PM10
 - HPMA115C0 PM1/PM2.5/PM4/PM10
 """

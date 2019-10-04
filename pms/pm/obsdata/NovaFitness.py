@@ -1,5 +1,6 @@
 """
 Observations NovaFitness sensors
+
 - SDS01x PM2.5/PM10
 - SDS198 PM100
 """
