@@ -19,6 +19,7 @@ class Sensor(Enum):
     SDS198 = auto()
     HPMA115S0 = auto()
     HPMA115C0 = auto()
+    SPS30 = auto()
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
@@ -37,6 +38,10 @@ class Sensor(Enum):
     @property
     def Commands(self) -> commands.Commands:
         return getattr(commands, self.name)
+
+    @property
+    def baud(self) -> int:
+        return 115200 if self.name == "SPS30" else 9600
 
     @classmethod
     def guess(cls, buffer: bytes) -> "Sensor":

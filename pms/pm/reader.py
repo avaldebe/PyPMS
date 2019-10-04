@@ -32,6 +32,7 @@ class SensorReader:
         self.sensor = Sensor[sensor]
         self.serial = Serial()
         self.serial.port = port
+        self.serial.baudrate = self.sensor.baud
         self.serial.timeout = 5  # max time to wake up sensor
         self.interval = interval
 

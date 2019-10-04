@@ -10,7 +10,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Read PMSx003 sensor
 
 Options:
-  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198|HPMA115S0|HPMA115C0]
+  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30]
                                   sensor model  [default: PMSx003]
   -s, --serial-port PATH          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -46,7 +46,7 @@ pms COMMAND --help
 |                 | SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
 | [Honeywell][]   | HPMA115S0         | `HPMA115S0`      |       |   X   |       |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
 |                 | HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
-| [Senserion][]   | SPS30             |                  |   X   |   X   |   X   |   X   |     5     | typical particle size |              | Not supported |            | [en][SPS30]                   |
+| [Senserion][]   | SPS30             | `SPS30`          |   X   |   X   |   X   |   X   |     5     | typical particle size |              |               |     X      | [en][SPS30]                   | UART 115200 8N1      |
 
 [plantower]: http://www.plantower.com/
 [g1_aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
