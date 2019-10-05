@@ -5,7 +5,7 @@ Observations from Senserion messages
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple, Dict
+from typing import NamedTuple, Dict
 
 
 class SPS30(NamedTuple):
@@ -24,7 +24,7 @@ class SPS30(NamedTuple):
     pm25: float
     pm04: float
     pm10: float
-    # nX_Y [#/100cc]: number concentrations under X.Y um
+    # nX_Y [#/cm3]: number concentrations under X.Y um
     n0_5: float
     n1_0: float
     n2_5: float

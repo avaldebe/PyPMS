@@ -6,7 +6,7 @@ Observations NovaFitness sensors
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple, Dict
+from typing import NamedTuple, Dict
 
 
 class SDS01x(NamedTuple):

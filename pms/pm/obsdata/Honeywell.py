@@ -6,7 +6,7 @@ Observations Honeywell sensors
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple, Dict
+from typing import NamedTuple, Dict
 
 
 class HPMA115S0(NamedTuple):

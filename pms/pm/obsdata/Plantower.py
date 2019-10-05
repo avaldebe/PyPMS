@@ -6,7 +6,7 @@ Observations from Plantower messages
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional, Tuple, Dict
+from typing import NamedTuple, Dict, Optional
 
 
 class PMSx003(NamedTuple):
