@@ -1,3 +1,4 @@
+from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -51,18 +52,14 @@ class RawPM6:
         return 0
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("pm"):
-            d = spec[:-2] + "d"
-            return f"PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("csv"):
-            d = spec[:-3] + "d"
-            return f"{self.raw01:{d}}, {self.raw25:{d}}, {self.raw10:{d}}, {self.pm01:{d}}, {self.pm25:{d}}, {self.pm10:{d}}"
-        if spec.endswith("cf"):
-            d = (spec[:-2] or ".0") + "%"
-            return f"CF1 {self.cf01:{d}}, CF2.5 {self.cf25:{d}}, CF10 {self.cf10:{d}}"
-        if spec.endswith("raw"):
-            d = spec[:-3] + "d"
-            return f"PM1 {self.raw01:{d}}, PM2.5 {self.raw25:{d}}, PM10 {self.raw10:{d}} ug/m3"
+        if spec == "pm":
+            return f"PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+        if spec == "csv":
+            return f"{self.raw01}, {self.raw25}, {self.raw10}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm10:.1f}"
+        if spec == "cf":
+            return f"CF1 {self.cf01:.0%}, CF2.5 {self.cf25:.0%}, CF10 {self.cf10:.0%}"
+        if spec == "raw":
+            return f"PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} ug/m3"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -88,12 +85,10 @@ class RawPM2:
         self.pm10 /= 10
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("pm"):
-            d = (spec[:-2] or ".1") + "f"
-            return f"PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("csv"):
-            d = (spec[:-3] or ".1") + "f"
-            return f"{self.pm25:{d}}, {self.pm10:{d}}"
+        if spec == "pm":
+            return f"PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+        if spec == "csv":
+            return f"{self.pm25:.1f}, {self.pm10:.1f}"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -114,12 +109,10 @@ class PM2:
     pm10: int
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("pm"):
-            d = spec[:-2] + "d"
-            return f"PM2.5 {self.pm25:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("csv"):
-            d = spec[:-3] + "d"
-            return f"{self.pm25:{d}}, {self.pm10:{d}}"
+        if spec == "pm":
+            return f"PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+        if spec == "csv":
+            return f"{self.pm25:.1f}, {self.pm10:.1f}"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -142,12 +135,10 @@ class PM4:
     pm10: float
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("pm"):
-            d = (spec[:-2] or "0.2") + "f"
-            return f"PM1 {self.pm01:{d}}, PM2.5 {self.pm25:{d}}, PM4 {self.pm04:{d}}, PM10 {self.pm10:{d}} ug/m3"
-        if spec.endswith("csv"):
-            d = (spec[:-3] or "0.2") + "f"
-            return f"{self.pm01:{d}}, {self.pm25:{d}}, {self.pm04:{d}}, {self.pm10:{d}}"
+        if spec == "pm":
+            return f"PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} ug/m3"
+        if spec == "csv":
+            return f"{self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -167,12 +158,10 @@ class PM100:
     pm100: int
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("pm"):
-            d = spec[:-2] + "d"
-            return f"PM100 {self.pm100:{d}} ug/m3"
-        if spec.endswith("csv"):
-            d = spec[:-3] + "d"
-            return f"{self.pm100:{d}}"
+        if spec == "pm":
+            return f"PM100 {self.pm100:.1f} ug/m3"
+        if spec == "csv":
+            return f"{self.pm100:.1f}"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -206,12 +195,10 @@ class RawNum6:
         self.n10_0 /= 100
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("num"):
-            d = (spec[:-3] or ".2") + "f"
-            return f"N0.3 {self.n0_3:{d}}, N0.5 {self.n0_5:{d}}, N1.0 {self.n1_0:{d}}, N2.5 {self.n2_5:{d}}, N5.0 {self.n5_0:{d}}, N10 {self.n10_0:{d}} #/cm3"
-        if spec.endswith("csv"):
-            d = spec[:-3] + ".2f"
-            return f"{self.n0_3:{d}}, {self.n0_5:{d}}, {self.n1_0:{d}}, {self.n2_5:{d}}, {self.n5_0:{d}}, {self.n10_0:{d}}"
+        if spec == "csv":
+            return f"{self.n0_3:.2f}, {self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, {self.n5_0:.2f}, {self.n10_0:.2f}"
+        if spec == "num":
+            return f"N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f}, N5.0 {self.n5_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -232,12 +219,10 @@ class Num5:
     n10_0: float
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("csv"):
-            d = (spec[:-3] or ".2") + "f"
-            return f"{self.n0_5:{d}}, {self.n1_0:{d}}, {self.n2_5:{d}}, {self.n4_0:{d}}, {self.n10_0:{d}}"
-        if spec.endswith("num"):
-            d = (spec[:-3] or ".2") + "f"
-            return f"N0.5 {self.n0_5:{d}}, N1.0 {self.n1_0:{d}}, N2.5 {self.n2_5:{d}}, N4.0 {self.n4_0:{d}}, N10 {self.n10_0:{d}} #/cm3"
+        if spec == "csv":
+            return f"{self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, {self.n4_0:.2f}, {self.n10_0:.2f}"
+        if spec == "num":
+            return f"N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f}, N4.0 {self.n4_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
@@ -254,12 +239,10 @@ class PSize:
     diam: float
 
     def __format__(self, spec: str) -> str:
-        if spec.endswith("csv"):
-            d = (spec[:-3] or ".2") + "f"
-            return f"{self.diam:{d}}"
-        if spec.endswith("num"):
-            d = (spec[:-3] or ".2") + "f"
-            return f"Ø {self.diam:{d}} μm"
+        if spec == "csv":
+            return f"{self.diam:.1f}"
+        if spec == "diam":
+            return f"Ø {self.diam:.1f} μm"
         raise ValueError(
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
