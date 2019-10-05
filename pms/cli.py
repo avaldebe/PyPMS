@@ -40,8 +40,8 @@ def main(ctx, sensor_model, serial_port, interval, debug):
 @click.option(
     "--format",
     "-f",
-    type=str,
-    help="formatted output (e.g (pm|num|cf|csv))",
+    type=click.Choice("csv pm num raw cf".split()),
+    help="formatted output",
     default="pm",
     show_default=True,
 )
