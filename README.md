@@ -40,7 +40,7 @@ pms COMMAND --help
 |                 | PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
 |                 | PMS7003 (aka G7)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][g7_lcsc]                 |
 |                 | PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
-| [NovaFitness][] | SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS011]                  |
+| [NovaFitness][] | SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |      X       |               |            | [en][SDS011]                  |
 |                 | SDS018            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS018]                  |
 |                 | SDS021            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS021]                  |
 |                 | SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
