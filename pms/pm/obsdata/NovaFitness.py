@@ -39,6 +39,7 @@ class SDS01x(RawPM2, Time):
         )
 
 
+@dataclass
 class SDS198(PM100, Time):
 
     """SDS198 observations
