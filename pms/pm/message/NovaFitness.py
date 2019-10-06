@@ -51,7 +51,7 @@ class SDS01x(Message):
         checksum = sum(msg.payload) % 0x100
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
-        if sum(msg.payload) == 0:
+        if sum(msg.payload[:-2]) == 0:
             raise SensorWarmingUp(f"message empty: warming up sensor")
         return msg
 

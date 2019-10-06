@@ -43,25 +43,24 @@ class Sensor(Enum):
     def baud(self) -> int:
         return 115200 if self.name == "SPS30" else 9600
 
-    @classmethod
-    def guess(cls, buffer: bytes) -> "Sensor":
+    def guess(self, buffer: bytes) -> "Sensor":
         """Guess sensor type from buffer contents
         
         Need to issue the correct commands for a given sensor.
         Otherwise, the sensor will not wake up...
         """
         if buffer[-8:] == b"\x42\x4D\x00\x04\xe1\x00\x01\x74":
-            sensor = cls.PMSx003
+            sensor = "PMSx003"
         elif buffer[-10:-4] == b"\xAA\xC5\x02\x01\x01\x00":
-            if sensor != cls.SDS198:  # SDS01x/SDS198 use the same commands
-                sensor = cls.SDS01x
+            # SDS01x/SDS198 use the same commands
+            sensor = "SDS198" if self.name == "SDS198" else "SDS01x"
         elif buffer:
-            sensor = cls.PMS3003
+            sensor = "PMS3003"
         else:
-            sensor = cls.PMSx003
-            logger.debug(f"Sensor returned empty buffer, assume {sensor.name} on sleep mode")
-        logger.debug(f"Guess {sensor.name} from buffer contents")
-        return sensor
+            sensor = "PMSx003"
+            logger.debug(f"Sensor returned empty buffer, assume {sensor} on sleep mode")
+        logger.debug(f"Guess {sensor} from buffer contents")
+        return self.__class__[sensor]
 
     @staticmethod
     def now() -> int:
