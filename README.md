@@ -36,7 +36,7 @@ pms COMMAND --help
 | Vendor          | Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                 | Tested Works | Doesn't Work  | Not Tested | Datasheet                     | Notes                |
 | --------------- | ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | --------------------- | :----------: | :-----------: | :--------: | ----------------------------- | -------------------- |
 | [Plantower][]   | PMS1003 (aka G1)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
-|                 | PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |              |               |     X      | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
+|                 | PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
 |                 | PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
 |                 | PMS7003 (aka G7)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][g7_lcsc]                 |
 |                 | PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
