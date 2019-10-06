@@ -10,7 +10,7 @@ from typing import Dict
 from .obs import Time, RawPM6, RawNum6
 
 
-@dataclass
+@dataclass(frozen=False)
 class PMSx003(RawNum6, RawPM6, Time):
     """PMSx003 observations
     
@@ -45,7 +45,7 @@ class PMSx003(RawNum6, RawPM6, Time):
         )
 
 
-@dataclass
+@dataclass(frozen=False)
 class PMS3003(RawPM6, Time):
     """PMS3003 observations
     

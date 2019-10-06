@@ -10,7 +10,7 @@ from typing import Dict
 from .obs import Time, PM2, PM4
 
 
-@dataclass
+@dataclass(frozen=False)
 class HPMA115S0(PM2, Time):
     """HPMA115S0 observations
     
@@ -39,7 +39,7 @@ class HPMA115S0(PM2, Time):
         )
 
 
-@dataclass
+@dataclass(frozen=False)
 class HPMA115C0(PM4, Time):
     """HPMA115C0 observations
     

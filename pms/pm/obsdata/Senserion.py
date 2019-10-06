@@ -9,7 +9,7 @@ from typing import Dict
 from .obs import Time, PM4, Num5, PSize
 
 
-@dataclass
+@dataclass(frozen=False)
 class SPS30(PSize, Num5, PM4, Time):
     """SPS30 observations
     
