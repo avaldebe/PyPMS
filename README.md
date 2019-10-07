@@ -37,7 +37,7 @@ pms COMMAND --help
 | ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | --------------------- | :----------: | :-----------: | :--------: | ----------------------------- | -------------------- |
 | [Plantower][]     |
 | PMS1003 (aka G1)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
-| PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
+| PMS3003 (aka G3)  | `PMS3003`        |   X   |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
 | PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
 | PMS5003S          | `PMS5003S`       |   X   |   X   |       |   X   |     6     | HCHO concentration    |              |               |     X      |
 | PMS5003ST         | `PMS5003ST`      |   X   |   X   |       |   X   |     6     | HCHO, temp. & rel.hum.|              |               |     X      |
