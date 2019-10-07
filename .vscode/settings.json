@@ -2,6 +2,7 @@
     "python.pythonPath": "${env:HOME}/.local/share/virtualenvs/PyPMS-xW7ddr2c",
     "cSpell.words": [
         "Datasheet",
+        "HCHO",
         "dataclasses",
         "extensions",
         "getenv",
