@@ -4,7 +4,7 @@ Access supported PM sensors from a single object
 
 
 from datetime import datetime
-from enum import Enum, auto
+from enum import Enum
 from typing import NamedTuple, Optional
 from pms import logger
 from . import sensors
@@ -13,13 +13,13 @@ from . import sensors
 class Sensor(Enum):
     """Supported PM sensors"""
 
-    PMSx003 = auto()
-    PMS3003 = auto()
-    SDS01x = auto()
-    SDS198 = auto()
-    HPMA115S0 = auto()
-    HPMA115C0 = auto()
-    SPS30 = auto()
+    PMSx003 = sensors.PMSx003
+    PMS3003 = sensors.PMS3003
+    SDS01x = sensors.SDS01x
+    SDS198 = sensors.SDS198
+    HPMA115S0 = sensors.HPMA115S0
+    HPMA115C0 = sensors.HPMA115C0
+    SPS30 = sensors.SPS30
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
@@ -29,15 +29,15 @@ class Sensor(Enum):
 
     @property
     def Message(self) -> sensors.Message:
-        return getattr(sensors, self.name).Message
+        return self.value.Message
 
     @property
     def Data(self) -> sensors.ObsData:
-        return getattr(sensors, self.name).ObsData
+        return self.value.ObsData
 
     @property
     def Commands(self) -> sensors.Commands:
-        return getattr(sensors, self.name).commands
+        return self.value.commands
 
     @property
     def baud(self) -> int:
