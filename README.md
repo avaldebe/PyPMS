@@ -33,20 +33,27 @@ pms COMMAND --help
 
 ## Sensors
 
-| Vendor          | Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                 | Tested Works | Doesn't Work  | Not Tested | Datasheet                     | Notes                |
-| --------------- | ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | --------------------- | :----------: | :-----------: | :--------: | ----------------------------- | -------------------- |
-| [Plantower][]   | PMS1003 (aka G1)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
-|                 | PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
-|                 | PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
-|                 | PMS7003 (aka G7)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][g7_lcsc]                 |
-|                 | PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
-| [NovaFitness][] | SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |      X       |               |            | [en][SDS011]                  |
-|                 | SDS018            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS018]                  |
-|                 | SDS021            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS021]                  |
-|                 | SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
-| [Honeywell][]   | HPMA115S0         | `HPMA115S0`      |       |   X   |       |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
-|                 | HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
-| [Senserion][]   | SPS30             | `SPS30`          |   X   |   X   |   X   |   X   |     5     | typical particle size |              |               |     X      | [en][SPS30]                   | UART 115200 8N1      |
+| Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                 | Tested Works | Doesn't Work  | Not Tested | Datasheet                     | Notes                |
+| ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | --------------------- | :----------: | :-----------: | :--------: | ----------------------------- | -------------------- |
+| [Plantower][]     |
+| PMS1003 (aka G1)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
+| PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
+| PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
+| PMS5003T          |                  |   X   |   X   |       |   X   |     4     | temp. & rel.hum.      |              | not supported |
+| PMS5003S          |                  |   X   |   X   |       |   X   |     6     | HCHO concentration    |              | not supported |
+| PMS5003ST         |                  |   X   |   X   |       |   X   |     6     | HCHO, temp. & rel.hum.|              | not supported |
+| PMS7003 (aka G7)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][g7_lcsc]                 |
+| PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
+| [NovaFitness][]   |
+| SDS011            | `SDS01x`         |       |   X   |       |   X   |           |                       |      X       |               |            | [en][SDS011]                  |
+| SDS018            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS018]                  |
+| SDS021            | `SDS01x`         |       |   X   |       |   X   |           |                       |              |               |     X      | [en][SDS021]                  |
+| SDS198            | `SDS198`         |       |       |       |       |           | PM100                 |              |               |     X      | [en][SDS198]                  |
+| [Honeywell][]     |
+| HPMA115S0         | `HPMA115S0`      |       |   X   |       |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
+| HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                       |              |               |     X      | [en][HPMA115]                 |
+| [Senserion][]     |
+| SPS30             | `SPS30`          |   X   |   X   |   X   |   X   |     5     | typical particle size |              |               |     X      | [en][SPS30]                   | UART 115200 8N1      |
 
 [plantower]: http://www.plantower.com/
 [g1_aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
