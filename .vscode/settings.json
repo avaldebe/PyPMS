@@ -13,6 +13,7 @@
         "pyserial",
         "pytest",
         "rfind",
+        "rhum",
         "strftime",
         "subcommand",
         "subcommands",
