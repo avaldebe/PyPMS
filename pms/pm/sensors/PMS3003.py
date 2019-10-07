@@ -100,14 +100,6 @@ class ObsData(base.ObsData):
             return 1
         return 0
 
-    def subset(self, spec: str) -> Dict[str, float]:
-        if spec == "pm":
-            return {"pm01": self.pm01, "pm25": self.pm25, "pm10": self.pm10}
-        raise ValueError(
-            f"Unknown subset code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
-        )
-
     def __format__(self, spec: str) -> str:
         if spec == "pm":
             return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"

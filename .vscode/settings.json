@@ -3,6 +3,7 @@
     "cSpell.words": [
         "Datasheet",
         "HCHO",
+        "asdict",
         "dataclasses",
         "extensions",
         "getenv",

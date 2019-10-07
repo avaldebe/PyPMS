@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import NamedTuple, Tuple, Dict
 from datetime import datetime
 from pms import logger, WrongMessageFormat
@@ -103,9 +103,14 @@ class ObsData(metaclass=ABCMeta):
         """measurement time as datetime object"""
         return datetime.fromtimestamp(self.time)
 
-    @abstractmethod
     def subset(self, spec: str) -> Dict[str, float]:
-        pass
+        obs = {k: v for k, v in asdict(self).items() if k.startswith(spec)}
+        if obs:
+            return obs
+        raise ValueError(
+            f"Unknown subset code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
 
     @abstractmethod
     def __format__(self, spec: str) -> str:
