@@ -1,44 +1,4 @@
-"""
-Serial commands NovaFitness sensors
-
-- SDS01x/SDS198 have the same commands
-- Support active/passive mode and sleep/wake
-- Also support periodic wake/sleep cycles
-"""
-
-from .base import Cmd, Commands
-
-
-SDS01x = Commands(
-    passive_read=Cmd(
-        b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-        b"\xAA\xC0",
-        10,
-    ),
-    passive_mode=Cmd(
-        b"\xAA\xB4\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-        b"\xAA\xC5",
-        10,
-    ),
-    active_mode=Cmd(
-        b"\xAA\xB4\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x01\xAB",
-        b"\xAA\xC5",
-        10,
-    ),
-    sleep=Cmd(
-        b"\xAA\xB4\x06\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x05\xAB",
-        b"\xAA\xC5",
-        10,
-    ),
-    wake=Cmd(
-        b"\xAA\xB4\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x06\xAB",
-        b"\xAA\xC5",
-        10,
-    ),
-)
-
-# NovaFitness SDS198 commands are the same as the SDS011/SDS018/SDS021
-SDS198 = SDS01x
+from .base import Cmd
 
 
 class SDS:
@@ -83,3 +43,30 @@ class SDS:
     def firmware_version(cls, device: int = 0xFFFF) -> Cmd:
         """Protocol V1.3, 6) Check firmware version"""
         return Cmd(cls._msg(0xB4, "07000000000000000000000000", device), b"\xAA\xC0", 10)
+
+
+class HPMA:
+    """Additional commands for Honeywell sensors
+    
+    HPM Series, Particulate Matter Sensors, 32322550 Issue F
+    https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
+    """
+
+    @staticmethod
+    def read_cf() -> Cmd:
+        """Read Customer Adjustment Coefficient
+        
+        HPM Series, Table 4 and Table 6
+        """
+        return Cmd(b"\x68\x01\x10\x87", b"\x40\x02\x10", 5)
+
+    @staticmethod
+    def write_cf(cf: int = 0) -> Cmd:
+        """Set Customer Adjustment Coefficient
+
+        HPM Series, Table 4 and Table 6
+        cf: 30 ~ 200 (Default, 100)
+        """
+
+        assert 30 <= cf <= 200, f"out of range: 30 <= {cf} <= 200"
+        return Cmd(bytes.fromhex(f"680208{cf:02X}{(0xff8e-cf)%0x100:02X}"), b"\xA5\xA5", 2)

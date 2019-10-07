@@ -13,8 +13,7 @@ import pytest
 
 try:
     os.environ["LEVEL"] = "DEBUG"
-    from pms.pm.commands.NovaFitness import SDS
-    from pms.pm.commands.Honeywell import HPMA
+    from pms.pm.sensors.extra_commands import SDS, HPMA
 except ModuleNotFoundError as e:
     print(__doc__)
     raise

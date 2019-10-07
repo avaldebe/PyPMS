@@ -7,7 +7,7 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import NamedTuple, Optional
 from pms import logger
-from . import message, obsdata, commands
+from . import sensors
 
 
 class Sensor(Enum):
@@ -28,16 +28,16 @@ class Sensor(Enum):
     Default = PMSx003
 
     @property
-    def Message(self) -> message.Message:
-        return getattr(message, self.name)
+    def Message(self) -> sensors.Message:
+        return getattr(sensors, self.name).Message
 
     @property
-    def Data(self):
-        return getattr(obsdata, self.name)
+    def Data(self) -> sensors.ObsData:
+        return getattr(sensors, self.name).ObsData
 
     @property
-    def Commands(self) -> commands.Commands:
-        return getattr(commands, self.name)
+    def Commands(self) -> sensors.Commands:
+        return getattr(sensors, self.name).commands
 
     @property
     def baud(self) -> int:
@@ -67,7 +67,7 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> commands.Cmd:
+    def command(self, cmd: str) -> sensors.Cmd:
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
 
@@ -77,4 +77,4 @@ class Sensor(Enum):
             time = self.now()
 
         data = self.Message.decode(buffer, self.Commands.passive_read)
-        return self.Data(time, *data)
+        return self.Data(time, *data)  # type: ignore
