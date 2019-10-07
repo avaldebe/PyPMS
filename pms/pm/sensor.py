@@ -15,6 +15,9 @@ class Sensor(Enum):
 
     PMSx003 = sensors.PMSx003
     PMS3003 = sensors.PMS3003
+    PMS5003S = sensors.PMS5003S
+    PMS5003ST = sensors.PMS5003ST
+    PMS5003T = sensors.PMS5003T
     SDS01x = sensors.SDS01x
     SDS198 = sensors.SDS198
     HPMA115S0 = sensors.HPMA115S0

@@ -10,7 +10,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Read PMSx003 sensor
 
 Options:
-  -m, --sensor-model [PMSx003|PMS3003|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30]
+  -m, --sensor-model [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30]
                                   sensor model  [default: PMSx003]
   -s, --serial-port PATH          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -39,9 +39,9 @@ pms COMMAND --help
 | PMS1003 (aka G1)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g1_aqmd],  [cn][g1_lcsc] |
 | PMS3003 (aka G3)  | `PMS3003`        |       |   X   |       |   X   |           |                       |      X       |               |            | [en][g3_aqmon], [cn][g3_lcsc] | No passive mode read |
 | PMS5003 (aka G5)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |              |               |     X      | [en][g5_aqmd],  [cn][g5_lcsc] |
-| PMS5003T          |                  |   X   |   X   |       |   X   |     4     | temp. & rel.hum.      |              | not supported |
-| PMS5003S          |                  |   X   |   X   |       |   X   |     6     | HCHO concentration    |              | not supported |
-| PMS5003ST         |                  |   X   |   X   |       |   X   |     6     | HCHO, temp. & rel.hum.|              | not supported |
+| PMS5003S          | `PMS5003S`       |   X   |   X   |       |   X   |     6     | HCHO concentration    |              |               |     X      |
+| PMS5003ST         | `PMS5003ST`      |   X   |   X   |       |   X   |     6     | HCHO, temp. & rel.hum.|              |               |     X      |
+| PMS5003T          | `PMS5003T`       |   X   |   X   |       |   X   |     4     | temp. & rel.hum.      |              |               |     X      |
 | PMS7003 (aka G7)  | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][g7_lcsc]                 |
 | PMSA003 (aka G10) | `PMSx003`        |   X   |   X   |       |   X   |     6     |                       |      X       |               |            | [cn][gA_lcsc]                 |
 | [NovaFitness][]   |
