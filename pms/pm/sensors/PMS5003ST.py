@@ -52,9 +52,9 @@ class ObsData(PMS5003S.ObsData):
 
     def __format__(self, spec: str) -> str:
         if spec in ["pm", "raw", "cf", "num", "hcho"]:
-            return PMS5003S.ObsData.__format__(self, spec)
+            return super().__format__(spec)
         if spec == "csv":
-            csv = PMS5003S.ObsData.__format__(self, spec)
+            csv = super().__format__(spec)
             return f"{csv}, {self.temp:.1f}, {self.rhum:.1f}"
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"

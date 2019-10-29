@@ -33,9 +33,9 @@ class ObsData(PMSx003.ObsData):
 
     def __format__(self, spec: str) -> str:
         if spec in ["pm", "raw", "cf", "num"]:
-            return PMSx003.ObsData.__format__(self, spec)
+            return super().__format__(spec)
         if spec == "csv":
-            csv = PMSx003.ObsData.__format__(self, spec)
+            csv = super().__format__(spec)
             return f"{csv}, {self.HCHO}"
         if spec == "hcho":
             return f"{self.date:%F %T}: HCHO {self.HCHO} ug/m3"
