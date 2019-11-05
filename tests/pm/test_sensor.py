@@ -1,23 +1,9 @@
-"""
-Choose one of the following strategies
-
-Run pytest as a module
-$ python3 -m pytest test/
-
-Install locally before testing
-$ pip install -e .
-$ pytest test/
-"""
 import os
 import pytest
 
-try:
-    os.environ["LEVEL"] = "DEBUG"
-    from pms.pm.sensor import Sensor
-    from pms import SensorWarning
-except ModuleNotFoundError as e:
-    print(__doc__)
-    raise
+os.environ["LEVEL"] = "DEBUG"
+from pms.pm.sensor import Sensor
+from pms import SensorWarning
 
 
 @pytest.mark.parametrize("sensor", [s.name for s in Sensor])

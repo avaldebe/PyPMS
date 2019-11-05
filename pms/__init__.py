@@ -1,6 +1,4 @@
-"""
-PyPMS logging and recoverable errors
-"""
+"""Data acquisition and logging tool for PM sensors with UART interface"""
 __version__ = "0.1.4"
 
 
