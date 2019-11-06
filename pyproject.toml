@@ -35,3 +35,17 @@ classifiers = [
 
 [tool.flit.scripts]
 pms = "pms.cli:main"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py36, py37, py38
+skip_missing_interpreters = True
+isolated_build = True
+
+[testenv]
+commands = pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing
+deps =
+    pytest
+    pytest-cov
+"""
