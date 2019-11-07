@@ -2,12 +2,12 @@ import os, time
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor.pm import PMSx003, PMS5003ST, PMS5003T, SDS01x, SDS198, HPMA115S0, HPMA115C0, SPS30
+from pms.sensor import pm
 from pms import SensorWarning
 
 
 @pytest.mark.parametrize("fmt", "csv pm num cf raw".split())
-def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=PMSx003):
+def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=pm.PMSx003):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:])
     if fmt.endswith("csv"):
@@ -33,7 +33,7 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=PM
 
 
 @pytest.mark.parametrize("fmt", "csv pm num cf raw hcho atm".split())
-def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1567198523, sensor=PMS5003ST):
+def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1567198523, sensor=pm.PMS5003ST):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:12]) + (raw[12],) + tuple(x / 10 for x in raw[13:])
     if fmt.endswith("csv"):
@@ -67,7 +67,7 @@ def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1567198523, sensor=
 
 
 @pytest.mark.parametrize("fmt", "csv pm num cf raw atm".split())
-def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=PMS5003T):
+def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=pm.PMS5003T):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:-2]) + tuple(x / 10 for x in raw[-2:])
     if fmt.endswith("csv"):
@@ -98,7 +98,7 @@ def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1567198523, sensor=P
 
 
 @pytest.mark.parametrize("fmt", "csv pm".split())
-def test_SDS01x_format(fmt, raw=(11, 12), secs=1567198523, sensor=SDS01x):
+def test_SDS01x_format(fmt, raw=(11, 12), secs=1567198523, sensor=pm.SDS01x):
 
     obs = sensor.ObsData(secs, *raw)
     raw = tuple(r / 10 for r in raw)
@@ -112,7 +112,7 @@ def test_SDS01x_format(fmt, raw=(11, 12), secs=1567198523, sensor=SDS01x):
 
 
 @pytest.mark.parametrize("fmt", "csv pm".split())
-def test_SDS198_format(fmt, raw=123, secs=1567198523, sensor=SDS198):
+def test_SDS198_format(fmt, raw=123, secs=1567198523, sensor=pm.SDS198):
 
     obs = sensor.ObsData(secs, raw)
     if fmt.endswith("csv"):
@@ -125,7 +125,7 @@ def test_SDS198_format(fmt, raw=123, secs=1567198523, sensor=SDS198):
 
 
 @pytest.mark.parametrize("fmt", "csv pm".split())
-def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1567198523, sensor=HPMA115S0):
+def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1567198523, sensor=pm.HPMA115S0):
     obs = sensor.ObsData(secs, *raw)
     if fmt.endswith("csv"):
         secs = f"{secs},"
@@ -137,7 +137,7 @@ def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1567198523, sensor=HPMA115S0):
 
 
 @pytest.mark.parametrize("fmt", "csv pm".split())
-def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1567198523, sensor=HPMA115C0):
+def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1567198523, sensor=pm.HPMA115C0):
     obs = sensor.ObsData(secs, *raw)
     if fmt.endswith("csv"):
         secs = f"{secs},"
@@ -149,7 +149,7 @@ def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1567198523, sensor=HPM
 
 
 @pytest.mark.parametrize("fmt", "csv pm num diam".split())
-def test_SPS30_format(fmt, raw=range(100, 110), secs=1567198523, sensor=SPS30):
+def test_SPS30_format(fmt, raw=range(100, 110), secs=1567198523, sensor=pm.SPS30):
 
     obs = sensor.ObsData(secs, *raw)
     if fmt.endswith("csv"):
