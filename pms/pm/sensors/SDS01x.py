@@ -63,13 +63,13 @@ class Message(base.Message):
 
         # consistency check: bug in message singnature
         assert len(header) == 2, f"wrong header length {len(header)}"
-        assert header[:1] == b"\xAA", f"wrong header start {header}"
+        assert header[:1] == b"\xAA", f"wrong header start {header!r}"
         assert length == 10, f"wrong payload length {length}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
         if msg.header != header:
-            raise WrongMessageFormat(f"message header: {msg.header}")
+            raise WrongMessageFormat(f"message header: {msg.header!r}")
         if msg.tail != 0xAB:
             raise WrongMessageFormat(f"message tail: {msg.tail:#x}")
         if len(message) != length:

@@ -41,14 +41,14 @@ class Message(base.Message):
 
         # consistency check: bug in message singnature
         assert len(header) == 4, f"wrong header length {len(header)}"
-        assert header[:2] == b"BM", f"wrong header start {header}"
+        assert header[:2] == b"BM", f"wrong header start {header!r}"
         len_payload = cls._unpack(header[-2:])[0]
         assert length == len(header) + len_payload, f"wrong payload length {length}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
         if msg.header != header:
-            raise WrongMessageFormat(f"message header: {msg.header}")
+            raise WrongMessageFormat(f"message header: {msg.header!r}")
         if len(message) != length:
             raise WrongMessageFormat(f"message length: {len(message)}")
         checksum = sum(msg.header) + sum(msg.payload)

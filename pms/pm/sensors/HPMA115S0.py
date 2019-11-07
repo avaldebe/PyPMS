@@ -42,13 +42,13 @@ class Message(base.Message):
 
         # consistency check: bug in message singnature
         assert len(header) == 3, f"wrong header length {len(header)}"
-        assert header[:1] == b"\x40", f"wrong header start {header}"
+        assert header[:1] == b"\x40", f"wrong header start {header!r}"
         assert length in [5, 8, 16], f"wrong payload length {length}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
         if msg.header != header:
-            raise WrongMessageFormat(f"message header: {msg.header}")
+            raise WrongMessageFormat(f"message header: {msg.header!r}")
         if len(message) != length:
             raise WrongMessageFormat(f"message length: {len(message)}")
         checksum = (0x10000 - sum(msg.header) - sum(msg.payload)) % 0x100
