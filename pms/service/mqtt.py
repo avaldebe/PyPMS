@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Optional, Union, Any, Callable, NamedTuple
+from typing import Dict, Union, Callable, NamedTuple
 import paho.mqtt.client as mqtt
 from pms import logger
 
@@ -38,7 +38,7 @@ class Data(NamedTuple):
         return int(datetime.now().timestamp())
 
     @classmethod
-    def decode(cls, topic: str, payload: str, *, time: Optional[int] = None) -> "Data":
+    def decode(cls, topic: str, payload: str, *, time: int = None) -> "Data":
         """Decode a MQTT message
         
         For example

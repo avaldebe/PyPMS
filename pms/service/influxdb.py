@@ -1,5 +1,5 @@
 import os, json
-from typing import Dict, List, Optional, Any, Callable
+from typing import Dict, Callable
 from mypy_extensions import NamedArg
 from influxdb import InfluxDBClient
 

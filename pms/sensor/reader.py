@@ -9,7 +9,7 @@ NOTE:
 """
 
 import sys, time
-from typing import NamedTuple, Callable, Generator, Optional
+from typing import NamedTuple, Generator
 from serial import Serial
 from pms import logger, SensorWarning, SensorWarmingUp
 from .sensor import Sensor
@@ -73,7 +73,7 @@ class SensorReader:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self, *, interval: Optional[int] = None) -> Generator[NamedTuple, None, None]:
+    def __call__(self, *, interval: int = None) -> Generator[NamedTuple, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:

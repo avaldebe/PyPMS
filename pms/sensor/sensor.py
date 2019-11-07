@@ -5,7 +5,7 @@ Access supported PM sensors from a single object
 
 from datetime import datetime
 from enum import Enum
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 from pms import logger
 from . import pm
 
@@ -72,7 +72,7 @@ class Sensor(Enum):
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
 
-    def decode(self, buffer: bytes, *, time: Optional[int] = None) -> NamedTuple:
+    def decode(self, buffer: bytes, *, time: int = None) -> NamedTuple:
         """Exract observations from serial buffer"""
         if not time:
             time = self.now()
