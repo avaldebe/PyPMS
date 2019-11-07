@@ -46,7 +46,7 @@ isolated_build = True
 [testenv]
 commands =
     py36: pytest --black --mypy --mypy-ignore-missing-imports
-    py37: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing
+    py37: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing --cov-fail-under=70
     py38: pytest
 deps =
     pytest
