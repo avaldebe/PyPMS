@@ -2,7 +2,7 @@ import os
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.pm.sensors.extra_commands import SDS, HPMA
+from pms.sensor.pm.extra_commands import SDS, HPMA
 
 
 @pytest.mark.parametrize(

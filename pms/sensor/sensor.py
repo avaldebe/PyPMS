@@ -7,37 +7,37 @@ from datetime import datetime
 from enum import Enum
 from typing import NamedTuple, Optional
 from pms import logger
-from . import sensors
+from . import pm
 
 
 class Sensor(Enum):
     """Supported PM sensors"""
 
-    PMSx003 = sensors.PMSx003
-    PMS3003 = sensors.PMS3003
-    PMS5003S = sensors.PMS5003S
-    PMS5003ST = sensors.PMS5003ST
-    PMS5003T = sensors.PMS5003T
-    SDS01x = sensors.SDS01x
-    SDS198 = sensors.SDS198
-    HPMA115S0 = sensors.HPMA115S0
-    HPMA115C0 = sensors.HPMA115C0
-    SPS30 = sensors.SPS30
+    PMSx003 = pm.PMSx003
+    PMS3003 = pm.PMS3003
+    PMS5003S = pm.PMS5003S
+    PMS5003ST = pm.PMS5003ST
+    PMS5003T = pm.PMS5003T
+    SDS01x = pm.SDS01x
+    SDS198 = pm.SDS198
+    HPMA115S0 = pm.HPMA115S0
+    HPMA115C0 = pm.HPMA115C0
+    SPS30 = pm.SPS30
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
     SDS011 = SDS018 = SDS021 = SDS01x
 
     @property
-    def Message(self) -> sensors.Message:
+    def Message(self) -> pm.Message:
         return self.value.Message
 
     @property
-    def Data(self) -> sensors.ObsData:
+    def Data(self) -> pm.ObsData:
         return self.value.ObsData
 
     @property
-    def Commands(self) -> sensors.Commands:
+    def Commands(self) -> pm.Commands:
         return self.value.commands
 
     @property
@@ -68,7 +68,7 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> sensors.Cmd:
+    def command(self, cmd: str) -> pm.Cmd:
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
 

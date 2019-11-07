@@ -2,7 +2,7 @@ import os
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.pm.sensors import PMSx003, PMS3003, SDS01x, SPS30
+from pms.sensor.pm import PMSx003, PMS3003, SDS01x, SPS30
 from pms import SensorWarning
 
 
