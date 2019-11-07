@@ -2,8 +2,9 @@
 
 Tools for reading PM sensors with serial (UART) interface, data acquisition and logging.
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Build Status](https://travis-ci.org/avaldebe/PyPMS.svg?branch=master)](https://travis-ci.org/avaldebe/PyPMS)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Command line interface
 
