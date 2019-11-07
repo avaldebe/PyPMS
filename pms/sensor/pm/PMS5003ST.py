@@ -46,7 +46,7 @@ class ObsData(PMS5003S.ObsData):
         temp [°C]    read in [0.1 °C]
         rhum [%]     read in [1/1000]
         """
-        PMS5003S.__post_init__(self)
+        super().__post_init__()
         self.temp /= 10
         self.rhum /= 10
 
