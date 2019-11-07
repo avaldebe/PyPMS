@@ -44,8 +44,17 @@ skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
-commands = pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing
+commands =
+    py36: pytest --black
+    py37: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing
+    py38: pytest
 deps =
     pytest
-    pytest-cov
+    py36: pytest-black
+    py37: pytest-cov
 """
+
+[tool.black]
+line-length = 100
+target-version = ['py36']
+
