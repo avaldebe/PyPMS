@@ -42,7 +42,7 @@ class Sensor(Enum):
 
     @property
     def baud(self) -> int:
-        return 115200 if self.name == "SPS30" else 9600
+        return 115_200 if self.name == "SPS30" else 9600
 
     def guess(self, buffer: bytes) -> "Sensor":
         """Guess sensor type from buffer contents

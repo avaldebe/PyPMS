@@ -10,10 +10,7 @@ from pms import SensorWarning
     "sensor,hex,error",
     [
         pytest.param(
-            pm.PMSx003,
-            "424d001c0005000d0016",
-            "message length: 10",
-            id="PMSx003 short message",
+            pm.PMSx003, "424d001c0005000d0016", "message length: 10", id="PMSx003 short message"
         ),
         pytest.param(
             pm.PMSx003,
@@ -34,10 +31,7 @@ from pms import SensorWarning
             id="PMSx003 empty message",
         ),
         pytest.param(
-            pm.PMS3003,
-            "424d00140051006A0077",
-            "message length: 10",
-            id="PMS3003 short message",
+            pm.PMS3003, "424d00140051006A0077", "message length: 10", id="PMS3003 short message"
         ),
         pytest.param(
             pm.PMS3003,
@@ -57,12 +51,7 @@ from pms import SensorWarning
             "message empty: warming up sensor",
             id="PMS3003 empty message",
         ),
-        pytest.param(
-            pm.SDS01x,
-            "AAC0D4041DAB",
-            "message length: 6",
-            id="SDS01x short message",
-        ),
+        pytest.param(pm.SDS01x, "AAC0D4041DAB", "message length: 6", id="SDS01x short message"),
         pytest.param(
             pm.SDS01x,
             "ABC0D4043A0AA1601DAA",
@@ -70,10 +59,7 @@ from pms import SensorWarning
             id="SDS01x wrong header",
         ),
         pytest.param(
-            pm.SDS01x,
-            "AAC0D4043A0AA1601DAA",
-            "message tail: 0xaa",
-            id="SDS01x wrong tail",
+            pm.SDS01x, "AAC0D4043A0AA1601DAA", "message tail: 0xaa", id="SDS01x wrong tail"
         ),
         pytest.param(
             pm.SDS01x,
@@ -88,10 +74,7 @@ from pms import SensorWarning
             id="SDS01x empty message",
         ),
         pytest.param(
-            pm.SPS30,
-            "7E00030028000000D47E",
-            "message length: 10",
-            id="SPS30 short message",
+            pm.SPS30, "7E00030028000000D47E", "message length: 10", id="SPS30 short message"
         ),
         pytest.param(
             pm.SPS30,
