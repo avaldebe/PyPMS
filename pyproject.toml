@@ -33,6 +33,14 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest >=5.0.0",
+    "pytest-cov >=2.8.0",
+    "pytest-black >=0.3.7",
+    "pytest-mypy >=0.4.2",
+]
+
 [tool.flit.scripts]
 pms = "pms.cli:main"
 
