@@ -103,9 +103,30 @@ from pms import SensorWarning
         pytest.param(
             SPS30.Message,
             SPS30.commands.passive_read,
+            "7E00030028000000D47E",
+            "message length: 10",
+            id="SPS30 short message",
+        ),
+        pytest.param(
+            SPS30.Message,
+            SPS30.commands.passive_read,
             "7E00030000FC7E",
             r"message header: b'~\x00\x03\x00\x00'",
-            id="SPS30 empty message",
+            id="SPS30 wrong header",
+        ),
+        pytest.param(
+            SPS30.Message,
+            SPS30.commands.passive_read,
+            "7E0003002800000000000000000000000000000000000000000000000000000000000000000000000000000000D477",
+            "message tail: 0x77",
+            id="SPS30 wrong tail",
+        ),
+        pytest.param(
+            SPS30.Message,
+            SPS30.commands.passive_read,
+            "7E0003002800000000000000000000000000000000000000000000000000000000000000000000000000000000D07E",
+            "message checksum 208 != 212",
+            id="SPS30 wrong checksum",
         ),
         pytest.param(
             SPS30.Message,
