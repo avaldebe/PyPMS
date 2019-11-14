@@ -114,7 +114,12 @@ class ObsData(metaclass=ABCMeta):
 
     @abstractmethod
     def __format__(self, spec: str) -> str:
-        pass
+        if spec == "header":  # header for csv file
+            return ", ".join(asdict(self).keys())
+        raise ValueError(
+            f"Unknown format code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
 
     def __str__(self):
         return self.__format__("pm")

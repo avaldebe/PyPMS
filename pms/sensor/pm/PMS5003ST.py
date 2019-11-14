@@ -51,7 +51,7 @@ class ObsData(PMS5003S.ObsData):
         self.rhum /= 10
 
     def __format__(self, spec: str) -> str:
-        if spec in ["pm", "raw", "cf", "num", "hcho"]:
+        if spec in ["header", "pm", "raw", "cf", "num", "hcho"]:
             return super().__format__(spec)
         if spec == "csv":
             csv = super().__format__(spec)

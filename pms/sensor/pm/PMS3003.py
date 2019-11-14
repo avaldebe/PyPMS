@@ -101,6 +101,8 @@ class ObsData(base.ObsData):
         return 0
 
     def __format__(self, spec: str) -> str:
+        if spec == "header":
+            return super().__format__(spec)
         if spec == "pm":
             return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
         if spec == "csv":

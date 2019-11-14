@@ -1,5 +1,4 @@
 from pathlib import Path
-from dataclasses import asdict
 import click
 from pms import logger, service, sensor
 
@@ -68,8 +67,7 @@ def csv(ctx, filename, overwrite):
         # add header to new files
         if path.stat().st_size == 0:
             obs = next(reader())
-            header = ", ".join(asdict(obs).keys())
-            print(header, file=f)
+            print(f"{obs:header}", file=f)
         for obs in reader():
             print(f"{obs:csv}", file=f)
 

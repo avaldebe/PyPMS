@@ -32,7 +32,7 @@ class ObsData(PMSx003.ObsData):
     HCHO: int
 
     def __format__(self, spec: str) -> str:
-        if spec in ["pm", "raw", "cf", "num"]:
+        if spec in ["header", "pm", "raw", "cf", "num"]:
             return super().__format__(spec)
         if spec == "csv":
             csv = super().__format__(spec)
