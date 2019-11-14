@@ -3,6 +3,8 @@
 Tools for reading PM sensors with serial (UART) interface, data acquisition and logging.
 
 [![Build Status](https://travis-ci.org/avaldebe/PyPMS.svg?branch=master)](https://travis-ci.org/avaldebe/PyPMS)
+[![GitHub issues](https://img.shields.io/github/issues/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/issues)
+[![GitHub license](https://img.shields.io/github/license/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/blob/master/LICENSE)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
