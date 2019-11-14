@@ -1,3 +1,5 @@
+from pathlib import Path
+from dataclasses import asdict
 import click
 from pms import logger, service, sensor
 
@@ -51,6 +53,25 @@ def serial(ctx, format):
     with ctx.obj["reader"] as reader:
         for obs in reader():
             print(f"{obs:{format}}")
+
+
+@main.command()
+@click.option("--filename", "-F", help="csv formatted file", default="pms.csv", show_default=True)
+@click.option("--overwrite", help="overwrite file, if already exists", is_flag=True)
+@click.pass_context
+def csv(ctx, filename, overwrite):
+    """Read sensor and print measurements"""
+    path = Path(filename)
+    mode = "w" if overwrite else "a"
+    logger.debug(f"open {filename} on '{mode}' mode")
+    with ctx.obj["reader"] as reader, path.open(mode) as f:
+        # add header to new files
+        if path.stat().st_size == 0:
+            obs = next(reader())
+            header = ", ".join(asdict(obs).keys())
+            print(header, file=f)
+        for obs in reader():
+            print(f"{obs:csv}", file=f)
 
 
 @main.command()

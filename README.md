@@ -26,9 +26,10 @@ Options:
 
 Commands:
   bridge    Bridge between MQTT and InfluxDB servers
+  csv       Read sensor and print measurements
   influxdb  Read sensor and push PM measurements to an InfluxDB server
   mqtt      Read sensor and push PM measurements to a MQTT server
-  serial    Read sensor and print PM measurements
+  serial    Read sensor and print measurements
 ```
 
 For details on a particular command and their options
