@@ -7,7 +7,7 @@ from pms.sensor import pm
 from pms import SensorWarning
 
 
-@pytest.mark.parametrize("fmt", "header csv pm num cf raw".split())
+@pytest.mark.parametrize("fmt", "header csv pm num cf raw error".split())
 def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pm.PMSx003):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:])
@@ -31,11 +31,17 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor
         raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm num cf raw hcho atm".split())
+@pytest.mark.parametrize("fmt", "header csv pm num cf raw hcho atm error".split())
 def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1_567_198_523, sensor=pm.PMS5003ST):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:12]) + (raw[12],) + tuple(x / 10 for x in raw[13:])
@@ -63,12 +69,17 @@ def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1_567_198_523, sens
         atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %".format(
             time.strftime("%F %T", time.localtime(secs)), raw[-2], raw[-1]
         ),
-    )[fmt]
+    )
 
-    assert f"{obs:{fmt}}" == obs_fmt
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm num cf raw atm".split())
+@pytest.mark.parametrize("fmt", "header csv pm num cf raw atm error".split())
 def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pm.PMS5003T):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:-2]) + tuple(x / 10 for x in raw[-2:])
@@ -95,11 +106,17 @@ def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, senso
         atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %".format(
             time.strftime("%F %T", time.localtime(secs)), raw[-2], raw[-1]
         ),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm".split())
+@pytest.mark.parametrize("fmt", "header csv pm error".split())
 def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.SDS01x):
 
     obs = sensor.ObsData(secs, *raw)
@@ -110,11 +127,17 @@ def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.SDS01x):
         pm="{}: PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm".split())
+@pytest.mark.parametrize("fmt", "header csv pm error".split())
 def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=pm.SDS198):
 
     obs = sensor.ObsData(secs, raw)
@@ -122,11 +145,17 @@ def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=pm.SDS198):
         header=", ".join(asdict(obs).keys()),
         csv=f"{secs}, {raw:.1f}",
         pm="{}: PM100 {:.1f} ug/m3".format(time.strftime("%F %T", time.localtime(secs)), raw),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm".split())
+@pytest.mark.parametrize("fmt", "header csv pm error".split())
 def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.HPMA115S0):
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
@@ -135,11 +164,17 @@ def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.HPMA1
         pm="{}: PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm".split())
+@pytest.mark.parametrize("fmt", "header csv pm error".split())
 def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=pm.HPMA115C0):
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
@@ -148,11 +183,17 @@ def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=
         pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM4 {:.1f}, PM10 {:.1f} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
 
 
-@pytest.mark.parametrize("fmt", "header csv pm num diam".split())
+@pytest.mark.parametrize("fmt", "header csv pm num diam error".split())
 def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=pm.SPS30):
 
     obs = sensor.ObsData(secs, *raw)
@@ -168,5 +209,11 @@ def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=pm.SP
             time.strftime("%F %T", time.localtime(secs)), *raw[4:-1]
         ),
         diam="{}: Ø {:.1f} μm".format(time.strftime("%F %T", time.localtime(secs)), raw[-1]),
-    )[fmt]
-    assert f"{obs:{fmt}}" == obs_fmt
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
