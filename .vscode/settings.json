@@ -3,10 +3,13 @@
     "cSpell.words": [
         "Datasheet",
         "HCHO",
+        "Molex",
+        "PicoBlade",
         "asdict",
         "dataclasses",
         "extensions",
         "getenv",
+        "hexdump",
         "influxdb",
         "mosquitto",
         "mypy",
