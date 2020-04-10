@@ -83,8 +83,7 @@ can be fully controlled with serial commands:
 
 ### Measurements
 
-Messages containing measurements consist of (big-endian) unsigned short integers,
-and can be unpacked with `struct.unpack(f">{len(message)//2}H", message)`.
+Messages containing measurements consist of unsigned short integers.
 The last 2 bits of the message should contain `sum(message[:2])`.
 
 | `message` | [`PMS3003`][]        | [`PMSx003`][]         | [`PMS5003T`][] | [`PMS5003S`][] | [`PMS5003ST`][]       |
