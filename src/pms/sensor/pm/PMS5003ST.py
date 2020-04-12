@@ -6,7 +6,8 @@ Plantower PMS5003ST sensors
 from dataclasses import dataclass
 from typing import Dict, Tuple
 import struct
-from . import base, PMS3003, PMSx003, PMS5003S
+from .. import base
+from . import PMS3003, PMSx003, PMS5003S
 
 
 commands = base.Commands(

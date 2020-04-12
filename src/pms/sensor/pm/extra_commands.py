@@ -1,4 +1,4 @@
-from .base import Cmd
+from ..base import Cmd
 
 
 class SDS:

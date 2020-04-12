@@ -7,7 +7,8 @@ from dataclasses import dataclass, field
 from typing import Tuple, Dict
 import struct
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from . import base, HPMA115S0
+from .. import base
+from . import HPMA115S0
 
 commands = HPMA115S0.commands._replace(
     passive_read=base.Cmd(  # Read Particle Measuring Results
