@@ -3,7 +3,7 @@ from dataclasses import asdict
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor import pm
+from pms.sensor import pm, aq
 from pms import SensorWarning
 
 
@@ -212,6 +212,38 @@ def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=pm.SP
             time.strftime("%F %T", time.localtime(secs)), *raw[4:-1]
         ),
         diam="{}: Ø {:.1f} μm".format(time.strftime("%F %T", time.localtime(secs)), raw[-1]),
+    )
+
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt]
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
+
+
+@pytest.mark.parametrize("fmt", "header csv atm bme bsec error".split())
+def test_MCU680_format(fmt, raw=list(range(100, 107)), secs=1_567_198_523, sensor=aq.MCU680):
+
+    obs = sensor.ObsData(secs, *raw)
+    raw[0] /= 100
+    raw[1] /= 100
+    raw[2] = (int(raw[2]) << 8 | raw[3]) / 100
+    raw[3] = raw[4] >> 4
+    raw[4] &= 0x0FFF
+    raw[5] /= 1000
+    obs_fmt = dict(
+        header=", ".join(asdict(obs).keys()),
+        csv="{}, {:.1f}, {:.1f}, {:.2f}, {:}, {:}, {:.1f}, {:}".format(secs, *raw),
+        atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %, Press {:.2f} hPa".format(
+            time.strftime("%F %T", time.localtime(secs)), *raw[:3]
+        ),
+        bme="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %, Press {:.2f} hPa, {:.1f} kΩ".format(
+            time.strftime("%F %T", time.localtime(secs)), raw[0], raw[1], raw[2], raw[5]
+        ),
+        bsec="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %, Press {:.2f} hPa, {} IAQ".format(
+            time.strftime("%F %T", time.localtime(secs)), raw[0], raw[1], raw[2], raw[4]
+        ),
     )
 
     if fmt in obs_fmt:
