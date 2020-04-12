@@ -13,6 +13,8 @@ class Format(str, Enum):
     cf = "cf"
     atm = "atm"
     hcho = "hcho"
+    bme = "bme"
+    bsec = "bsec"
 
 
 def serial(
