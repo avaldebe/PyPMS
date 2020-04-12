@@ -72,6 +72,12 @@ def test_commands(sensor, command):
             (48, 49, 50, 51),
             id="HPMA115C0 data at the end of the buffer",
         ),
+        pytest.param(
+            "MCU680",
+            "5A5A3F0F0835198A01885430D200032BE1004A1A",
+            (2101, 6538, 392, 84, 12498, 207841, 74),
+            id="MCU680 good data",
+        ),
     ],
 )
 def test_decode(sensor, hex, msg, secs=1567201793):
