@@ -27,6 +27,7 @@ class Supported(str, Enum):
     HPMA115S0 = "HPMA115S0"
     HPMA115C0 = "HPMA115C0"
     SPS30 = "SPS30"
+    MCU680 = "MCU680"
     default = PMSx003
 
 
