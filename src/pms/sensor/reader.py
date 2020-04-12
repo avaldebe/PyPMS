@@ -61,9 +61,8 @@ class SensorReader:
         logger.debug(f"buffer length: {len(buffer)}")
 
         # check against sensor type derived from buffer
-        guess = self.sensor.guess(buffer)
-        if self.sensor != guess:
-            logger.error(f"Sensor is not {self.sensor.name}, try with {guess.name}")
+        if not self.sensor.check(buffer, "passive_mode"):
+            logger.error(f"Sensor is not {self.sensor.name}")
             sys.exit(1)
 
         return self
