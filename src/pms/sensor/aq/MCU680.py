@@ -1,0 +1,123 @@
+"""
+Bosh Sensortec sensors on MCU bridge modules
+- messages are 7-20b long
+"""
+
+from dataclasses import dataclass, field
+from typing import Tuple, Dict
+import struct
+from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from .. import base
+
+
+commands = base.Commands(
+    passive_read=base.Cmd(b"\xA5\x56\x01\xFC", b"\x5A\x5A\x3F\x0F", 20),
+    passive_mode=base.Cmd(b"\xA5\x56\x01\xFC", b"\x5A\x5A\x3F\x0F", 20),
+    active_mode=base.Cmd(b"\xA5\x56\x02\xFD", b"\x5A\x5A\x3F\x0F", 20),
+    sleep=base.Cmd(b"", b"", 0),
+    wake=base.Cmd(b"", b"", 0),
+)
+
+
+class Message(base.Message):
+    """Messages from MCU680 modules with a BME680 sensor"""
+
+    data_records = slice(7)
+
+    @property
+    def header(self) -> bytes:
+        return self.message[:4]
+
+    @property
+    def payload(self) -> bytes:
+        return self.message[4:-1]
+
+    @property
+    def checksum(self) -> int:
+        return self.message[-1]
+
+    @classmethod
+    def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
+
+        # consistency check: bug in message singnature
+        assert len(header) == 4, f"wrong header length {len(header)}"
+        assert header[:2] == b"ZZ", f"wrong header start {header!r}"
+        len_payload = header[-1]
+        assert length == len_payload + 5, f"wrong payload length {length}"
+
+        # validate message: recoverable errors (throw away observation)
+        msg = cls(message)
+        if msg.header != header:
+            raise WrongMessageFormat(f"message header: {msg.header!r}")
+        if len(message) != length:
+            raise WrongMessageFormat(f"message length: {len(message)}")
+        checksum = (sum(msg.header) + sum(msg.payload)) % 0x100
+        if msg.checksum != checksum:
+            raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
+        if sum(msg.payload) == 0:
+            raise SensorWarmingUp(f"message empty: warming up sensor")
+        return msg
+
+    @staticmethod
+    def _unpack(message: bytes) -> Tuple[int, ...]:
+        return struct.unpack(f">hHHBHLh", message)
+
+
+@dataclass(frozen=False)
+class ObsData(base.ObsData):
+    """Observations from Plantower PMS3003 sensors
+
+    time                                    measurement time [seconds since epoch]
+    temp                                    temperature [°C]
+    rhum                                    relative humidity [%]
+    press                                   atmospheric pressure [hPa]
+    IAQ_acc                                 IAQ accuracy flag
+    IAQ                                     index of air quality [0--500]
+    gas                                     gas resistance [kΩ]
+    alt                                     altitude estimate [m a.s.l.]
+    """
+
+    time: int
+    # temp[°C],rhum[%],press[hPa]: temperature,relative humidity (read as 100*temp,100*rhum)
+    temp: float
+    rhum: float
+    # press[hPa]: atm. pressure (read as 24b in hPa)
+    pres: float  # on read press XSB(8b)|MSB(8b)
+    IAQ_acc: int  # on read press LSB(8b)
+    IAQ: int  # on read IAQ_acc(4b)|IAQ(12b) packed into 16b
+    gas: int
+    alt: int
+
+    def __post_init__(self):
+        """Units conversion
+        temp [°C]    read in [0.01 °C]
+        rhum [%]     read in [1/10 000]
+        press [hPa]  read in [Pa] across 12b
+        gas [kΩ]   read in [Ω]
+        """
+        self.temp /= 100
+        self.rhum /= 100
+        self.press = (int(self.pres) << 8 | self.IAQ_acc) / 100
+        self.IAQ_acc = self.IAQ >> 4
+        self.IAQ &= 0x0FFF
+        self.gas /= 1000
+
+    def __format__(self, spec: str) -> str:
+        if spec == "header":
+            return super().__format__(spec)
+        if spec == "atm":
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa"
+        if spec == "bme":
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa, {self.gas:.1f} kΩ"
+        if spec == "bsec":
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa, {self.IAQ} IAQ"
+        if spec == "csv":
+            return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.press:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
+
+        raise ValueError(  # pragma: no cover
+            f"Unknown format code '{spec}' "
+            f"for object of type '{__name__}.{self.__class__.__name__}'"
+        )
+
+    def __str__(self):
+        return self.__format__("bme")

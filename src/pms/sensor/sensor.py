@@ -7,7 +7,7 @@ from datetime import datetime
 from enum import Enum
 from typing import NamedTuple
 from pms import logger
-from . import pm, base
+from . import base, pm, aq
 
 
 class Sensor(Enum):
@@ -23,6 +23,7 @@ class Sensor(Enum):
     HPMA115S0 = pm.HPMA115S0
     HPMA115C0 = pm.HPMA115C0
     SPS30 = pm.SPS30
+    MCU680 = aq.MCU680
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
