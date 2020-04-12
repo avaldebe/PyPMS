@@ -1,6 +1,7 @@
 {
     "python.pythonPath": ".venv/bin/python",
     "cSpell.words": [
+        "BSEC",
         "Datasheet",
         "HCHO",
         "LVTTL",
@@ -8,6 +9,7 @@
         "PicoBlade",
         "SFSD",
         "Samtec",
+        "Sensortec",
         "VOUT",
         "asdict",
         "dataclasses",
@@ -15,6 +17,7 @@
         "getenv",
         "hexdump",
         "influxdb",
+        "mirocontroller",
         "mosquitto",
         "mypy",
         "paho",

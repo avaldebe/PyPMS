@@ -107,3 +107,6 @@ venv.bak/
 
 # poetry
 poetry.lock
+
+# datasheets
+*.pdf
