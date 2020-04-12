@@ -2,7 +2,7 @@ import os
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor import pm
+from pms.sensor import pm, aq
 from pms import SensorWarning
 
 
@@ -99,6 +99,21 @@ from pms import SensorWarning
             "7E0003002800000000000000000000000000000000000000000000000000000000000000000000000000000000D47E",
             "message empty: warming up sensor",
             id="SPS30 empty message",
+        ),
+        pytest.param(
+            aq.MCU680, "5A5A3F0F0835198A0188", "message length: 10", id="MCU680 short message"
+        ),
+        pytest.param(
+            aq.MCU680,
+            "5A5A00000835198A01885430D200032BE1004A1A",
+            r"message header: b'ZZ\x00\x00'",
+            id="MCU680 wrong header",
+        ),
+        pytest.param(
+            aq.MCU680,
+            "5A5A3F0F0835198A01885430D200032BE1004A00",
+            "message checksum 0 != 26",
+            id="MCU680 wrong checksum",
         ),
     ],
 )
