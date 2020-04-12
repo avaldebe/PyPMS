@@ -28,6 +28,7 @@ class Sensor(Enum):
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
     SDS011 = SDS018 = SDS021 = SDS01x
+    BME680 = MCU680
 
     @property
     def Message(self) -> base.Message:
