@@ -7,7 +7,7 @@ from datetime import datetime
 from enum import Enum
 from typing import NamedTuple
 from pms import logger
-from . import pm
+from . import pm, base
 
 
 class Sensor(Enum):
@@ -29,15 +29,15 @@ class Sensor(Enum):
     SDS011 = SDS018 = SDS021 = SDS01x
 
     @property
-    def Message(self) -> pm.Message:
+    def Message(self) -> base.Message:
         return self.value.Message
 
     @property
-    def Data(self) -> pm.ObsData:
+    def Data(self) -> base.ObsData:
         return self.value.ObsData
 
     @property
-    def Commands(self) -> pm.Commands:
+    def Commands(self) -> base.Commands:
         return self.value.commands
 
     @property
@@ -68,7 +68,7 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> pm.Cmd:
+    def command(self, cmd: str) -> base.Cmd:
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
 

@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Tuple, Dict
 import struct
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from . import base
+from .. import base
 
 commands = base.Commands(
     # Read Measured Values

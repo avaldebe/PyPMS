@@ -4,7 +4,8 @@ Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 """
 from dataclasses import dataclass
 from typing import Dict
-from . import base, PMS3003
+from .. import base
+from . import PMS3003
 
 
 commands = base.Commands(

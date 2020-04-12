@@ -5,7 +5,8 @@ NovaFitness SDS198 sensors
 """
 from dataclasses import dataclass, field
 from typing import Dict
-from . import base, SDS01x
+from .. import base
+from . import SDS01x
 
 commands = SDS01x.commands._replace(
     passive_read=base.Cmd(
