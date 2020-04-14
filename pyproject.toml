@@ -44,6 +44,9 @@ test = [
 [tool.flit.scripts]
 pms = "pms.cli:main"
 
+[tool.flit.sdist]
+exclude = ["docs", "tests", ".gitignore", ".vscode", ".travis.yml"]
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
