@@ -65,7 +65,7 @@ def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1_567_198_523, sens
         raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
-        hcho="{}: HCHO {} ug/m3".format(time.strftime("%F %T", time.localtime(secs)), raw[-3]),
+        hcho="{}: HCHO {} mg/m3".format(time.strftime("%F %T", time.localtime(secs)), raw[-3]),
         atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %".format(
             time.strftime("%F %T", time.localtime(secs)), raw[-2], raw[-1]
         ),
