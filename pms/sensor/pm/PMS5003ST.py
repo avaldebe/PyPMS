@@ -4,7 +4,8 @@ Plantower PMS5003ST sensors
 - 6 size bins (as PMS5003). HCHO concentration, temperature and relative humidity
 """
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Tuple
+import struct
 from . import base, PMS3003, PMSx003, PMS5003S
 
 
@@ -21,6 +22,14 @@ class Message(PMS3003.Message):
     """Messages from Plantower PMS5003ST sensors"""
 
     data_records = slice(15)
+
+    @staticmethod
+    def _unpack(message: bytes) -> Tuple[int, ...]:
+        if len(message) == 34:
+            # 14th record is signed (temp)
+            return struct.unpack(f">13Hh3H", message)
+        else:
+            return PMS3003.Message._unpack(message)
 
 
 @dataclass(frozen=False)

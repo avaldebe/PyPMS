@@ -4,7 +4,8 @@ Plantower PMS5003T sensors
 - only 4 size bins
 """
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Tuple
+import struct
 from . import PMS3003, PMSx003
 
 
@@ -15,6 +16,14 @@ class Message(PMS3003.Message):
     """Messages from Plantower PMS5003T sensors"""
 
     data_records = slice(12)
+
+    @staticmethod
+    def _unpack(message: bytes) -> Tuple[int, ...]:
+        if len(message) == 26:
+            # 11th record is signed (temp)
+            return struct.unpack(">10Hh2H", message)
+        else:
+            return PMS3003.Message._unpack(message)
 
 
 @dataclass(frozen=False)
