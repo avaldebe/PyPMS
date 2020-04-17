@@ -28,8 +28,16 @@ class ObsData(PMSx003.ObsData):
     HCHO                                    formaldehyde concentration [mg/m3]
     """
 
-    # datasheet says [1/1000 mg/m3], which is [ug/m3]
+    # HCHO [mg/m3]: formaldehyde concentration (read as ug/m3, datasheet says 1/1000 mg/m3 ie ug/m3)
     HCHO: int
+
+    def __post_init__(self):
+        """Units conversion
+        nX_Y [#/cm3] read in [#/0.1L]
+        HCHO [mg/m3] read in [ug/m3]
+        """
+        super().__post_init__()
+        self.HCHO /= 1000
 
     def __format__(self, spec: str) -> str:
         if spec in ["header", "pm", "raw", "cf", "num"]:

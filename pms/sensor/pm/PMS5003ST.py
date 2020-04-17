@@ -52,6 +52,7 @@ class ObsData(PMS5003S.ObsData):
     def __post_init__(self):
         """Units conversion
         nX_Y [#/cm3] read in [#/0.1L]
+        HCHO [mg/m3] read in [ug/m3]
         temp [°C]    read in [0.1 °C]
         rhum [%]     read in [1/1000]
         """
