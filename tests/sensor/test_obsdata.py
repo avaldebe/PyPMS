@@ -42,12 +42,15 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw hcho atm error".split())
-def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1_567_198_523, sensor=pm.PMS5003ST):
+def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, sensor=pm.PMS5003ST):
     obs = sensor.ObsData(secs, *raw)
-    raw = raw[:6] + tuple(x / 100 for x in raw[6:12]) + (raw[12],) + tuple(x / 10 for x in raw[13:])
+    raw[6:12] = [x / 100 for x in raw[6:12]]
+    raw[12] /= 1000
+    raw[13] /= 10
+    raw[14] /= 10
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
-        csv="{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:d}, {:.1f}, {:.1f}".format(
+        csv="{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.3f}, {:.1f}, {:.1f}".format(
             secs, *raw
         ),
         pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
@@ -65,7 +68,7 @@ def test_PMS5003ST_format(fmt, raw=tuple(range(1, 16)), secs=1_567_198_523, sens
         raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
-        hcho="{}: HCHO {} mg/m3".format(time.strftime("%F %T", time.localtime(secs)), raw[-3]),
+        hcho="{}: HCHO {:.3f} mg/m3".format(time.strftime("%F %T", time.localtime(secs)), raw[-3]),
         atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %".format(
             time.strftime("%F %T", time.localtime(secs)), raw[-2], raw[-1]
         ),
