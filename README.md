@@ -1,6 +1,6 @@
-# PyPMS
+# Serial Air Quality Sensors
 
-Tools for reading PM sensors with serial (UART) interface, data acquisition and logging.
+Tools for reading Air Quality Sensors with serial (UART) interface, data acquisition and logging.
 
 [![Build Status](https://travis-ci.com/avaldebe/PyPMS.svg?branch=master)](https://travis-ci.com/avaldebe/PyPMS)
 [![GitHub issues](https://img.shields.io/github/issues/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/issues)
@@ -8,15 +8,15 @@ Tools for reading PM sensors with serial (UART) interface, data acquisition and 
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Command line interface
+## Command Line Interface
 
 ```man
 Usage: pms [OPTIONS] COMMAND [ARGS]...
 
-  Data acquisition and logging tool for PM sensors with UART interface
+  Read serial sensor
 
 Options:
-  --sensor-model -m [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30]
+  --sensor-model -m [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30|MCU680]
                                   sensor model  [default: PMSx003]
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -47,7 +47,7 @@ For details on a particular command and their options
 pms COMMAND --help
 ```
 
-## Sensors
+## Particulate Matter Sensors
 
 | Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                  | Tested Works | Doesn't Work | Not Tested | Datasheet                     | Notes                |
 | ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | ---------------------- | :----------: | :----------: | :--------: | ----------------------------- | -------------------- |
@@ -93,3 +93,29 @@ pms COMMAND --help
 
 [Senserion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
 [SPS30]: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.6_Particulate_Matter/Datasheets/Sensirion_PM_Sensors_SPS30_Datasheet.pdf
+
+## Other Sensors
+
+- [MCU680][]:
+  chinese module with a [BME680][] sensor, [STM32F051K8][] mirocontroller (μC) and 3.3V low-dropout regulator (LDO).
+  The μC acts as I2C/UART bridge, providing outputs from the [closed source integration library][BSEC].
+
+[MCU680]:   /docs/sensors/mcu680.md
+[BME680]:   https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
+[STM32F051K8]:  https://www.st.com/en/microcontrollers-microprocessors/stm32f051k8.html
+[BSEC]:     https://www.bosch-sensortec.com/software-tools/software/bsec/
+
+## Want More Sensors
+
+For more Air Quality sensors [open an issue][issue].
+
+[issue]: https://github.com/avaldebe/PyPMS/issues
+
+## Changelog
+
+- 0.1.*
+  - widen project scope from PM sensors to AQ sensors in general
+  - support [BME680][] sensor ([MCU680][] module)
+  - widen project scope beyond [Plantower][] PM sensors
+  - support [NovaFitness][], [Honeywell][] and [Senserion][] PM sensors
+  - cli for logging to csv file, InfluxDB server or MQTT server
