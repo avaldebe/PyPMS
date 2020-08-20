@@ -36,9 +36,9 @@ class ObsData(base.ObsData):
     def __format__(self, spec: str) -> str:
         if spec == "header":
             return super().__format__(spec)
-        if spec.endswith("pm"):
+        if spec == "pm":
             return f"{self.date:%F %T}: PM100 {self.pm100:.1f} ug/m3"
-        if spec.endswith("csv"):
+        if spec == "csv":
             return f"{self.time}, {self.pm100:.1f}"
         raise ValueError(
             f"Unknown format code '{spec}' "
