@@ -7,7 +7,13 @@ from dataclasses import dataclass, field
 from typing import Dict
 from . import base, SDS01x
 
-commands = SDS01x.commands
+commands = SDS01x.commands._replace(
+    passive_read=base.Cmd(
+        b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
+        b"\xAA\xCF",
+        10,
+    )
+)
 
 
 class Message(SDS01x.Message):
