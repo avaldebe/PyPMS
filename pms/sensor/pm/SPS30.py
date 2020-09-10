@@ -87,7 +87,7 @@ class Message(base.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """SPS30 observations
-    
+
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [ug/m3]
     n0_5, n1_0, n2_5, n4_0, n10_0           number concentrations under X.Y um [#/cm3]

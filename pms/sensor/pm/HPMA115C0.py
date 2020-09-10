@@ -25,7 +25,7 @@ class Message(HPMA115S0.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """Observations from Honeywell HPMA115C0 sensors
-    
+
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [ug/m3]
     """

@@ -89,7 +89,7 @@ class Message(base.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """SDS01x observations
-    
+
     time                                    measurement time [seconds since epoch]
     raw25, raw10                            PM2.5*10, PM10*10 [ug/m3]
     """

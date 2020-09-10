@@ -26,7 +26,7 @@ class Message(SDS01x.Message):
 class ObsData(base.ObsData):
 
     """SDS198 observations
-    
+
     time                                    measurement time [seconds since epoch]
     pm100                                   PM100 [ug/m3]
     """

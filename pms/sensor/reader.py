@@ -17,7 +17,7 @@ from .sensor import Sensor
 
 class SensorReader:
     """Read sensor messages from serial port
-    
+
     The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
     While the serial port is open, the sensor is read in passive mode.
 

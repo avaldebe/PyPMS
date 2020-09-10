@@ -35,7 +35,7 @@ class Message(PMS3003.Message):
 @dataclass(frozen=False)
 class ObsData(PMS5003S.ObsData):
     """Observations from Plantower PMS5003ST sensors
-    
+
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]

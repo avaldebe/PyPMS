@@ -40,7 +40,7 @@ class Data(NamedTuple):
     @classmethod
     def decode(cls, topic: str, payload: str, *, time: int = None) -> "Data":
         """Decode a MQTT message
-        
+
         For example
         >>> decode("homie/test/pm10/concentration", "27")
         >>> Data(now(), "test", "pm10", 27)

@@ -3,7 +3,7 @@ from .base import Cmd
 
 class SDS:
     """Additional commands for NovaFitness sensors
-    
+
     Laser Dust Sensor Control Protocol V1.3
     https://learn.watterott.com/sensors/sds011/sds011_protocol.pdf
     """
@@ -47,7 +47,7 @@ class SDS:
 
 class HPMA:
     """Additional commands for Honeywell sensors
-    
+
     HPM Series, Particulate Matter Sensors, 32322550 Issue F
     https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
     """
@@ -55,7 +55,7 @@ class HPMA:
     @staticmethod
     def read_cf() -> Cmd:
         """Read Customer Adjustment Coefficient
-        
+
         HPM Series, Table 4 and Table 6
         """
         return Cmd(b"\x68\x01\x10\x87", b"\x40\x02\x10", 5)

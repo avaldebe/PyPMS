@@ -91,7 +91,7 @@ class Message(metaclass=ABCMeta):
 @dataclass  # type: ignore
 class ObsData(metaclass=ABCMeta):
     """Measurements
-    
+
     time: measurement time [seconds since epoch]
     date: measurement time [datetime object]
     """

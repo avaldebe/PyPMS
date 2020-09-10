@@ -66,7 +66,7 @@ class Message(base.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """Observations from Plantower PMS3003 sensors
-    
+
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]

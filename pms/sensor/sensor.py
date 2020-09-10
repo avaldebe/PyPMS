@@ -46,7 +46,7 @@ class Sensor(Enum):
 
     def guess(self, buffer: bytes) -> "Sensor":
         """Guess sensor type from buffer contents
-        
+
         Need to issue the correct commands for a given sensor.
         Otherwise, the sensor will not wake up...
         """
