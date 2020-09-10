@@ -52,7 +52,7 @@ def test_commands(sensor, command):
             (1236, 2618),
             id="SDS01x data at the end of the buffer",
         ),
-        pytest.param("SDS198", "AACF00006400e90552AB", (100,), id="SDS198 good data"),
+        pytest.param("SDS198", "AACF0C001600E90510AB", (22,), id="SDS198 good data"),
         pytest.param("HPMA115S0", "4005040030003156", (48, 49), id="HPMA115S0 good data"),
         pytest.param(
             "HPMA115S0",
