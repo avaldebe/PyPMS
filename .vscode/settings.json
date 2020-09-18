@@ -26,6 +26,7 @@
         "strftime",
         "subcommand",
         "subcommands",
+        "typer",
         "uart"
     ],
     "cSpell.ignoreWords": [
@@ -33,10 +34,12 @@
         "avaldebe",
         "gmail",
         "hpma",
+        "jtag",
         "lcsc",
         "mqttpassword",
         "mqttuser",
         "pmsa",
+        "pwsh",
         "senserion"
     ],
     "editor.formatOnSave": true,

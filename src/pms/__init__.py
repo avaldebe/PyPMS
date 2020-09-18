@@ -1,5 +1,4 @@
-"""Data acquisition and logging tool for PM sensors with UART interface"""
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 
 import logging, os

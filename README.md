@@ -13,15 +13,24 @@ Tools for reading PM sensors with serial (UART) interface, data acquisition and 
 ```man
 Usage: pms [OPTIONS] COMMAND [ARGS]...
 
-  Read PMSx003 sensor
+  Data acquisition and logging tool for PM sensors with UART interface
 
 Options:
   -m, --sensor-model [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30]
                                   sensor model  [default: PMSx003]
-  -s, --serial-port PATH          serial port  [default: /dev/ttyUSB0]
+  -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
                                   60]
-  --debug                         print DEBUG/logging messages
+
+  --debug                         print DEBUG/logging messages  [default:
+                                  False]
+
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+
   --help                          Show this message and exit.
 
 Commands:

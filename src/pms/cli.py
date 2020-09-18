@@ -1,65 +1,75 @@
+"""Data acquisition and logging tool for PM sensors with UART interface"""
+
 import json
+from enum import Enum
 from pathlib import Path
-import click
-from pms import logger, service, sensor
+from typing import Optional
+import typer
+from . import logger, service, sensor
 
 
-@click.group()
-@click.option(
-    "--sensor-model",
-    "-m",
-    type=click.Choice(sensor.SUPPORTED),
-    help="sensor model",
-    default=sensor.DEFAULT,
-    show_default=True,
-)
-@click.option(
-    "--serial-port",
-    "-s",
-    type=click.Path(),
-    help="serial port",
-    default="/dev/ttyUSB0",
-    show_default=True,
-)
-@click.option(
-    "--interval",
-    "-i",
-    type=int,
-    help="seconds to wait between updates",
-    default=60,
-    show_default=True,
-)
-@click.option("--debug", is_flag=True, help="print DEBUG/logging messages")
-@click.pass_context
-def main(ctx, sensor_model, serial_port, interval, debug):
+cli = typer.Typer(help=__doc__)
+
+
+class Supported(str, Enum):
+    PMSx003 = "PMSx003"
+    PMS3003 = "PMS3003"
+    PMS5003S = "PMS5003S"
+    PMS5003ST = "PMS5003ST"
+    PMS5003T = "PMS5003T"
+    SDS01x = "SDS01x"
+    SDS198 = "SDS198"
+    HPMA115S0 = "HPMA115S0"
+    HPMA115C0 = "HPMA115C0"
+    SPS30 = "SPS30"
+    default = PMSx003
+
+
+@cli.callback()
+def main(
+    ctx: typer.Context,
+    model: Supported = typer.Option(Supported.default, "--sensor-model", "-m", help="sensor model"),
+    port: str = typer.Option("/dev/ttyUSB0", "--serial-port", "-s", help="serial port"),
+    seconds: int = typer.Option(60, "--interval", "-i", help="seconds to wait between updates"),
+    debug: bool = typer.Option(False, "--debug", help="print DEBUG/logging messages"),
+):
     """Read serial sensor"""
     if debug:
         logger.setLevel("DEBUG")
-    ctx.obj = {"reader": sensor.SensorReader(sensor_model, serial_port, interval)}
+    ctx.obj = {"reader": sensor.SensorReader(model, port, seconds)}
 
 
-@main.command()
-@click.option(
-    "--format",
-    "-f",
-    type=click.Choice("csv pm num raw cf atm hcho".split()),
-    help="formatted output",
-    default="pm",
-    show_default=True,
-)
-@click.pass_context
-def serial(ctx, format):
+class Format(str, Enum):
+    csv = "csv"
+    pm = "pm"
+    num = "num"
+    raw = "raw"
+    cf = "cf"
+    atm = "atm"
+    hcho = "hcho"
+
+
+@cli.command()
+def serial(
+    ctx: typer.Context,
+    format: Optional[Format] = typer.Option(None, "--format", "-f", help="formatted output"),
+):
     """Read sensor and print measurements"""
     with ctx.obj["reader"] as reader:
-        for obs in reader():
-            print(f"{obs:{format}}")
+        if format:
+            for obs in reader():
+                print(f"{obs:{format}}")
+        else:
+            for obs in reader():
+                print(str(obs))
 
 
-@main.command()
-@click.option("--filename", "-F", help="csv formatted file", default="pms.csv", show_default=True)
-@click.option("--overwrite", help="overwrite file, if already exists", is_flag=True)
-@click.pass_context
-def csv(ctx, filename, overwrite):
+@cli.command()
+def csv(
+    ctx: typer.Context,
+    filename: str = typer.Option("pms.csv", "--filename", "-F", help="csv formatted file"),
+    overwrite: bool = typer.Option(False, "--overwrite", help="overwrite file, if already exists"),
+):
     """Read sensor and print measurements"""
     path = Path(filename)
     mode = "w" if overwrite else "a"
@@ -73,22 +83,17 @@ def csv(ctx, filename, overwrite):
             print(f"{obs:csv}", file=f)
 
 
-@main.command()
-@click.option(
-    "--topic", "-t", type=str, help="mqtt root/topic", default="homie/test", show_default=True
-)
-@click.option(
-    "--mqtt-host", type=str, help="mqtt server", default="mqtt.eclipse.org", show_default=True
-)
-@click.option("--mqtt-port", type=int, help="server port", default=1883, show_default=True)
-@click.option("--mqtt-user", type=str, help="server username")
-@click.option("--mqtt-pass", type=str, help="server password")
-@click.pass_context
-def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
+@cli.command()
+def mqtt(
+    ctx: typer.Context,
+    topic: str = typer.Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
+    host: str = typer.Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
+    port: int = typer.Option(1883, "--mqtt-port", help="server port"),
+    user: str = typer.Option("", "--mqtt-user", help="server username", show_default=False),
+    word: str = typer.Option("", "--mqtt-pass", help="server password", show_default=False),
+):
     """Read sensor and push PM measurements to a MQTT server"""
-    pub = service.mqtt.client_pub(
-        topic=topic, host=mqtt_host, port=mqtt_port, username=mqtt_user, password=mqtt_pass
-    )
+    pub = service.mqtt.client_pub(topic=topic, host=host, port=port, username=user, password=word)
     for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
         pub(
             {
@@ -103,54 +108,38 @@ def mqtt(ctx, topic, mqtt_host, mqtt_port, mqtt_user, mqtt_pass):
             pub({f"{k}/concentration": v for k, v in obs.subset("pm").items()})
 
 
-@main.command()
-@click.option("--db-host", type=str, help="database server", default="influxdb", show_default=True)
-@click.option("--db-port", type=int, help="server port", default=8086, show_default=True)
-@click.option("--db-user", type=str, help="server username", default="root", show_default=True)
-@click.option("--db-pass", type=str, help="server password", default="root", show_default=True)
-@click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
-@click.option(
-    "--tags", type=str, help="measurement tags", default="{'location':'test'}", show_default=True
-)
-@click.pass_context
-def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
+@cli.command()
+def influxdb(
+    ctx: typer.Context,
+    host: str = typer.Option("influxdb", "--db-host", help="database server"),
+    port: int = typer.Option(8086, "--db-port", help="server port"),
+    user: str = typer.Option("root", "--db-user", help="server username"),
+    word: str = typer.Option("root", "--db-pass", help="server password"),
+    name: str = typer.Option("homie", "--db-name", help="database name"),
+    jtag: str = typer.Option("{'location':'test'}", "--tags", help="measurement tags"),
+):
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = service.influxdb.client_pub(
-        host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name
+        host=host, port=port, username=user, password=word, db_name=name
     )
-    tags = json.loads(tags)
-
+    tags = json.loads(jtag)
     with ctx.obj["reader"] as reader:
         for obs in reader():
             pub(time=obs.time, tags=tags, data=obs.subset("pm"))
 
 
-@main.command()
-@click.option(
-    "--mqtt-topic", type=str, help="mqtt root/topic", default="homie/+/+/+", show_default=True
-)
-@click.option(
-    "--mqtt-host", type=str, help="mqtt server", default="mqtt.eclipse.org", show_default=True
-)
-@click.option("--mqtt-port", type=int, help="server port", default=1883, show_default=True)
-@click.option("--mqtt-user", type=str, help="server username")
-@click.option("--mqtt-pass", type=str, help="server password")
-@click.option("--db-host", type=str, help="database server", default="influxdb", show_default=True)
-@click.option("--db-port", type=int, help="server port", default=8086, show_default=True)
-@click.option("--db-user", type=str, help="server username", default="root", show_default=True)
-@click.option("--db-pass", type=str, help="server password", default="root", show_default=True)
-@click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
+@cli.command()
 def bridge(
-    mqtt_topic,
-    mqtt_host,
-    mqtt_port,
-    mqtt_user,
-    mqtt_pass,
-    db_host,
-    db_port,
-    db_user,
-    db_pass,
-    db_name,
+    mqtt_topic: str = typer.Option("homie/+/+/+", help="mqtt root/topic"),
+    mqtt_host: str = typer.Option("mqtt.eclipse.org", help="mqtt server"),
+    mqtt_port: int = typer.Option(1883, help="server port"),
+    mqtt_user: str = typer.Option("", help="server username", show_default=False),
+    mqtt_pass: str = typer.Option("", help="server password", show_default=False),
+    db_host: str = typer.Option("influxdb", help="database server"),
+    db_port: int = typer.Option(8086, help="server port"),
+    db_user: str = typer.Option("root", help="server username"),
+    db_pass: str = typer.Option("root", help="server password"),
+    db_name: str = typer.Option("homie", help="database name"),
 ):
     """Bridge between MQTT and InfluxDB servers"""
     pub = service.influxdb.client_pub(
