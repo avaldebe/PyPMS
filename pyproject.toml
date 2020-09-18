@@ -52,7 +52,7 @@ pytest-mypy = ">=0.4.2"
 typer-cli = ">=0.0.10"
 
 [tool.poetry.scripts]
-pms = "pms.cli:main"
+pms = "pms.cli:cli"
 
 [tool.tox]
 legacy_tox_ini = """
