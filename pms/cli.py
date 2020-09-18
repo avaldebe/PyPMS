@@ -126,6 +126,9 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
 
 @main.command()
 @click.option(
+    "--mqtt-topic", type=str, help="mqtt root/topic", default="homie/+/+/+", show_default=True
+)
+@click.option(
     "--mqtt-host", type=str, help="mqtt server", default="mqtt.eclipse.org", show_default=True
 )
 @click.option("--mqtt-port", type=int, help="server port", default=1883, show_default=True)
@@ -136,7 +139,18 @@ def influxdb(ctx, db_host, db_port, db_user, db_pass, db_name, tags):
 @click.option("--db-user", type=str, help="server username", default="root", show_default=True)
 @click.option("--db-pass", type=str, help="server password", default="root", show_default=True)
 @click.option("--db-name", type=str, help="database name", default="homie", show_default=True)
-def bridge(mqtt_host, mqtt_port, mqtt_user, mqtt_pass, db_host, db_port, db_user, db_pass, db_name):
+def bridge(
+    mqtt_topic,
+    mqtt_host,
+    mqtt_port,
+    mqtt_user,
+    mqtt_pass,
+    db_host,
+    db_port,
+    db_user,
+    db_pass,
+    db_name,
+):
     """Bridge between MQTT and InfluxDB servers"""
     pub = service.influxdb.client_pub(
         host=db_host, port=db_port, username=db_user, password=db_pass, db_name=db_name
@@ -145,8 +159,8 @@ def bridge(mqtt_host, mqtt_port, mqtt_user, mqtt_pass, db_host, db_port, db_user
     def on_sensordata(data: service.mqtt.Data) -> None:
         pub(time=data.time, tags={"location": data.location}, data={data.measurement: data.value})
 
-    setvice.mqtt.client_sub(
-        topic=topic,
+    service.mqtt.client_sub(
+        topic=mqtt_topic,
         host=mqtt_host,
         port=mqtt_port,
         username=mqtt_user,
