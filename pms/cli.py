@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import click
 from pms import logger, service, sensor
