@@ -96,9 +96,9 @@ class ObsData(base.ObsData):
     def _safe_div(x: int, y: int) -> float:
         if y:
             return x / y
-        if x == y == 0:
+        if x == y == 0:  # pragma: no cover
             return 1
-        return 0
+        return 0  # pragma: no cover
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
@@ -113,8 +113,7 @@ class ObsData(base.ObsData):
             return (
                 f"{self.date:%F %T}: PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} ug/m3"
             )
-
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

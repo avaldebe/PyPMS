@@ -42,7 +42,7 @@ class Message(base.Message):
             b"\x11": b"\x7D\x31",
             b"\x13": b"\x7D\x33",
         }.items():
-            if v in p:
+            if v in p:  # pragma: no cover
                 p = p.replace(v, k)
         return p
 
@@ -118,7 +118,7 @@ class ObsData(base.ObsData):
             return f"{self.date:%F %T}: N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f}, N4.0 {self.n4_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
         if spec == "diam":
             return f"{self.date:%F %T}: Ø {self.diam:.1f} μm"
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

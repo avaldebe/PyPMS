@@ -62,15 +62,21 @@ isolated_build = True
 
 [testenv]
 commands =
-    py36: pytest --black --mypy --mypy-ignore-missing-imports
-    py37: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing --cov-fail-under=70
-    py38: pytest
+    py36: pytest --black
+    py37: pytest --mypy --mypy-ignore-missing-imports
+    py38: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing --cov-fail-under=80
 deps =
     pytest
     py36: pytest-black
-    py36: pytest-mypy
-    py37: pytest-cov
+    py37: pytest-mypy
+    py38: pytest-cov
 """
+
+[tool.coverage.run]
+omit = ["*/__init__.py", "*/__main__.py", "*/cli.py"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "def __repr__", "def __str__"]
 
 [tool.black]
 line-length = 100

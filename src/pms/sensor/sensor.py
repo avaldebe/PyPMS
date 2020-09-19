@@ -64,7 +64,7 @@ class Sensor(Enum):
         return self.__class__[sensor]
 
     @staticmethod
-    def now() -> int:
+    def now() -> int:  # pragma: no cover
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
@@ -74,7 +74,7 @@ class Sensor(Enum):
 
     def decode(self, buffer: bytes, *, time: int = None) -> NamedTuple:
         """Exract observations from serial buffer"""
-        if not time:
+        if not time:  # pragma: no cover
             time = self.now()
 
         data = self.Message.decode(buffer, self.Commands.passive_read)

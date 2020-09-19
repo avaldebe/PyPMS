@@ -7,4 +7,4 @@ install:
   - pip install poetry
   - poetry install
 script:
-  - pytest --black --mypy --mypy-ignore-missing-imports --cov=src/pms --cov-report=term-missing --cov-fail-under=70
+  - pytest --black --mypy --mypy-ignore-missing-imports --cov=src/pms --cov-report=term-missing --cov-fail-under=80
