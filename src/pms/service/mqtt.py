@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import Dict, Union, Callable, NamedTuple
-import paho.mqtt.client as mqtt
-from pms import logger
+from paho.mqtt import client
+from typer import Context, Option
+from .. import logger
 
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[Dict[str, Union[int, str]]], None]:
-    c = mqtt.Client(topic)
+    c = client.Client(topic)
     c.enable_logger(logger)
     if username:
         c.username_pw_set(username, password)
@@ -80,7 +81,7 @@ def client_sub(
         else:
             on_sensordata(data)
 
-    c = mqtt.Client(topic)
+    c = client.Client(topic)
     c.enable_logger(logger)
     if username:
         c.username_pw_set(username, password)
@@ -89,3 +90,27 @@ def client_sub(
     c.on_message = on_message
     c.connect(host, port, 60)
     c.loop_forever()
+
+
+def mqtt(
+    ctx: Context,
+    topic: str = Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
+    host: str = Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
+    port: int = Option(1883, "--mqtt-port", help="server port"),
+    user: str = Option("", "--mqtt-user", help="server username", show_default=False),
+    word: str = Option("", "--mqtt-pass", help="server password", show_default=False),
+):
+    """Read sensor and push PM measurements to a MQTT server"""
+    pub = client_pub(topic=topic, host=host, port=port, username=user, password=word)
+    for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
+        pub(
+            {
+                f"{k}/$type": v,
+                f"{k}/$properties": "sensor,unit,concentration",
+                f"{k}/sensor": ctx.obj["reader"].sensor.name,
+                f"{k}/unit": "ug/m3",
+            }
+        )
+    with ctx.obj["reader"] as reader:
+        for obs in reader():
+            pub({f"{k}/concentration": v for k, v in obs.subset("pm").items()})

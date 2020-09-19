@@ -1,7 +1,9 @@
-import os, json
+import os
+import json
 from typing import Dict, Callable
 from mypy_extensions import NamedArg
 from influxdb import InfluxDBClient
+from typer import Context, Option
 
 
 def client_pub(
@@ -26,3 +28,20 @@ def client_pub(
         )
 
     return pub
+
+
+def influxdb(
+    ctx: Context,
+    host: str = Option("influxdb", "--db-host", help="database server"),
+    port: int = Option(8086, "--db-port", help="server port"),
+    user: str = Option("root", "--db-user", help="server username"),
+    word: str = Option("root", "--db-pass", help="server password"),
+    name: str = Option("homie", "--db-name", help="database name"),
+    jtag: str = Option("{'location':'test'}", "--tags", help="measurement tags"),
+):
+    """Read sensor and push PM measurements to an InfluxDB server"""
+    pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)
+    tags = json.loads(jtag)
+    with ctx.obj["reader"] as reader:
+        for obs in reader():
+            pub(time=obs.time, tags=tags, data=obs.subset("pm"))
