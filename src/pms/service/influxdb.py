@@ -1,9 +1,11 @@
 import os
 import json
+from dataclasses import fields
 from typing import Dict, Callable
 from mypy_extensions import NamedArg
 from influxdb import InfluxDBClient
 from typer import Context, Option
+from ..sensor.base import ObsData
 
 
 def client_pub(
@@ -42,6 +44,8 @@ def influxdb(
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)
     tags = json.loads(jtag)
+
     with ctx.obj["reader"] as reader:
         for obs in reader():
-            pub(time=obs.time, tags=tags, data=obs.subset("pm"))
+            data = {field.name: getattr(obs, field.name) for field in fields(obs) if field.metadata}
+            pub(time=obs.time, tags=tags, data=data)
