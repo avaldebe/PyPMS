@@ -1,7 +1,9 @@
 from datetime import datetime
+from dataclasses import fields
 from typing import Dict, Union, Callable, NamedTuple
 from paho.mqtt import client
 from typer import Context, Option
+from ..sensor.base import ObsData
 from .. import logger
 
 
@@ -58,7 +60,7 @@ class Data(NamedTuple):
 
         try:
             value = float(payload)
-        except ValueError:
+        except ValueError:  # pragma: no cover
             raise UserWarning(f"non numeric payload: {payload}")
         else:
             return cls(time, location, measurement, value)
@@ -101,16 +103,23 @@ def mqtt(
     word: str = Option("", "--mqtt-pass", help="server password", show_default=False),
 ):
     """Read sensor and push PM measurements to a MQTT server"""
+
     pub = client_pub(topic=topic, host=host, port=port, username=user, password=word)
-    for k, v in {"pm01": "PM1", "pm25": "PM2.5", "pm10": "PM10"}.items():
-        pub(
-            {
-                f"{k}/$type": v,
-                f"{k}/$properties": "sensor,unit,concentration",
-                f"{k}/sensor": ctx.obj["reader"].sensor.name,
-                f"{k}/unit": "ug/m3",
-            }
-        )
+
+    def publish(obs: ObsData, metadata: bool = False):
+        data = {}
+        for field in fields(obs):
+            if not field.metadata:
+                continue
+            if metadata:
+                data[f"{field.name}/$type"] = field.metadata["long_name"]
+                data[f"{field.name}/$properties"] = f"sensor,unit,{field.metadata['topic']}"
+                data[f"{field.name}/sensor"] = ctx.obj["reader"].sensor.name
+                data[f"{field.name}/unit"] = field.metadata["units"]
+            data[f"{field.name}/{field.metadata['topic']}"] = getattr(obs, field.name)
+        pub(data)
+
     with ctx.obj["reader"] as reader:
+        publish(next(reader()), metadata=True)
         for obs in reader():
-            pub({f"{k}/concentration": v for k, v in obs.subset("pm").items()})
+            publish(obs)
