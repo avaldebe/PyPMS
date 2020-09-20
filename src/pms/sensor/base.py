@@ -106,10 +106,13 @@ class ObsData(metaclass=ABCMeta):
         return datetime.fromtimestamp(self.time)
 
     def subset(self, spec: str) -> Dict[str, float]:
-        obs = {k: v for k, v in asdict(self).items() if k.startswith(spec)}
+        if spec:
+            obs = {k: v for k, v in asdict(self).items() if k.startswith(spec)}
+        else:
+            obs = {k: v for k, v in asdict(self).items() if k != "time"}
         if obs:
             return obs
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown subset code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )
@@ -125,3 +128,8 @@ class ObsData(metaclass=ABCMeta):
 
     def __str__(self):
         return self.__format__("pm")
+
+
+def metadata(long_name: str, units: str, topic: str):
+    """For fields(metadata=metadata(...))"""
+    return dict(long_name=long_name, units=units, topic=topic)

@@ -94,10 +94,10 @@ class ObsData(base.ObsData):
     diam                                    typical particle size [μm]
     """
 
-    pm01: float
-    pm25: float
-    pm04: float
-    pm10: float
+    pm01: float = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
+    pm25: float = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
+    pm04: float = field(metadata=base.metadata("PM4", "ug/m3", "concentration"))
+    pm10: float = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
     n0_5: float
     n1_0: float
     n2_5: float

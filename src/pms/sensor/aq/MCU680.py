@@ -77,16 +77,18 @@ class ObsData(base.ObsData):
     alt                                     altitude estimate [m a.s.l.]
     """
 
-    time: int
-    # temp[°C],rhum[%],press[hPa]: temperature,relative humidity (read as 100*temp,100*rhum)
-    temp: float
-    rhum: float
+    # temp[°C],rhum[%]: temperature,relative humidity (read as 100*temp,100*rhum)
+    temp: float = field(metadata=base.metadata("temperature", "°C", "degrees"))
+    rhum: float = field(metadata=base.metadata("relative humidity", "%", "percentage"))
     # press[hPa]: atm. pressure (read as 24b in hPa)
-    pres: float  # on read press XSB(8b)|MSB(8b)
-    IAQ_acc: int  # on read press LSB(8b)
-    IAQ: int  # on read IAQ_acc(4b)|IAQ(12b) packed into 16b
-    gas: int
-    alt: int
+    # on read press XSB(8b)|MSB(8b)
+    pres: float = field(metadata=base.metadata("atmospheric pressure", "hPa", "pressure"))
+    # on read press LSB(8b)
+    IAQ_acc: int = field(metadata=base.metadata("IAQ acc", "1", "acc"))
+    # on read IAQ_acc(4b)|IAQ(12b) packed into 16b
+    IAQ: int = field(metadata=base.metadata("IAQ", "0-500", "iaq"))
+    gas: int = field(metadata=base.metadata("gas resistance", "kΩ", "resistance"))
+    alt: int = field(metadata=base.metadata("altitude estimate", "m(a.s.l.)", "elevation"))
 
     def __post_init__(self):
         """Units conversion

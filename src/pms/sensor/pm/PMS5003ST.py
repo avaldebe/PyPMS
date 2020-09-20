@@ -3,7 +3,7 @@ Plantower PMS5003ST sensors
 - messages are 32b long
 - 6 size bins (as PMS5003). HCHO concentration, temperature and relative humidity
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Tuple
 import struct
 from .. import base
@@ -47,8 +47,8 @@ class ObsData(PMS5003S.ObsData):
     """
 
     # temp[°C],rhum[%]: temperature,relative humidity (read as 10*temp,10*rhum)
-    temp: float
-    rhum: float
+    temp: float = field(metadata=base.metadata("temperature", "°C", "degrees"))
+    rhum: float = field(metadata=base.metadata("relative humidity", "%", "percentage"))
 
     def __post_init__(self):
         """Units conversion
@@ -69,7 +69,7 @@ class ObsData(PMS5003S.ObsData):
             return f"{csv}, {self.temp:.1f}, {self.rhum:.1f}"
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )
