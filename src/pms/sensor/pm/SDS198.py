@@ -32,7 +32,7 @@ class ObsData(base.ObsData):
     pm100                                   PM100 [ug/m3]
     """
 
-    pm100: int
+    pm100: int = field(metadata=base.metadata("PM100", "ug/m3", "concentration"))
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
@@ -41,7 +41,7 @@ class ObsData(base.ObsData):
             return f"{self.date:%F %T}: PM100 {self.pm100:.1f} ug/m3"
         if spec == "csv":
             return f"{self.time}, {self.pm100:.1f}"
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

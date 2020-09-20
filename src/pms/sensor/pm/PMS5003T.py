@@ -3,9 +3,10 @@ Plantower PMS5003T sensors
 - messages are 32b long
 - only 4 size bins
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Tuple
 import struct
+from .. import base
 from . import PMS3003, PMSx003
 
 
@@ -44,8 +45,8 @@ class ObsData(PMS3003.ObsData):
     n1_0: float
     n2_5: float
     # temp[°C],rhum[%]: temperature,relative humidity (read as 10*temp,10*rhum)
-    temp: float
-    rhum: float
+    temp: float = field(metadata=base.metadata("temperature", "°C", "degrees"))
+    rhum: float = field(metadata=base.metadata("relative humidity", "%", "percentage"))
 
     def __post_init__(self):
         """Units conversion
@@ -70,7 +71,7 @@ class ObsData(PMS3003.ObsData):
             return f"{self.date:%F %T}: N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f} #/cm3"
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

@@ -31,10 +31,10 @@ class ObsData(base.ObsData):
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [ug/m3]
     """
 
-    pm01: int
-    pm25: int
-    pm04: int
-    pm10: int
+    pm01: int = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
+    pm25: int = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
+    pm04: int = field(metadata=base.metadata("PM4", "ug/m3", "concentration"))
+    pm10: int = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
@@ -45,7 +45,7 @@ class ObsData(base.ObsData):
             return (
                 f"{self.time}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
             )
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

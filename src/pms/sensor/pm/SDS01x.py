@@ -94,8 +94,8 @@ class ObsData(base.ObsData):
     raw25, raw10                            PM2.5*10, PM10*10 [ug/m3]
     """
 
-    pm25: float
-    pm10: float
+    pm25: float = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
+    pm10: float = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
 
     def __post_init__(self):
         """Convert from 0.1 ug/m3 to ug/m3"""
@@ -109,7 +109,7 @@ class ObsData(base.ObsData):
             return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
         if spec == "csv":
             return f"{self.time}, {self.pm25:.1f}, {self.pm10:.1f}"
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
             f"for object of type '{__name__}.{self.__class__.__name__}'"
         )

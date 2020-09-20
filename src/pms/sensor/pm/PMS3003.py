@@ -75,9 +75,9 @@ class ObsData(base.ObsData):
     raw01: int = field(repr=False)
     raw25: int = field(repr=False)
     raw10: int = field(repr=False)
-    pm01: int
-    pm25: int
-    pm10: int
+    pm01: int = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
+    pm25: int = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
+    pm10: int = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
 
     # cfX [1]: pmX/rawX
     @property
