@@ -9,7 +9,7 @@ NOTE:
 import sys, time
 from typing import Generator, Optional
 from serial import Serial
-from .. import logger, SensorWarning, SensorWarmingUp
+from .. import logger, SensorWarning, SensorWarmingUp, InconsistentObservation
 from .sensor import Sensor, base
 
 
@@ -78,9 +78,9 @@ class SensorReader:
 
                 try:
                     obs = self.sensor.decode(buffer)
-                except SensorWarmingUp as e:
+                except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
-                    time.sleep(1)
+                    time.sleep(5)
                 except SensorWarning as e:
                     logger.debug(e)
                     self.serial.reset_input_buffer()

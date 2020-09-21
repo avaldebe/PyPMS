@@ -6,7 +6,7 @@ Plantower PMS3003 sensors
 from dataclasses import dataclass, field
 from typing import Tuple, Dict
 import struct
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from ... import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
 from .. import base
 
 
