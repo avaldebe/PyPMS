@@ -1,7 +1,7 @@
 from enum import Enum
 from pathlib import Path
 from typing import Optional
-from typer import Context, Option
+from typer import Context, Option, echo
 from .. import logger
 
 
@@ -25,10 +25,10 @@ def serial(
     with ctx.obj["reader"] as reader:
         if format:
             for obs in reader():
-                print(f"{obs:{format}}")
+                echo(f"{obs:{format}}")
         else:
             for obs in reader():
-                print(str(obs))
+                echo(str(obs))
 
 
 def csv(
