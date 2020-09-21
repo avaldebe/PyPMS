@@ -1,8 +1,7 @@
-"""Data acquisition and logging tool for PM sensors with UART interface"""
-
 from enum import Enum
-from typer import Typer, Context, Option
-from . import logger
+from typing import Optional
+from typer import Typer, Context, Option, echo, Exit
+from . import logger, __doc__, __version__
 from .sensor import SensorReader
 from .sensor.cli import serial, csv
 from .service.cli import influxdb, mqtt, bridge
@@ -31,6 +30,13 @@ class Supported(str, Enum):
     default = PMSx003
 
 
+def version_callback(value: bool):
+    if value:
+        name = __name__.split(".")[0]
+        echo(f"{name} version {__version__}")
+        raise Exit()
+
+
 @main.callback()
 def callback(
     ctx: Context,
@@ -38,6 +44,7 @@ def callback(
     port: str = Option("/dev/ttyUSB0", "--serial-port", "-s", help="serial port"),
     seconds: int = Option(60, "--interval", "-i", help="seconds to wait between updates"),
     debug: bool = Option(False, "--debug", help="print DEBUG/logging messages"),
+    version: Optional[bool] = Option(None, "--version", callback=version_callback),
 ):
     """Read serial sensor"""
     if debug:
