@@ -3,7 +3,7 @@ Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 - messages are 32b long
 """
 from dataclasses import dataclass
-from typing import Dict
+from ... import InconsistentObservation
 from .. import base
 from . import PMS3003
 
@@ -30,10 +30,10 @@ class ObsData(PMS3003.ObsData):
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
-    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations under X.Y um [#/cm3]
+    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
     """
 
-    # nX_Y [#/cm3]: number concentrations under X.Y um (read as 100*nX_Y)
+    # nX_Y [#/cm3]: number concentrations over X.Y um (read as 100*nX_Y)
     n0_3: float
     n0_5: float
     n1_0: float
@@ -49,6 +49,11 @@ class ObsData(PMS3003.ObsData):
         self.n2_5 /= 100
         self.n5_0 /= 100
         self.n10_0 /= 100
+
+        if self.n0_3 == 0 and self.pm10 > 0:
+            raise InconsistentObservation(
+                f"inconsistent obs: PM10={self.pm10} and N0.3={self.n0_3}"
+            )
 
     def __format__(self, spec: str) -> str:
         if spec in ["header", "pm", "raw", "cf"]:

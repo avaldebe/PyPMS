@@ -1,4 +1,4 @@
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 
 import logging, os
@@ -27,5 +27,11 @@ class WrongMessageChecksum(SensorWarning):
 
 class SensorWarmingUp(SensorWarning):
     """Empty message: throw away observation and wait until sensor warms up"""
+
+    pass
+
+
+class InconsistentObservation(SensorWarning):
+    """Message payload makes no sense: throw away observation"""
 
     pass

@@ -85,6 +85,23 @@ def test_decode(sensor, hex, msg, secs=1567201793):
 
 
 @pytest.mark.parametrize(
+    "sensor,hex,error",
+    [
+        pytest.param(
+            "PMSx003",
+            "424d001c0000000a00200000000a002000000000000000000000000097000196",
+            "inconsistent obs: PM10=32 and N0.3=0.0",
+            id="inconsistent obs",
+        )
+    ],
+)
+def test_decode_error(sensor, hex, error, secs=1567201793):
+    with pytest.raises(SensorWarning) as e:
+        Sensor[sensor].decode(bytes.fromhex(hex), time=secs)
+    assert str(e.value) == error
+
+
+@pytest.mark.parametrize(
     "sensor,command,hex,length",
     [
         pytest.param("PMSx003", "passive_mode", "424DE100000170", 8, id="PMSx003 passive"),

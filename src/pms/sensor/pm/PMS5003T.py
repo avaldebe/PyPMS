@@ -4,8 +4,9 @@ Plantower PMS5003T sensors
 - only 4 size bins
 """
 from dataclasses import dataclass, field
-from typing import Dict, Tuple
+from typing import Tuple
 import struct
+from ... import InconsistentObservation
 from .. import base
 from . import PMS3003, PMSx003
 
@@ -34,12 +35,12 @@ class ObsData(PMS3003.ObsData):
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
-    n0_3, n0_5, n1_0, n2_5                  number concentrations under X.Y um [#/cm3]
+    n0_3, n0_5, n1_0, n2_5                  number concentrations over X.Y um [#/cm3]
     temp                                    temperature [°C]
     rhum                                    relative humidity [%]
     """
 
-    # nX_Y [#/cm3]: number concentrations under X.Y um (read as 100*nX_Y)
+    # nX_Y [#/cm3]: number concentrations over X.Y um (read as 100*nX_Y)
     n0_3: float
     n0_5: float
     n1_0: float
@@ -60,6 +61,11 @@ class ObsData(PMS3003.ObsData):
         self.n2_5 /= 100
         self.temp /= 10
         self.rhum /= 10
+
+        if self.n0_3 == 0 and self.pm10 > 0:
+            raise InconsistentObservation(
+                f"inconsistent obs: PM10={self.pm10} and N0.3={self.n0_3}"
+            )
 
     def __format__(self, spec: str) -> str:
         if spec in ["header", "pm", "raw", "cf"]:
