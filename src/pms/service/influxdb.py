@@ -3,9 +3,14 @@ import json
 from dataclasses import fields
 from typing import Dict, Callable
 from mypy_extensions import NamedArg
-from influxdb import InfluxDBClient
+
+try:
+    from influxdb import InfluxDBClient as client
+except ModuleNotFoundError:  # pragma: no cover
+    client = None  # type: ignore
 from typer import Context, Option
 from ..sensor.base import ObsData
+from ..optional import missing_optional_module
 
 
 def client_pub(
@@ -14,7 +19,9 @@ def client_pub(
     [NamedArg(int, "time"), NamedArg(Dict[str, str], "tags"), NamedArg(Dict[str, float], "data")],
     None,
 ]:
-    c = InfluxDBClient(host, port, username, password, None)
+    if client is None:
+        missing_optional_module(__name__, "influxdb")
+    c = client(host, port, username, password, None)
     databases = c.get_list_database()
     if len(list(filter(lambda x: x["name"] == db_name, databases))) == 0:
         c.create_database(db_name)

@@ -47,6 +47,35 @@ For details on a particular command and their options
 pms COMMAND --help
 ```
 
+## Installation
+
+**NOTE** this package is not yet available via on pypi [#10][]...
+
+[#10]: https://github.com/avaldebe/PyPMS/issues/10
+
+```bash
+# basic installation with pip
+python3 -m pip install pypms
+
+# or with pipx
+pipx install pypms
+```
+
+Will allow you yo access to sensors via serial port (`pms serial`),
+and aave observations to a csv file (`pms csv`).
+
+Additional packages are required for pushing observations to an mqtt server
+(`pms mqtt`), to an influxdb server (`pms influxdb`), or provide a bridge
+between mqtt and influxdb servers (`pms bridge`).
+
+```bash
+# full installation with pip
+python3 -m pip install pypms[mqtt,influxdb]
+
+# or with pipx
+pipx install pypms[mqtt,influxdb]
+```
+
 ## Particulate Matter Sensors
 
 | Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                  | Tested Works | Doesn't Work | Not Tested | Datasheet                     | Notes                |

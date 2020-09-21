@@ -1,15 +1,22 @@
 from datetime import datetime
 from dataclasses import fields
 from typing import Dict, Union, Callable, NamedTuple
-from paho.mqtt import client
+
+try:
+    from paho.mqtt import client
+except ModuleNotFoundError:  # pragma: no cover
+    client = None  # type: ignore
 from typer import Context, Option
 from ..sensor.base import ObsData
 from .. import logger
+from ..optional import missing_optional_module
 
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[Dict[str, Union[int, str]]], None]:
+    if client is None:
+        missing_optional_module(__name__, "influxdb")
     c = client.Client(topic)
     c.enable_logger(logger)
     if username:
@@ -83,6 +90,8 @@ def client_sub(
         else:
             on_sensordata(data)
 
+    if client is None:
+        missing_optional_module(__name__, "influxdb")
     c = client.Client(topic)
     c.enable_logger(logger)
     if username:
@@ -103,7 +112,6 @@ def mqtt(
     word: str = Option("", "--mqtt-pass", help="server password", show_default=False),
 ):
     """Read sensor and push PM measurements to a MQTT server"""
-
     pub = client_pub(topic=topic, host=host, port=port, username=user, password=word)
 
     def publish(obs: ObsData, metadata: bool = False):
