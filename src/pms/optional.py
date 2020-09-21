@@ -1,4 +1,3 @@
-from click.decorators import option
 from typer import echo, style, colors, Abort
 
 
@@ -15,7 +14,7 @@ def missing_optional_module(name: str, module: str):
     echo(
         f"""
 {name} provides additional functionality to {package}.
-This functionality requires the {module} module, which is not stalled.
+This functionality requires the {module} module, which is not installed.
 You can install this additional dependency with
 \t{pip} {package}[{extra}]
 Or, if you installed {package} with pipx
