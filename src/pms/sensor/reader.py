@@ -2,10 +2,8 @@
 Read PM sensors
 
 NOTE:
-- Sensor are read on passive mode.
-- Should work on a PMS1003 sensor, but has not been tested.
-- Should work on a PMS3003 sensor, but has not been tested.
-- Experimental support for NovaFitness sensors
+- Sensors are read on passive mode.
+- Tested on PMS3003, PMS7003, PMSA003, SDS011 and MCU680
 """
 
 import sys, time
