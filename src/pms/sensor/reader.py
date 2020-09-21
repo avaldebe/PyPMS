@@ -7,9 +7,9 @@ NOTE:
 """
 
 import sys, time
-from typing import Generator
+from typing import Generator, Optional
 from serial import Serial
-from pms import logger, SensorWarning, SensorWarmingUp
+from .. import logger, SensorWarning, SensorWarmingUp
 from .sensor import Sensor, base
 
 
@@ -24,7 +24,7 @@ class SensorReader:
     """
 
     def __init__(
-        self, sensor: str = "PMSx003", port: str = "/dev/ttyUSB0", interval: int = 60
+        self, sensor: str = "PMSx003", port: str = "/dev/ttyUSB0", interval: Optional[int] = None
     ) -> None:
         """Configure serial port"""
         self.sensor = Sensor[sensor]
@@ -86,6 +86,8 @@ class SensorReader:
                     self.serial.reset_input_buffer()
                 else:
                     yield obs
+                    if not self.interval:
+                        continue
                     delay = self.interval - (time.time() - obs.time)
                     if delay > 0:
                         time.sleep(delay)
