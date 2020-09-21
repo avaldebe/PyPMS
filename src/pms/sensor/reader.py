@@ -7,10 +7,10 @@ NOTE:
 """
 
 import sys, time
-from typing import NamedTuple, Generator
+from typing import Generator
 from serial import Serial
 from pms import logger, SensorWarning, SensorWarmingUp
-from .sensor import Sensor
+from .sensor import Sensor, base
 
 
 class SensorReader:
@@ -70,7 +70,7 @@ class SensorReader:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self, *, interval: int = None) -> Generator[NamedTuple, None, None]:
+    def __call__(self) -> Generator[base.ObsData, None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:
@@ -86,9 +86,7 @@ class SensorReader:
                     self.serial.reset_input_buffer()
                 else:
                     yield obs
-                    if interval is None:
-                        interval = self.interval
-                    delay = interval - (time.time() - obs.time)  # type: ignore
+                    delay = self.interval - (time.time() - obs.time)
                     if delay > 0:
                         time.sleep(delay)
             except KeyboardInterrupt:
