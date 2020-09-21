@@ -64,7 +64,7 @@ class Sensor(Enum):
         else:
             return True
 
-    def decode(self, buffer: bytes, *, time: int = None) -> NamedTuple:
+    def decode(self, buffer: bytes, *, time: int = None) -> base.ObsData:
         """Exract observations from serial buffer"""
         if not time:  # pragma: no cover
             time = self.now()
