@@ -33,17 +33,16 @@ def serial(
 
 def csv(
     ctx: Context,
-    filename: str = Option("pms.csv", "--filename", "-F", help="csv formatted file"),
+    path: Path = Option(Path("pms.csv"), "--filename", "-F", help="csv formatted file"),
     overwrite: bool = Option(False, "--overwrite", help="overwrite file, if already exists"),
 ):
     """Read sensor and print measurements"""
-    path = Path(filename)
     mode = "w" if overwrite else "a"
-    logger.debug(f"open {filename} on '{mode}' mode")
+    logger.debug(f"open {path} on '{mode}' mode")
     with ctx.obj["reader"] as reader, path.open(mode) as f:
         # add header to new files
         if path.stat().st_size == 0:
             obs = next(reader())
-            print(f"{obs:header}", file=f)
+            f.write(f"{obs:header}\n{obs:csv}\n")
         for obs in reader():
-            print(f"{obs:csv}", file=f)
+            f.write(f"{obs:csv}\n")
