@@ -3,8 +3,9 @@ Plantower PMS5003S sensors
 - messages are 32b long
 - 6 size bins (as PMS5003) and HCHO concentration
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict
+from .. import base
 from . import PMS3003, PMSx003
 
 
@@ -29,7 +30,7 @@ class ObsData(PMSx003.ObsData):
     """
 
     # HCHO [mg/m3]: formaldehyde concentration (read as ug/m3, datasheet says 1/1000 mg/m3 ie ug/m3)
-    HCHO: int
+    HCHO: int = field(metadata=base.metadata("formaldehyde", "mg/m3", "concentration"))
 
     def __post_init__(self):
         """Units conversion
