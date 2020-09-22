@@ -1,6 +1,6 @@
 """
 Plantower PMS5003ST sensors
-- messages are 32b long
+- messages are 40b long
 - 6 size bins (as PMS5003). HCHO concentration, temperature and relative humidity
 """
 from dataclasses import dataclass, field
@@ -11,11 +11,11 @@ from . import PMS3003, PMSx003, PMS5003S
 
 
 commands = base.Commands(
-    passive_read=PMSx003.commands.passive_read._replace(answer_length=40),
+    passive_read=base.Cmd(PMSx003.commands.passive_read.command, b"\x42\x4D\x00\x24", 40),
     passive_mode=PMSx003.commands.passive_mode,
-    active_mode=PMSx003.commands.active_mode._replace(answer_length=40),
+    active_mode=base.Cmd(PMSx003.commands.active_mode.command, b"\x42\x4D\x00\x24", 40),
     sleep=PMSx003.commands.sleep,
-    wake=PMSx003.commands.wake._replace(answer_length=40),
+    wake=base.Cmd(PMSx003.commands.wake.command, b"\x42\x4D\x00\x24", 40),
 )
 
 
