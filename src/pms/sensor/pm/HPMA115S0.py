@@ -50,7 +50,7 @@ class Message(base.Message):
         if msg.header != header:
             raise WrongMessageFormat(f"message header: {msg.header!r}")
         if len(message) != length:
-            raise WrongMessageFormat(f"message length: {len(message)}")
+            raise WrongMessageFormat(f"message length: {len(message)} != {length}")
         checksum = (0x10000 - sum(msg.header) - sum(msg.payload)) % 0x100
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")

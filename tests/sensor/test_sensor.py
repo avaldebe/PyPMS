@@ -73,6 +73,12 @@ def test_commands(sensor, command):
             id="HPMA115C0 data at the end of the buffer",
         ),
         pytest.param(
+            "SPS30",
+            "7E0003002842280000422800004228000042280000422800004228000042280000422800004228000042280000B07E",
+            (42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0),
+            id="SPS30 fake data",
+        ),
+        pytest.param(
             "MCU680",
             "5A5A3F0F0835198A01885430D200032BE1004A1A",
             (2101, 6538, 392, 84, 12498, 207841, 74),
@@ -91,8 +97,26 @@ def test_decode(sensor, hex, msg, secs=1567201793):
             "PMSx003",
             "424d001c0000000a00200000000a002000000000000000000000000097000196",
             "inconsistent obs: PM10=32 and N0.3=0.0",
-            id="inconsistent obs",
-        )
+            id="PMSx003",
+        ),
+        pytest.param(
+            "PMS5003T",
+            "424d001c0000000a00200000000a002000000000000000000000000097000196",
+            "inconsistent obs: PM10=32 and N0.3=0.0",
+            id="PMS5003T",
+        ),
+        pytest.param(
+            "PMS5003S",
+            "424d001c0000000a00200000000a002000000000000000000000000097000196",
+            "inconsistent obs: PM10=32 and N0.3=0.0",
+            id="PMS5003S",
+        ),
+        pytest.param(
+            "PMS5003ST",
+            "424d00240000000a00200000000a002000000000000000000000000000000000000000009700019E",
+            "inconsistent obs: PM10=32 and N0.3=0.0",
+            id="PMS5003ST",
+        ),
     ],
 )
 def test_decode_error(sensor, hex, error, secs=1567201793):

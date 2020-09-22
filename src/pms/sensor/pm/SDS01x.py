@@ -64,7 +64,7 @@ class Message(base.Message):
         # consistency check: bug in message singnature
         assert len(header) == 2, f"wrong header length {len(header)}"
         assert header[:1] == b"\xAA", f"wrong header start {header!r}"
-        assert length == 10, f"wrong payload length {length}"
+        assert length == 10, f"wrong payload length {length} != 10"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)

@@ -43,7 +43,7 @@ class Message(base.Message):
         assert len(header) == 4, f"wrong header length {len(header)}"
         assert header[:2] == b"BM", f"wrong header start {header!r}"
         len_payload = cls._unpack(header[-2:])[0]
-        assert length == len(header) + len_payload, f"wrong payload length {length}"
+        assert length == 4 + len_payload, f"wrong payload length {length} != {4+len_payload}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)

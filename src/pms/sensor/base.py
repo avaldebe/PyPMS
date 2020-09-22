@@ -105,7 +105,8 @@ class ObsData(metaclass=ABCMeta):
         """measurement time as datetime object"""
         return datetime.fromtimestamp(self.time)
 
-    def subset(self, spec: str) -> Dict[str, float]:
+    def subset(self, spec: str) -> Dict[str, float]:  # pragma: no cover
+        logger.warning("The 'subset' is deprecated", DeprecationWarning, stacklevel=2)
         if spec:
             obs = {k: v for k, v in asdict(self).items() if k.startswith(spec)}
         else:

@@ -60,9 +60,9 @@ class Message(base.Message):
         # consistency check: bug in message singnature
         assert len(header) == 5, f"wrong header length {len(header)}"
         assert header[:2] == b"\x7E\x00", f"wrong header start {header!r}"
-        assert length in [7, 47], f"wrong payload length {length}"
+        assert length in [7, 47], f"wrong payload length {length} != 4||47"
         len_payload = header[-1]
-        assert length == len_payload + 7, f"wrong payload length {length}"
+        assert length == len_payload + 7, f"wrong payload length {length} != {len_payload+7}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
@@ -71,7 +71,7 @@ class Message(base.Message):
         if msg.tail != 0x7E:
             raise WrongMessageFormat(f"message tail: {msg.tail:#x}")
         if len(message) != length:
-            raise WrongMessageFormat(f"message length: {len(message)}")
+            raise WrongMessageFormat(f"message length: {len(message)} != {length}")
         checksum = 0xFF - (sum(msg.header[1:]) + sum(msg.payload)) % 0x100
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
