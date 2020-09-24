@@ -2,11 +2,13 @@
 NovaFitness SDS011, SDS018 and SDS021 sensors
 - messages are 10b long
 """
+
 from dataclasses import dataclass, field
-from typing import Tuple, Dict
+from typing import Tuple
 import struct
+
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .. import base
+from pms.sensor import base
 
 commands = base.Commands(
     passive_read=base.Cmd(

@@ -9,8 +9,8 @@ try:
 except ModuleNotFoundError:  # pragma: no cover
     client = None  # type: ignore
 from typer import Context, Option
-from ..sensor.base import ObsData
-from ..optional import missing_optional_module
+
+from pms.optional import missing_optional_module
 
 
 def client_pub(

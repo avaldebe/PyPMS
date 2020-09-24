@@ -1,5 +1,6 @@
 from datetime import datetime
 from dataclasses import fields
+
 from typing import Dict, Union, Callable, NamedTuple
 
 try:
@@ -7,9 +8,10 @@ try:
 except ModuleNotFoundError:  # pragma: no cover
     client = None  # type: ignore
 from typer import Context, Option
-from ..sensor.base import ObsData
-from .. import logger
-from ..optional import missing_optional_module
+
+from pms import logger
+from pms.optional import missing_optional_module
+from pms.sensor.base import ObsData
 
 
 def client_pub(

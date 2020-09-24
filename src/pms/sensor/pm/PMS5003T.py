@@ -3,11 +3,13 @@ Plantower PMS5003T sensors
 - messages are 32b long
 - only 4 size bins
 """
+
 from dataclasses import dataclass, field
 from typing import Tuple
 import struct
-from ... import InconsistentObservation
-from .. import base
+
+from pms import InconsistentObservation
+from pms.sensor import base
 from . import PMS3003, PMSx003
 
 

@@ -1,7 +1,8 @@
 __version__ = "0.3.0"
 
 
-import logging, os
+import logging
+import os
 
 logging.basicConfig(level=os.getenv("LEVEL", "WARNING"))
 logger = logging.getLogger(__name__)

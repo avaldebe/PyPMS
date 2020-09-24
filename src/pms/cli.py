@@ -1,10 +1,12 @@
 from enum import Enum
 from typing import Optional
+
 from typer import Typer, Context, Option, echo, Exit
-from . import logger, __doc__, __version__
-from .sensor import SensorReader
-from .sensor.cli import serial, csv
-from .service.cli import influxdb, mqtt, bridge
+
+from pms import logger, __doc__, __version__
+from pms.sensor import SensorReader
+from pms.sensor.cli import serial, csv
+from pms.service.cli import influxdb, mqtt, bridge
 
 
 main = Typer(help=__doc__)

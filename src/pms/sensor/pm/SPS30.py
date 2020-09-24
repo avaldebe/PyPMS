@@ -5,11 +5,13 @@ Senserion SPS30 sensors
 - passive read messages are 47b long
 - empty read messages are 7b long
 """
+
 from dataclasses import dataclass, field
-from typing import Tuple, Dict
+from typing import Tuple
 import struct
+
 from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .. import base
+from pms.sensor import base
 
 commands = base.Commands(
     # Read Measured Values

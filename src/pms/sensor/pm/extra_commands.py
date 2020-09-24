@@ -1,4 +1,4 @@
-from ..base import Cmd
+from pms.sensor.base import Cmd
 
 
 class SDS:

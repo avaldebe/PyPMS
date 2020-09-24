@@ -3,9 +3,10 @@ NovaFitness SDS198 sensors
 - messages are 10b long
 - only PM100 measurements
 """
+
 from dataclasses import dataclass, field
-from typing import Dict
-from .. import base
+
+from pms.sensor import base
 from . import SDS01x
 
 commands = SDS01x.commands._replace(

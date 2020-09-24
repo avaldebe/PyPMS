@@ -3,9 +3,10 @@ Plantower PMS5003S sensors
 - messages are 32b long
 - 6 size bins (as PMS5003) and HCHO concentration
 """
+
 from dataclasses import dataclass, field
-from typing import Dict
-from .. import base
+
+from pms.sensor import base
 from . import PMS3003, PMSx003
 
 

@@ -2,9 +2,11 @@
 Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 - messages are 32b long
 """
+
 from dataclasses import dataclass
-from ... import InconsistentObservation
-from .. import base
+
+from pms import InconsistentObservation
+from pms.sensor import base
 from . import PMS3003
 
 

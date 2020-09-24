@@ -6,9 +6,9 @@ Bosh Sensortec sensors on MCU bridge modules
 from dataclasses import dataclass, field
 from typing import Tuple, Dict
 import struct
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .. import base
 
+from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms.sensor import base
 
 commands = base.Commands(
     passive_read=base.Cmd(b"\xA5\x56\x01\xFC", b"\x5A\x5A\x3F\x0F", 20),

@@ -3,11 +3,10 @@ Honeywell HPMA115C0 sensors
 - passive mode messages are 16b long
 - active mode messages are 32b long
 """
+
 from dataclasses import dataclass, field
-from typing import Tuple, Dict
-import struct
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .. import base
+
+from pms.sensor import base
 from . import HPMA115S0
 
 commands = HPMA115S0.commands._replace(

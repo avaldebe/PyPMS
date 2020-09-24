@@ -1,6 +1,7 @@
 from typer import Context, Option
-from .influxdb import client_pub, influxdb
-from .mqtt import client_sub, Data, mqtt
+
+from pms.service.influxdb import client_pub, influxdb
+from pms.service.mqtt import client_sub, Data, mqtt
 
 
 def bridge(

@@ -1,8 +1,10 @@
 from enum import Enum
 from pathlib import Path
+
 from typing import Optional
 from typer import Context, Option, echo
-from .. import logger
+
+from pms import logger
 
 
 class Format(str, Enum):

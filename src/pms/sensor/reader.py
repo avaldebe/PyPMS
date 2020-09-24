@@ -6,12 +6,14 @@ NOTE:
 - Tested on PMS3003, PMS7003, PMSA003, SDS011 and MCU680
 """
 
-import sys, time
+import sys
+import time
 from typing import Generator, Optional
-from _pytest.compat import safe_getattr
+
 from serial import Serial
-from .. import logger, SensorWarning, SensorWarmingUp, InconsistentObservation
-from .sensor import Sensor, base
+
+from pms import logger, SensorWarning, SensorWarmingUp, InconsistentObservation
+from pms.sensor import Sensor, base
 
 
 class SensorReader:

@@ -3,11 +3,13 @@ Plantower PMS3003 sensors
 - do not support commands
 - messages are 24b long
 """
+
 from dataclasses import dataclass, field
-from typing import Tuple, Dict
+from typing import Tuple
 import struct
-from ... import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
-from .. import base
+
+from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms.sensor import base
 
 
 commands = base.Commands(

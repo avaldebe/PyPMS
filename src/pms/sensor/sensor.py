@@ -1,13 +1,12 @@
 """
-Access supported PM sensors from a single object
+Access supported sensors from a single object
 """
-
 
 from datetime import datetime
 from enum import Enum
-from typing import NamedTuple
-from pms import logger, WrongMessageFormat
-from . import base, pm, aq
+
+from pms import WrongMessageFormat
+from pms.sensor import base, pm, aq
 
 
 class Sensor(Enum):
