@@ -8,6 +8,7 @@ NOTE:
 
 import sys, time
 from typing import Generator, Optional
+from _pytest.compat import safe_getattr
 from serial import Serial
 from .. import logger, SensorWarning, SensorWarmingUp, InconsistentObservation
 from .sensor import Sensor, base
@@ -24,7 +25,11 @@ class SensorReader:
     """
 
     def __init__(
-        self, sensor: str = "PMSx003", port: str = "/dev/ttyUSB0", interval: Optional[int] = None
+        self,
+        sensor: str = "PMSx003",
+        port: str = "/dev/ttyUSB0",
+        interval: Optional[int] = None,
+        samples: Optional[int] = None,
     ) -> None:
         """Configure serial port"""
         self.sensor = Sensor[sensor]
@@ -33,6 +38,13 @@ class SensorReader:
         self.serial.baudrate = self.sensor.baud
         self.serial.timeout = 5  # max time to wake up sensor
         self.interval = interval
+        self.samples = samples
+        logger.debug(
+            f"Reader: "
+            f"request {samples if samples else '?'} obs "
+            f"from {sensor} on {port} "
+            f"every {interval if interval else '?'} secs"
+        )
 
     def _cmd(self, command: str) -> bytes:
         """Write command to sensor and return answer"""
@@ -86,11 +98,14 @@ class SensorReader:
                     self.serial.reset_input_buffer()
                 else:
                     yield obs
-                    if not self.interval:
-                        continue
-                    delay = self.interval - (time.time() - obs.time)
-                    if delay > 0:
-                        time.sleep(delay)
+                    if self.samples:
+                        self.samples -= 1
+                        if self.samples <= 0:
+                            break
+                    if self.interval:
+                        delay = self.interval - (time.time() - obs.time)
+                        if delay > 0:
+                            time.sleep(delay)
             except KeyboardInterrupt:
                 print()
                 break

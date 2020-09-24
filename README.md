@@ -21,7 +21,7 @@ Options:
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
                                   60]
-
+  -n, --samples INTEGER           stop after N samples
   --debug                         print DEBUG/logging messages  [default:
                                   False]
 
@@ -62,7 +62,7 @@ pipx install pypms
 ```
 
 Will allow you yo access to sensors via serial port (`pms serial`),
-and aave observations to a csv file (`pms csv`).
+and save observations to a csv file (`pms csv`).
 
 Additional packages are required for pushing observations to an mqtt server
 (`pms mqtt`), to an influxdb server (`pms influxdb`), or provide a bridge
