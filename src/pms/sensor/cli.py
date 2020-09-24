@@ -24,6 +24,9 @@ def serial(
     """Read sensor and print measurements"""
     with ctx.obj["reader"] as reader:
         if format:
+            if format == "csv":
+                obs = next(reader())
+                echo(f"{obs:header}")
             for obs in reader():
                 echo(f"{obs:{format}}")
         else:
@@ -43,6 +46,6 @@ def csv(
         # add header to new files
         if path.stat().st_size == 0:
             obs = next(reader())
-            f.write(f"{obs:header}\n{obs:csv}\n")
+            f.write(f"{obs:header}\n")
         for obs in reader():
             f.write(f"{obs:csv}\n")
