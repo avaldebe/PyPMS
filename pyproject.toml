@@ -57,7 +57,7 @@ pms = "pms.cli:main"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py36, py37, py38, py39-dev
+envlist = py36, py37, py38, py39
 skip_missing_interpreters = True
 isolated_build = True
 
@@ -67,7 +67,7 @@ commands =
     py36: pytest --black
     py37: pytest --mypy --mypy-ignore-missing-imports
     py38: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing --cov-fail-under=80
-    py39-dev: pytest -Werror
+    py39: pytest -Werror
 deps =
     pytest
     py36: pytest-black
