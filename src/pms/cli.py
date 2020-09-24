@@ -43,10 +43,11 @@ def callback(
     model: Supported = Option(Supported.default, "--sensor-model", "-m", help="sensor model"),
     port: str = Option("/dev/ttyUSB0", "--serial-port", "-s", help="serial port"),
     seconds: int = Option(60, "--interval", "-i", help="seconds to wait between updates"),
+    samples: Optional[int] = Option(None, "--samples", "-n", help="stop after N samples"),
     debug: bool = Option(False, "--debug", help="print DEBUG/logging messages"),
     version: Optional[bool] = Option(None, "--version", callback=version_callback),
 ):
     """Read serial sensor"""
     if debug:
         logger.setLevel("DEBUG")
-    ctx.obj = {"reader": SensorReader(model, port, seconds)}
+    ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
