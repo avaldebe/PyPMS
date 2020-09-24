@@ -7,20 +7,20 @@ Plantower PMS5003S sensors
 from dataclasses import dataclass, field
 
 from pms.sensor import base
-from . import PMS3003, PMSx003
+from . import pms3003, pmsx003
 
 
-commands = PMSx003.commands
+commands = pmsx003.commands
 
 
-class Message(PMS3003.Message):
+class Message(pms3003.Message):
     """Messages from Plantower PMS5003S sensors"""
 
     data_records = slice(13)
 
 
 @dataclass(frozen=False)
-class ObsData(PMSx003.ObsData):
+class ObsData(pmsx003.ObsData):
     """Observations from Plantower PMS5003S sensors
 
     time                                    measurement time [seconds since epoch]

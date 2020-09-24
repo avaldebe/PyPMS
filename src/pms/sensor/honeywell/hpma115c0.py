@@ -7,16 +7,16 @@ Honeywell HPMA115C0 sensors
 from dataclasses import dataclass, field
 
 from pms.sensor import base
-from . import HPMA115S0
+from . import hpma115s0
 
-commands = HPMA115S0.commands._replace(
+commands = hpma115s0.commands._replace(
     passive_read=base.Cmd(  # Read Particle Measuring Results
         b"\x68\x01\x04\x93", b"\x40\x05\x04", 16
     )
 )
 
 
-class Message(HPMA115S0.Message):
+class Message(hpma115s0.Message):
     """Messages from Honeywell HPMA115C0 sensors"""
 
     data_records = slice(4)

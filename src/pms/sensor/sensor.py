@@ -6,23 +6,23 @@ from datetime import datetime
 from enum import Enum
 
 from pms import WrongMessageFormat
-from pms.sensor import base, pm, aq
+from pms.sensor import base, plantower, novafitness, honeywell, senserion, bosch_sensortec
 
 
 class Sensor(Enum):
     """Supported PM sensors"""
 
-    PMSx003 = pm.PMSx003
-    PMS3003 = pm.PMS3003
-    PMS5003S = pm.PMS5003S
-    PMS5003ST = pm.PMS5003ST
-    PMS5003T = pm.PMS5003T
-    SDS01x = pm.SDS01x
-    SDS198 = pm.SDS198
-    HPMA115S0 = pm.HPMA115S0
-    HPMA115C0 = pm.HPMA115C0
-    SPS30 = pm.SPS30
-    MCU680 = aq.MCU680
+    PMSx003 = plantower.pmsx003
+    PMS3003 = plantower.pms3003
+    PMS5003S = plantower.pms5003s
+    PMS5003ST = plantower.pms5003st
+    PMS5003T = plantower.pms5003t
+    SDS01x = novafitness.sds01x
+    SDS198 = novafitness.sds198
+    HPMA115S0 = honeywell.hpma115s0
+    HPMA115C0 = honeywell.hpma115c0
+    SPS30 = senserion.sps30
+    MCU680 = bosch_sensortec.mcu680
 
     PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
     G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003

@@ -2,13 +2,18 @@ import os, time
 from dataclasses import asdict
 import pytest
 
+from pms.sensor import plantower
+
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor import pm, aq
-from pms import SensorWarning
+from pms.sensor.plantower import pmsx003, pms5003t, pms5003st
+from pms.sensor.novafitness import sds01x, sds198
+from pms.sensor.honeywell import hpma115s0, hpma115c0
+from pms.sensor.senserion import sps30
+from pms.sensor.bosch_sensortec import mcu680
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw error".split())
-def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pm.PMSx003):
+def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pmsx003):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:])
     obs_fmt = dict(
@@ -42,7 +47,7 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw hcho atm error".split())
-def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, sensor=pm.PMS5003ST):
+def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, sensor=pms5003st):
     obs = sensor.ObsData(secs, *raw)
     raw[6:12] = [x / 100 for x in raw[6:12]]
     raw[12] /= 1000
@@ -83,7 +88,7 @@ def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, senso
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw atm error".split())
-def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pm.PMS5003T):
+def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor=pms5003t):
     obs = sensor.ObsData(secs, *raw)
     raw = raw[:6] + tuple(x / 100 for x in raw[6:-2]) + tuple(x / 10 for x in raw[-2:])
     obs_fmt = dict(
@@ -120,7 +125,7 @@ def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, senso
 
 
 @pytest.mark.parametrize("fmt", "header csv pm error".split())
-def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.SDS01x):
+def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=sds01x):
 
     obs = sensor.ObsData(secs, *raw)
     raw = tuple(r / 10 for r in raw)
@@ -141,7 +146,7 @@ def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.SDS01x):
 
 
 @pytest.mark.parametrize("fmt", "header csv pm error".split())
-def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=pm.SDS198):
+def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=sds198):
 
     obs = sensor.ObsData(secs, raw)
     obs_fmt = dict(
@@ -159,7 +164,7 @@ def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=pm.SDS198):
 
 
 @pytest.mark.parametrize("fmt", "header csv pm error".split())
-def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.HPMA115S0):
+def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=hpma115s0):
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
@@ -178,7 +183,7 @@ def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=pm.HPMA1
 
 
 @pytest.mark.parametrize("fmt", "header csv pm error".split())
-def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=pm.HPMA115C0):
+def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=hpma115c0):
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
@@ -197,7 +202,7 @@ def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num diam error".split())
-def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=pm.SPS30):
+def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=sps30):
 
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
@@ -223,7 +228,7 @@ def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=pm.SP
 
 
 @pytest.mark.parametrize("fmt", "header csv atm bme bsec error".split())
-def test_MCU680_format(fmt, raw=list(range(100, 107)), secs=1_567_198_523, sensor=aq.MCU680):
+def test_mcu680_format(fmt, raw=list(range(100, 107)), secs=1_567_198_523, sensor=mcu680):
 
     obs = sensor.ObsData(secs, *raw)
     raw[0] /= 100

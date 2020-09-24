@@ -20,7 +20,7 @@ commands = base.Commands(
 
 
 class Message(base.Message):
-    """Messages from MCU680 modules with a BME680 sensor"""
+    """Messages from mcu680 modules with a BME680 sensor"""
 
     data_records = slice(7)
 

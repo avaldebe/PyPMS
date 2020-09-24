@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from pms import InconsistentObservation
 from pms.sensor import base
-from . import PMS3003
+from . import pms3003
 
 
 commands = base.Commands(
@@ -19,14 +19,14 @@ commands = base.Commands(
 )
 
 
-class Message(PMS3003.Message):
+class Message(pms3003.Message):
     """Messages from Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors"""
 
     data_records = slice(12)
 
 
 @dataclass(frozen=False)
-class ObsData(PMS3003.ObsData):
+class ObsData(pms3003.ObsData):
     """Observations from Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 
     time                                    measurement time [seconds since epoch]

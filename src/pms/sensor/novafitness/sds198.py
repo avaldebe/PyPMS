@@ -7,9 +7,9 @@ NovaFitness SDS198 sensors
 from dataclasses import dataclass, field
 
 from pms.sensor import base
-from . import SDS01x
+from . import sds01x
 
-commands = SDS01x.commands._replace(
+commands = sds01x.commands._replace(
     passive_read=base.Cmd(
         b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
         b"\xAA\xCF",
@@ -18,7 +18,7 @@ commands = SDS01x.commands._replace(
 )
 
 
-class Message(SDS01x.Message):
+class Message(sds01x.Message):
     """Messages from NovaFitness SDS011, SDS018 and SDS021 sensors"""
 
     data_records = slice(1, 2)

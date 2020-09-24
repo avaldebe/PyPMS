@@ -47,6 +47,7 @@
         "mqttpassword",
         "mqttuser",
         "pmsa",
+        "pmsx",
         "pwsh",
         "senserion"
     ],
