@@ -1,24 +1,43 @@
 from datetime import datetime
 from dataclasses import fields
-
 from typing import Dict, Union, Callable, NamedTuple
+
+from typer import Context, Option, style, colors, echo, Abort
 
 try:
     from paho.mqtt import client
 except ModuleNotFoundError:  # pragma: no cover
     client = None  # type: ignore
-from typer import Context, Option
 
 from pms import logger
-from pms.optional import missing_optional_module
 from pms.sensor.base import ObsData
+
+
+def __missing_mqtt():  # pragma: no cover
+    name = style(__name__, fg=colors.GREEN, bold=True)
+    package = style("pypms", fg=colors.GREEN, bold=True)
+    module = style("paho-mqtt", fg=colors.RED, bold=True)
+    extra = style("mqtt", fg=colors.RED, bold=True)
+    pip = style("python3 -m pip instal --upgrade", fg=colors.GREEN)
+    pipx = style("pipx inject", fg=colors.GREEN)
+    echo(
+        f"""
+{name} provides additional functionality to {package}.
+This functionality requires the {module} module, which is not installed.
+You can install this additional dependency with
+\t{pip} {package}[{extra}]
+Or, if you installed {package} with pipx
+\t{pipx} {package} {module}
+"""
+    )
+    raise Abort()
 
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[Dict[str, Union[int, str]]], None]:
     if client is None:
-        missing_optional_module(__name__, "influxdb")
+        __missing_mqtt()
     c = client.Client(topic)
     c.enable_logger(logger)
     if username:
@@ -93,7 +112,7 @@ def client_sub(
             on_sensordata(data)
 
     if client is None:
-        missing_optional_module(__name__, "influxdb")
+        __missing_mqtt()
     c = client.Client(topic)
     c.enable_logger(logger)
     if username:

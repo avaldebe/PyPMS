@@ -1,16 +1,34 @@
-import os
 import json
 from dataclasses import fields
 from typing import Dict, Callable
 from mypy_extensions import NamedArg
 
+from typer import Context, Option, style, colors, echo, Abort
+
 try:
     from influxdb import InfluxDBClient as client
 except ModuleNotFoundError:  # pragma: no cover
     client = None  # type: ignore
-from typer import Context, Option
 
-from pms.optional import missing_optional_module
+
+def __missing_influxdb():  # pragma: no cover
+    name = style(__name__, fg=colors.GREEN, bold=True)
+    package = style("pypms", fg=colors.GREEN, bold=True)
+    module = style("influxdb", fg=colors.RED, bold=True)
+    extra = style("influxdb", fg=colors.RED, bold=True)
+    pip = style("python3 -m pip instal --upgrade", fg=colors.GREEN)
+    pipx = style("pipx inject", fg=colors.GREEN)
+    echo(
+        f"""
+{name} provides additional functionality to {package}.
+This functionality requires the {module} module, which is not installed.
+You can install this additional dependency with
+\t{pip} {package}[{extra}]
+Or, if you installed {package} with pipx
+\t{pipx} {package} {module}
+"""
+    )
+    raise Abort()
 
 
 def client_pub(
@@ -20,7 +38,7 @@ def client_pub(
     None,
 ]:
     if client is None:
-        missing_optional_module(__name__, "influxdb")
+        __missing_influxdb()
     c = client(host, port, username, password, None)
     databases = c.get_list_database()
     if len(list(filter(lambda x: x["name"] == db_name, databases))) == 0:
