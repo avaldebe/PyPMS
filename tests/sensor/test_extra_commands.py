@@ -2,7 +2,8 @@ import os
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor.novafitness.extra_commands import SDS, HPMA
+import pms.sensor.novafitness.extra_commands as SDS
+import pms.sensor.honeywell.extra_commands as HPMA
 
 
 @pytest.mark.parametrize(
