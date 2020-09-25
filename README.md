@@ -7,6 +7,7 @@ Tools for reading Air Quality Sensors with serial (UART) interface, data acquisi
 [![GitHub license](https://img.shields.io/github/license/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/blob/master/LICENSE)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![DOI](https://zenodo.org/badge/203110737.svg)](https://zenodo.org/badge/latestdoi/203110737)
 
 ## Command Line Interface
 
@@ -48,10 +49,6 @@ pms COMMAND --help
 ```
 
 ## Installation
-
-**NOTE** this package is not yet available via on pypi [#10][]...
-
-[#10]: https://github.com/avaldebe/PyPMS/issues/10
 
 ```bash
 # basic installation with pip
@@ -142,9 +139,13 @@ For more Air Quality sensors [open an issue][issue].
 
 ## Changelog
 
-- 0.1.*
+- 0.3.*
+  - option for a fix number of samples
+  - PMSx003 consistency check after sleep/wake
+- 0.2.*
   - widen project scope from PM sensors to AQ sensors in general
   - support [BME680][] sensor ([MCU680][] module)
+- 0.1.*
   - widen project scope beyond [Plantower][] PM sensors
   - support [NovaFitness][], [Honeywell][] and [Senserion][] PM sensors
   - cli for logging to csv file, InfluxDB server or MQTT server
