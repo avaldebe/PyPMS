@@ -76,7 +76,7 @@ deps =
 """
 
 [tool.coverage.run]
-omit = ["*/__init__.py", "*/__main__.py", "*/cli.py"]
+omit = ["*/__init__.py", "*/__main__.py"]
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "def __repr__", "def __str__"]

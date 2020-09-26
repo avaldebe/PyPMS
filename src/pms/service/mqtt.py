@@ -35,7 +35,7 @@ Or, if you installed {package} with pipx
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
-) -> Callable[[Dict[str, Union[int, str]]], None]:
+) -> Callable[[Dict[str, Union[int, str]]], None]:  # pragma: no cover
     if client is None:
         __missing_mqtt()
     c = client.Client(topic)
@@ -64,7 +64,7 @@ class Data(NamedTuple):
     value: float
 
     @staticmethod
-    def now() -> int:
+    def now() -> int:  # pragma: no cover
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
@@ -76,7 +76,7 @@ class Data(NamedTuple):
         >>> decode("homie/test/pm10/concentration", "27")
         >>> Data(now(), "test", "pm10", 27)
         """
-        if not time:
+        if not time:  # pragma: no cover
             time = cls.now()
 
         fields = topic.split("/")
@@ -102,7 +102,7 @@ def client_sub(
     password: str,
     *,
     on_sensordata: Callable[[Data], None],
-) -> None:
+) -> None:  # pragma: no cover
     def on_message(client, userdata, msg):
         try:
             data = Data.decode(msg.topic, msg.payload)

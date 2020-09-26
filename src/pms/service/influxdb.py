@@ -36,7 +36,7 @@ def client_pub(
 ) -> Callable[
     [NamedArg(int, "time"), NamedArg(Dict[str, str], "tags"), NamedArg(Dict[str, float], "data")],
     None,
-]:
+]:  # pragma: no cover
     if client is None:
         __missing_influxdb()
     c = client(host, port, username, password, None)
