@@ -2,8 +2,6 @@ import os, time
 from dataclasses import asdict
 import pytest
 
-from pms.sensor import plantower
-
 os.environ["LEVEL"] = "DEBUG"
 from pms.sensor.plantower import pmsx003, pms5003t, pms5003st
 from pms.sensor.novafitness import sds01x, sds198

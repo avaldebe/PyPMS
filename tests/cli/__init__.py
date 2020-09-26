@@ -1,8 +1,6 @@
 from enum import Enum
 from datetime import datetime
-from typing import NamedTuple, List, Generator, Optional
-from contextlib import contextmanager
-from pathlib import Path
+from typing import NamedTuple, Dict, List, Generator, Optional
 
 from pms.sensor import Sensor, base
 
@@ -59,20 +57,17 @@ class CapturedData(Enum):
         return 10
 
     @property
-    def serial_options(self) -> List[str]:
-        return f"-m {self.name} -s {self.samples} -i {self.interval} serial -f csv".split()
+    def options(self) -> Dict[str, List[str]]:
+        capture = f"-m {self.name} -s {self.samples} -i {self.interval}"
+        return dict(
+            serial=f"{capture} serial -f csv".split(),
+            csv=f"{capture} csv --overwrite -F test.csv".split(),
+            mqtt=f"{capture} mqtt".split(),
+            influxdb=f"{capture} influxdb".split(),
+        )
 
     @property
-    def csv_options(self) -> List[str]:
-        return f"-m {self.name} -s {self.samples} -i {self.interval} csv --overwrite -F test.csv".split()
-
-    @property
-    def obs(self) -> Generator:
-        sensor = Sensor[self.name]
-        return (obs.decode(sensor) for obs in self.value)
-
-    @property
-    def output(self) -> str:
+    def csv(self) -> str:
         heder = dict(
             PMSx003="time, raw01, raw25, raw10, pm01, pm25, pm10, n0_3, n0_5, n1_0, n2_5, n5_0, n10_0",
         )[self.name]
@@ -80,15 +75,31 @@ class CapturedData(Enum):
         return f"{heder}\n{csv}\n"
 
 
-@contextmanager
-def sensor_reader(sensor: str, port: str, interval: int, samples: Optional[int] = None):
+class MockReader:
     """mock pms.sensor.SensorReader"""
-    try:
-        capture = CapturedData[sensor]
-    except KeyError:
-        raise NotImplementedError(f"missing captured data to test {sensor} sensor")
 
-    if samples and samples > capture.samples:
-        raise ValueError(f"not enough captured data to test {sensor} sensor")
+    def __init__(
+        self, sensor: str, port: str, interval: int, samples: Optional[int] = None
+    ) -> None:
+        try:
+            self.sensor = Sensor[sensor]
+        except KeyError:
+            raise ValueError(f"unknown sensor '{sensor}'")
 
-    yield lambda: capture.obs
+        try:
+            self.data = CapturedData[sensor]
+        except KeyError:
+            raise NotImplementedError(f"missing captured data to test {sensor} sensor")
+
+        if samples and samples > self.data.samples:
+            raise ValueError(f"not enough captured data to test {sensor} sensor")
+
+    def __enter__(self) -> "MockReader":
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback) -> None:
+        pass
+
+    def __call__(self) -> Generator[base.ObsData, None, None]:
+        for obs in self.data.value:
+            yield obs.decode(self.sensor)

@@ -1,9 +1,9 @@
 import json
 from dataclasses import fields
 from typing import Dict, Callable
-from mypy_extensions import NamedArg
 
 from typer import Context, Option, style, colors, echo, Abort
+from mypy_extensions import NamedArg
 
 try:
     from influxdb import InfluxDBClient as client
@@ -64,7 +64,7 @@ def influxdb(
     user: str = Option("root", "--db-user", help="server username"),
     word: str = Option("root", "--db-pass", help="server password"),
     name: str = Option("homie", "--db-name", help="database name"),
-    jtag: str = Option("{'location':'test'}", "--tags", help="measurement tags"),
+    jtag: str = Option("""{"location":"test"}""", "--tags", help="measurement tags"),
 ):
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)
