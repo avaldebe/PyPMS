@@ -75,7 +75,7 @@ The second to last bit of the message should contain `sum(message[2:-2])%0x100`.
 | --------- | -------------- | ------------------------- |
 |           | 10 bits        | 10 bits                   |
 | header    | 2 bits         | 2 bits                    |
-|           | `aa c0`        | `aa c0`                   |
+|           | `aa c0`        | `aa cf`                   |
 | body      | 6 bits         | 6 bits                    |
 |           | 2 values, 1 ID | 1 reserved, 1 value, 1 ID |
 | checksum  | 1 bit          | 1 bit                     |
