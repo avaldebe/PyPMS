@@ -17,11 +17,15 @@ def mock_reader(monkeypatch):
     monkeypatch.setattr("pms.sensor.SensorReader", MockReader)
 
 
+@pytest.fixture(params=[capture for capture in CapturedData])
+def capture(request) -> CapturedData:
+    return request.param
+
+
 runner = CliRunner()
 
 
-@pytest.mark.parametrize("capture", [capture for capture in CapturedData])
-def test_serial(capture: CapturedData):
+def test_serial(capture):
 
     from pms.cli import main
 
@@ -30,8 +34,7 @@ def test_serial(capture: CapturedData):
     assert result.stdout == capture.csv
 
 
-@pytest.mark.parametrize("capture", [capture for capture in CapturedData])
-def test_csv(capture: CapturedData):
+def test_csv(capture):
 
     from pms.cli import main
 
@@ -71,8 +74,7 @@ def mock_mqtt(monkeypatch):
     monkeypatch.setattr("pms.service.mqtt.client_sub", client_sub)
 
 
-@pytest.mark.parametrize("capture", [capture for capture in CapturedData])
-def test_mqtt(capture: CapturedData, mock_mqtt):
+def test_mqtt(capture, mock_mqtt):
 
     from pms.cli import main
 
@@ -102,8 +104,7 @@ def mock_influxdb(monkeypatch):
     monkeypatch.setattr("pms.service.influxdb.client_pub", client_pub)
 
 
-@pytest.mark.parametrize("capture", [capture for capture in CapturedData])
-def test_influxdb(capture: CapturedData, mock_influxdb):
+def test_influxdb(capture, mock_influxdb):
 
     from pms.cli import main
 
