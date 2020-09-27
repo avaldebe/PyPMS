@@ -2,6 +2,8 @@
 
 Tools for reading Air Quality Sensors with serial (UART) interface, data acquisition and logging.
 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pypms)](https://pypi.org/project/pypms)
+[![PyPI](https://img.shields.io/pypi/v/pypms)](https://pypi.org/project/pypms)
 [![Build Status](https://travis-ci.com/avaldebe/PyPMS.svg?branch=master)](https://travis-ci.com/avaldebe/PyPMS)
 [![GitHub issues](https://img.shields.io/github/issues/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/issues)
 [![GitHub license](https://img.shields.io/github/license/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/blob/master/LICENSE)
