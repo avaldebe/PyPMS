@@ -8,6 +8,7 @@ from typing import Optional
 from typer import Context, Option, echo, secho, colors, Abort
 
 from pms import logger
+from pms.sensor import Sensor, SensorReader
 
 
 class Format(str, Enum):
@@ -56,6 +57,37 @@ def csv(
             f.write(f"{obs:csv}\n")
 
 
+def _capture(sensor: Sensor, path: Path, reader: SensorReader):
+    secho(f"capture {sensor.name} messages to {path}", fg=colors.GREEN, bold=True)
+    with reader, path.open("a") as csv:
+        writer = DictWriter(csv, fieldnames="time sensor hex".split())
+        # add header to new files
+        if path.stat().st_size == 0:
+            writer.writeheader()
+        for raw in reader(raw=True):
+            writer.writerow(
+                dict(
+                    time=int(datetime.now().timestamp()),
+                    sensor=sensor.name,
+                    hex=raw.hex(),  # type: ignore
+                )
+            )
+
+
+def _decode(sensor: Sensor, path: Path):
+    secho(f"decode {sensor.name} messages from {path}", fg=colors.GREEN, bold=True)
+    if not path.is_file():
+        secho(f"{path} is not a capture file", fg=colors.RED)
+        echo(f"try something like\n\tpms -s PMS_CAPTURE_FILE.csv -m PMS_SENSOR raw --decode")
+        Abort()
+    with path.open() as csv:
+        reader = DictReader(csv)
+        for row in reader:
+            if row["sensor"] != sensor.name:
+                continue
+            echo(sensor.decode(bytes.fromhex(row["hex"]), time=int(row["time"])))
+
+
 def raw(
     ctx: Context,
     capture: bool = Option(False, "--capture", help="save messages to file"),
@@ -63,46 +95,18 @@ def raw(
     hexdump: bool = Option(False, "--hexdump", help="print in hexdump format"),
 ):
     """Capture raw sensor messages"""
-
+    reader = ctx.obj["reader"]
     if capture:
-        sensor = ctx.obj["reader"].sensor
-        path = Path(f"{datetime.now():%F}_pypms.csv")
-        secho(f"capture {sensor.name} messages to {path}", fg=colors.GREEN, bold=True)
-        with ctx.obj["reader"] as reader, path.open("a") as csv:
-            writer = DictWriter(csv, fieldnames="time sensor hex".split())
-            # add header to new files
-            if path.stat().st_size == 0:
-                writer.writeheader()
-            for raw in reader(raw=True):
-                writer.writerow(
-                    dict(
-                        time=int(datetime.now().timestamp()),
-                        sensor=reader.sensor.name,
-                        hex=raw.hex(),
-                    )
-                )
+        _capture(reader.sensor, Path(f"{datetime.now():%F}_pypms.csv"), reader)
     elif decode:
-        sensor = ctx.obj["reader"].sensor
-        path = Path(ctx.obj["reader"].serial.port)
-        secho(f"decode {sensor.name} messages from {path}", fg=colors.GREEN, bold=True)
-        if not path.is_file():
-            secho(f"{path} is not a capture file", fg=colors.RED)
-            echo(f"try something like\n\tpms -s PMS_CAPTURE_FILE.csv -m PMS_SENSOR raw --decode")
-            Abort()
-        with path.open() as csv:
-            reader = DictReader(csv)
-            for row in reader:
-                if row["sensor"] != sensor.name:
-                    continue
-                echo(sensor.decode(bytes.fromhex(row["hex"]), time=int(row["time"])))
-
+        _decode(reader.sensor, Path(reader.serial.port))
     elif hexdump:
-        with ctx.obj["reader"] as reader:
+        with reader:
             for n, raw in enumerate(reader(raw=True)):
                 msg = " ".join(wrap(raw.hex(), 2))
                 prt = "".join(chr(b) if 0x20 <= b <= 0x7E else "." for b in raw)
                 echo(f"{n*len(raw):08x}: {msg}  {prt}")
     else:
-        with ctx.obj["reader"] as reader:
+        with reader:
             for raw in reader(raw=True):
                 echo(raw.hex())
