@@ -141,7 +141,9 @@ For more Air Quality sensors [open an issue][issue].
 
 ## Changelog
 
-- 0.3.*
+- 0.3.1
+  - fix influxdb default tags
+- 0.3.0
   - option for a fix number of samples
   - PMSx003 consistency check after sleep/wake
 - 0.2.*
