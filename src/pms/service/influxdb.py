@@ -64,11 +64,11 @@ def influxdb(
     user: str = Option("root", "--db-user", help="server username"),
     word: str = Option("root", "--db-pass", help="server password"),
     name: str = Option("homie", "--db-name", help="database name"),
-    jtag: str = Option("""{"location":"test"}""", "--tags", help="measurement tags"),
+    jtag: str = Option(json.dumps({"location": "test"}), "--tags", help="measurement tags"),
 ):
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)
-    tags = json.loads(jtag)
+    tags = json.loads(jtag.replace("'", '"'))
 
     with ctx.obj["reader"] as reader:
         for obs in reader():
