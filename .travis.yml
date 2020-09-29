@@ -1,10 +1,24 @@
 language: python
 python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
-  - "3.9-dev"
+- '3.6'
+- '3.7'
+- '3.8'
+- '3.9-dev'
 install:
-  - pip install poetry tox-travis
+- pip install poetry tox-travis
 script:
-  - tox
+- tox
+before_deploy:
+- poetry config virtualenvs.in-project true
+- poetry config pypi-token.pypi $PYPI_TOKEN
+deploy:
+  provider: script
+  script: poetry publish --build
+  skip_existing: true
+  on:
+    branch: master
+    python: '3.6'
+    tags: true
+env:
+  global:
+    secure: c0c+qnnWdULkrt/6i2coEa+BdpnnQpJExTEHp/eYY93vlLPKM50lVRIAJwuJsXZ7B0/Avt/YME1kimNXk99gxWX0hO0pkgWe/8EtPVTtGJqXnCcMNj6mDzv1Cv92DKPXNzY8k6OYk0Ih9BqI7QWN6ygrLZiCZ/kER29fGTEzZeyRt3undUcCKwa3F1hfim66L8nofH5EBqVFY8QrvAu81fqLjzw9VEOAMzzFjmpR9jSCzkOM0SllAruycPw6r+cEkuShIIrnmvtJxt44S8doTTZ8CZCWNHmgsIzASKiDnANb8g7PF/7FaM0f6z7b7EZMUsYGUnc6sN/FHrDnIiw7QFoZBhFc4is8MJ9RMZ8b1gL+m8QF3ZTnnQeJ30bdTKCmpN7z+J5PQymwU952qx0ojJybFC8YdCafoN+drgpwi4efROZ4IhC1cZ7uRtVl5B+XWLzm8S4fazfMLwLQQLkUWG6ekXduNdMFDEOFbFj9YcTkzr5SA8e/eKcVVUwCIdev9Ie1r6q3quCwDB6IsFuswSwDFrixZkJD/E/VMbLTkJv0HaqBjEt1Tcvl+lTrMyu0pcJbCkUvObZt3NWfoVS04VhDExbNJXZM3zZ3m8s/mFyfCqpptXSDtYLks24+yNgq4ipsWi7K8eTD1lkvfvuIruY+dT/2NPEsqJtGIfAcviQ=
