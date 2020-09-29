@@ -53,6 +53,9 @@ class CapturedData(Enum):
         return dict(
             serial=f"{capture} serial -f csv".split(),
             csv=f"{capture} csv --overwrite -F test.csv".split(),
+            raw=f"{capture} raw".split(),
+            capture=f"{capture} raw --capture --test-file {self.name}_pypms.csv".split(),
+            decode=f"{capture} raw --decode --test-file {self.name}_pypms.csv".split(),
             mqtt=f"{capture} mqtt".split(),
             influxdb=f"{capture} influxdb".split(),
         )
@@ -62,6 +65,11 @@ class CapturedData(Enum):
         heder = self.value[1].csv
         csv = "\n".join(obs.csv for obs in self.value[2:])
         return f"{heder}\n{csv}\n"
+
+    @property
+    def hex(self) -> str:
+        hex = "\n".join(obs.hex for obs in self.value[2:])
+        return f"{hex}\n"
 
 
 class MockReader:
@@ -89,6 +97,6 @@ class MockReader:
     def __exit__(self, exception_type, exception_value, traceback) -> None:
         pass
 
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self, *, raw: bool = False) -> Generator[base.ObsData, None, None]:
         for obs in self.data.value[2:]:
-            yield obs.decode(self.sensor)
+            yield obs.raw if raw else obs.decode(self.sensor)

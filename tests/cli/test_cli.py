@@ -47,6 +47,30 @@ def test_csv(capture):
     csv.unlink()
 
 
+def test_raw(capture):
+
+    from pms.cli import main
+
+    result = runner.invoke(main, capture.options["raw"])
+    assert result.exit_code == 0
+    assert result.stdout == capture.hex
+
+
+def test_capture_decode(capture):
+
+    from pms.cli import main
+
+    result = runner.invoke(main, capture.options["capture"])
+    assert result.exit_code == 0
+
+    csv = Path(capture.options["capture"][-1])
+    assert csv.exists()
+
+    result = runner.invoke(main, capture.options["decode"])
+    assert result.exit_code == 0
+    csv.unlink()
+
+
 @pytest.fixture()
 def mock_mqtt(monkeypatch):
     """mock pms.service.mqtt.client_pub"""

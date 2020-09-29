@@ -93,13 +93,14 @@ def raw(
     capture: bool = Option(False, "--capture", help="save messages to file"),
     decode: bool = Option(False, "--decode", help="process messages from file"),
     hexdump: bool = Option(False, "--hexdump", help="print in hexdump format"),
+    path: Optional[Path] = Option(None, "--test-file", hidden=True),
 ):
     """Capture raw sensor messages"""
     reader = ctx.obj["reader"]
     if capture:
-        _capture(reader.sensor, Path(f"{datetime.now():%F}_pypms.csv"), reader)
+        _capture(reader.sensor, path or Path(f"{datetime.now():%F}_pypms.csv"), reader)
     elif decode:
-        _decode(reader.sensor, Path(reader.serial.port))
+        _decode(reader.sensor, path or Path(reader.serial.port))
     elif hexdump:
         with reader:
             for n, raw in enumerate(reader(raw=True)):
