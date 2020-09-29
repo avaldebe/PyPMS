@@ -35,7 +35,7 @@ def serial(
                 echo(f"{obs:header}")
             for obs in reader():
                 echo(f"{obs:{format}}")
-        else:
+        else:  # pragma: no cover
             for obs in reader():
                 echo(str(obs))
 
@@ -76,14 +76,14 @@ def _capture(sensor: Sensor, path: Path, reader: SensorReader):
 
 def _decode(sensor: Sensor, path: Path):
     secho(f"decode {sensor.name} messages from {path}", fg=colors.GREEN, bold=True)
-    if not path.is_file():
+    if not path.is_file():  # pragma: no cover
         secho(f"{path} is not a capture file", fg=colors.RED)
         echo(f"try something like\n\tpms -s PMS_CAPTURE_FILE.csv -m PMS_SENSOR raw --decode")
         Abort()
     with path.open() as csv:
         reader = DictReader(csv)
         for row in reader:
-            if row["sensor"] != sensor.name:
+            if row["sensor"] != sensor.name:  # pragma: no cover
                 continue
             echo(sensor.decode(bytes.fromhex(row["hex"]), time=int(row["time"])))
 
@@ -101,7 +101,7 @@ def raw(
         _capture(reader.sensor, path or Path(f"{datetime.now():%F}_pypms.csv"), reader)
     elif decode:
         _decode(reader.sensor, path or Path(reader.serial.port))
-    elif hexdump:
+    elif hexdump:  # pragma: no cover
         with reader:
             for n, raw in enumerate(reader(raw=True)):
                 msg = " ".join(wrap(raw.hex(), 2))

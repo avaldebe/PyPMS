@@ -33,7 +33,7 @@ class Supported(str, Enum):
     default = PMSx003
 
 
-def version_callback(value: bool):
+def version_callback(value: bool):  # pragma: no cover
     if value:
         name = __name__.split(".")[0]
         echo(f"{name} version {__version__}")
@@ -51,6 +51,6 @@ def callback(
     version: Optional[bool] = Option(None, "--version", callback=version_callback),
 ):
     """Read serial sensor"""
-    if debug:
+    if debug:  # pragma: no cover
         logger.setLevel("DEBUG")
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
