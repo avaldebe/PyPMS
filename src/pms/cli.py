@@ -5,13 +5,14 @@ from typer import Typer, Context, Option, echo, Exit
 
 from pms import logger, __doc__, __version__
 from pms.sensor import SensorReader
-from pms.sensor.cli import serial, csv
+from pms.sensor.cli import serial, csv, raw
 from pms.service.cli import influxdb, mqtt, bridge
 
 
 main = Typer(help=__doc__)
 main.command()(serial)
 main.command()(csv)
+main.command()(raw)
 main.command()(influxdb)
 main.command()(mqtt)
 main.command()(bridge)

@@ -41,6 +41,7 @@ Commands:
   csv       Read sensor and print measurements
   influxdb  Read sensor and push PM measurements to an InfluxDB server
   mqtt      Read sensor and push PM measurements to a MQTT server
+  raw       Capture raw sensor messages
   serial    Read sensor and print measurements
 ```
 

@@ -8,7 +8,7 @@ NOTE:
 
 import sys
 import time
-from typing import Generator, Optional
+from typing import Generator, Optional, Union
 
 from serial import Serial
 
@@ -23,7 +23,7 @@ class SensorReader:
     While the serial port is open, the sensor is read in passive mode.
 
     PMS3003 sensors do not accept serial commands, such as wake/sleep or passive mode read.
-    Valid messages are extracted from the serail buffer. Support for this sensor is experimental.
+    Valid messages are extracted from the serial buffer.
     """
 
     def __init__(
@@ -42,10 +42,8 @@ class SensorReader:
         self.interval = interval
         self.samples = samples
         logger.debug(
-            f"Reader: "
-            f"request {samples if samples else '?'} obs "
-            f"from {sensor} on {port} "
-            f"every {interval if interval else '?'} secs"
+            f"capture {samples if samples else '?'} {sensor} obs "
+            f"from {port} every {interval if interval else '?'} secs"
         )
 
     def _cmd(self, command: str) -> bytes:
@@ -84,7 +82,7 @@ class SensorReader:
         buffer = self._cmd("sleep")
         self.serial.close()
 
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:
@@ -99,7 +97,7 @@ class SensorReader:
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
-                    yield obs
+                    yield buffer if raw else obs
                     if self.samples:
                         self.samples -= 1
                         if self.samples <= 0:
