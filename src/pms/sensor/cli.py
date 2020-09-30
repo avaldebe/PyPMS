@@ -5,7 +5,7 @@ from pathlib import Path
 from textwrap import wrap
 
 from typing import Optional
-from typer import Context, Option, echo, secho, colors, Abort
+from typer import Context, Option, Argument, echo, secho, colors, Abort
 
 from pms import logger
 from pms.sensor import Sensor, SensorReader
@@ -42,10 +42,12 @@ def serial(
 
 def csv(
     ctx: Context,
-    path: Path = Option(Path("pms.csv"), "--filename", "-F", help="csv formatted file"),
     overwrite: bool = Option(False, "--overwrite", help="overwrite file, if already exists"),
+    path: Path = Argument(Path(), help="csv formatted file", show_default=False),
 ):
     """Read sensor and print measurements"""
+    if path.is_dir():
+        path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")
     with ctx.obj["reader"] as reader, path.open(mode) as f:
