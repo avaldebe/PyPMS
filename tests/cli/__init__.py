@@ -52,9 +52,9 @@ class CapturedData(Enum):
         capture = f"-m {self.name} -s {self.samples} -i {self.interval}"
         return dict(
             serial=f"{capture} serial -f csv".split(),
-            csv=f"{capture} csv --overwrite -F test.csv".split(),
+            csv=f"{capture} csv --overwrite {self.name}_test.csv".split(),
+            capture=f"{capture} csv --capture {self.name}_pypms.csv".split(),
             raw=f"{capture} raw".split(),
-            capture=f"{capture} raw --capture --test-file {self.name}_pypms.csv".split(),
             decode=f"{capture} raw --decode --test-file {self.name}_pypms.csv".split(),
             mqtt=f"{capture} mqtt".split(),
             influxdb=f"{capture} influxdb".split(),

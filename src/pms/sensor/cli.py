@@ -42,6 +42,7 @@ def serial(
 
 def csv(
     ctx: Context,
+    capture: bool = Option(False, "--capture", help="write raw messages instead of observations"),
     overwrite: bool = Option(False, "--overwrite", help="overwrite file, if already exists"),
     path: Path = Argument(Path(), help="csv formatted file", show_default=False),
 ):
@@ -50,30 +51,30 @@ def csv(
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")
-    with ctx.obj["reader"] as reader, path.open(mode) as f:
-        # add header to new files
-        if path.stat().st_size == 0:
-            obs = next(reader())
-            f.write(f"{obs:header}\n")
-        for obs in reader():
-            f.write(f"{obs:csv}\n")
-
-
-def _capture(sensor: Sensor, path: Path, reader: SensorReader):
-    secho(f"capture {sensor.name} messages to {path}", fg=colors.GREEN, bold=True)
-    with reader, path.open("a") as csv:
-        writer = DictWriter(csv, fieldnames="time sensor hex".split())
-        # add header to new files
-        if path.stat().st_size == 0:
-            writer.writeheader()
-        for raw in reader(raw=True):
-            writer.writerow(
-                dict(
-                    time=int(datetime.now().timestamp()),
-                    sensor=sensor.name,
-                    hex=raw.hex(),  # type: ignore
+    with ctx.obj["reader"] as reader, path.open(mode) as csv:
+        sensor_name = reader.sensor.name
+        if not capture:
+            logger.debug(f"capture {sensor_name} observations to {path}")
+            # add header to new files
+            if path.stat().st_size == 0:
+                obs = next(reader())
+                csv.write(f"{obs:header}\n")
+            for obs in reader():
+                csv.write(f"{obs:csv}\n")
+        else:
+            logger.debug(f"capture {sensor_name} messages to {path}")
+            writer = DictWriter(csv, fieldnames="time sensor hex".split())
+            # add header to new files
+            if path.stat().st_size == 0:
+                writer.writeheader()
+            for raw in reader(raw=True):
+                writer.writerow(
+                    dict(
+                        time=int(datetime.now().timestamp()),
+                        sensor=sensor_name,
+                        hex=raw.hex(),  # type: ignore
+                    )
                 )
-            )
 
 
 def _decode(sensor: Sensor, path: Path):
@@ -92,16 +93,13 @@ def _decode(sensor: Sensor, path: Path):
 
 def raw(
     ctx: Context,
-    capture: bool = Option(False, "--capture", help="save messages to file"),
     decode: bool = Option(False, "--decode", help="process messages from file"),
     hexdump: bool = Option(False, "--hexdump", help="print in hexdump format"),
     path: Optional[Path] = Option(None, "--test-file", hidden=True),
 ):
     """Capture raw sensor messages"""
     reader = ctx.obj["reader"]
-    if capture:
-        _capture(reader.sensor, path or Path(f"{datetime.now():%F}_pypms.csv"), reader)
-    elif decode:
+    if decode:
         _decode(reader.sensor, path or Path(reader.serial.port))
     elif hexdump:  # pragma: no cover
         table = bytes.maketrans(
