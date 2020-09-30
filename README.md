@@ -142,6 +142,10 @@ For more Air Quality sensors [open an issue][issue].
 
 ## Changelog
 
+- 0.4.0
+  - capture and decode raw messages
+  - hexdump format
+  - deprecate subset observation method
 - 0.3.1
   - fix influxdb default tags
 - 0.3.0
