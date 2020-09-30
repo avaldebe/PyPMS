@@ -102,10 +102,13 @@ def raw(
     elif decode:
         _decode(reader.sensor, path or Path(reader.serial.port))
     elif hexdump:  # pragma: no cover
+        table = bytes.maketrans(
+            bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
+        )
         with reader:
             for n, raw in enumerate(reader(raw=True)):
-                msg = " ".join(wrap(raw.hex(), 2))
-                prt = "".join(chr(b) if 0x20 <= b <= 0x7E else "." for b in raw)
+                msg = " ".join(wrap(raw.hex(), 2))  # raw.hex(" ") in python3.8+
+                prt = raw.translate(table).decode()
                 echo(f"{n*len(raw):08x}: {msg}  {prt}")
     else:
         with reader:
