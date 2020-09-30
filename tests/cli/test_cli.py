@@ -47,15 +47,6 @@ def test_csv(capture):
     csv.unlink()
 
 
-def test_raw(capture):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options["raw"])
-    assert result.exit_code == 0
-    assert result.stdout == capture.hex
-
-
 def test_capture_decode(capture):
 
     from pms.cli import main

@@ -41,7 +41,6 @@ Commands:
   csv       Read sensor and print measurements
   influxdb  Read sensor and push PM measurements to an InfluxDB server
   mqtt      Read sensor and push PM measurements to a MQTT server
-  raw       Capture raw sensor messages
   serial    Read sensor and print measurements
 ```
 
@@ -143,8 +142,9 @@ For more Air Quality sensors [open an issue][issue].
 ## Changelog
 
 - 0.4.0
-  - capture and decode raw messages
-  - hexdump format
+  - capture raw messages with `pms csv --capture`
+  - decode captured messages with `pms serial --capture`
+  - hexdump format with `pms serial --format hexdump`
   - deprecate subset observation method
 - 0.3.1
   - fix influxdb default tags

@@ -4,11 +4,11 @@ from datetime import datetime
 from pathlib import Path
 from textwrap import wrap
 
-from typing import Optional
+from typing import Optional, Generator, Union
 from typer import Context, Option, Argument, echo, secho, colors, Abort
 
 from pms import logger
-from pms.sensor import Sensor, SensorReader
+from pms.sensor import Sensor, base
 
 
 class Format(str, Enum):
@@ -27,9 +27,13 @@ class Format(str, Enum):
 def serial(
     ctx: Context,
     format: Optional[Format] = Option(None, "--format", "-f", help="formatted output"),
+    decode: Optional[Path] = Option(None, help="decode captured messages"),
 ):
     """Read sensor and print measurements"""
-    with ctx.obj["reader"] as reader:
+    reader = ctx.obj["reader"]
+    if decode:
+        reader = MesageReader(decode, reader.sensor)
+    with reader:
         if format == "hexdump":
             table = bytes.maketrans(
                 bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
@@ -86,30 +90,23 @@ def csv(
                 )
 
 
-def _decode(sensor: Sensor, path: Path):
-    secho(f"decode {sensor.name} messages from {path}", fg=colors.GREEN, bold=True)
-    if not path.is_file():  # pragma: no cover
-        secho(f"{path} is not a capture file", fg=colors.RED)
-        echo(f"try something like\n\tpms -s PMS_CAPTURE_FILE.csv -m PMS_SENSOR raw --decode")
-        Abort()
-    with path.open() as csv:
-        reader = DictReader(csv)
-        for row in reader:
-            if row["sensor"] != sensor.name:  # pragma: no cover
-                continue
-            echo(sensor.decode(bytes.fromhex(row["hex"]), time=int(row["time"])))
+class MesageReader:
+    def __init__(self, path: Path, sensor: Sensor) -> None:
+        self.path = path
+        self.sensor = sensor
 
+    def __enter__(self) -> "MesageReader":
+        logger.debug(f"open {self.path}")
+        self.csv = self.path.open()
+        reader = DictReader(self.csv)
+        self.data = (row for row in reader if row["sensor"] == self.sensor.name)
+        return self
 
-def raw(
-    ctx: Context,
-    decode: bool = Option(False, "--decode", help="process messages from file"),
-    path: Optional[Path] = Option(None, "--test-file", hidden=True),
-):
-    """Capture raw sensor messages"""
-    reader = ctx.obj["reader"]
-    if decode:
-        _decode(reader.sensor, path or Path(reader.serial.port))
-    else:
-        with reader:
-            for raw in reader(raw=True):
-                echo(raw.hex())
+    def __exit__(self, exception_type, exception_value, traceback) -> None:
+        logger.debug(f"close {self.path}")
+        self.csv.close()
+
+    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
+        for row in self.data:
+            time, message = int(row["time"]), bytes.fromhex(row["hex"])
+            yield message if raw else self.sensor.decode(message, time=time)

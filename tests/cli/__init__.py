@@ -53,9 +53,8 @@ class CapturedData(Enum):
         return dict(
             serial=f"{capture} serial -f csv".split(),
             csv=f"{capture} csv --overwrite {self.name}_test.csv".split(),
-            capture=f"{capture} csv --capture {self.name}_pypms.csv".split(),
-            raw=f"{capture} raw".split(),
-            decode=f"{capture} raw --decode --test-file {self.name}_pypms.csv".split(),
+            capture=f"{capture} csv --overwrite  --capture {self.name}_pypms.csv".split(),
+            decode=f"{capture} serial -f csv --decode {self.name}_pypms.csv".split(),
             mqtt=f"{capture} mqtt".split(),
             influxdb=f"{capture} influxdb".split(),
         )
@@ -65,11 +64,6 @@ class CapturedData(Enum):
         heder = self.value[1].csv
         csv = "\n".join(obs.csv for obs in self.value[2:])
         return f"{heder}\n{csv}\n"
-
-    @property
-    def hex(self) -> str:
-        hex = "\n".join(obs.hex for obs in self.value[2:])
-        return f"{hex}\n"
 
 
 class MockReader:

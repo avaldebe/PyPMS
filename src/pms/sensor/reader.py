@@ -63,10 +63,12 @@ class SensorReader:
     def __enter__(self) -> "SensorReader":
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
+            logger.debug(f"open {self.serial.port}")
             self.serial.open()
             self.serial.reset_input_buffer()
 
         # wake sensor and set passive mode
+        logger.debug(f"wake {self.sensor.name}")
         buffer = self._cmd("wake") + self._cmd("passive_mode")
         logger.debug(f"buffer length: {len(buffer)}")
 
@@ -79,7 +81,9 @@ class SensorReader:
 
     def __exit__(self, exception_type, exception_value, traceback) -> None:
         """Put sensor to sleep and close serial port"""
+        logger.debug(f"sleep {self.sensor.name}")
         buffer = self._cmd("sleep")
+        logger.debug(f"close {self.serial.port}")
         self.serial.close()
 
     def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
