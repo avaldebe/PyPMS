@@ -21,6 +21,7 @@ class Format(str, Enum):
     hcho = "hcho"
     bme = "bme"
     bsec = "bsec"
+    hex = "hexdump"
 
 
 def serial(
@@ -29,7 +30,15 @@ def serial(
 ):
     """Read sensor and print measurements"""
     with ctx.obj["reader"] as reader:
-        if format:
+        if format == "hexdump":
+            table = bytes.maketrans(
+                bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
+            )
+            for n, raw in enumerate(reader(raw=True)):
+                msg = " ".join(wrap(raw.hex(), 2))  # raw.hex(" ") in python3.8+
+                prt = raw.translate(table).decode()
+                echo(f"{n*len(raw):08x}: {msg}  {prt}")
+        elif format:
             if format == "csv":
                 obs = next(reader())
                 echo(f"{obs:header}")
@@ -94,22 +103,12 @@ def _decode(sensor: Sensor, path: Path):
 def raw(
     ctx: Context,
     decode: bool = Option(False, "--decode", help="process messages from file"),
-    hexdump: bool = Option(False, "--hexdump", help="print in hexdump format"),
     path: Optional[Path] = Option(None, "--test-file", hidden=True),
 ):
     """Capture raw sensor messages"""
     reader = ctx.obj["reader"]
     if decode:
         _decode(reader.sensor, path or Path(reader.serial.port))
-    elif hexdump:  # pragma: no cover
-        table = bytes.maketrans(
-            bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
-        )
-        with reader:
-            for n, raw in enumerate(reader(raw=True)):
-                msg = " ".join(wrap(raw.hex(), 2))  # raw.hex(" ") in python3.8+
-                prt = raw.translate(table).decode()
-                echo(f"{n*len(raw):08x}: {msg}  {prt}")
     else:
         with reader:
             for raw in reader(raw=True):
