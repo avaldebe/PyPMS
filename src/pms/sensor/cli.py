@@ -32,7 +32,7 @@ def serial(
     """Read sensor and print measurements"""
     reader = ctx.obj["reader"]
     if decode:
-        reader = MesageReader(decode, reader.sensor)
+        reader = MesageReader(decode, reader.sensor, reader.samples)
     with reader:
         if format == "hexdump":
             table = bytes.maketrans(
@@ -91,9 +91,10 @@ def csv(
 
 
 class MesageReader:
-    def __init__(self, path: Path, sensor: Sensor) -> None:
+    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
         self.path = path
         self.sensor = sensor
+        self.samples = samples
 
     def __enter__(self) -> "MesageReader":
         logger.debug(f"open {self.path}")
@@ -110,3 +111,7 @@ class MesageReader:
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
             yield message if raw else self.sensor.decode(message, time=time)
+            if self.samples:
+                self.samples -= 1
+                if self.samples <= 0:
+                    break
