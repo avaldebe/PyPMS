@@ -117,13 +117,13 @@ class SensorReader:
                 break
 
 
-class MesageReader:
+class MessageReader:
     def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
         self.path = path
         self.sensor = sensor
         self.samples = samples
 
-    def __enter__(self) -> "MesageReader":
+    def __enter__(self) -> "MessageReader":
         logger.debug(f"open {self.path}")
         self.csv = self.path.open()
         reader = DictReader(self.csv)

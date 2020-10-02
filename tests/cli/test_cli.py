@@ -1,4 +1,3 @@
-import os
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Callable, Union, List, Dict, Any
@@ -7,8 +6,6 @@ import pytest
 from typer.testing import CliRunner
 from mypy_extensions import NamedArg
 
-os.environ["LEVEL"] = "DEBUG"
-
 """All captured data from /docs/sensors"""
 captured_data = Path("tests/cli/captured_data/data.csv")
 
@@ -16,9 +13,9 @@ captured_data = Path("tests/cli/captured_data/data.csv")
 @pytest.fixture(autouse=True)
 def mock_reader(monkeypatch):
     """mock pms.sensor.SensorReader"""
-    from pms.sensor import Sensor, MesageReader
+    from pms.sensor import Sensor, MessageReader
 
-    class MockReader(MesageReader):
+    class MockReader(MessageReader):
         def __init__(
             self, sensor: str, port: str, interval: int, samples: Optional[int] = None
         ) -> None:

@@ -7,7 +7,7 @@ from typing import Optional
 from typer import Context, Option, Argument, echo
 
 from pms import logger
-from pms.sensor import MesageReader
+from pms.sensor import MessageReader
 
 
 class Format(str, Enum):
@@ -31,7 +31,7 @@ def serial(
     """Read sensor and print measurements"""
     reader = ctx.obj["reader"]
     if decode:
-        reader = MesageReader(decode, reader.sensor, reader.samples)
+        reader = MessageReader(decode, reader.sensor, reader.samples)
     with reader:
         if format == "hexdump":
             table = bytes.maketrans(
