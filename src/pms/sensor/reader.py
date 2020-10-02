@@ -8,6 +8,8 @@ NOTE:
 
 import sys
 import time
+from csv import DictReader
+from pathlib import Path
 from typing import Generator, Optional, Union
 
 from serial import Serial
@@ -113,3 +115,30 @@ class SensorReader:
             except KeyboardInterrupt:
                 print()
                 break
+
+
+class MesageReader:
+    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
+        self.path = path
+        self.sensor = sensor
+        self.samples = samples
+
+    def __enter__(self) -> "MesageReader":
+        logger.debug(f"open {self.path}")
+        self.csv = self.path.open()
+        reader = DictReader(self.csv)
+        self.data = (row for row in reader if row["sensor"] == self.sensor.name)
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback) -> None:
+        logger.debug(f"close {self.path}")
+        self.csv.close()
+
+    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
+        for row in self.data:
+            time, message = int(row["time"]), bytes.fromhex(row["hex"])
+            yield message if raw else self.sensor.decode(message, time=time)
+            if self.samples:
+                self.samples -= 1
+                if self.samples <= 0:
+                    break

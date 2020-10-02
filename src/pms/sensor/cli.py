@@ -1,14 +1,13 @@
-from csv import DictReader, DictWriter
 from enum import Enum
 from datetime import datetime
 from pathlib import Path
 from textwrap import wrap
 
-from typing import Optional, Generator, Union
-from typer import Context, Option, Argument, echo, secho, colors, Abort
+from typing import Optional
+from typer import Context, Option, Argument, echo
 
 from pms import logger
-from pms.sensor import Sensor, base
+from pms.sensor import MesageReader
 
 
 class Format(str, Enum):
@@ -76,42 +75,9 @@ def csv(
                 csv.write(f"{obs:csv}\n")
         else:
             logger.debug(f"capture {sensor_name} messages to {path}")
-            writer = DictWriter(csv, fieldnames="time sensor hex".split())
             # add header to new files
             if path.stat().st_size == 0:
-                writer.writeheader()
+                csv.write("time,sensor,hex\n")
             for raw in reader(raw=True):
-                writer.writerow(
-                    dict(
-                        time=int(datetime.now().timestamp()),
-                        sensor=sensor_name,
-                        hex=raw.hex(),  # type: ignore
-                    )
-                )
-
-
-class MesageReader:
-    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
-        self.path = path
-        self.sensor = sensor
-        self.samples = samples
-
-    def __enter__(self) -> "MesageReader":
-        logger.debug(f"open {self.path}")
-        self.csv = self.path.open()
-        reader = DictReader(self.csv)
-        self.data = (row for row in reader if row["sensor"] == self.sensor.name)
-        return self
-
-    def __exit__(self, exception_type, exception_value, traceback) -> None:
-        logger.debug(f"close {self.path}")
-        self.csv.close()
-
-    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
-        for row in self.data:
-            time, message = int(row["time"]), bytes.fromhex(row["hex"])
-            yield message if raw else self.sensor.decode(message, time=time)
-            if self.samples:
-                self.samples -= 1
-                if self.samples <= 0:
-                    break
+                time = int(datetime.now().timestamp())
+                csv.write(f"{time},{sensor_name},{raw.hex()}\n")

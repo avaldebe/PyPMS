@@ -16,8 +16,7 @@ captured_data = Path("tests/cli/captured_data/data.csv")
 @pytest.fixture(autouse=True)
 def mock_reader(monkeypatch):
     """mock pms.sensor.SensorReader"""
-    from pms.sensor import Sensor
-    from pms.sensor.cli import MesageReader
+    from pms.sensor import Sensor, MesageReader
 
     class MockReader(MesageReader):
         def __init__(
