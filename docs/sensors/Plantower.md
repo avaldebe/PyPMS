@@ -102,7 +102,7 @@ The message body (`message[4:16]`) contains 6 values:
 - raw01, raw25, raw10: cf=1 PM estimates [μg/m³]
 - pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]
 
-The following hexdump (`xxd -g1 -c24`) shows one message per line
+The following hexdump (`pms -m PMS3003 -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 00000000: 42 4d 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 51 00 f4  BM...................Q..
@@ -125,7 +125,7 @@ The message body (`message[4:28]`) contains 12 values:
 - pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]
 - n0_3, n0_5, n1_0, n2_5, n5_0, n10_0: number of particles under X_Y μm [#/cm³] (raw values [#/100 cm³])
 
-The following hexdump (`xxd -g1 -c32`) shows one message per line
+The following hexdump (`pms -m PMSx003 -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 00000000: 42 4d 00 1c 00 00 00 08 00 08 00 00 00 08 00 08 00 d2 00 46 00 2d 00 1e 00 00 00 00 97 00 02 c5  BM.................F.-..........
@@ -150,7 +150,7 @@ The message body (`message[4:28]`) contains 12 values:
 - temp: temperature [°C]
 - rhum: relative humidity [%]
 
-The following hexdump (`xxd -g1 -c32`) shows one message per line
+The following hexdump (`pms -m PMS5003T -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 ```
@@ -164,7 +164,7 @@ The message body (`message[4:30]`) contains 13 values:
 - n0_3, n0_5, n1_0, n2_5, n5_0, n10_0: number of particles under X_Y um [#/cm³] (raw values [#/100 cm³])
 - HCHO: concentration of formaldehyde [μg/m³]
 
-The following hexdump (`xxd -g1 -c32`) shows one message per line
+The following hexdump (`pms -m PMS5003S -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 ```
@@ -180,7 +180,7 @@ The message body (`message[4:34]`) contains 15 values:
 - temp: temperature [°C]
 - rhum: relative humidity [%]
 
-The following hexdump (`xxd -g1 -c40`) shows one message per line
+The following hexdump (`pms -m PMS5003ST -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 ```

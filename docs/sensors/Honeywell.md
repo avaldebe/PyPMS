@@ -85,7 +85,7 @@ The message body (`message[3:7]`) contains 2 values:
 
 - pm25, pm10: PM2.5, PM10 [μg/m³]
 
-The following hexdump (`xxd -g1 -c8`) shows one message per line
+The following hexdump (`pms -m HPMA115S0 -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 ```
@@ -96,7 +96,7 @@ The message body (`message[3:7]`) contains 4 values:
 
 - pm01, pm25, pm04, pm10: PM1.0, PM2.5, PM4.0 PM10 [μg/m³]
 
-The following hexdump (`xxd -g1 -c16`) shows one message per line
+The following hexdump (`pms -m HPMA115C0 -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 ```

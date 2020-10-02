@@ -88,7 +88,7 @@ The message body (`message[2:6]`) contains 2 values:
 
 - pm25, pm10: PM2.5, PM10 [μg/m³] (raw values [0.1 μg/m³])
 
-The following hexdump (`xxd -g1 -c10`) shows one message per line
+The following hexdump (`pms -m SDS01x -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
 00000000: aa c0 06 00 06 00 58 d9 3d ab  ......X.=.
@@ -109,7 +109,13 @@ The message body (`message[4:6]`) contains 1 value:
 
 - pm100: PM100 [μg/m³]
 
-The following hexdump (`xxd -g1 -c10`) shows one message per line
+The following hexdump (`pms -m SDS198 -n 10 -i 10 serial -f hexdump`) shows one message per line
 
 ```hexdump
+00000000: aa cf 0e 00 10 00 e9 05 0c ab  ..........
+0000000a: aa cf 0e 00 13 00 e9 05 0f ab  ..........
+00000014: aa cf 0c 00 16 00 e9 05 10 ab  ..........
+0000001e: aa cf 0c 00 1a 00 e9 05 14 ab  ..........
+00000028: aa cf 0b 00 14 00 e9 05 0d ab  ..........
+00000032: aa cf 06 01 01 00 e9 05 f6 ab  ..........
 ```

@@ -38,7 +38,7 @@ class CapturedData(Enum):
 
     @property
     def samples(self) -> int:
-        return sum(self.name in line for line in self.csv.split("\n"))
+        return sum(self.name in line for line in self.output("csv").split("\n"))
 
     @property
     def interval(self) -> int:
@@ -48,7 +48,8 @@ class CapturedData(Enum):
     def options(self) -> Dict[str, List[str]]:
         capture = f"-m {self.name} -s {self.samples} -i {self.interval}"
         return dict(
-            serial=f"{capture} serial -f csv".split(),
+            serial_csv=f"{capture} serial -f csv".split(),
+            serial_hexdump=f"{capture} serial -f hexdump".split(),
             csv=f"{capture} csv --overwrite {self.name}_test.csv".split(),
             capture=f"{capture} csv --overwrite  --capture {self.name}_pypms.csv".split(),
             decode=f"{capture} serial -f csv --decode {self.name}_pypms.csv".split(),
@@ -56,10 +57,9 @@ class CapturedData(Enum):
             influxdb=f"{capture} influxdb".split(),
         )
 
-    @property
-    def csv(self) -> str:
-        csv = captured_data.parent / f"{self.name}.csv"
-        return csv.read_text()
+    def output(self, ending: str) -> str:
+        path = captured_data.parent / f"{self.name}.{ending}"
+        return path.read_text()
 
 
 @pytest.fixture(params=[capture for capture in CapturedData])
@@ -70,13 +70,14 @@ def capture(request) -> CapturedData:
 runner = CliRunner()
 
 
-def test_serial(capture):
+@pytest.mark.parametrize("format", {"csv", "hexdump"})
+def test_serial(capture, format):
 
     from pms.cli import main
 
-    result = runner.invoke(main, capture.options["serial"])
+    result = runner.invoke(main, capture.options[f"serial_{format}"])
     assert result.exit_code == 0
-    assert result.stdout == capture.csv
+    assert result.stdout == capture.output(format)
 
 
 def test_csv(capture):
@@ -88,7 +89,7 @@ def test_csv(capture):
 
     csv = Path(capture.options["csv"][-1])
     assert csv.exists()
-    assert csv.read_text() == capture.csv
+    assert csv.read_text() == capture.output("csv")
     csv.unlink()
 
 
@@ -108,7 +109,7 @@ def test_capture_decode(capture):
 
     # freezegun.timestamps don't match https://github.com/spulec/freezegun/issues/346
     # compare only the end of the lines
-    for stdout, line in zip(result.stdout.split("\n"), capture.csv.split("\n")):
+    for stdout, line in zip(result.stdout.split("\n"), capture.output("csv").split("\n")):
         assert stdout[10:] == line[10:]
 
 
