@@ -59,7 +59,7 @@ def csv(
     path: Path = Argument(Path(), help="csv formatted file", show_default=False),
 ):
     """Read sensor and print measurements"""
-    if path.is_dir():
+    if path.is_dir():  # pragma: no cover
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")

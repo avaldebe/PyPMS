@@ -38,7 +38,8 @@ class CapturedData(Enum):
 
     @property
     def samples(self) -> int:
-        return sum(self.name in line for line in self.output("csv").split("\n"))
+        text = captured_data.read_text().split("\n")
+        return sum(self.name in line for line in text)
 
     @property
     def interval(self) -> int:
@@ -46,11 +47,12 @@ class CapturedData(Enum):
 
     @property
     def options(self) -> Dict[str, List[str]]:
-        capture = f"-m {self.name} -s {self.samples} -i {self.interval}"
+        capture = f"-m {self.name} -n {self.samples} -i {self.interval} --debug"
+        serial = f"-m {self.name} -n {self.samples - 1} -i {self.interval} --debug"
         return dict(
-            serial_csv=f"{capture} serial -f csv".split(),
+            serial_csv=f"{serial} serial -f csv".split(),
             serial_hexdump=f"{capture} serial -f hexdump".split(),
-            csv=f"{capture} csv --overwrite {self.name}_test.csv".split(),
+            csv=f"{serial} csv --overwrite {self.name}_test.csv".split(),
             capture=f"{capture} csv --overwrite  --capture {self.name}_pypms.csv".split(),
             decode=f"{capture} serial -f csv --decode {self.name}_pypms.csv".split(),
             mqtt=f"{capture} mqtt".split(),
