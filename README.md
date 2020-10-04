@@ -16,18 +16,18 @@ Tools for reading Air Quality Sensors with serial (UART) interface, data acquisi
 ```man
 Usage: pms [OPTIONS] COMMAND [ARGS]...
 
-  Read serial sensor
-
 Options:
-  --sensor-model -m [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30|MCU680]
+  -m, --sensor-model [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30|MCU680]
                                   sensor model  [default: PMSx003]
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
                                   60]
+
   -n, --samples INTEGER           stop after N samples
   --debug                         print DEBUG/logging messages  [default:
                                   False]
 
+  --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.
   --show-completion [bash|zsh|fish|powershell|pwsh]
