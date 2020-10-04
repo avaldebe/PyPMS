@@ -1,6 +1,11 @@
 from enum import Enum
+from datetime import datetime
 from pathlib import Path
-from typing import Callable, Union, List, Dict, Any
+from typing import Callable, Generator, Union, List, Dict, Any
+
+from pms import logger
+from pms.sensor import Sensor, MessageReader
+from pms.sensor.reader import RawData
 
 import pytest
 from typer.testing import CliRunner
@@ -10,22 +15,35 @@ from mypy_extensions import NamedArg
 captured_data = Path("tests/cli/captured_data/data.csv")
 
 
+def read_captured_data(sensor: str) -> Generator[RawData, None, None]:
+    with MessageReader(captured_data, Sensor[sensor]) as reader:
+        for raw in reader(raw=True):
+            yield raw
+
+
 class CapturedData(Enum):
     """Captured data from /docs/sensors"""
 
-    PMS3003 = "PMS3003"
-    PMSx003 = "PMSx003"
-    SDS01x = "SDS01x"
-    SDS198 = "SDS198"
-    MCU680 = "MCU680"
+    PMS3003 = tuple(read_captured_data("PMS3003"))
+    PMSx003 = tuple(read_captured_data("PMSx003"))
+    SDS01x = tuple(read_captured_data("SDS01x"))
+    SDS198 = tuple(read_captured_data("SDS198"))
+    MCU680 = tuple(read_captured_data("MCU680"))
 
     @property
-    def samples(self) -> int:
-        text = captured_data.read_text().split("\n")
-        return sum(self.name in line for line in text)
+    def sensor(self) -> Sensor:
+        return Sensor[self.name]
+
+    @property
+    def data(self) -> Generator[bytes, None, None]:
+        return (msg.data for msg in self.value)
+
+    @property
+    def time(self) -> Generator[int, None, None]:
+        return (msg.time for msg in self.value)
 
     def options(self, command: str) -> List[str]:
-        samples = self.samples
+        samples = len(self.value)
         if "csv" in command or command == "mqtt":
             samples -= 1
         capture = f"-m {self.name} -n {samples} -i 0"
@@ -47,9 +65,6 @@ class CapturedData(Enum):
 
 @pytest.fixture(params=[capture for capture in CapturedData])
 def capture(monkeypatch, request) -> CapturedData:
-    from pms import logger
-    from pms.sensor import Sensor, MessageReader
-
     class MockSerial:
         port = None
         baudrate = None
@@ -67,20 +82,13 @@ def capture(monkeypatch, request) -> CapturedData:
 
     monkeypatch.setattr("pms.sensor.reader.Serial", MockSerial)
 
-    sensor = Sensor[request.param.name]
-    with MessageReader(captured_data, sensor) as reader:
-        data = b"".join(raw.data for raw in reader(raw=True))
+    data = request.param.data
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
-        nonlocal data, sensor
-        size = sensor.command(command).answer_length
-        logger.debug(f"mock read({size}), {len(data)} bytes left")
-        if command == "passive_read":
-            answer, data = data[:size], data[size:]
-        else:
-            answer = b"." * size
-        return answer
+        logger.debug(f"mock write/read: {command}")
+        nonlocal data
+        return next(data) if command == "passive_read" else b""
 
     monkeypatch.setattr("pms.sensor.reader.SensorReader._cmd", mock_reader__cmd)
 
@@ -89,6 +97,15 @@ def capture(monkeypatch, request) -> CapturedData:
         return True
 
     monkeypatch.setattr("pms.sensor.reader.Sensor.check", mock_sensor_check)
+
+    time = request.param.time
+
+    def mock_sensor_now(self) -> int:
+        """mock pms.sensor.Sensor.now"""
+        nonlocal time
+        return next(time)
+
+    monkeypatch.setattr("pms.sensor.reader.Sensor.now", mock_sensor_now)
 
     return request.param
 
@@ -103,13 +120,7 @@ def test_serial(capture, format):
 
     result = runner.invoke(main, capture.options(f"serial_{format}"))
     assert result.exit_code == 0
-    # freezegun.timestamps don't match https://github.com/spulec/freezegun/issues/346
-    # compare only the end of the lines
-    if format == "csv":
-        for stdout, line in zip(result.stdout.split("\n"), capture.output("csv").split("\n")):
-            assert stdout[10:] == line[10:]
-    else:
-        assert result.stdout == capture.output(format)
+    assert result.stdout == capture.output(format)
 
 
 def test_csv(capture):
@@ -121,11 +132,7 @@ def test_csv(capture):
 
     csv = Path(capture.options("csv")[-1])
     assert csv.exists()
-    # assert csv.read_text() == capture.output("csv")
-    # freezegun.timestamps don't match https://github.com/spulec/freezegun/issues/346
-    # compare only the end of the lines
-    for csvout, line in zip(csv.read_text().split("\n"), capture.output("csv").split("\n")):
-        assert csvout[10:] == line[10:]
+    assert csv.read_text() == capture.output("csv")
     csv.unlink()
 
 
@@ -142,12 +149,7 @@ def test_capture_decode(capture):
     result = runner.invoke(main, capture.options("decode"))
     assert result.exit_code == 0
     csv.unlink()
-
-    # assert result.stdout == capture.output("csv")
-    # freezegun.timestamps don't match https://github.com/spulec/freezegun/issues/346
-    # compare only the end of the lines
-    for stdout, line in zip(result.stdout.split("\n"), capture.output("csv").split("\n")):
-        assert stdout[10:] == line[10:]
+    assert result.stdout == capture.output("csv")
 
 
 @pytest.fixture()
