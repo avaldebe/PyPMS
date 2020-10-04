@@ -10,7 +10,7 @@ import sys
 import time
 from csv import DictReader
 from pathlib import Path
-from typing import Generator, Optional, Union
+from typing import Generator, Optional, overload
 
 from serial import Serial
 
@@ -88,7 +88,15 @@ class SensorReader:
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
 
-    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
+    @overload
+    def __call__(self) -> Generator[base.ObsData, None, None]:
+        pass
+
+    @overload
+    def __call__(self, *, raw: bool) -> Generator[bytes, None, None]:
+        pass
+
+    def __call__(self, *, raw: Optional[bool] = None):
         """Passive mode reading at regular intervals"""
         while self.serial.is_open:
             try:
@@ -134,7 +142,15 @@ class MessageReader:
         logger.debug(f"close {self.path}")
         self.csv.close()
 
-    def __call__(self, *, raw: bool = False) -> Generator[Union[base.ObsData, bytes], None, None]:
+    @overload
+    def __call__(self) -> Generator[base.ObsData, None, None]:
+        pass
+
+    @overload
+    def __call__(self, *, raw: bool) -> Generator[bytes, None, None]:
+        pass
+
+    def __call__(self, *, raw: Optional[bool] = None):
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
             yield message if raw else self.sensor.decode(message, time=time)
