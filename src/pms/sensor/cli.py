@@ -1,7 +1,6 @@
 from enum import Enum
 from datetime import datetime
 from pathlib import Path
-from textwrap import wrap
 
 from typing import Optional
 from typer import Context, Option, Argument, echo
@@ -34,13 +33,8 @@ def serial(
         reader = MessageReader(decode, reader.sensor, reader.samples)
     with reader:
         if format == "hexdump":
-            table = bytes.maketrans(
-                bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
-            )
             for n, raw in enumerate(reader(raw=True)):
-                msg = " ".join(wrap(raw.hex(), 2))  # raw.hex(" ") in python3.8+
-                prt = raw.translate(table).decode()
-                echo(f"{n*len(raw):08x}: {msg}  {prt}")
+                echo(raw.hexdump(n))
         elif format:
             if format == "csv":
                 obs = next(reader())
@@ -79,5 +73,4 @@ def csv(
             if path.stat().st_size == 0:
                 csv.write("time,sensor,hex\n")
             for raw in reader(raw=True):
-                time = int(datetime.now().timestamp())
-                csv.write(f"{time},{sensor_name},{raw.hex()}\n")
+                csv.write(f"{raw.time},{sensor_name},{raw.hex}\n")

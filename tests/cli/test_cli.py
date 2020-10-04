@@ -24,15 +24,11 @@ class CapturedData(Enum):
         text = captured_data.read_text().split("\n")
         return sum(self.name in line for line in text)
 
-    @property
-    def interval(self) -> int:
-        return 10
-
     def options(self, command: str) -> List[str]:
         samples = self.samples
         if "csv" in command or command == "mqtt":
             samples -= 1
-        capture = f"-m {self.name} -n {samples} -i {self.interval}"
+        capture = f"-m {self.name} -n {samples} -i 0"
         cmd = dict(
             serial_csv=f"serial -f csv",
             serial_hexdump=f"serial -f hexdump",
@@ -73,7 +69,7 @@ def capture(monkeypatch, request) -> CapturedData:
 
     sensor = Sensor[request.param.name]
     with MessageReader(captured_data, sensor) as reader:
-        data = b"".join(message for message in reader(raw=True))
+        data = b"".join(raw.data for raw in reader(raw=True))
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
@@ -93,12 +89,6 @@ def capture(monkeypatch, request) -> CapturedData:
         return True
 
     monkeypatch.setattr("pms.sensor.reader.Sensor.check", mock_sensor_check)
-
-    def mock_time_sleep(secs: float):
-        """don't wait for next sample"""
-        pass
-
-    monkeypatch.setattr("time.sleep", mock_time_sleep)
 
     return request.param
 

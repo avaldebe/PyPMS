@@ -9,13 +9,40 @@ NOTE:
 import sys
 import time
 from csv import DictReader
+from functools import lru_cache
 from pathlib import Path
-from typing import Generator, Optional, overload
+from textwrap import wrap
+from typing import Generator, NamedTuple, Optional, overload
 
 from serial import Serial
 
 from pms import logger, SensorWarning, SensorWarmingUp, InconsistentObservation
 from pms.sensor import Sensor, base
+
+
+class RawData(NamedTuple):
+    """raw messages with timestamp"""
+
+    time: int
+    data: bytes
+
+    @property
+    def hex(self) -> str:
+        return self.data.hex()
+
+    @classmethod
+    @lru_cache(maxsize=1, typed=True)
+    def __table(cls) -> bytes:
+        """translation table for raw.hexdump(n)"""
+        return bytes.maketrans(
+            bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
+        )
+
+    def hexdump(self, line: Optional[int] = None) -> str:
+        offset = time if line is None else line * len(self.data)
+        hex = " ".join(wrap(self.data.hex(), 2))  # raw.hex(" ") in python3.8+
+        dump = self.data.translate(self.__table()).decode()
+        return f"{offset:08x}: {hex}  {dump}"
 
 
 class SensorReader:
@@ -93,7 +120,7 @@ class SensorReader:
         pass
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[bytes, None, None]:
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
         pass
 
     def __call__(self, *, raw: Optional[bool] = None):
@@ -111,7 +138,7 @@ class SensorReader:
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
-                    yield buffer if raw else obs
+                    yield RawData(obs.time, buffer) if raw else obs
                     if self.samples:
                         self.samples -= 1
                         if self.samples <= 0:
@@ -147,13 +174,13 @@ class MessageReader:
         pass
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[bytes, None, None]:
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
         pass
 
     def __call__(self, *, raw: Optional[bool] = None):
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
-            yield message if raw else self.sensor.decode(message, time=time)
+            yield RawData(time, message) if raw else self.sensor.decode(message, time=time)
             if self.samples:
                 self.samples -= 1
                 if self.samples <= 0:
