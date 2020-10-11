@@ -41,8 +41,8 @@ class ObsData(pms5003s.ObsData):
     Plantower PMS5003ST sensor observations
 
     time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
+    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
     n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
     HCHO                                    formaldehyde concentration [mg/m3]
     temp                                    temperature [°C]
@@ -58,7 +58,7 @@ class ObsData(pms5003s.ObsData):
     def __post_init__(self):
         """Units conversion
         nX_Y [#/cm3] read in [#/0.1L]
-        HCHO [mg/m3] read in [ug/m3]
+        HCHO [mg/m3] read in [μg/m3]
         temp [°C]    read in [0.1 °C]
         rhum [%]     read in [1/1000]
         """

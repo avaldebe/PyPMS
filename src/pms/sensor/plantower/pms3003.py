@@ -70,8 +70,8 @@ class ObsData(base.ObsData):
     Plantower PMS3003 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
+    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
 
     String formats: pm (default), raw, cf, csv and header
     """
@@ -79,9 +79,9 @@ class ObsData(base.ObsData):
     raw01: int = field(repr=False)
     raw25: int = field(repr=False)
     raw10: int = field(repr=False)
-    pm01: int = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
-    pm25: int = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
-    pm10: int = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
+    pm01: int = field(metadata=base.metadata("PM1", "μg/m3", "concentration"))
+    pm25: int = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
+    pm10: int = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     # cfX [1]: pmX/rawX
     @property
@@ -108,14 +108,14 @@ class ObsData(base.ObsData):
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
         if spec == "csv":
             return f"{self.time}, {self.raw01}, {self.raw25}, {self.raw10}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm10:.1f}"
         if spec == "cf":
             return f"{self.date:%F %T}: CF1 {self.cf01:.0%}, CF2.5 {self.cf25:.0%}, CF10 {self.cf10:.0%}"
         if spec == "raw":
             return (
-                f"{self.date:%F %T}: PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} ug/m3"
+                f"{self.date:%F %T}: PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} μg/m3"
             )
         raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "

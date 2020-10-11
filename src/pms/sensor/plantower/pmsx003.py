@@ -31,8 +31,8 @@ class ObsData(pms3003.ObsData):
     Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
+    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
     n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
 
     String formats: pm (default), raw, cf, num, csv and header

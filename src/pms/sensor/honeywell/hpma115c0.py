@@ -29,21 +29,21 @@ class ObsData(base.ObsData):
     Honeywell HPMA115C0 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [ug/m3]
+    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [μg/m3]
 
     String formats: pm (default), csv and header
     """
 
-    pm01: int = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
-    pm25: int = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
-    pm04: int = field(metadata=base.metadata("PM4", "ug/m3", "concentration"))
-    pm10: int = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
+    pm01: int = field(metadata=base.metadata("PM1", "μg/m3", "concentration"))
+    pm25: int = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
+    pm04: int = field(metadata=base.metadata("PM4", "μg/m3", "concentration"))
+    pm10: int = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
         if spec == "csv":
             return (
                 f"{self.time}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"

@@ -94,16 +94,16 @@ class ObsData(base.ObsData):
     NovaFitness SDS011, SDS018 and SDS021 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    pm25, pm10                              PM2.5, PM10 [ug/m3]
+    pm25, pm10                              PM2.5, PM10 [μg/m3]
 
     String formats: pm (default), csv and header
     """
 
-    pm25: float = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
-    pm10: float = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
+    pm25: float = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
+    pm10: float = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     def __post_init__(self):
-        """Convert from 0.1 ug/m3 to ug/m3"""
+        """Convert from 0.1 μg/m3 to μg/m3"""
         self.pm25 /= 10
         self.pm10 /= 10
 
@@ -111,7 +111,7 @@ class ObsData(base.ObsData):
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
         if spec == "csv":
             return f"{self.time}, {self.pm25:.1f}, {self.pm10:.1f}"
         raise ValueError(  # pragma: no cover

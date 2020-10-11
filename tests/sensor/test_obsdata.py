@@ -21,7 +21,7 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor
         csv="{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}".format(
             secs, *raw
         ),
-        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[3:6]
         ),
         num="{}: N0.3 {:.2f}, N0.5 {:.2f}, N1.0 {:.2f}, N2.5 {:.2f}, N5.0 {:.2f}, N10 {:.2f} #/cm3".format(
@@ -33,7 +33,7 @@ def test_PMSx003_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, sensor
             raw[4] / raw[1],
             raw[5] / raw[2],
         ),
-        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
+        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
     )
@@ -58,7 +58,7 @@ def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, senso
         csv="{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.3f}, {:.1f}, {:.1f}".format(
             secs, *raw
         ),
-        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[3:6]
         ),
         num="{}: N0.3 {:.2f}, N0.5 {:.2f}, N1.0 {:.2f}, N2.5 {:.2f}, N5.0 {:.2f}, N10 {:.2f} #/cm3".format(
@@ -70,7 +70,7 @@ def test_PMS5003ST_format(fmt, raw=list(range(1, 16)), secs=1_567_198_523, senso
             raw[4] / raw[1],
             raw[5] / raw[2],
         ),
-        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
+        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
         hcho="{}: HCHO {:.3f} mg/m3".format(time.strftime("%F %T", time.localtime(secs)), raw[-3]),
@@ -96,7 +96,7 @@ def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, senso
         csv="{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.1f}, {:.1f}".format(
             secs, *raw
         ),
-        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[3:6]
         ),
         num="{}: N0.3 {:.2f}, N0.5 {:.2f}, N1.0 {:.2f}, N2.5 {:.2f} #/cm3".format(
@@ -108,7 +108,7 @@ def test_PMS5003T_format(fmt, raw=tuple(range(1, 13)), secs=1_567_198_523, senso
             raw[4] / raw[1],
             raw[5] / raw[2],
         ),
-        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} ug/m3".format(
+        raw="{}: PM1 {:d}, PM2.5 {:d}, PM10 {:d} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:3]
         ),
         atm="{}: Temp. {:.1f} °C, Rel.Hum. {:.1f} %".format(
@@ -132,7 +132,7 @@ def test_SDS01x_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=sds01x):
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
         csv=f"{secs}, " + ", ".join(map("{:.1f}".format, raw)),
-        pm="{}: PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM2.5 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
     )
@@ -152,7 +152,7 @@ def test_SDS198_format(fmt, raw=123, secs=1_567_198_523, sensor=sds198):
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
         csv=f"{secs}, {raw:.1f}",
-        pm="{}: PM100 {:.1f} ug/m3".format(time.strftime("%F %T", time.localtime(secs)), raw),
+        pm="{}: PM100 {:.1f} μg/m3".format(time.strftime("%F %T", time.localtime(secs)), raw),
     )
 
     if fmt in obs_fmt:
@@ -169,7 +169,7 @@ def test_HPMA115S0_format(fmt, raw=(11, 12), secs=1_567_198_523, sensor=hpma115s
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
         csv=f"{secs}, " + ", ".join(map("{:.1f}".format, raw)),
-        pm="{}: PM2.5 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM2.5 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
     )
@@ -188,7 +188,7 @@ def test_HPMA115C0_format(fmt, raw=(11, 12, 13, 14), secs=1_567_198_523, sensor=
     obs_fmt = dict(
         header=", ".join(asdict(obs).keys()),
         csv=f"{secs}, " + ", ".join(map("{:.1f}".format, raw)),
-        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM4 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM4 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw
         ),
     )
@@ -210,7 +210,7 @@ def test_SPS30_format(fmt, raw=range(100, 110), secs=1_567_198_523, sensor=sps30
         csv="{}, {:.1f}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.1f}".format(
             secs, *raw
         ),
-        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM4 {:.1f}, PM10 {:.1f} ug/m3".format(
+        pm="{}: PM1 {:.1f}, PM2.5 {:.1f}, PM4 {:.1f}, PM10 {:.1f} μg/m3".format(
             time.strftime("%F %T", time.localtime(secs)), *raw[:4]
         ),
         num="{}: N0.5 {:.2f}, N1.0 {:.2f}, N2.5 {:.2f}, N4.0 {:.2f}, N10 {:.2f} #/cm3".format(

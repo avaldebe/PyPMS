@@ -71,7 +71,7 @@ class ObsData(base.ObsData):
     Honeywell HPMA115S0 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    pm25, pm10                              PM2.5, PM10 [ug/m3]
+    pm25, pm10                              PM2.5, PM10 [μg/m3]
 
     String formats: pm (default), csv and header
     """

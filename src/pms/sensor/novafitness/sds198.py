@@ -32,18 +32,18 @@ class ObsData(base.ObsData):
     NovaFitness SDS198 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    pm100                                   PM100 [ug/m3]
+    pm100                                   PM100 [μg/m3]
 
     String formats: pm (default), csv and header
     """
 
-    pm100: int = field(metadata=base.metadata("PM100", "ug/m3", "concentration"))
+    pm100: int = field(metadata=base.metadata("PM100", "μg/m3", "concentration"))
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM100 {self.pm100:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM100 {self.pm100:.1f} μg/m3"
         if spec == "csv":
             return f"{self.time}, {self.pm100:.1f}"
         raise ValueError(  # pragma: no cover
