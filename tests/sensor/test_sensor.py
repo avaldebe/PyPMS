@@ -1,9 +1,10 @@
 import os
+
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor import Sensor
 from pms import SensorWarning
+from pms.sensor import Sensor
 
 
 @pytest.mark.parametrize("sensor", [s.name for s in Sensor])

@@ -7,6 +7,7 @@ Honeywell HPMA115C0 sensors
 from dataclasses import dataclass, field
 
 from pms.sensor import base
+
 from . import hpma115s0
 
 commands = hpma115s0.commands._replace(

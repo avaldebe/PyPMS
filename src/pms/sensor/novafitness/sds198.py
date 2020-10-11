@@ -7,6 +7,7 @@ NovaFitness SDS198 sensors
 from dataclasses import dataclass, field
 
 from pms.sensor import base
+
 from . import sds01x
 
 commands = sds01x.commands._replace(

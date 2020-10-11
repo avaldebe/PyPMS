@@ -7,8 +7,8 @@ from dataclasses import dataclass
 
 from pms import InconsistentObservation
 from pms.sensor import base
-from . import pms3003
 
+from . import pms3003
 
 commands = base.Commands(
     passive_read=base.Cmd(b"\x42\x4D\xE2\x00\x00\x01\x71", b"\x42\x4D\x00\x1c", 32),

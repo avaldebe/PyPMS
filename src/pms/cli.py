@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import Optional
 
-from typer import Typer, Context, Option, echo, Exit
+from typer import Context, Exit, Option, Typer, echo
 
-from pms import logger, __doc__, __version__
+from pms import __doc__, __version__, logger
 from pms.sensor import SensorReader
-from pms.sensor.cli import serial, csv
-from pms.service.cli import influxdb, mqtt, bridge
-
+from pms.sensor.cli import csv, serial
+from pms.service.cli import bridge, influxdb, mqtt
 
 main = Typer(help=__doc__)
 main.command()(serial)

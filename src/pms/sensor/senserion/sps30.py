@@ -6,11 +6,11 @@ Senserion SPS30 sensors
 - empty read messages are 7b long
 """
 
+import struct
 from dataclasses import dataclass, field
 from typing import Tuple
-import struct
 
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
 commands = base.Commands(

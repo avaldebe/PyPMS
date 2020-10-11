@@ -1,9 +1,9 @@
 import json
 from dataclasses import fields
-from typing import Dict, Callable
+from typing import Callable, Dict
 
-from typer import Context, Option, style, colors, echo, Abort
 from mypy_extensions import NamedArg
+from typer import Abort, Context, Option, colors, echo, style
 
 try:
     from influxdb import InfluxDBClient as client

@@ -1,9 +1,9 @@
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
-
 from typing import Optional
-from typer import Context, Option, Argument, echo
+
+from typer import Argument, Context, Option, echo
 
 from pms import logger
 from pms.sensor import MessageReader

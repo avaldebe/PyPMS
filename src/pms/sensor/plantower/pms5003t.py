@@ -4,14 +4,14 @@ Plantower PMS5003T sensors
 - only 4 size bins
 """
 
+import struct
 from dataclasses import dataclass, field
 from typing import Tuple
-import struct
 
 from pms import InconsistentObservation
 from pms.sensor import base
-from . import pms3003, pmsx003
 
+from . import pms3003, pmsx003
 
 commands = pmsx003.commands
 

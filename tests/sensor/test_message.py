@@ -1,13 +1,14 @@
 import os
+
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.sensor.plantower import pmsx003, pms3003
-from pms.sensor.novafitness import sds01x
-from pms.sensor.honeywell import hpma115s0
-from pms.sensor.senserion import sps30
-from pms.sensor.bosch_sensortec import mcu680
 from pms import SensorWarning
+from pms.sensor.bosch_sensortec import mcu680
+from pms.sensor.honeywell import hpma115s0
+from pms.sensor.novafitness import sds01x
+from pms.sensor.plantower import pms3003, pmsx003
+from pms.sensor.senserion import sps30
 
 
 @pytest.mark.parametrize(

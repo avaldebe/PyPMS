@@ -3,11 +3,11 @@ Bosh Sensortec sensors on MCU bridge modules
 - messages are 7-20b long
 """
 
-from dataclasses import dataclass, field
-from typing import Tuple, Dict
 import struct
+from dataclasses import dataclass, field
+from typing import Dict, Tuple
 
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
 commands = base.Commands(

@@ -1,2 +1,2 @@
-from .sensor import Sensor
-from .reader import SensorReader, MessageReader
+from .sensor import Sensor  # isort: skip
+from .reader import MessageReader, SensorReader

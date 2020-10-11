@@ -4,13 +4,13 @@ Plantower PMS5003ST sensors
 - 6 size bins (as PMS5003). HCHO concentration, temperature and relative humidity
 """
 
+import struct
 from dataclasses import dataclass, field
 from typing import Tuple
-import struct
 
 from pms.sensor import base
-from . import pms3003, pmsx003, pms5003s
 
+from . import pms3003, pms5003s, pmsx003
 
 commands = base.Commands(
     passive_read=base.Cmd(pmsx003.commands.passive_read.command, b"\x42\x4D\x00\x24", 40),

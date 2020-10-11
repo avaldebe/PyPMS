@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 
 from pms import WrongMessageFormat
-from pms.sensor import base, plantower, novafitness, honeywell, senserion, bosch_sensortec
+from pms.sensor import base, bosch_sensortec, honeywell, novafitness, plantower, senserion
 
 
 class Sensor(Enum):

@@ -1,8 +1,8 @@
-from datetime import datetime
 from dataclasses import fields
-from typing import Dict, Union, Callable, NamedTuple
+from datetime import datetime
+from typing import Callable, Dict, NamedTuple, Union
 
-from typer import Context, Option, style, colors, echo, Abort
+from typer import Abort, Context, Option, colors, echo, style
 
 try:
     from paho.mqtt import client

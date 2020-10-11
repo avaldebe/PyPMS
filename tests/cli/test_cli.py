@@ -1,15 +1,15 @@
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
-from typing import Callable, Generator, Union, List, Dict, Any
-
-from pms import logger
-from pms.sensor import Sensor, MessageReader
-from pms.sensor.reader import RawData
+from typing import Any, Callable, Dict, Generator, List, Union
 
 import pytest
-from typer.testing import CliRunner
 from mypy_extensions import NamedArg
+from typer.testing import CliRunner
+
+from pms import logger
+from pms.sensor import MessageReader, Sensor
+from pms.sensor.reader import RawData
 
 """All captured data from /docs/sensors"""
 captured_data = Path("tests/cli/captured_data/data.csv")

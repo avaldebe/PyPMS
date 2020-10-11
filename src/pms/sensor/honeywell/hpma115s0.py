@@ -4,11 +4,11 @@ Honeywell HPMA115S0 sensors
 - active mode messages are 32b long
 """
 
+import struct
 from dataclasses import dataclass, field
 from typing import Tuple
-import struct
 
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
 commands = base.Commands(

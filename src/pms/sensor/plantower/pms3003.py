@@ -4,13 +4,12 @@ Plantower PMS3003 sensors
 - messages are 24b long
 """
 
+import struct
 from dataclasses import dataclass, field
 from typing import Tuple
-import struct
 
-from pms import WrongMessageFormat, WrongMessageChecksum, SensorWarmingUp
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
-
 
 commands = base.Commands(
     passive_read=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
