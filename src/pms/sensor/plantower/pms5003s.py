@@ -21,13 +21,16 @@ class Message(pms3003.Message):
 
 @dataclass(frozen=False)
 class ObsData(pmsx003.ObsData):
-    """Observations from Plantower PMS5003S sensors
+    """
+    Plantower PMS5003S sensor observations
 
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
     n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
     HCHO                                    formaldehyde concentration [mg/m3]
+
+    String formats: pm (default), raw, cf, num, hcho, csv and header
     """
 
     # HCHO [mg/m3]: formaldehyde concentration (read as ug/m3, datasheet says 1/1000 mg/m3 ie ug/m3)

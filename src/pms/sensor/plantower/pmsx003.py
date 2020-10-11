@@ -27,12 +27,15 @@ class Message(pms3003.Message):
 
 @dataclass(frozen=False)
 class ObsData(pms3003.ObsData):
-    """Observations from Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
+    """
+    Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensor observations
 
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [ug/m3]
     n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
+
+    String formats: pm (default), raw, cf, num, csv and header
     """
 
     # nX_Y [#/cm3]: number concentrations over X.Y um (read as 100*nX_Y)

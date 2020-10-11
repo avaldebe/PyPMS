@@ -32,7 +32,8 @@ class Message(pms3003.Message):
 
 @dataclass(frozen=False)
 class ObsData(pms3003.ObsData):
-    """Observations from Plantower PMS5003T sensors
+    """
+    Plantower PMS5003T sensor observations
 
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
@@ -40,6 +41,8 @@ class ObsData(pms3003.ObsData):
     n0_3, n0_5, n1_0, n2_5                  number concentrations over X.Y um [#/cm3]
     temp                                    temperature [°C]
     rhum                                    relative humidity [%]
+
+    String formats: pm (default), raw, cf, num, atm, csv and header
     """
 
     # nX_Y [#/cm3]: number concentrations over X.Y um (read as 100*nX_Y)

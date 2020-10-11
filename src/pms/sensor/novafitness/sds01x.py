@@ -90,10 +90,13 @@ class Message(base.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-    """SDS01x observations
+    """
+    NovaFitness SDS011, SDS018 and SDS021 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    raw25, raw10                            PM2.5*10, PM10*10 [ug/m3]
+    pm25, pm10                              PM2.5, PM10 [ug/m3]
+
+    String formats: pm (default), csv and header
     """
 
     pm25: float = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))

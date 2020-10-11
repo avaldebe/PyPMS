@@ -41,6 +41,7 @@ Commands:
   bridge    Bridge between MQTT and InfluxDB servers
   csv       Read sensor and print measurements
   influxdb  Read sensor and push PM measurements to an InfluxDB server
+  info      Information about the sensor observations
   mqtt      Read sensor and push PM measurements to a MQTT server
   serial    Read sensor and print measurements
 ```
@@ -142,6 +143,8 @@ For more Air Quality sensors [open an issue][issue].
 
 ## Changelog
 
+- WIP
+  - info about the sensor observations with `pms info`
 - 0.4.0
   - capture raw messages with `pms csv --capture`
   - decode captured messages with `pms serial --capture`

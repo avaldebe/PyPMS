@@ -33,8 +33,7 @@ class Supported(str, Enum):
 
 def version_callback(value: bool):  # pragma: no cover
     if value:
-        name = __name__.split(".")[0]
-        echo(f"{name} version {__version__}")
+        echo(f"pms version {__version__}")
         raise Exit()
 
 
@@ -52,3 +51,10 @@ def callback(
     if debug:  # pragma: no cover
         logger.setLevel("DEBUG")
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
+
+
+@main.command()
+def info(ctx: Context):
+    """Information about the sensor observations"""
+    sensor = ctx.obj["reader"].sensor
+    echo(sensor.Data.__doc__)

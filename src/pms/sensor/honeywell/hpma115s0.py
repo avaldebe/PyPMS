@@ -67,20 +67,23 @@ class Message(base.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-    """Observations from Honeywell HPMA115S0 sensors
+    """
+    Honeywell HPMA115S0 sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm25, pm10                              PM2.5, PM10 [ug/m3]
+
+    String formats: pm (default), csv and header
     """
 
-    pm25: int = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
-    pm10: int = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
+    pm25: int = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
+    pm10: int = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     def __format__(self, spec: str) -> str:
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
         if spec == "csv":
             return f"{self.time}, {self.pm25:.1f}, {self.pm10:.1f}"
         raise ValueError(  # pragma: no cover

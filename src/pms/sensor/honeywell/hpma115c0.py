@@ -25,10 +25,13 @@ class Message(hpma115s0.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-    """Observations from Honeywell HPMA115C0 sensors
+    """
+    Honeywell HPMA115C0 sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [ug/m3]
+
+    String formats: pm (default), csv and header
     """
 
     pm01: int = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))

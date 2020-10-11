@@ -37,7 +37,8 @@ class Message(pms3003.Message):
 
 @dataclass(frozen=False)
 class ObsData(pms5003s.ObsData):
-    """Observations from Plantower PMS5003ST sensors
+    """
+    Plantower PMS5003ST sensor observations
 
     time                                    measurement time [seconds since epoch]
     raw01, raw25, raw10                     cf=1 PM estimates [ug/m3]
@@ -46,6 +47,8 @@ class ObsData(pms5003s.ObsData):
     HCHO                                    formaldehyde concentration [mg/m3]
     temp                                    temperature [°C]
     rhum                                    relative humidity [%]
+
+    String formats: pm (default), raw, cf, num, hcho, atm, csv and header
     """
 
     # temp[°C],rhum[%]: temperature,relative humidity (read as 10*temp,10*rhum)

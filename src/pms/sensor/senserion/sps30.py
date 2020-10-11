@@ -88,18 +88,21 @@ class Message(base.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-    """SPS30 observations
+    """
+    Senserion SPS30 sensor observations
 
     time                                    measurement time [seconds since epoch]
-    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [ug/m3]
+    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [μg/m3]
     n0_5, n1_0, n2_5, n4_0, n10_0           number concentrations between 0.3 and X.Y um [#/cm3]
     diam                                    typical particle size [μm]
+
+    String formats: pm (default), num, diam, csv and header
     """
 
-    pm01: float = field(metadata=base.metadata("PM1", "ug/m3", "concentration"))
-    pm25: float = field(metadata=base.metadata("PM2.5", "ug/m3", "concentration"))
-    pm04: float = field(metadata=base.metadata("PM4", "ug/m3", "concentration"))
-    pm10: float = field(metadata=base.metadata("PM10", "ug/m3", "concentration"))
+    pm01: float = field(metadata=base.metadata("PM1", "μg/m3", "concentration"))
+    pm25: float = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
+    pm04: float = field(metadata=base.metadata("PM4", "μg/m3", "concentration"))
+    pm10: float = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
     n0_5: float
     n1_0: float
     n2_5: float
@@ -111,7 +114,7 @@ class ObsData(base.ObsData):
         if spec == "header":
             return super().__format__(spec)
         if spec == "pm":
-            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} ug/m3"
+            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
         if spec == "csv":
             pm = f"{self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
             num = f"{self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, {self.n4_0:.2f}, {self.n10_0:.2f}"

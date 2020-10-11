@@ -65,7 +65,8 @@ class Message(base.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-    """Observations from Plantower PMS3003 sensors
+    """
+    Bosh Sensortec BME680 sensor observations
 
     time                                    measurement time [seconds since epoch]
     temp                                    temperature [°C]
@@ -74,7 +75,9 @@ class ObsData(base.ObsData):
     IAQ_acc                                 IAQ accuracy flag
     IAQ                                     index of air quality [0--500]
     gas                                     gas resistance [kΩ]
-    alt                                     altitude estimate [m a.s.l.]
+    alt                                     altitude estimate [m above sea level]
+
+    String formats: atm, bme (default), bsec, csv and header
     """
 
     # temp[°C],rhum[%]: temperature,relative humidity (read as 100*temp,100*rhum)
