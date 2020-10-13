@@ -1,4 +1,6 @@
 import os
+from enum import Enum
+from typing import Generator, NamedTuple
 
 import pytest
 
@@ -19,76 +21,76 @@ def test_commands(sensor, command):
     assert Sensor[sensor].command(command)
 
 
-@pytest.mark.parametrize(
-    "sensor,hex,msg",
-    [
-        pytest.param(
-            "PMSx003",
-            "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
-            (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
-            id="PMSx003 good data",
-        ),
-        pytest.param(
-            "PMSx003",
-            "02fd00fc001d000f00060006970003c5424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
-            (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
-            id="PMSx003 data at the end of the buffer",
-        ),
-        pytest.param(
-            "PMS3003",
-            "424d00140051006A007700350046004F33D20F28003F041A",
-            (81, 106, 119, 53, 70, 79),
-            id="PMS3003 good data",
-        ),
-        pytest.param(
-            "PMS3003",
-            "33D20F28003F041A424d00140051006A007700350046004F33D20F28003F041A",
-            (81, 106, 119, 53, 70, 79),
-            id="PMS3003 data at the end of the buffer",
-        ),
-        pytest.param("SDS01x", "AAC0D4043A0AA1601DAB", (1236, 2618), id="SDS01x good data"),
-        pytest.param(
-            "SDS01x",
-            "3A0AA1601DABAAC0D4043A0AA1601DAB",
-            (1236, 2618),
-            id="SDS01x data at the end of the buffer",
-        ),
-        pytest.param("SDS198", "AACF0C001600E90510AB", (22,), id="SDS198 good data"),
-        pytest.param("HPMA115S0", "4005040030003156", (48, 49), id="HPMA115S0 good data"),
-        pytest.param(
-            "HPMA115S0",
-            "A5A54005040030003156",
-            (48, 49),
-            id="HPMA115S0 data at the end of the buffer",
-        ),
-        pytest.param(
-            "HPMA115C0",
-            "400504003000310032003300000000F1",
-            (48, 49, 50, 51),
-            id="HPMA115C0 good data",
-        ),
-        pytest.param(
-            "HPMA115C0",
-            "A5A5400504003000310032003300000000F1",
-            (48, 49, 50, 51),
-            id="HPMA115C0 data at the end of the buffer",
-        ),
-        pytest.param(
-            "SPS30",
-            "7E0003002842280000422800004228000042280000422800004228000042280000422800004228000042280000B07E",
-            (42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0),
-            id="SPS30 fake data",
-        ),
-        pytest.param(
-            "MCU680",
-            "5A5A3F0F0835198A01885430D200032BE1004A1A",
-            (2101, 6538, 392, 84, 12498, 207841, 74),
-            id="MCU680 good data",
-        ),
-    ],
-)
-def test_decode(sensor, hex, msg, secs=1567201793):
-    assert Sensor[sensor].decode(bytes.fromhex(hex), time=secs) == Sensor[sensor].Data(secs, *msg)
+class RawData(NamedTuple):
+    hex: str
+    raw: tuple
+    id: str = "good data"
+
+    @property
+    def msg(self) -> bytes:
+        return bytes.fromhex(self.hex)
+
+    @property
+    def long_buffer(self) -> "RawData":
+        buffer = self.hex * 2
+        return self._replace(hex=buffer[6:], id="data at the end of the buffer")
+
+
+class GoodData(Enum):
+
+    PMSx003 = RawData(
+        "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
+        (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),
+    )
+
+    PMS3003 = RawData(
+        "424d00140051006A007700350046004F33D20F28003F041A",
+        (81, 106, 119, 53, 70, 79),
+    )
+
+    SDS01x = RawData(
+        "AAC0D4043A0AA1601DAB",
+        (1236, 2618),
+    )
+
+    SDS198 = RawData(
+        "AACF0C001600E90510AB",
+        (22,),
+    )
+
+    HPMA115S0 = RawData(
+        "4005040030003156",
+        (48, 49),
+    )
+
+    HPMA115C0 = RawData(
+        "400504003000310032003300000000F1",
+        (48, 49, 50, 51),
+    )
+
+    SPS30 = RawData(
+        "7E0003002842280000422800004228000042280000422800004228000042280000422800004228000042280000B07E",
+        (42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0),
+        "fake data",
+    )
+
+    MCU680 = RawData(
+        "5A5A3F0F0835198A01885430D200032BE1004A1A",
+        (2101, 6538, 392, 84, 12498, 207841, 74),
+    )
+
+    @classmethod
+    def test_param(cls) -> Generator[pytest.param, None, None]:  # type: ignore
+        for sensor in cls:
+            data = sensor.value
+            yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
+            data = data.long_buffer
+            yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
+
+
+@pytest.mark.parametrize("sensor,msg,raw", [test for test in GoodData.test_param()])
+def test_decode(sensor, msg, raw, secs=1567201793):
+    assert Sensor[sensor].decode(msg, time=secs) == Sensor[sensor].Data(secs, *raw)
 
 
 @pytest.mark.parametrize(

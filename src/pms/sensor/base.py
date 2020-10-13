@@ -40,7 +40,7 @@ class Message(metaclass=ABCMeta):
             msg = cls._validate(message, header, length)
         except WrongMessageFormat as e:
             # search last complete message on buffer
-            start = message.rfind(header, 0, 4 - length)
+            start = message.rfind(header, 0, len(header) - length)
             if start < 0:  # No match found
                 raise
             # validate last complete message
