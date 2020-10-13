@@ -36,7 +36,8 @@
         "subcommand",
         "subcommands",
         "typer",
-        "uart"
+        "uart",
+        "virtualenvs"
     ],
     "cSpell.ignoreWords": [
         "aqmd",
