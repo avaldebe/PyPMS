@@ -145,6 +145,7 @@ For more Air Quality sensors [open an issue][issue].
 
 - WIP
   - info about the sensor observations with `pms info`
+  - fix [MCU680][] obs.pres typo [#16](https://github.com/avaldebe/PyPMS/issues/16)
 - 0.4.0
   - capture raw messages with `pms csv --capture`
   - decode captured messages with `pms serial --capture`

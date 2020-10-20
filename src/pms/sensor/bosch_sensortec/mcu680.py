@@ -71,7 +71,7 @@ class ObsData(base.ObsData):
     time                                    measurement time [seconds since epoch]
     temp                                    temperature [°C]
     rhum                                    relative humidity [%]
-    press                                   atmospheric pressure [hPa]
+    pres                                    atmospheric pressure [hPa]
     IAQ_acc                                 IAQ accuracy flag
     IAQ                                     index of air quality [0--500]
     gas                                     gas resistance [kΩ]
@@ -95,14 +95,14 @@ class ObsData(base.ObsData):
 
     def __post_init__(self):
         """Units conversion
-        temp [°C]    read in [0.01 °C]
-        rhum [%]     read in [1/10 000]
-        press [hPa]  read in [Pa] across 12b
-        gas [kΩ]   read in [Ω]
+        temp [°C]   read in [0.01 °C]
+        rhum [%]    read in [1/10 000]
+        pres [hPa]  read in [Pa] across 12b
+        gas  [kΩ]   read in [Ω]
         """
         self.temp /= 100
         self.rhum /= 100
-        self.press = (int(self.pres) << 8 | self.IAQ_acc) / 100
+        self.pres = (int(self.pres) << 8 | self.IAQ_acc) / 100
         self.IAQ_acc = self.IAQ >> 4
         self.IAQ &= 0x0FFF
         self.gas /= 1000
@@ -111,13 +111,13 @@ class ObsData(base.ObsData):
         if spec == "header":
             return super().__format__(spec)
         if spec == "atm":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa"
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa"
         if spec == "bme":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa, {self.gas:.1f} kΩ"
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa, {self.gas:.1f} kΩ"
         if spec == "bsec":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.press:.2f} hPa, {self.IAQ} IAQ"
+            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa, {self.IAQ} IAQ"
         if spec == "csv":
-            return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.press:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
+            return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
 
         raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' "
