@@ -76,3 +76,23 @@ print(types(Sensor["PMSx003"].Data))
 ```
 
 [dataclasses.dataclass]: https://docs.python.org/3/library/dataclasses.html#dataclasses.dataclass
+
+## Observation formats
+
+As the example at the top of the page shows, the `obs` object has custom formats.
+Observations from different sensors support different formats.
+The following table shows all different formats
+
+| sensor model  |  csv  | header |  pm   |  num  |  raw  |  cf   |  atm  | hcho  |  bme  | bsec  |
+| ------------- | :---: | :----: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [`PMS3003`]   |   X   |   X    |   X   |   X   |   X   |   X   |       |       |       |       |
+| [`PMSx003`]   |   X   |   X    |   X   |   X   |   X   |   X   |       |       |       |       |
+| [`PMS5003T`]  |   X   |   X    |   X   |   X   |   X   |   X   |   X   |       |       |       |
+| [`PMS5003S`]  |   X   |   X    |   X   |   X   |   X   |   X   |       |   X   |       |       |
+| [`PMS5003ST`] |   X   |   X    |   X   |   X   |   X   |   X   |   X   |   X   |       |       |
+| [`SDS01x`]    |   X   |   X    |   X   |       |       |       |       |       |       |       |
+| [`SDS198`]    |   X   |   X    |   X   |       |       |       |       |       |       |       |
+| [`HPMA115S0`] |   X   |   X    |   X   |       |       |       |       |       |       |       |
+| [`HPMA115C0`] |   X   |   X    |   X   |       |       |       |       |       |       |       |
+| [`SPS30`]     |   X   |   X    |   X   |   X   |       |       |       |       |       |       |
+| [`MCU680`]    |   X   |   X    |       |       |       |       |   X   |       |   X   |   X   |
