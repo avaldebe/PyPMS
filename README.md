@@ -141,6 +141,13 @@ For more Air Quality sensors [open an issue][issue].
 
 [issue]: https://github.com/avaldebe/PyPMS/issues
 
+## Use as a library
+
+PyPMS/pms is meant as a command line application.
+The [docs][library] contain some help for those brave enough to use its internals as a [library][].
+
+[library]: /docs/library_usage.md
+
 ## Changelog
 
 - WIP

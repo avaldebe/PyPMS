@@ -8,7 +8,6 @@
 [Honeywell]: https://sensing.honeywell.com/sensors/particle-sensors/hpm-series
 [HPMA115]: https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
 
-
 [`HPMA115S0`]:#HPMA115S0
 [`HPMA115C0`]:#HPMA115C0
 [8 pin]:      #8_Pin_connector

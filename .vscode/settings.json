@@ -12,6 +12,7 @@
         "Sensortec",
         "VOUT",
         "asdict",
+        "dataclass",
         "dataclasses",
         "envvar",
         "extensions",
