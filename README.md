@@ -150,7 +150,7 @@ The [docs][library] contain some help for those brave enough to use its internal
 
 ## Changelog
 
-- WIP
+- 0.5.0
   - set username/password with environment variables:
     - `$MQTT_USER` sets `--mqtt-user` on `pms mqtt` and `pms bridge`
     - `$MQTT_USER` sets `--mqtt-user` on `pms mqtt` and `pms bridge`
