@@ -61,8 +61,8 @@ def influxdb(
     ctx: Context,
     host: str = Option("influxdb", "--db-host", help="database server"),
     port: int = Option(8086, "--db-port", help="server port"),
-    user: str = Option("root", "--db-user", help="server username"),
-    word: str = Option("root", "--db-pass", help="server password"),
+    user: str = Option("root", "--db-user", envvar="DB_USER", help="server username"),
+    word: str = Option("root", "--db-pass", envvar="DB_PASS", help="server password"),
     name: str = Option("homie", "--db-name", help="database name"),
     jtag: str = Option(json.dumps({"location": "test"}), "--tags", help="measurement tags"),
 ):

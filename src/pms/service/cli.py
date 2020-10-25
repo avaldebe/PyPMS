@@ -8,12 +8,12 @@ def bridge(
     mqtt_topic: str = Option("homie/+/+/+", help="mqtt root/topic"),
     mqtt_host: str = Option("mqtt.eclipse.org", help="mqtt server"),
     mqtt_port: int = Option(1883, help="server port"),
-    mqtt_user: str = Option("", help="server username", show_default=False),
-    mqtt_pass: str = Option("", help="server password", show_default=False),
+    mqtt_user: str = Option("", envvar="MQTT_USER", help="server username", show_default=False),
+    mqtt_pass: str = Option("", envvar="MQTT_PASS", help="server password", show_default=False),
     db_host: str = Option("influxdb", help="database server"),
     db_port: int = Option(8086, help="server port"),
-    db_user: str = Option("root", help="server username"),
-    db_pass: str = Option("root", help="server password"),
+    db_user: str = Option("root", envvar="DB_USER", help="server username"),
+    db_pass: str = Option("root", envvar="DB_PASS", help="server password"),
     db_name: str = Option("homie", help="database name"),
 ):
     """Bridge between MQTT and InfluxDB servers"""

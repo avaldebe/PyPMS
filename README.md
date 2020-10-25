@@ -144,6 +144,12 @@ For more Air Quality sensors [open an issue][issue].
 ## Changelog
 
 - WIP
+  - set username/password with environment variables:
+    - `$MQTT_USER` sets `--mqtt-user` on `pms mqtt` and `pms bridge`
+    - `$MQTT_USER` sets `--mqtt-user` on `pms mqtt` and `pms bridge`
+    - `$DB_USER` sets `--db-user` on `pms influxdb` and `pms bridge`
+    - `$DB_PASS` sets `--db-pass` on `pms influxdb` and `pms bridge`
+- 0.4.1
   - info about the sensor observations with `pms info`
   - fix [MCU680][] obs.pres typo [#16](https://github.com/avaldebe/PyPMS/issues/16)
 - 0.4.0

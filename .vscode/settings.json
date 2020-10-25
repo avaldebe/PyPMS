@@ -13,6 +13,7 @@
         "VOUT",
         "asdict",
         "dataclasses",
+        "envvar",
         "extensions",
         "getenv",
         "hexdump",

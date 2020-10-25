@@ -129,8 +129,12 @@ def mqtt(
     topic: str = Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
     host: str = Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
     port: int = Option(1883, "--mqtt-port", help="server port"),
-    user: str = Option("", "--mqtt-user", help="server username", show_default=False),
-    word: str = Option("", "--mqtt-pass", help="server password", show_default=False),
+    user: str = Option(
+        "", "--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False
+    ),
+    word: str = Option(
+        "", "--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False
+    ),
 ):
     """Read sensor and push PM measurements to a MQTT server"""
     pub = client_pub(topic=topic, host=host, port=port, username=user, password=word)
