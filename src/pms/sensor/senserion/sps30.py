@@ -110,6 +110,10 @@ class ObsData(base.ObsData):
     n10_0: float
     diam: float
 
+    @property
+    def pm2_5(self) -> float:
+        return self.pm25
+
     def __format__(self, spec: str) -> str:
         if spec == "header":
             return super().__format__(spec)

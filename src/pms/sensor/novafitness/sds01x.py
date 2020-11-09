@@ -102,6 +102,10 @@ class ObsData(base.ObsData):
     pm25: float = field(metadata=base.metadata("PM2.5", "μg/m3", "concentration"))
     pm10: float = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
+    @property
+    def pm2_5(self) -> float:
+        return self.pm25
+
     def __post_init__(self):
         """Convert from 0.1 μg/m3 to μg/m3"""
         self.pm25 /= 10
