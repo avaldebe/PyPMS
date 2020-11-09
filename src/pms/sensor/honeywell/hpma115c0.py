@@ -40,8 +40,16 @@ class ObsData(base.ObsData):
     pm10: int = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     @property
+    def pm1(self) -> int:
+        return self.pm01
+
+    @property
     def pm2_5(self) -> int:
         return self.pm25
+
+    @property
+    def pm4(self) -> int:
+        return self.pm04
 
     def __format__(self, spec: str) -> str:
         if spec == "header":

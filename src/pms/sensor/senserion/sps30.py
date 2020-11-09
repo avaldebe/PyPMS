@@ -111,8 +111,16 @@ class ObsData(base.ObsData):
     diam: float
 
     @property
+    def pm1(self) -> float:
+        return self.pm01
+
+    @property
     def pm2_5(self) -> float:
         return self.pm25
+
+    @property
+    def pm4(self) -> float:
+        return self.pm04
 
     def __format__(self, spec: str) -> str:
         if spec == "header":

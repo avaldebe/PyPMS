@@ -84,12 +84,24 @@ class ObsData(base.ObsData):
     pm10: int = field(metadata=base.metadata("PM10", "μg/m3", "concentration"))
 
     @property
+    def raw1(self) -> int:
+        return self.raw01
+
+    @property
     def raw2_5(self) -> int:
         return self.raw25
 
     @property
+    def pm1(self) -> int:
+        return self.pm01
+
+    @property
     def pm2_5(self) -> int:
         return self.pm25
+
+    @property
+    def cf1(self) -> float:
+        return self.cf01
 
     @property
     def cf2_5(self) -> float:
