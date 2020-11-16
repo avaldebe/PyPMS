@@ -87,10 +87,33 @@ class GoodData(Enum):
             data = data.long_buffer
             yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
 
+    @classmethod
+    def test_obs(cls, secs: int = 1567201793) -> Generator[pytest.param, None, None]:  # type: ignore
+        for sensor in cls:
+            obs = Sensor[sensor.name].decode(sensor.value.msg, time=secs)
+            yield pytest.param(obs, id=sensor.name)
+
 
 @pytest.mark.parametrize("sensor,msg,raw", [test for test in GoodData.test_param()])
 def test_decode(sensor, msg, raw, secs=1567201793):
     assert Sensor[sensor].decode(msg, time=secs) == Sensor[sensor].Data(secs, *raw)
+
+
+@pytest.mark.parametrize("obs", GoodData.test_obs())
+def test_obs_prop(obs):
+    prop = dict(
+        pm01=lambda x: x.pm01 == x.pm1,
+        pm25=lambda x: x.pm25 == x.pm2_5,
+        pm04=lambda x: x.pm04 == x.pm4,
+        raw01=lambda x: x.raw01 == x.raw1,
+        raw25=lambda x: x.raw25 == x.raw2_5,
+        cf01=lambda x: x.cf01 == x.cf1,
+        cf25=lambda x: x.cf25 == x.cf2_5,
+    )
+    for field, check in prop.items():
+        if getattr(obs, field, None) is None:
+            continue
+        assert check(obs)
 
 
 @pytest.mark.parametrize(
