@@ -33,7 +33,7 @@ class Supported(str, Enum):
 
 def version_callback(value: bool):  # pragma: no cover
     if value:
-        echo(f"pms version {__version__}")
+        echo(f"{__package__} version {__version__}")
         raise Exit()
 
 
