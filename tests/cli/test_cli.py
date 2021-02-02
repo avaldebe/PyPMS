@@ -1,4 +1,3 @@
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, Generator, List, Union
@@ -26,6 +25,7 @@ class CapturedData(Enum):
 
     PMS3003 = tuple(read_captured_data("PMS3003"))
     PMSx003 = tuple(read_captured_data("PMSx003"))
+    PMS5003T = tuple(read_captured_data("PMS5003T"))
     SDS01x = tuple(read_captured_data("SDS01x"))
     SDS198 = tuple(read_captured_data("SDS198"))
     MCU680 = tuple(read_captured_data("MCU680"))

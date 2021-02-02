@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": ".venv/bin/python",
     "cSpell.words": [
         "BSEC",
         "Datasheet",
@@ -22,6 +21,7 @@
         "isort",
         "mirocontroller",
         "mosquitto",
+        "mqtt",
         "mypy",
         "noqa",
         "paho",
