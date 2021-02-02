@@ -16,7 +16,7 @@ def __missing_influxdb():  # pragma: no cover
     package = style("pypms", fg=colors.GREEN, bold=True)
     module = style("influxdb", fg=colors.RED, bold=True)
     extra = style("influxdb", fg=colors.RED, bold=True)
-    pip = style("python3 -m pip instal --upgrade", fg=colors.GREEN)
+    pip = style("python3 -m pip install --upgrade", fg=colors.GREEN)
     pipx = style("pipx inject", fg=colors.GREEN)
     echo(
         f"""
