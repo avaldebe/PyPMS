@@ -25,7 +25,6 @@ jobs:
       run: tox -e lint
 
   test:
-    needs: lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
