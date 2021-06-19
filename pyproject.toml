@@ -69,7 +69,7 @@ whitelist_externals = poetry
 commands =
     py36: pytest --black --isort
     py37: pytest --mypy --mypy-ignore-missing-imports
-    py38: pytest --cov={envsitepackagesdir}/pms --cov-report=term-missing --cov-fail-under=95
+    py38: pytest --cov --cov-report=term-missing --cov-fail-under=95
     py39: pytest -Werror
     py310: pytest -Werror
 deps =
@@ -81,10 +81,12 @@ deps =
 """
 
 [tool.coverage.run]
+source = ["pms"]
 omit = ["*/__init__.py", "*/__main__.py"]
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "def __repr__", "def __str__"]
+show_missing = true
 
 [tool.black]
 target-version = ['py36']
