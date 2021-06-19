@@ -54,6 +54,8 @@
         "pmsa",
         "pmsx",
         "pwsh",
+        "pypoetry",
+        "pyproject",
         "senserion"
     ],
     "editor.formatOnSave": true,
