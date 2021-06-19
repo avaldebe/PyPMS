@@ -61,24 +61,19 @@ pms = "pms.cli:main"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, py36, py37, py38, py39, py310
+envlist = lint, py36, py37, py38, py39
 skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
 commands =
-    pytest --cov --cov-report=term-missing --cov-fail-under=95
+    pytest -Werror --cov --cov-report=term-missing --cov-fail-under=95
 deps =
     pytest
     pytest-cov
 
-[testenv:py310]
-commands =
-    pytest -Werror
-deps =
-    pytest
-
 [testenv:lint]
+skipsdist=True
 commands =
     black --check .
     isort --check .
@@ -95,7 +90,6 @@ python =
     3.7: py37
     3.8: py38
     3.9: py39
-    3.10-dev: py310
 """
 
 [tool.coverage.run]
