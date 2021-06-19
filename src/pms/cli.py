@@ -1,14 +1,21 @@
+import sys
 from enum import Enum
+from sys import version_info
 from typing import Optional
+
+if sys.version_info >= (3, 8):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
 
 from typer import Context, Exit, Option, Typer, echo
 
-from pms import __doc__, __version__, logger
+from pms import logger
 from pms.sensor import SensorReader
 from pms.sensor.cli import csv, serial
 from pms.service.cli import bridge, influxdb, mqtt
 
-main = Typer(help=__doc__)
+main = Typer(help="Data acquisition and logging tool for PM sensors with UART interface")
 main.command()(serial)
 main.command()(csv)
 main.command()(influxdb)
@@ -32,8 +39,9 @@ class Supported(str, Enum):
 
 
 def version_callback(value: bool):  # pragma: no cover
+    package = "PyPMS"
     if value:
-        echo(f"{__package__} version {__version__}")
+        echo(f"{package} version {metadata.version(package)}")
         raise Exit()
 
 
