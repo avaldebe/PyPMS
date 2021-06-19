@@ -61,23 +61,33 @@ pms = "pms.cli:main"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py36, py37, py38, py39, py310
+envlist = lint, py36, py37, py38, py39, py310
 skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
 commands =
-    py36: pytest --black --isort
-    py37: pytest --mypy --mypy-ignore-missing-imports
-    py38: pytest --cov --cov-report=term-missing --cov-fail-under=95
-    py39: pytest -Werror
-    py310: pytest -Werror
+    pytest --cov --cov-report=term-missing --cov-fail-under=95
 deps =
     pytest
-    py36: pytest-black
-    py36: pytest-isort
-    py37: pytest-mypy
-    py38: pytest-cov
+    pytest-cov
+
+[testenv:py310]
+commands =
+    pytest -Werror
+deps =
+    pytest
+
+[testenv:lint]
+commands =
+    black --check .
+    isort --check .
+    mypy --ignore-missing-imports .
+deps =
+    black
+    isort
+    mypy
+    types-dataclasses
 
 [gh-actions]
 python =
