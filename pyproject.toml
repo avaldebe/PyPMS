@@ -66,7 +66,6 @@ skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
-whitelist_externals = poetry
 commands =
     py36: pytest --black --isort
     py37: pytest --mypy --mypy-ignore-missing-imports
@@ -79,6 +78,14 @@ deps =
     py36: pytest-isort
     py37: pytest-mypy
     py38: pytest-cov
+
+[gh-actions]
+python =
+    3.6: py36
+    3.7: py37
+    3.8: py38
+    3.9: py39
+    3.10-dev: py310
 """
 
 [tool.coverage.run]
