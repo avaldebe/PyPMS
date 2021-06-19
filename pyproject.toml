@@ -67,11 +67,7 @@ isolated_build = True
 
 [testenv]
 commands =
-    py36: pytest --black --isort
-    py37: pytest --mypy --mypy-ignore-missing-imports
-    py38: pytest --cov --cov-report=term-missing --cov-fail-under=95
-    py39: pytest -Werror
-    py310: pytest -Werror
+    pytest -Werror --cov --cov-report=term-missing --cov-fail-under=95
 deps =
     pytest
     pytest-cov
