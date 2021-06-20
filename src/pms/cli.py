@@ -2,9 +2,9 @@ import sys
 from enum import Enum
 from typing import Optional
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 8):  # pragma: no cover
     from importlib import metadata
-else:
+else:  # pragma: no cover
     import importlib_metadata as metadata
 
 from typer import Context, Exit, Option, Typer, echo
@@ -61,7 +61,7 @@ def callback(
 
 
 @main.command()
-def info(ctx: Context):
+def info(ctx: Context):  # pragma: no cover
     """Information about the sensor observations"""
     sensor = ctx.obj["reader"].sensor
     echo(sensor.Data.__doc__)
