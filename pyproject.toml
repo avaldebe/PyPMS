@@ -62,7 +62,7 @@ isolated_build = True
 
 [testenv]
 commands =
-    pytest -Werror --cov --cov-report=term-missing --cov-fail-under=95
+    pytest --cov --cov-fail-under=95 {posargs}
 deps =
     pytest
     pytest-cov
@@ -86,6 +86,10 @@ python =
     3.8: py38
     3.9: py39
 """
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q -Werror"
 
 [tool.coverage.run]
 source = ["pms"]

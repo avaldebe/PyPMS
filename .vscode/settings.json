@@ -76,6 +76,8 @@
         "pypa",
         "pypoetry",
         "pyproject",
-        "senserion"
+        "runxfail",
+        "senserion",
+        "xfail"
     ]
 }
