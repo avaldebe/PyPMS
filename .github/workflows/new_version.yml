@@ -6,7 +6,7 @@ on:
     tags: ["*.*.*"]
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,4 +31,9 @@ jobs:
           POETRY_VIRTUALENVS_IN_PROJECT: true
         run: |
           poetry install
-          poetry run pytest --runxfail
+          poetry run pytest
+      - name: Package version vs Git tag
+        run: |
+          echo "SEM_VER=$(poetry version -s)" >> $GITHUB_ENV
+          echo "GIT_TAG=$(git describe)"      >> $GITHUB_ENV
+          test $SEM_VER = $GIT_TAG
