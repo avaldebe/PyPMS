@@ -1,6 +1,5 @@
 import sys
 from enum import Enum
-from sys import version_info
 from typing import Optional
 
 if sys.version_info >= (3, 8):

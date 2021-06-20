@@ -47,13 +47,8 @@ mqtt = ["paho-mqtt"]
 influxdb = ["influxdb"]
 
 [tool.poetry.dev-dependencies]
-black = ">=20.8b1"
-isort = ">=5.6.0"
-pytest = ">=5.0.0"
-pytest-cov = ">=2.8.0"
-pytest-black = ">=0.3.7"
-pytest-mypy = ">=0.4.2"
-pytest-isort = ">=1.2.0"
+pytest = ">=6.2.4"
+pytest-cov = ">=2.12.1"
 
 [tool.poetry.scripts]
 pms = "pms.cli:main"
