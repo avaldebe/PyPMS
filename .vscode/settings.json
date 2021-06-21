@@ -13,7 +13,7 @@
     "python.sortImports.path": "isort",
     "python.sortImports.args": [
         "--python-version",
-        "36",
+        "37",
         "--profile",
         "black",
         "--line-width",
