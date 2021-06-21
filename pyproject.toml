@@ -62,7 +62,7 @@ isolated_build = True
 
 [testenv]
 commands =
-    pytest --cov --cov-fail-under=95 {posargs}
+    pytest --cov {posargs}
 deps =
     pytest
     pytest-cov
@@ -98,6 +98,8 @@ omit = ["*/__init__.py", "*/__main__.py"]
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "def __repr__", "def __str__"]
 show_missing = true
+skip_covered =  true
+fail_under = 95
 
 [tool.black]
 target-version = ['py36']
