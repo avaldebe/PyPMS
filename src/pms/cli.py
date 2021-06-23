@@ -6,7 +6,7 @@ if sys.version_info >= (3, 7):  # pragma: no cover
 else:  # pragma: no cover
     from aenum import Enum
 
-if sys.version_info >= (3, 8):  # pragma: no cover
+if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib import metadata
 else:  # pragma: no cover
     import importlib_metadata as metadata
@@ -15,15 +15,10 @@ from typer import Context, Exit, Option, Typer, echo
 
 from pms import logger
 from pms.sensor import Sensor, SensorReader
-from pms.sensor.cli import csv, serial
-from pms.service.cli import bridge, influxdb, mqtt
 
 main = Typer(help="Data acquisition and logging tool for PM sensors with UART interface")
-main.command()(serial)
-main.command()(csv)
-main.command()(influxdb)
-main.command()(mqtt)
-main.command()(bridge)
+for ep in metadata.entry_points(group="pms.cli"):
+    main.command(name=ep.name)(ep.load())
 
 
 class Supported(str, Enum):

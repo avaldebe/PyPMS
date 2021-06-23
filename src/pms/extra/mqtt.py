@@ -124,7 +124,7 @@ def client_sub(
     c.loop_forever()
 
 
-def mqtt(
+def cli(
     ctx: Context,
     topic: str = Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
     host: str = Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),

@@ -57,7 +57,7 @@ def client_pub(
     return pub
 
 
-def influxdb(
+def cli(
     ctx: Context,
     host: str = Option("influxdb", "--db-host", help="database server"),
     port: int = Option(8086, "--db-port", help="server port"),
