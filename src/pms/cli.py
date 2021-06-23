@@ -1,6 +1,10 @@
 import sys
-from enum import Enum
 from typing import Optional
+
+if sys.version_info >= (3, 7):  # pragma: no cover
+    from enum import Enum
+else:  # pragma: no cover
+    from aenum import Enum
 
 if sys.version_info >= (3, 8):  # pragma: no cover
     from importlib import metadata
@@ -10,7 +14,7 @@ else:  # pragma: no cover
 from typer import Context, Exit, Option, Typer, echo
 
 from pms import logger
-from pms.sensor import SensorReader
+from pms.sensor import Sensor, SensorReader
 from pms.sensor.cli import csv, serial
 from pms.service.cli import bridge, influxdb, mqtt
 
@@ -23,18 +27,13 @@ main.command()(bridge)
 
 
 class Supported(str, Enum):
-    PMSx003 = "PMSx003"
-    PMS3003 = "PMS3003"
-    PMS5003S = "PMS5003S"
-    PMS5003ST = "PMS5003ST"
-    PMS5003T = "PMS5003T"
-    SDS01x = "SDS01x"
-    SDS198 = "SDS198"
-    HPMA115S0 = "HPMA115S0"
-    HPMA115C0 = "HPMA115C0"
-    SPS30 = "SPS30"
-    MCU680 = "MCU680"
-    default = PMSx003
+    _ignore_ = "s Supported"
+
+    Supported = vars()
+    for s in Sensor:
+        Supported[s.name] = s.name
+
+    default = list(Sensor)[0].name
 
 
 def version_callback(value: bool):  # pragma: no cover

@@ -30,6 +30,7 @@
         "Samtec",
         "Sensortec",
         "VOUT",
+        "aenum",
         "asdict",
         "dataclass",
         "dataclasses",
