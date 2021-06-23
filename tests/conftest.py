@@ -1,17 +1,15 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, Generator, List, Union
+from typing import Generator, List
 
 import pytest
-from mypy_extensions import NamedArg
-from typer.testing import CliRunner
 
 from pms import logger
 from pms.sensor import MessageReader, Sensor
 from pms.sensor.reader import RawData
 
-"""All captured data from /docs/sensors"""
-captured_data = Path("tests/cli/captured_data/data.csv")
+logger.setLevel("DEBUG")
+captured_data = Path("tests/captured_data/data.csv")
 
 
 def read_captured_data(sensor: str) -> Generator[RawData, None, None]:
@@ -108,110 +106,3 @@ def capture(monkeypatch, request) -> CapturedData:
     monkeypatch.setattr("pms.sensor.reader.Sensor.now", mock_sensor_now)
 
     return request.param
-
-
-runner = CliRunner()
-
-
-@pytest.mark.parametrize("format", {"csv", "hexdump"})
-def test_serial(capture, format):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options(f"serial_{format}"))
-    assert result.exit_code == 0
-    assert result.stdout == capture.output(format)
-
-
-def test_csv(capture):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options("csv"))
-    assert result.exit_code == 0
-
-    csv = Path(capture.options("csv")[-1])
-    assert csv.exists()
-    assert csv.read_text() == capture.output("csv")
-    csv.unlink()
-
-
-def test_capture_decode(capture):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options("capture"))
-    assert result.exit_code == 0
-
-    csv = Path(capture.options("capture")[-1])
-    assert csv.exists()
-
-    result = runner.invoke(main, capture.options("decode"))
-    assert result.exit_code == 0
-    csv.unlink()
-    assert result.stdout == capture.output("csv")
-
-
-@pytest.fixture()
-def mock_mqtt(monkeypatch):
-    """mock pypms.extra.mqtt.client_pub"""
-
-    def client_pub(
-        *, topic: str, host: str, port: int, username: str, password: str
-    ) -> Callable[[Dict[str, Union[int, str]]], None]:
-        def pub(data: Dict[str, Union[int, str]]) -> None:
-            pass
-
-        return pub
-
-    def client_sub(
-        topic: str,
-        host: str,
-        port: int,
-        username: str,
-        password: str,
-        *,
-        on_sensordata: Callable[[Any], None],
-    ) -> None:
-        pass
-
-    monkeypatch.setattr("pypms.extra.mqtt.client_pub", client_pub)
-    monkeypatch.setattr("pypms.extra.mqtt.client_sub", client_sub)
-
-
-def test_mqtt(capture, mock_mqtt):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options("mqtt"))
-    assert result.exit_code == 0
-
-
-@pytest.fixture()
-def mock_influxdb(monkeypatch):
-    """mock pypms.extra.influxdb.client_pub"""
-
-    def client_pub(
-        *, host: str, port: int, username: str, password: str, db_name: str
-    ) -> Callable[
-        [
-            NamedArg(int, "time"),
-            NamedArg(Dict[str, str], "tags"),
-            NamedArg(Dict[str, float], "data"),
-        ],
-        None,
-    ]:
-        def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
-            pass
-
-        return pub
-
-    monkeypatch.setattr("pypms.extra.influxdb.client_pub", client_pub)
-
-
-def test_influxdb(capture, mock_influxdb):
-
-    from pms.cli import main
-
-    result = runner.invoke(main, capture.options("influxdb"))
-    assert result.exit_code == 0

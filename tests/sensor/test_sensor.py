@@ -3,10 +3,8 @@ from typing import Generator, NamedTuple
 
 import pytest
 
-from pms import SensorWarning, logger
+from pms import SensorWarning
 from pms.sensor import Sensor
-
-logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize("sensor", [s.name for s in Sensor])
