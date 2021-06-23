@@ -1,9 +1,9 @@
-import os
-
 import pytest
 
-os.environ["LEVEL"] = "DEBUG"
+from pms import logger
 from pypms.extra import mqtt
+
+logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize(

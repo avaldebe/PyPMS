@@ -1,14 +1,13 @@
-import os
-
 import pytest
 
-os.environ["LEVEL"] = "DEBUG"
-from pms import SensorWarning
+from pms import SensorWarning, logger
 from pypms.bosch_sensortec import mcu680
 from pypms.honeywell import hpma115s0
 from pypms.novafitness import sds01x
 from pypms.plantower import pms3003, pmsx003
 from pypms.senserion import sps30
+
+logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize(

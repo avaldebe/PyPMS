@@ -15,7 +15,6 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
-
 from pms import WrongMessageFormat
 from pms.sensor import base
 
