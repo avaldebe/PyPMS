@@ -3,7 +3,7 @@ import os
 import pytest
 
 os.environ["LEVEL"] = "DEBUG"
-from pms.extra import mqtt
+from pypms.extra import mqtt
 
 
 @pytest.mark.parametrize(

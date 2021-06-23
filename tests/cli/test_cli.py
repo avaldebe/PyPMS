@@ -154,7 +154,7 @@ def test_capture_decode(capture):
 
 @pytest.fixture()
 def mock_mqtt(monkeypatch):
-    """mock pms.extra.mqtt.client_pub"""
+    """mock pypms.extra.mqtt.client_pub"""
 
     def client_pub(
         *, topic: str, host: str, port: int, username: str, password: str
@@ -175,8 +175,8 @@ def mock_mqtt(monkeypatch):
     ) -> None:
         pass
 
-    monkeypatch.setattr("pms.extra.mqtt.client_pub", client_pub)
-    monkeypatch.setattr("pms.extra.mqtt.client_sub", client_sub)
+    monkeypatch.setattr("pypms.extra.mqtt.client_pub", client_pub)
+    monkeypatch.setattr("pypms.extra.mqtt.client_sub", client_sub)
 
 
 def test_mqtt(capture, mock_mqtt):
@@ -189,7 +189,7 @@ def test_mqtt(capture, mock_mqtt):
 
 @pytest.fixture()
 def mock_influxdb(monkeypatch):
-    """mock pms.extra.influxdb.client_pub"""
+    """mock pypms.extra.influxdb.client_pub"""
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
@@ -206,7 +206,7 @@ def mock_influxdb(monkeypatch):
 
         return pub
 
-    monkeypatch.setattr("pms.extra.influxdb.client_pub", client_pub)
+    monkeypatch.setattr("pypms.extra.influxdb.client_pub", client_pub)
 
 
 def test_influxdb(capture, mock_influxdb):
