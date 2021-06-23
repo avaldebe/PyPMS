@@ -15,7 +15,7 @@ captured_data = Path("tests/cli/captured_data/data.csv")
 
 
 def read_captured_data(sensor: str) -> Generator[RawData, None, None]:
-    with MessageReader(captured_data, Sensor[sensor]) as reader:
+    with MessageReader(captured_data, Sensor[sensor]) as reader:  # type: ignore
         for raw in reader(raw=True):
             yield raw
 
@@ -32,7 +32,7 @@ class CapturedData(Enum):
 
     @property
     def sensor(self) -> Sensor:
-        return Sensor[self.name]
+        return Sensor[self.name]  # type: ignore
 
     @property
     def data(self) -> Generator[bytes, None, None]:
@@ -154,7 +154,7 @@ def test_capture_decode(capture):
 
 @pytest.fixture()
 def mock_mqtt(monkeypatch):
-    """mock pms.service.mqtt.client_pub"""
+    """mock pms.extra.mqtt.client_pub"""
 
     def client_pub(
         *, topic: str, host: str, port: int, username: str, password: str
@@ -175,8 +175,8 @@ def mock_mqtt(monkeypatch):
     ) -> None:
         pass
 
-    monkeypatch.setattr("pms.service.mqtt.client_pub", client_pub)
-    monkeypatch.setattr("pms.service.mqtt.client_sub", client_sub)
+    monkeypatch.setattr("pms.extra.mqtt.client_pub", client_pub)
+    monkeypatch.setattr("pms.extra.mqtt.client_sub", client_sub)
 
 
 def test_mqtt(capture, mock_mqtt):
@@ -189,7 +189,7 @@ def test_mqtt(capture, mock_mqtt):
 
 @pytest.fixture()
 def mock_influxdb(monkeypatch):
-    """mock pms.service.influxdb.client_pub"""
+    """mock pms.extra.influxdb.client_pub"""
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
@@ -206,7 +206,7 @@ def mock_influxdb(monkeypatch):
 
         return pub
 
-    monkeypatch.setattr("pms.service.influxdb.client_pub", client_pub)
+    monkeypatch.setattr("pms.extra.influxdb.client_pub", client_pub)
 
 
 def test_influxdb(capture, mock_influxdb):

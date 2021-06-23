@@ -1,10 +1,10 @@
-from typer import Context, Option
+from typer import Option
 
-from pms.service.influxdb import client_pub, influxdb
-from pms.service.mqtt import Data, client_sub, mqtt
+from .influxdb import client_pub
+from .mqtt import Data, client_sub
 
 
-def bridge(
+def cli(
     mqtt_topic: str = Option("homie/+/+/+", help="mqtt root/topic"),
     mqtt_host: str = Option("mqtt.eclipse.org", help="mqtt server"),
     mqtt_port: int = Option(1883, help="server port"),
