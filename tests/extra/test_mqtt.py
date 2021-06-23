@@ -1,9 +1,6 @@
 import pytest
 
-from pms import logger
 from pypms.extra import mqtt
-
-logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize(

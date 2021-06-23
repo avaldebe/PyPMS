@@ -2,9 +2,6 @@ import pytest
 
 import pypms.honeywell.extra_commands as HPMA
 import pypms.novafitness.extra_commands as SDS
-from pms import logger
-
-logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize(
