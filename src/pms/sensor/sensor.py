@@ -10,7 +10,7 @@ if sys.version_info >= (3, 7):  # pragma: no cover
 else:  # pragma: no cover
     from aenum import Enum
 
-if sys.version_info >= (3, 8):  # pragma: no cover
+if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib import metadata
 else:  # pragma: no cover
     import importlib_metadata as metadata
@@ -26,7 +26,7 @@ class Sensor(Enum):
     _ignore_ = "ep alias Sensor"
 
     Sensor = vars()
-    for ep in metadata.entry_points()["pypms.sensors"]:
+    for ep in metadata.entry_points(group="pypms.sensors"):
         Sensor[ep.name] = ep.load()
 
         if not hasattr(Sensor[ep.name], "ALIASES"):
