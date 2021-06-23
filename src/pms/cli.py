@@ -37,10 +37,12 @@ class Supported(str, Enum):
 
 
 def version_callback(value: bool):  # pragma: no cover
+    if not value:
+        return
+
     package = "PyPMS"
-    if value:
-        echo(f"{package} version {metadata.version(package)}")
-        raise Exit()
+    echo(f"{package} version {metadata.version(package)}")
+    raise Exit()
 
 
 @main.callback()
@@ -51,7 +53,7 @@ def callback(
     seconds: int = Option(60, "--interval", "-i", help="seconds to wait between updates"),
     samples: Optional[int] = Option(None, "--samples", "-n", help="stop after N samples"),
     debug: bool = Option(False, "--debug", help="print DEBUG/logging messages"),
-    version: Optional[bool] = Option(None, "--version", callback=version_callback),
+    version: Optional[bool] = Option(None, "--version", "-V", callback=version_callback),
 ):
     """Read serial sensor"""
     if debug:  # pragma: no cover
