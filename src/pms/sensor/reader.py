@@ -63,7 +63,7 @@ class SensorReader:
         samples: Optional[int] = None,
     ) -> None:
         """Configure serial port"""
-        self.sensor = Sensor[sensor]
+        self.sensor = Sensor[sensor]  # type: ignore
         self.serial = Serial()
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud
