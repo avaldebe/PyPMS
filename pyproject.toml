@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pypms"
-version = "0.5.0"
+version = "0.6.0"
 description = "Data acquisition and logging tool for PM sensors with UART interface"
 authors = ["Alvaro Valdebenito <avaldebe@gmail.com>"]
 readme = "README.md"
@@ -51,6 +51,25 @@ types-dataclasses = ">=0.1.5"
 
 [tool.poetry.scripts]
 pms = "pms.cli:main"
+
+[tool.poetry.plugins."pypms.sensors"]
+# docs/sensors/Plantower.md
+PMSx003   = "pms.sensor.plantower.pmsx003"
+PMS3003   = "pms.sensor.plantower.pms3003"
+PMS5003S  = "pms.sensor.plantower.pms5003s"
+PMS5003ST = "pms.sensor.plantower.pms5003st"
+PMS5003T  = "pms.sensor.plantower.pms5003t"
+# docs/sensors/NovaFitness.md
+SDS01x    = "pms.sensor.novafitness.sds01x"
+SDS198    = "pms.sensor.novafitness.sds198"
+# docs/sensors/Honeywell.md
+HPMA115S0 = "pms.sensor.honeywell.hpma115s0"
+HPMA115C0 = "pms.sensor.honeywell.hpma115c0"
+# docs/sensors/Senserion.md
+SPS30     = "pms.sensor.senserion.sps30"
+# docs/sensors/mcu680.md
+MCU680    = "pms.sensor.bosch_sensortec.mcu680"
+
 
 [tool.tox]
 legacy_tox_ini = """
