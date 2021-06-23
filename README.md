@@ -17,8 +17,10 @@ Tools for reading Air Quality Sensors with serial (UART) interface, data acquisi
 ```man
 Usage: pms [OPTIONS] COMMAND [ARGS]...
 
+  Data acquisition and logging tool for PM sensors with UART interface
+
 Options:
-  -m, --sensor-model [PMSx003|PMS3003|PMS5003S|PMS5003ST|PMS5003T|SDS01x|SDS198|HPMA115S0|HPMA115C0|SPS30|MCU680]
+  -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30]
                                   sensor model  [default: PMSx003]
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -28,7 +30,7 @@ Options:
   --debug                         print DEBUG/logging messages  [default:
                                   False]
 
-  --version
+  -V, --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.
   --show-completion [bash|zsh|fish|powershell|pwsh]
@@ -150,6 +152,9 @@ The [docs][library] contain some help for those brave enough to use its internal
 
 ## Changelog
 
+- WIP
+  - load sensor modules and extra cli commands from entry points (plugin architecture)
+  - pm1/pm4/raw2_5/pm2_5 properties, [#17](https://github.com/avaldebe/PyPMS/issues/17)
 - 0.5.0
   - set username/password with environment variables:
     - `$MQTT_USER` sets `--mqtt-user` on `pms mqtt` and `pms bridge`
