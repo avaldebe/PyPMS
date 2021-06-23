@@ -30,7 +30,7 @@ class Supported(str, Enum):
     _ignore_ = "s Supported"
 
     Supported = vars()
-    for s in Sensor:
+    for s in Sensor:  # type: ignore
         Supported[s.name] = s.name
 
     default = "PMSx003"
