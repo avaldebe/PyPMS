@@ -2,32 +2,32 @@
 Access supported sensors from a single object
 """
 
+import sys
 from datetime import datetime
-from enum import Enum
+
+if sys.version_info >= (3, 7):  # pragma: no cover
+    from enum import Enum
+else:  # pragma: no cover
+    from aenum import Enum
+
+if sys.version_info >= (3, 8):  # pragma: no cover
+    from importlib import metadata
+else:  # pragma: no cover
+    import importlib_metadata as metadata
+
 
 from pms import WrongMessageFormat
-from pms.sensor import base, bosch_sensortec, honeywell, novafitness, plantower, senserion
+from pms.sensor import base
 
 
 class Sensor(Enum):
-    """Supported PM sensors"""
+    """Supported sensors"""
 
-    PMSx003 = plantower.pmsx003
-    PMS3003 = plantower.pms3003
-    PMS5003S = plantower.pms5003s
-    PMS5003ST = plantower.pms5003st
-    PMS5003T = plantower.pms5003t
-    SDS01x = novafitness.sds01x
-    SDS198 = novafitness.sds198
-    HPMA115S0 = honeywell.hpma115s0
-    HPMA115C0 = honeywell.hpma115c0
-    SPS30 = senserion.sps30
-    MCU680 = bosch_sensortec.mcu680
+    _ignore_ = "ep Sensor"
 
-    PMS1003 = PMS5003 = PMS7003 = PMSA003 = PMSx003
-    G1, G3, G5, G7, G10 = PMS1003, PMS3003, PMS5003, PMS7003, PMSA003
-    SDS011 = SDS018 = SDS021 = SDS01x
-    BME680 = MCU680
+    Sensor = vars()
+    for ep in metadata.entry_points()["pypms.sensors"]:
+        Sensor[ep.name] = ep.load()
 
     @property
     def Message(self) -> base.Message:

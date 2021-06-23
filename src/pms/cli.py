@@ -33,7 +33,7 @@ class Supported(str, Enum):
     for s in Sensor:
         Supported[s.name] = s.name
 
-    default = list(Sensor)[0].name
+    default = "PMSx003"
 
 
 def version_callback(value: bool):  # pragma: no cover
