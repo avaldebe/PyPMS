@@ -133,7 +133,7 @@ line-length = 100
 [tool.isort]
 py_version = "37" # dataclasses in standard library
 profile = "black"
-src_paths = ["src/pms", "src/pypms", "tests"]
+src_paths = ["src", "tests"]
 line_length = 100
 
 [tool.mypy]
