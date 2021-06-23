@@ -73,9 +73,7 @@ SPS30     = "pypms.senserion.sps30"
 # docs/sensors/mcu680.md
 MCU680    = "pypms.bosch_sensortec.mcu680"
 
-[tool.poetry.plugins."pms.cli"]
-csv      = "pms.sensor.cli:csv"
-serial   = "pms.sensor.cli:serial"
+[tool.poetry.plugins."pypms.extras"]
 influxdb = "pms.extra.influxdb:cli"
 mqtt     = "pms.extra.mqtt:cli"
 bridge   = "pms.extra.bridge:cli"
