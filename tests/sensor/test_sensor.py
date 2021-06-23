@@ -1,12 +1,12 @@
-import os
 from enum import Enum
 from typing import Generator, NamedTuple
 
 import pytest
 
-os.environ["LEVEL"] = "DEBUG"
-from pms import SensorWarning
+from pms import SensorWarning, logger
 from pms.sensor import Sensor
+
+logger.setLevel("DEBUG")
 
 
 @pytest.mark.parametrize("sensor", [s.name for s in Sensor])
