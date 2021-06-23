@@ -56,6 +56,7 @@
         "rhum",
         "secho",
         "strftime",
+        "struct",
         "subcommand",
         "subcommands",
         "typer",

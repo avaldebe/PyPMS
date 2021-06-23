@@ -11,6 +11,9 @@ from typing import Tuple
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
+ALIASES = ("G3",)
+
+
 commands = base.Commands(
     passive_read=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
     passive_mode=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),

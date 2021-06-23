@@ -10,6 +10,9 @@ from typing import Tuple
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
+ALIASES = ("SDS011", "SDS018", "SDS021")
+
+
 commands = base.Commands(
     passive_read=base.Cmd(
         b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",

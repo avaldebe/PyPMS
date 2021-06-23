@@ -23,11 +23,17 @@ from pms.sensor import base
 class Sensor(Enum):
     """Supported sensors"""
 
-    _ignore_ = "ep Sensor"
+    _ignore_ = "ep alias Sensor"
 
     Sensor = vars()
     for ep in metadata.entry_points()["pypms.sensors"]:
         Sensor[ep.name] = ep.load()
+
+        if not hasattr(Sensor[ep.name], "ALIASES"):
+            continue
+
+        for alias in Sensor[ep.name].ALIASES:
+            Sensor[alias] = Sensor[ep.name]
 
     @property
     def Message(self) -> base.Message:
