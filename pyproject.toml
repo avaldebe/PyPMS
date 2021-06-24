@@ -124,7 +124,7 @@ omit = ["*/__init__.py", "*/__main__.py"]
 exclude_lines = ["pragma: no cover", "def __repr__", "def __str__"]
 show_missing = true
 skip_covered =  true
-fail_under = 97
+fail_under = 100
 
 [tool.black]
 target-version = ['py36']

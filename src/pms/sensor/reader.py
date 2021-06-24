@@ -75,7 +75,7 @@ class SensorReader:
             f"from {port} every {interval if interval else '?'} secs"
         )
 
-    def _cmd(self, command: str) -> bytes:
+    def _cmd(self, command: str) -> bytes:  # pragma: no cover
         """Write command to sensor and return answer"""
 
         # send command
@@ -102,7 +102,7 @@ class SensorReader:
         logger.debug(f"buffer length: {len(buffer)}")
 
         # check against sensor type derived from buffer
-        if not self.sensor.check(buffer, "passive_mode"):
+        if not self.sensor.check(buffer, "passive_mode"):  # pragma: no cover
             logger.error(f"Sensor is not {self.sensor.name}")
             sys.exit(1)
 
@@ -131,10 +131,10 @@ class SensorReader:
 
                 try:
                     obs = self.sensor.decode(buffer)
-                except (SensorWarmingUp, InconsistentObservation) as e:
+                except (SensorWarmingUp, InconsistentObservation) as e:  # pragma: no cover
                     logger.debug(e)
                     time.sleep(5)
-                except SensorWarning as e:
+                except SensorWarning as e:  # pragma: no cover
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
@@ -143,7 +143,7 @@ class SensorReader:
                         self.samples -= 1
                         if self.samples <= 0:
                             break
-                    if self.interval:
+                    if self.interval:  # pragma: no cover
                         delay = self.interval - (time.time() - obs.time)
                         if delay > 0:
                             time.sleep(delay)
