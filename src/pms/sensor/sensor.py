@@ -15,7 +15,7 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
-from pms import WrongMessageFormat
+from pms import WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
 
@@ -65,7 +65,7 @@ class Sensor(Enum):
         """Validate buffer contents"""
         try:
             self.Message.decode(buffer, self.command(command))
-        except WrongMessageFormat:
+        except (WrongMessageFormat, WrongMessageChecksum):
             return False
         else:
             return True
