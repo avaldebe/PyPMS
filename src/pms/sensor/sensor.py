@@ -47,8 +47,10 @@ class Sensor(Enum):
         return self.value.commands
 
     @property
-    def baud(self) -> int:  # pragma: no cover
-        return 115_200 if self.name == "SPS30" else 9600
+    def baud(self) -> int:
+        if hasattr(self.value, "BAUD"):
+            return self.value.BAUD
+        return 9600
 
     @staticmethod
     def now() -> int:  # pragma: no cover

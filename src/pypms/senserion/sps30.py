@@ -13,6 +13,8 @@ from typing import Tuple
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.sensor import base
 
+BAUD = 115_200
+
 commands = base.Commands(
     # Read Measured Values
     passive_read=base.Cmd(b"\x7E\x00\x03\x00\xFC\x7E", b"\x7E\x00\x03\x00\x28", 47),

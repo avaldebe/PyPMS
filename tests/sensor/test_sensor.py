@@ -19,6 +19,12 @@ def test_commands(sensor, command):
     assert Sensor[sensor].command(command)
 
 
+@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+def test_baud(sensor):
+    baud = 9600 if sensor != "SPS30" else 115200
+    assert Sensor[sensor].baud == baud
+
+
 class RawData(NamedTuple):
     hex: str
     raw: tuple
