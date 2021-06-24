@@ -6,6 +6,7 @@ import pytest
 
 from pms import logger
 from pms.sensor import MessageReader, Sensor
+from pms.sensor.base import ObsData
 from pms.sensor.reader import RawData
 
 logger.setLevel("DEBUG")
@@ -40,6 +41,11 @@ class CapturedData(Enum):
     def time(self) -> Generator[int, None, None]:
         return (msg.time for msg in self.value)
 
+    @property
+    def obs(self) -> Generator[ObsData, None, None]:
+        sensor = self.sensor
+        return (sensor.decode(msg.data, time=msg.time) for msg in self.value)
+
     def options(self, command: str) -> List[str]:
         samples = len(self.value)
         if "csv" in command or command == "mqtt":
@@ -51,9 +57,7 @@ class CapturedData(Enum):
             csv=f"csv --overwrite {self.name}_test.csv",
             capture=f"csv --overwrite  --capture {self.name}_pypms.csv",
             decode=f"serial -f csv --decode {self.name}_pypms.csv",
-            mqtt=f"mqtt",
-            influxdb=f"influxdb",
-        )[command]
+        ).get(command, command)
         return f"{capture} --debug {cmd}".split()
 
     def output(self, ending: str) -> str:
@@ -61,8 +65,13 @@ class CapturedData(Enum):
         return path.read_text()
 
 
-@pytest.fixture(params=[capture for capture in CapturedData])
-def capture(monkeypatch, request) -> CapturedData:
+@pytest.fixture(params=list(CapturedData))
+def capture_data(request) -> CapturedData:
+    return request.param
+
+
+@pytest.fixture()
+def capture(monkeypatch, capture_data) -> CapturedData:
     class MockSerial:
         port = None
         baudrate = None
@@ -80,7 +89,7 @@ def capture(monkeypatch, request) -> CapturedData:
 
     monkeypatch.setattr("pms.sensor.reader.Serial", MockSerial)
 
-    data = request.param.data
+    data = capture_data.data
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
@@ -96,7 +105,7 @@ def capture(monkeypatch, request) -> CapturedData:
 
     monkeypatch.setattr("pms.sensor.reader.Sensor.check", mock_sensor_check)
 
-    time = request.param.time
+    time = capture_data.time
 
     def mock_sensor_now(self) -> int:
         """mock pms.sensor.Sensor.now"""
@@ -105,4 +114,4 @@ def capture(monkeypatch, request) -> CapturedData:
 
     monkeypatch.setattr("pms.sensor.reader.Sensor.now", mock_sensor_now)
 
-    return request.param
+    return capture_data
