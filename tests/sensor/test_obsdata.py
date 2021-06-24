@@ -3,11 +3,11 @@ from dataclasses import asdict
 
 import pytest
 
-from pypms.bosch_sensortec import mcu680
-from pypms.honeywell import hpma115c0, hpma115s0
-from pypms.novafitness import sds01x, sds198
-from pypms.plantower import pms5003st, pms5003t, pmsx003
-from pypms.senserion import sps30
+from pms.sensors.bosch_sensortec import mcu680
+from pms.sensors.honeywell import hpma115c0, hpma115s0
+from pms.sensors.novafitness import sds01x, sds198
+from pms.sensors.plantower import pms5003st, pms5003t, pmsx003
+from pms.sensors.senserion import sps30
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw error".split())

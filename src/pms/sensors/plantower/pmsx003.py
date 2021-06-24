@@ -6,7 +6,7 @@ Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 from dataclasses import dataclass
 
 from pms import InconsistentObservation
-from pms.sensor import base
+from pms.core import base
 
 from . import pms3003
 

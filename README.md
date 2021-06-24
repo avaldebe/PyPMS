@@ -152,8 +152,15 @@ The [docs][library] contain some help for those brave enough to use its internal
 
 ## Changelog
 
-- WIP
-  - load sensor modules and extra cli commands from entry points (plugin architecture)
+- 0.6 WIP
+  - reorganize internal modules
+    - `pms.core`: core functionality, such as `Sensor` and `SensorReader`
+    - `pms.sensors`: sensor modules grouped by manufacturer
+    - `pms.extra`: extra cli utilities, such as `pms influxdb` and `influxdb mqtt`
+    - importing from `pms.sensor` is deprecated, import from `pms.core` instead
+  - plugin architecture
+    - load sensor modules from entry points advertized as `"pypms.sensors"`
+    - load extra cli commands from entry points advertized as `"pypms.extras"`
   - pm1/pm4/raw2_5/pm2_5 properties, [#17](https://github.com/avaldebe/PyPMS/issues/17)
 - 0.5.0
   - set username/password with environment variables:

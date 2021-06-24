@@ -16,7 +16,7 @@ else:  # pragma: no cover
 from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms import logger
-from pms.sensor import MessageReader, Sensor, SensorReader
+from pms.core import MessageReader, Sensor, SensorReader
 
 main = Typer(help="Data acquisition and logging tool for PM sensors with UART interface")
 for ep in metadata.entry_points(group="pypms.extras"):

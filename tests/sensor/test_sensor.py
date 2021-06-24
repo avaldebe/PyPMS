@@ -4,7 +4,7 @@ from typing import Generator, NamedTuple
 import pytest
 
 from pms import SensorWarning
-from pms.sensor import Sensor
+from pms.core import Sensor
 
 
 @pytest.mark.parametrize("sensor", [s.name for s in Sensor])

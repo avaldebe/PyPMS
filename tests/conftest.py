@@ -5,9 +5,9 @@ from typing import Generator, List
 import pytest
 
 from pms import logger
-from pms.sensor import MessageReader, Sensor
-from pms.sensor.base import ObsData
-from pms.sensor.reader import RawData
+from pms.core import MessageReader, Sensor
+from pms.core.base import ObsData
+from pms.core.reader import RawData
 
 logger.setLevel("DEBUG")
 captured_data = Path("tests/captured_data/data.csv")
@@ -87,7 +87,7 @@ def capture(monkeypatch, capture_data) -> CapturedData:
         def reset_input_buffer(self):
             pass
 
-    monkeypatch.setattr("pms.sensor.reader.Serial", MockSerial)
+    monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
 
     data = capture_data.data
 
@@ -97,21 +97,21 @@ def capture(monkeypatch, capture_data) -> CapturedData:
         nonlocal data
         return next(data) if command == "passive_read" else b""
 
-    monkeypatch.setattr("pms.sensor.reader.SensorReader._cmd", mock_reader__cmd)
+    monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
 
     def mock_sensor_check(self, buffer: bytes, command: str) -> bool:
         """don't check if message matches sensor"""
         return True
 
-    monkeypatch.setattr("pms.sensor.reader.Sensor.check", mock_sensor_check)
+    monkeypatch.setattr("pms.core.reader.Sensor.check", mock_sensor_check)
 
     time = capture_data.time
 
     def mock_sensor_now(self) -> int:
-        """mock pms.sensor.Sensor.now"""
+        """mock pms.core.Sensor.now"""
         nonlocal time
         return next(time)
 
-    monkeypatch.setattr("pms.sensor.reader.Sensor.now", mock_sensor_now)
+    monkeypatch.setattr("pms.core.reader.Sensor.now", mock_sensor_now)
 
     return capture_data

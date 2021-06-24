@@ -3,7 +3,7 @@
 ```python
 """Read PMSx003 sensor on /dev/ttyUSB0"""
 
-from pms.sensor import SensorReader
+from pms.core import SensorReader
 
 # read 4 samples, one sample every 15 seconds
 reader = SensorReader("PMSx003", "/dev/ttyUSB0", 15, 4)
@@ -66,7 +66,7 @@ On the previous example, `obs` is a [dataclasses.dataclass][] instance which an 
 
 from dataclasses import fields
 from typing import Dict
-from pms.sensor import base, Sensor
+from pms.core import base, Sensor
 
 def types(obs: base.ObsData) -> Dict[str, str]:
     """return a dictionary containing the type of each data field"""""

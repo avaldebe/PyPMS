@@ -16,7 +16,7 @@ else:  # pragma: no cover
     import importlib_metadata as metadata
 
 from pms import WrongMessageChecksum, WrongMessageFormat
-from pms.sensor import base
+from pms.core import base
 
 
 class Sensor(Enum):

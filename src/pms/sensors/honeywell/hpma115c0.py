@@ -6,7 +6,7 @@ Honeywell HPMA115C0 sensors
 
 from dataclasses import dataclass, field
 
-from pms.sensor import base
+from pms.core import base
 
 from . import hpma115s0
 
