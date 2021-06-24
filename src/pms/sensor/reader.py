@@ -116,11 +116,11 @@ class SensorReader:
         self.serial.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self) -> Generator[base.ObsData, None, None]:  # pragma: no cover
         pass
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:  # pragma: no cover
         pass
 
     def __call__(self, *, raw: Optional[bool] = None):
@@ -147,7 +147,7 @@ class SensorReader:
                         delay = self.interval - (time.time() - obs.time)
                         if delay > 0:
                             time.sleep(delay)
-            except KeyboardInterrupt:
+            except KeyboardInterrupt:  # pragma: no cover
                 print()
                 break
 
@@ -170,18 +170,18 @@ class MessageReader:
         self.csv.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self) -> Generator[base.ObsData, None, None]:  # pragma: no cover
         pass
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:  # pragma: no cover
         pass
 
     def __call__(self, *, raw: Optional[bool] = None):
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
             yield RawData(time, message) if raw else self.sensor.decode(message, time=time)
-            if self.samples:
+            if self.samples:  # pragma: no cover
                 self.samples -= 1
                 if self.samples <= 0:
                     break
