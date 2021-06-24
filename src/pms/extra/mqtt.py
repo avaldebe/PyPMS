@@ -10,7 +10,7 @@ except ModuleNotFoundError:  # pragma: no cover
     client = None  # type: ignore
 
 from pms import logger
-from pms.sensor.base import ObsData
+from pms.core.base import ObsData
 
 
 def __missing_mqtt():  # pragma: no cover

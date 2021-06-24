@@ -4,7 +4,7 @@ HPM Series, Particulate Matter Sensors, 32322550 Issue F
 https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
 """
 
-from pms.sensor.base import Cmd
+from pms.core.base import Cmd
 
 
 def read_cf() -> Cmd:

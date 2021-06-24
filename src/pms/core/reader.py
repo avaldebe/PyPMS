@@ -17,7 +17,7 @@ from typing import Generator, NamedTuple, Optional, overload
 from serial import Serial
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
-from pms.sensor import Sensor, base
+from pms.core import Sensor, base
 
 
 class RawData(NamedTuple):

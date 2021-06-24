@@ -1,11 +1,11 @@
 import pytest
 
 from pms import SensorWarning
-from pypms.bosch_sensortec import mcu680
-from pypms.honeywell import hpma115s0
-from pypms.novafitness import sds01x
-from pypms.plantower import pms3003, pmsx003
-from pypms.senserion import sps30
+from pms.sensors.bosch_sensortec import mcu680
+from pms.sensors.honeywell import hpma115s0
+from pms.sensors.novafitness import sds01x
+from pms.sensors.plantower import pms3003, pmsx003
+from pms.sensors.senserion import sps30
 
 
 @pytest.mark.parametrize(

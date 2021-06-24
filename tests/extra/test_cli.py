@@ -5,14 +5,14 @@ import pytest
 from mypy_extensions import NamedArg
 from typer.testing import CliRunner
 
-from pypms.extra.mqtt import Data
+from pms.extra.mqtt import Data
 
 runner = CliRunner()
 
 
 @pytest.fixture()
 def mock_mqtt(monkeypatch):
-    """mock pypms.extra.mqtt.client_pub/client_sub"""
+    """mock pms.extra.mqtt.client_pub/client_sub"""
 
     def client_pub(
         *, topic: str, host: str, port: int, username: str, password: str
@@ -33,8 +33,8 @@ def mock_mqtt(monkeypatch):
     ) -> None:
         pass
 
-    monkeypatch.setattr("pypms.extra.mqtt.client_pub", client_pub)
-    monkeypatch.setattr("pypms.extra.mqtt.client_sub", client_sub)
+    monkeypatch.setattr("pms.extra.mqtt.client_pub", client_pub)
+    monkeypatch.setattr("pms.extra.mqtt.client_sub", client_sub)
 
 
 def test_mqtt(capture, mock_mqtt):
@@ -47,7 +47,7 @@ def test_mqtt(capture, mock_mqtt):
 
 @pytest.fixture()
 def mock_influxdb(monkeypatch):
-    """mock pypms.extra.influxdb.client_pub"""
+    """mock pms.extra.influxdb.client_pub"""
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
@@ -64,7 +64,7 @@ def mock_influxdb(monkeypatch):
 
         return pub
 
-    monkeypatch.setattr("pypms.extra.influxdb.client_pub", client_pub)
+    monkeypatch.setattr("pms.extra.influxdb.client_pub", client_pub)
 
 
 def test_influxdb(capture, mock_influxdb):
@@ -77,7 +77,7 @@ def test_influxdb(capture, mock_influxdb):
 
 @pytest.fixture()
 def mock_bridge(monkeypatch, capture_data):
-    """mock pypms.extra.bridge.client_pub/client_sub"""
+    """mock pms.extra.bridge.client_pub/client_sub"""
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
@@ -96,7 +96,7 @@ def mock_bridge(monkeypatch, capture_data):
 
         return pub
 
-    monkeypatch.setattr("pypms.extra.bridge.client_pub", client_pub)
+    monkeypatch.setattr("pms.extra.bridge.client_pub", client_pub)
 
     def client_sub(
         topic: str,
@@ -117,7 +117,7 @@ def mock_bridge(monkeypatch, capture_data):
                 data = Data.decode(topic, payload, time=obs.time)
                 on_sensordata(data)
 
-    monkeypatch.setattr("pypms.extra.bridge.client_sub", client_sub)
+    monkeypatch.setattr("pms.extra.bridge.client_sub", client_sub)
 
     return capture_data
 

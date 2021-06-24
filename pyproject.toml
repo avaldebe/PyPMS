@@ -26,10 +26,7 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
-packages = [
-    { include="pms", from="src" },
-    { include="pypms", from="src" },
-]
+packages = [{ include="pms", from="src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.6,<4.0"
@@ -57,26 +54,26 @@ pms = "pms.cli:main"
 
 [tool.poetry.plugins."pypms.sensors"]
 # docs/sensors/Plantower.md
-PMSx003   = "pypms.plantower.pmsx003"
-PMS3003   = "pypms.plantower.pms3003"
-PMS5003S  = "pypms.plantower.pms5003s"
-PMS5003ST = "pypms.plantower.pms5003st"
-PMS5003T  = "pypms.plantower.pms5003t"
+PMSx003   = "pms.sensors.plantower.pmsx003"
+PMS3003   = "pms.sensors.plantower.pms3003"
+PMS5003S  = "pms.sensors.plantower.pms5003s"
+PMS5003ST = "pms.sensors.plantower.pms5003st"
+PMS5003T  = "pms.sensors.plantower.pms5003t"
 # docs/sensors/NovaFitness.md
-SDS01x    = "pypms.novafitness.sds01x"
-SDS198    = "pypms.novafitness.sds198"
+SDS01x    = "pms.sensors.novafitness.sds01x"
+SDS198    = "pms.sensors.novafitness.sds198"
 # docs/sensors/Honeywell.md
-HPMA115S0 = "pypms.honeywell.hpma115s0"
-HPMA115C0 = "pypms.honeywell.hpma115c0"
+HPMA115S0 = "pms.sensors.honeywell.hpma115s0"
+HPMA115C0 = "pms.sensors.honeywell.hpma115c0"
 # docs/sensors/Senserion.md
-SPS30     = "pypms.senserion.sps30"
+SPS30     = "pms.sensors.senserion.sps30"
 # docs/sensors/mcu680.md
-MCU680    = "pypms.bosch_sensortec.mcu680"
+MCU680    = "pms.sensors.bosch_sensortec.mcu680"
 
 [tool.poetry.plugins."pypms.extras"]
-influxdb = "pypms.extra.influxdb:cli"
-mqtt     = "pypms.extra.mqtt:cli"
-bridge   = "pypms.extra.bridge:cli"
+influxdb = "pms.extra.influxdb:cli"
+mqtt     = "pms.extra.mqtt:cli"
+bridge   = "pms.extra.bridge:cli"
 
 [tool.tox]
 legacy_tox_ini = """
@@ -117,7 +114,7 @@ minversion = "6.0"
 addopts = "-ra -q -Werror"
 
 [tool.coverage.run]
-source = ["pms", "pypms"]
+source = ["pms"]
 omit = ["*/__init__.py", "*/__main__.py"]
 
 [tool.coverage.report]

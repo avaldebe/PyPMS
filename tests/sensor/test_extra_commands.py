@@ -1,7 +1,7 @@
 import pytest
 
-import pypms.honeywell.extra_commands as HPMA
-import pypms.novafitness.extra_commands as SDS
+import pms.sensors.honeywell.extra_commands as HPMA
+import pms.sensors.novafitness.extra_commands as SDS
 
 
 @pytest.mark.parametrize(

@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
-from pms.sensor import base
+from pms.core import base
 
 commands = base.Commands(
     passive_read=base.Cmd(  # Read Particle Measuring Results

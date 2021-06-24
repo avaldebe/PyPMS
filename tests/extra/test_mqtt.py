@@ -1,6 +1,6 @@
 import pytest
 
-from pypms.extra import mqtt
+from pms.extra import mqtt
 
 
 @pytest.mark.parametrize(
