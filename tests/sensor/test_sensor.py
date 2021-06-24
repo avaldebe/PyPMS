@@ -98,7 +98,18 @@ class GoodData(Enum):
             yield pytest.param(obs, id=sensor.name)
 
 
-@pytest.mark.parametrize("sensor,msg,raw", [test for test in GoodData.test_param()])
+@pytest.mark.parametrize("sensor,msg,raw", GoodData.test_param())
+def test_check(sensor, msg, raw, secs=1567201793):
+    assert Sensor[sensor].check(msg, "passive_read")
+    for other in Sensor:
+        if other.name == sensor:
+            continue
+        if sensor == "PMSx003" and other.name in ["PMS5003", "PMS5003S", "PMS5003T"]:
+            continue
+        assert not other.check(msg, "passive_read")
+
+
+@pytest.mark.parametrize("sensor,msg,raw", GoodData.test_param())
 def test_decode(sensor, msg, raw, secs=1567201793):
     assert Sensor[sensor].decode(msg, time=secs) == Sensor[sensor].Data(secs, *raw)
 
