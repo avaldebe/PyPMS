@@ -25,6 +25,12 @@ def test_baud(sensor):
     assert Sensor[sensor].baud == baud
 
 
+@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+def test_pre_heat(sensor):
+    pre_heat = 0 if sensor != "MHZ19B" else 180
+    assert Sensor[sensor].pre_heat == pre_heat
+
+
 class RawData(NamedTuple):
     hex: str
     raw: tuple

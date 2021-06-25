@@ -55,6 +55,12 @@ class Sensor(Enum):
             return self.value.BAUD
         return 9600
 
+    @property
+    def pre_heat(self) -> int:
+        if hasattr(self.value, "PREHEAT"):
+            return self.value.PREHEAT
+        return 0
+
     @staticmethod
     def now() -> int:  # pragma: no cover
         """current time as seconds since epoch"""

@@ -14,6 +14,7 @@ from textwrap import wrap
 from typing import Generator, NamedTuple, Optional, Union, overload
 
 from serial import Serial
+from typer import progressbar
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
 from pms.core import Sensor, Supported, base
@@ -60,6 +61,7 @@ class SensorReader:
     ) -> None:
         """Configure serial port"""
         self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]  # type: ignore
+        self.pre_heat = self.sensor.pre_heat
         self.serial = Serial()
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud
@@ -85,6 +87,18 @@ class SensorReader:
         # return full buffer
         return self.serial.read(max(cmd.answer_length, self.serial.in_waiting))
 
+    def _pre_heat(self):  # pragma: no cover
+        if not self.pre_heat:
+            return
+
+        logger.info(f"pre-heating {self.sensor.name} sensor {self.pre_heat} sec")
+        with progressbar(range(self.pre_heat), label="pre-heating") as progress:
+            for _ in progress:
+                time.sleep(1)
+
+        # only pre-heat the firs time
+        self.pre_heat = 0
+
     def __enter__(self) -> "SensorReader":
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
@@ -94,7 +108,9 @@ class SensorReader:
 
         # wake sensor and set passive mode
         logger.debug(f"wake {self.sensor.name}")
-        buffer = self._cmd("wake") + self._cmd("passive_mode")
+        buffer = self._cmd("wake")
+        self._pre_heat()
+        buffer += self._cmd("passive_mode")
         logger.debug(f"buffer length: {len(buffer)}")
 
         # check if the sensor answered
