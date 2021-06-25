@@ -71,6 +71,7 @@ SPS30     = "pms.sensors.senserion.sps30"
 MCU680    = "pms.sensors.bosch_sensortec.mcu680"
 # docs/sensors/Winsen.md
 MHZ19B    = "pms.sensors.winsen.mhz19b"
+ZH03B     = "pms.sensors.winsen.zh03b"
 
 [tool.poetry.plugins."pypms.extras"]
 influxdb = "pms.extra.influxdb:cli"
