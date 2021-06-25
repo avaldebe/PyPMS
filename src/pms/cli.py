@@ -65,6 +65,7 @@ class Format(str, Enum):
     cf = "cf"
     atm = "atm"
     hcho = "hcho"
+    co2 = "co2"
     bme = "bme"
     bsec = "bsec"
     hex = "hexdump"

@@ -83,6 +83,11 @@ class GoodData(Enum):
         (2101, 6538, 392, 84, 12498, 207841, 74),
     )
 
+    MHZ19B = RawData(
+        "FF8601F40000000085",
+        (500,),
+    )
+
     @classmethod
     def test_param(cls) -> Generator[pytest.param, None, None]:  # type: ignore
         for sensor in cls:
