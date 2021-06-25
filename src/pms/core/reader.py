@@ -97,6 +97,11 @@ class SensorReader:
         buffer = self._cmd("wake") + self._cmd("passive_mode")
         logger.debug(f"buffer length: {len(buffer)}")
 
+        # check if the sensor answered
+        if len(buffer) == 0:  # pragma: no cover
+            logger.error(f"Sensor did not respond, check UART pin connections")
+            sys.exit(1)
+
         # check against sensor type derived from buffer
         if not self.sensor.check(buffer, "passive_mode"):  # pragma: no cover
             logger.error(f"Sensor is not {self.sensor.name}")
