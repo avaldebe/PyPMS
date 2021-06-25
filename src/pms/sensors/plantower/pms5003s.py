@@ -34,7 +34,7 @@ class ObsData(pmsx003.ObsData):
     """
 
     # HCHO [mg/m3]: formaldehyde concentration (read as μg/m3, datasheet says 1/1000 mg/m3 ie μg/m3)
-    HCHO: int = field(metadata=base.metadata("formaldehyde", "mg/m3", "concentration"))
+    HCHO: float = field(metadata=base.metadata("formaldehyde", "mg/m3", "concentration"))
 
     def __post_init__(self):
         """Units conversion
