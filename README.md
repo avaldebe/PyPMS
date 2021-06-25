@@ -20,7 +20,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Data acquisition and logging tool for PM sensors with UART interface
 
 Options:
-  -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30]
+  -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|MHZ19B|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30]
                                   sensor model  [default: PMSx003]
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -131,11 +131,16 @@ pipx install pypms[mqtt,influxdb]
 - [MCU680][]:
   chinese module with a [BME680][] sensor, [STM32F051K8][] mirocontroller (μC) and 3.3V low-dropout regulator (LDO).
   The μC acts as I2C/UART bridge, providing outputs from the [closed source integration library][BSEC].
+- [MHZ19B][]:
+  infrared CO2 sensor module from [Winsen][].
 
 [MCU680]:   /docs/sensors/mcu680.md
 [BME680]:   https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
 [STM32F051K8]:  https://www.st.com/en/microcontrollers-microprocessors/stm32f051k8.html
 [BSEC]:     https://www.bosch-sensortec.com/software-tools/software/bsec/
+
+[MHZ19B]:   /docs/sensors/Winsen.md#MHZ19B
+[Winsen]:   https://www.winsen-sensor.com
 
 ## Want More Sensors
 
@@ -161,6 +166,7 @@ The [docs][library] contain some help for those brave enough to use its internal
   - plugin architecture
     - load sensor modules from entry points advertized as `"pypms.sensors"`
     - load extra cli commands from entry points advertized as `"pypms.extras"`
+  - support [MHZ19B][] infrared CO2 sensor module from [Winsen][].
   - pm1/pm4/raw2_5/pm2_5 properties, [#17](https://github.com/avaldebe/PyPMS/issues/17)
 - 0.5.0
   - set username/password with environment variables:

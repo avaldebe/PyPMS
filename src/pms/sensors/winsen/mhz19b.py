@@ -22,9 +22,9 @@ commands = base.Commands(
 
 
 class Message(base.Message):
-    """Messages from Plantower MH-Z19B sensors"""
+    """Messages from Winsen MH-Z19B sensors"""
 
-    data_records = slice(0, 1)
+    data_records = slice(1)
 
     @property
     def header(self) -> bytes:
@@ -36,7 +36,7 @@ class Message(base.Message):
 
     @property
     def checksum(self) -> int:
-        return 0x100 - (sum(self.message[1:-1]) % 0x100)
+        return 0x100 - sum(self.message[1:-1]) % 0x100
 
     @classmethod
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
@@ -85,3 +85,6 @@ class ObsData(base.ObsData):
         raise ValueError(  # pragma: no cover
             f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )
+
+    def __str__(self):
+        return self.__format__("co2")
