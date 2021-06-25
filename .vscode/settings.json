@@ -66,6 +66,7 @@
         "pypa",
         "pypoetry",
         "pyproject",
-        "senserion"
+        "senserion",
+        "winsen"
     ]
 }
