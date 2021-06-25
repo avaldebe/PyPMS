@@ -88,7 +88,7 @@ class GoodData(Enum):
         (500,),
     )
 
-    ZH03B = RawData(
+    ZH0xx = RawData(
         "FF86008500960065FA",
         (133, 150, 101),
     )
@@ -116,7 +116,7 @@ def test_check(sensor, msg, raw, secs=1567201793):
             continue
         if sensor == "PMSx003" and other.name in ["PMS5003", "PMS5003S", "PMS5003T"]:
             continue
-        if sensor in ["MHZ19B", "ZH03B"] and other.name in ["MHZ19B", "ZH03B"]:
+        if sensor in ["MHZ19B", "ZH0xx"] and other.name in ["MHZ19B", "ZH0xx"]:
             continue
         assert not other.check(msg, "passive_read")
 
