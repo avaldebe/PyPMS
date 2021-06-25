@@ -11,13 +11,12 @@ import time
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
-from typing import Generator, NamedTuple, Optional, overload
+from typing import Generator, NamedTuple, Optional, Union, overload
 
 from serial import Serial
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
-from pms.core import Sensor, base
-
+from pms.core import Sensor, Supported, base
 
 """translation table for raw.hexdump(n)"""
 HEXDUMP_TABLE = bytes.maketrans(
@@ -54,13 +53,13 @@ class SensorReader:
 
     def __init__(
         self,
-        sensor: str = "PMSx003",
+        sensor: Union[Sensor, Supported, str] = Supported.default,
         port: str = "/dev/ttyUSB0",
         interval: Optional[int] = None,
         samples: Optional[int] = None,
     ) -> None:
         """Configure serial port"""
-        self.sensor = Sensor[sensor]  # type: ignore
+        self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]  # type: ignore
         self.serial = Serial()
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud

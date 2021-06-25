@@ -20,7 +20,10 @@ from pms.core import base
 
 
 class Sensor(Enum):
-    """Supported sensors"""
+    """Sensor modules
+
+    sensor modules are loaded from plugins (entry points) advertized as `"pypms.sensors"`
+    """
 
     _ignore_ = "ep alias Sensor"
 
@@ -77,3 +80,15 @@ class Sensor(Enum):
 
         data = self.Message.decode(buffer, self.Commands.passive_read)
         return self.Data(time, *data)  # type: ignore
+
+
+class Supported(str, Enum):
+    """Supported sensor names"""
+
+    _ignore_ = "s Supported"
+
+    Supported = vars()
+    for s in Sensor:  # type: ignore
+        Supported[s.name] = s.name
+
+    default = "PMSx003"

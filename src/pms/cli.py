@@ -1,12 +1,8 @@
 import sys
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Optional
-
-if sys.version_info >= (3, 7):  # pragma: no cover
-    from enum import Enum
-else:  # pragma: no cover
-    from aenum import Enum
 
 if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib import metadata
@@ -16,21 +12,17 @@ else:  # pragma: no cover
 from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms import logger
-from pms.core import MessageReader, Sensor, SensorReader
+from pms.core import MessageReader, SensorReader, Supported
 
 main = Typer(help="Data acquisition and logging tool for PM sensors with UART interface")
+
+"""
+Extra cli commands from plugins
+
+additional Typer commands are loaded from plugins (entry points) advertized as `"pypms.extras"`
+"""
 for ep in metadata.entry_points(group="pypms.extras"):
     main.command(name=ep.name)(ep.load())
-
-
-class Supported(str, Enum):
-    _ignore_ = "s Supported"
-
-    Supported = vars()
-    for s in Sensor:  # type: ignore
-        Supported[s.name] = s.name
-
-    default = "PMSx003"
 
 
 def version_callback(value: bool):  # pragma: no cover
