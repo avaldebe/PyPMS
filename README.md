@@ -17,7 +17,7 @@ Tools for reading Air Quality Sensors with serial (UART) interface, data acquisi
 ```man
 Usage: pms [OPTIONS] COMMAND [ARGS]...
 
-  Data acquisition and logging tool for PM sensors with UART interface
+  Data acquisition and logging for Air Quality Sensors with UART interface
 
 Options:
   -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|MHZ19B|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30|ZH0xx]
