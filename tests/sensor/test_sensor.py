@@ -4,28 +4,28 @@ from typing import Generator, NamedTuple
 import pytest
 
 from pms import SensorWarning
-from pms.core import Sensor
+from pms.core import Sensor, Supported
 
 
-@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+@pytest.mark.parametrize("sensor", Supported)
 @pytest.mark.parametrize("attr", ["Message", "Data", "Commands"])
 def test_sensor_attrs(sensor, attr):
     assert getattr(Sensor[sensor], attr)
 
 
-@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+@pytest.mark.parametrize("sensor", Supported)
 @pytest.mark.parametrize("command", "passive_mode passive_read active_mode sleep wake".split())
 def test_commands(sensor, command):
     assert Sensor[sensor].command(command)
 
 
-@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+@pytest.mark.parametrize("sensor", Supported)
 def test_baud(sensor):
     baud = 9600 if sensor != "SPS30" else 115200
     assert Sensor[sensor].baud == baud
 
 
-@pytest.mark.parametrize("sensor", [s.name for s in Sensor])
+@pytest.mark.parametrize("sensor", Supported)
 def test_pre_heat(sensor):
     pre_heat = 0 if sensor != "MHZ19B" else 180
     assert Sensor[sensor].pre_heat == pre_heat
