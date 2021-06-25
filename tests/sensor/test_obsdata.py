@@ -8,7 +8,7 @@ from pms.sensors.honeywell import hpma115c0, hpma115s0
 from pms.sensors.novafitness import sds01x, sds198
 from pms.sensors.plantower import pms5003st, pms5003t, pmsx003
 from pms.sensors.senserion import sps30
-from pms.sensors.winsen import mhz19b
+from pms.sensors.winsen import mhz19b, zh03b
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw error".split())
@@ -239,6 +239,26 @@ def test_mhz19b_format(fmt, raw=(500,), secs=1_567_198_523, sensor=mhz19b):
         assert f"{obs:{fmt}}" == ", ".join(asdict(obs).keys())
     elif fmt == "csv":
         csv = "{}, {}"
+        assert f"{obs:{fmt}}" == csv.format(secs, *raw)
+    else:
+        with pytest.raises(ValueError) as e:
+            f"{obs:{fmt}}"
+        assert str(e.value).startswith(f"Unknown format code '{fmt}'")
+
+
+@pytest.mark.parametrize("fmt", "header csv pm error".split())
+def test_ZH03B_format(fmt, raw=(133, 150, 101), secs=1_567_198_523, sensor=zh03b):
+    obs = sensor.ObsData(secs, *raw)
+    obs_fmt = dict(
+        pm="{0}: PM1 {3:.1f}, PM2.5 {1:.1f}, PM10 {2:.1f} μg/m3",
+    )
+    date = time.strftime("%F %T", time.localtime(secs))
+    if fmt in obs_fmt:
+        assert f"{obs:{fmt}}" == obs_fmt[fmt].format(date, *raw)
+    elif fmt == "header":
+        assert f"{obs:{fmt}}" == ", ".join(asdict(obs).keys())
+    elif fmt == "csv":
+        csv = "{0}, {3:.1f}, {1:.1f}, {2:.1f}"
         assert f"{obs:{fmt}}" == csv.format(secs, *raw)
     else:
         with pytest.raises(ValueError) as e:
