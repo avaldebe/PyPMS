@@ -9,7 +9,6 @@ NOTE:
 import sys
 import time
 from csv import DictReader
-from functools import lru_cache
 from pathlib import Path
 from textwrap import wrap
 from typing import Generator, NamedTuple, Optional, overload
@@ -18,6 +17,12 @@ from serial import Serial
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
 from pms.core import Sensor, base
+
+
+"""translation table for raw.hexdump(n)"""
+HEXDUMP_TABLE = bytes.maketrans(
+    bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
+)
 
 
 class RawData(NamedTuple):
@@ -30,18 +35,10 @@ class RawData(NamedTuple):
     def hex(self) -> str:
         return self.data.hex()
 
-    @classmethod
-    @lru_cache(maxsize=1, typed=True)
-    def __table(cls) -> bytes:
-        """translation table for raw.hexdump(n)"""
-        return bytes.maketrans(
-            bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
-        )
-
     def hexdump(self, line: Optional[int] = None) -> str:
         offset = time if line is None else line * len(self.data)
         hex = " ".join(wrap(self.data.hex(), 2))  # raw.hex(" ") in python3.8+
-        dump = self.data.translate(self.__table()).decode()
+        dump = self.data.translate(HEXDUMP_TABLE).decode()
         return f"{offset:08x}: {hex}  {dump}"
 
 
