@@ -119,8 +119,7 @@ class ObsData(metaclass=ABCMeta):
         if obs:
             return obs
         raise ValueError(  # pragma: no cover
-            f"Unknown subset code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown subset code '{spec}' for object of type '{__name__}.ObsData'"
         )
 
     @abstractmethod
@@ -128,8 +127,7 @@ class ObsData(metaclass=ABCMeta):
         if spec == "header":  # header for csv file
             return ", ".join(asdict(self).keys())
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )
 
     def __str__(self):
