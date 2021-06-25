@@ -11,13 +11,16 @@ from typing import Tuple
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.core import base
 
+PREHEAT = 180  # 3 minutes
+
 commands = base.Commands(
     passive_read=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
     # same as passive_read for sensor.check
     passive_mode=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
     active_mode=base.Cmd(b"", b"", 0),
     sleep=base.Cmd(b"", b"", 0),
-    wake=base.Cmd(b"", b"", 0),
+    # same as passive_read for sensor.check
+    wake=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
 )
 
 
