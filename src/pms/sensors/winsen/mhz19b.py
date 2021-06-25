@@ -8,7 +8,7 @@ import struct
 from dataclasses import dataclass, field
 from typing import Tuple
 
-from pms import WrongMessageChecksum, WrongMessageFormat
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.core import base
 
 commands = base.Commands(
@@ -53,6 +53,8 @@ class Message(base.Message):
         checksum = message[-1]
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum 0x{msg.checksum:02X} != 0x{checksum:02X}")
+        if sum(msg.payload) == 0:
+            raise SensorWarmingUp(f"message empty: warming up sensor")
         return msg
 
     @staticmethod

@@ -6,6 +6,7 @@ from pms.sensors.honeywell import hpma115s0
 from pms.sensors.novafitness import sds01x
 from pms.sensors.plantower import pms3003, pmsx003
 from pms.sensors.senserion import sps30
+from pms.sensors.winsen import mhz19b
 
 
 @pytest.mark.parametrize(
@@ -140,7 +141,23 @@ from pms.sensors.senserion import sps30
             mcu680,
             "5A5A3F0F00000000000000000000000000000002",
             "message empty: warming up sensor",
-            id="MCU680 wrong checksum",
+            id="MCU680 empty message",
+        ),
+        pytest.param(mhz19b, "FF8601F4", "message length: 4", id="MHZ19B short message"),
+        pytest.param(
+            mhz19b, "FF8701F40000000084", r"message header: b'\xff\x87'", id="MHZ19B wrong header"
+        ),
+        pytest.param(
+            mhz19b,
+            "FF8601F40000000084",
+            "message checksum 0x85 != 0x84",
+            id="MHZ19B wrong checksum",
+        ),
+        pytest.param(
+            mhz19b,
+            "FF860000000000007A",
+            "message empty: warming up sensor",
+            id="MHZ19B wrong checksum",
         ),
     ],
 )
