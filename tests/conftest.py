@@ -89,13 +89,19 @@ def capture(monkeypatch, capture_data) -> CapturedData:
 
     monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
 
+    sensor = capture_data.sensor
     data = capture_data.data
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
         logger.debug(f"mock write/read: {command}")
-        nonlocal data
-        return next(data) if command == "passive_read" else b""
+        # nonlocal data
+        if command == "passive_read":
+            return next(data)
+        if command in ["wake", "passive_mode"]:
+            return b"." * sensor.command(command).answer_length
+
+        return b""
 
     monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
 

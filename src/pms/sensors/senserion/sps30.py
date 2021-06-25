@@ -18,7 +18,8 @@ BAUD = 115_200
 commands = base.Commands(
     # Read Measured Values
     passive_read=base.Cmd(b"\x7E\x00\x03\x00\xFC\x7E", b"\x7E\x00\x03\x00\x28", 47),
-    passive_mode=base.Cmd(b"", b"", 0),
+    # same as passive_read for sensor.check
+    passive_mode=base.Cmd(b"\x7E\x00\x03\x00\xFC\x7E", b"\x7E\x00\x03\x00\x28", 47),
     active_mode=base.Cmd(b"", b"", 0),
     # Stop Measurement
     sleep=base.Cmd(b"\x7E\x00\x01\x00\xFE\x7E", b"\x7E\x00\x01\x00\x00", 7),
