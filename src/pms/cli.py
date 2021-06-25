@@ -14,7 +14,7 @@ from typer import Argument, Context, Exit, Option, Typer, echo
 from pms import logger
 from pms.core import MessageReader, SensorReader, Supported
 
-main = Typer(help="Data acquisition and logging tool for PM sensors with UART interface")
+main = Typer(help="Data acquisition and logging for Air Quality Sensors with UART interface")
 
 """
 Extra cli commands from plugins
