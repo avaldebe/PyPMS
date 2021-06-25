@@ -69,6 +69,8 @@ HPMA115C0 = "pms.sensors.honeywell.hpma115c0"
 SPS30     = "pms.sensors.senserion.sps30"
 # docs/sensors/mcu680.md
 MCU680    = "pms.sensors.bosch_sensortec.mcu680"
+# docs/sensors/Winsen.md
+MHZ19B    = "pms.sensors.winsen.mhz19b"
 
 [tool.poetry.plugins."pypms.extras"]
 influxdb = "pms.extra.influxdb:cli"
