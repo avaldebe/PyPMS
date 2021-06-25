@@ -116,12 +116,12 @@ class SensorReader:
         self.serial.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:  # pragma: no cover
-        pass
+    def __call__(self) -> Generator[base.ObsData, None, None]:
+        ...
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:  # pragma: no cover
-        pass
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+        ...
 
     def __call__(self, *, raw: Optional[bool] = None):
         """Passive mode reading at regular intervals"""
@@ -170,12 +170,12 @@ class MessageReader:
         self.csv.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:  # pragma: no cover
-        pass
+    def __call__(self) -> Generator[base.ObsData, None, None]:
+        ...
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:  # pragma: no cover
-        pass
+    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+        ...
 
     def __call__(self, *, raw: Optional[bool] = None):
         for row in self.data:
