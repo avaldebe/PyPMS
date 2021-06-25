@@ -9,7 +9,6 @@ from pms.core import MessageReader, Sensor
 from pms.core.base import ObsData
 from pms.core.reader import RawData
 
-logger.setLevel("DEBUG")
 captured_data = Path("tests/captured_data/data.csv")
 
 
