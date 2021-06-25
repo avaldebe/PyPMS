@@ -138,6 +138,5 @@ class ObsData(base.ObsData):
         if spec == "diam":
             return f"{self.date:%F %T}: Ø {self.diam:.1f} μm"
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )

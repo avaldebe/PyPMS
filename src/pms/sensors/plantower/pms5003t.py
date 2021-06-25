@@ -83,6 +83,5 @@ class ObsData(pms3003.ObsData):
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )

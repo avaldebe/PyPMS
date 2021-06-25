@@ -145,6 +145,5 @@ class ObsData(base.ObsData):
                 f"{self.date:%F %T}: PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} μg/m3"
             )
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )

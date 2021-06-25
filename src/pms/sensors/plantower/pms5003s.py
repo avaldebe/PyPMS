@@ -53,6 +53,5 @@ class ObsData(pmsx003.ObsData):
         if spec == "hcho":
             return f"{self.date:%F %T}: HCHO {self.HCHO:.3f} mg/m3"
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )

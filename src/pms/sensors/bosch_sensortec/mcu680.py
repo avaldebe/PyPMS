@@ -122,8 +122,7 @@ class ObsData(base.ObsData):
             return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
 
         raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' "
-            f"for object of type '{__name__}.{self.__class__.__name__}'"
+            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
         )
 
     def __str__(self):
