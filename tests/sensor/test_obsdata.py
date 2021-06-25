@@ -8,7 +8,7 @@ from pms.sensors.honeywell import hpma115c0, hpma115s0
 from pms.sensors.novafitness import sds01x, sds198
 from pms.sensors.plantower import pms5003st, pms5003t, pmsx003
 from pms.sensors.senserion import sps30
-from pms.sensors.winsen import mhz19b, zh03b
+from pms.sensors.winsen import mhz19b, zh0xx
 
 
 @pytest.mark.parametrize("fmt", "header csv pm num cf raw error".split())
@@ -247,7 +247,7 @@ def test_mhz19b_format(fmt, raw=(500,), secs=1_567_198_523, sensor=mhz19b):
 
 
 @pytest.mark.parametrize("fmt", "header csv pm error".split())
-def test_ZH03B_format(fmt, raw=(133, 150, 101), secs=1_567_198_523, sensor=zh03b):
+def test_ZH0xx_format(fmt, raw=(133, 150, 101), secs=1_567_198_523, sensor=zh0xx):
     obs = sensor.ObsData(secs, *raw)
     obs_fmt = dict(
         pm="{0}: PM1 {3:.1f}, PM2.5 {1:.1f}, PM10 {2:.1f} μg/m3",

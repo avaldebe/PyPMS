@@ -20,7 +20,7 @@ Usage: pms [OPTIONS] COMMAND [ARGS]...
   Data acquisition and logging tool for PM sensors with UART interface
 
 Options:
-  -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|MHZ19B|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30]
+  -m, --sensor-model [HPMA115C0|HPMA115S0|MCU680|MHZ19B|PMS3003|PMS5003S|PMS5003ST|PMS5003T|PMSx003|SDS01x|SDS198|SPS30|ZH0xx]
                                   sensor model  [default: PMSx003]
   -s, --serial-port TEXT          serial port  [default: /dev/ttyUSB0]
   -i, --interval INTEGER          seconds to wait between updates  [default:
@@ -102,6 +102,9 @@ pipx install pypms[mqtt,influxdb]
 | HPMA115C0         | `HPMA115C0`      |   X   |   X   |   X   |   X   |           |                        |              |              |     X      | [en][HPMA115]                 |
 | [Senserion][]     |
 | SPS30             | `SPS30`          |   X   |   X   |   X   |   X   |     5     | typical particle size  |              |              |     X      | [en][SPS30]                   | UART 115200 8N1      |
+| [Winsen][]        |
+| ZH03B             | `ZH0xx`          |   X   |   X   |   X   |       |           |                        |              |              |     X      | [en][ZH03]                    |
+| ZH06-I            | `ZH0xx`          |   X   |   X   |   X   |       |           |                        |              |              |     X      | [en][ZH06]                    |
 
 [plantower]: http://www.plantower.com/
 [g1_aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
@@ -126,6 +129,10 @@ pipx install pypms[mqtt,influxdb]
 [Senserion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
 [SPS30]: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.6_Particulate_Matter/Datasheets/Sensirion_PM_Sensors_SPS30_Datasheet.pdf
 
+[Winsen]:   https://www.winsen-sensor.com
+[ZH03]:  https://www.winsen-sensor.com/d/files/ZH03B.pdf
+[ZH06]:  https://www.winsen-sensor.com/d/files/ZH06.pdf
+
 ## Other Sensors
 
 - [MCU680][]:
@@ -140,7 +147,6 @@ pipx install pypms[mqtt,influxdb]
 [BSEC]:     https://www.bosch-sensortec.com/software-tools/software/bsec/
 
 [MHZ19B]:   /docs/sensors/Winsen.md#MHZ19B
-[Winsen]:   https://www.winsen-sensor.com
 
 ## Want More Sensors
 
@@ -166,7 +172,7 @@ The [docs][library] contain some help for those brave enough to use its internal
   - plugin architecture
     - load sensor modules from entry points advertized as `"pypms.sensors"`
     - load extra cli commands from entry points advertized as `"pypms.extras"`
-  - support [MHZ19B][] infrared CO2 sensor module from [Winsen][].
+  - support [Winsen][] PM sensors and [MHZ19B][] infrared CO2 sensor.
   - pm1/pm4/raw2_5/pm2_5 properties, [#17](https://github.com/avaldebe/PyPMS/issues/17)
 - 0.5.0
   - set username/password with environment variables:

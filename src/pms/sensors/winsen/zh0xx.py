@@ -1,5 +1,5 @@
 """
-Winsen ZH03B sensors
+Winsen ZH03B/ZH06I sensors
 - messages are 9b long on passive mode and 24b bit long on active mode
 - active mode is not pupported
 """
@@ -13,6 +13,8 @@ from pms.core import base
 
 from . import mhz19b
 
+ALIASES = ("ZH03B", "ZH06I")
+
 commands = base.Commands(
     passive_read=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
     passive_mode=base.Cmd(b"\xFF\x01\x78\x41\x00\x00\x00\x00\x46", b"", 0),
@@ -23,7 +25,7 @@ commands = base.Commands(
 
 
 class Message(mhz19b.Message):
-    """Messages from Winsen ZH03B sensors"""
+    """Messages from Winsen ZH03B/ZH06I sensors"""
 
     data_records = slice(0, 3)
 
@@ -31,7 +33,7 @@ class Message(mhz19b.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """
-    Winsen ZH03B sensor observations
+    Winsen ZH03B/ZH06I sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
