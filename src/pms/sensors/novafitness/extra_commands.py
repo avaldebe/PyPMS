@@ -5,7 +5,7 @@ https://learn.watterott.com/sensors/sds011/sds011_protocol.pdf
 """
 
 
-from pms.core.base import Cmd
+from ..base import Cmd
 
 
 def _msg(cmd: int, payload: str, device: int = 0xFFFF) -> bytes:

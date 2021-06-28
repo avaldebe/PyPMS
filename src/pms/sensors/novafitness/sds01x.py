@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
-from pms.core import base
+
+from .. import base
 
 ALIASES = ("SDS011", "SDS018", "SDS021")
 

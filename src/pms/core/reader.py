@@ -17,7 +17,8 @@ from serial import Serial
 from typer import progressbar
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
-from pms.core import Sensor, Supported, base
+from pms.core import Sensor, Supported
+from pms.sensors import base
 
 """translation table for raw.hexdump(n)"""
 HEXDUMP_TABLE = bytes.maketrans(

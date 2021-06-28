@@ -8,8 +8,7 @@ import struct
 from dataclasses import dataclass, field
 from typing import Tuple
 
-from pms.core import base
-
+from .. import base
 from . import pms3003, pms5003s, pmsx003
 
 commands = base.Commands(

@@ -6,8 +6,8 @@ import pytest
 
 from pms import logger
 from pms.core import MessageReader, Sensor
-from pms.core.base import ObsData
 from pms.core.reader import RawData
+from pms.sensors.base import ObsData
 
 captured_data = Path("tests/captured_data/data.csv")
 

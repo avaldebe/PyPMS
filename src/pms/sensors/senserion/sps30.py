@@ -11,7 +11,8 @@ from dataclasses import dataclass, field
 from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
-from pms.core import base
+
+from .. import base
 
 BAUD = 115_200
 

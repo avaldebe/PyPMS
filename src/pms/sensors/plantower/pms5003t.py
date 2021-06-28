@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 from typing import Tuple
 
 from pms import InconsistentObservation
-from pms.core import base
 
+from .. import base
 from . import pms3003, pmsx003
 
 commands = pmsx003.commands

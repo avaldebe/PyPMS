@@ -6,8 +6,7 @@ Plantower PMS5003S sensors
 
 from dataclasses import dataclass, field
 
-from pms.core import base
-
+from .. import base
 from . import pms3003, pmsx003
 
 commands = pmsx003.commands

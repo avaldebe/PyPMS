@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
-from pms.core import base
 
+from .. import base
 from . import mhz19b
 
 ALIASES = ("ZH03B", "ZH06I")
