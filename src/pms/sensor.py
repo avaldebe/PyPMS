@@ -1,8 +1,9 @@
-from pms import logger
+import warnings
+
 from pms.core import MessageReader, Sensor, SensorReader
 
-logger.warning(
-    f"the pms.sensor module is deprecated, import from pms.core instead",
+warnings.warn(
+    "the pms.sensor module is deprecated, import from pms.core instead",
     DeprecationWarning,
-    2,
+    stacklevel=2,
 )

@@ -1,3 +1,4 @@
+import warnings
 from abc import ABCMeta, abstractmethod
 from dataclasses import asdict, dataclass
 from datetime import datetime
@@ -104,11 +105,11 @@ class ObsData(metaclass=ABCMeta):
         """measurement time as datetime object"""
         return datetime.fromtimestamp(self.time)
 
-    def subset(self, spec: str) -> Dict[str, float]:  # pragma: no cover
-        logger.warning(
+    def subset(self, spec: str = None) -> Dict[str, float]:  # pragma: no cover
+        warnings.warn(
             "obs.subset is deprecated, use dataclasses.asdict(obs) for a dictionary mapping",
             DeprecationWarning,
-            2,
+            stacklevel=2,
         )
         if spec:
             obs = {k: v for k, v in asdict(self).items() if k.startswith(spec)}
@@ -116,9 +117,7 @@ class ObsData(metaclass=ABCMeta):
             obs = {k: v for k, v in asdict(self).items() if k != "time"}
         if obs:
             return obs
-        raise ValueError(  # pragma: no cover
-            f"Unknown subset code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+        raise ValueError(f"Unknown subset code '{spec}' for object of type '{__name__}.ObsData'")
 
     @abstractmethod
     def __format__(self, spec: str) -> str:

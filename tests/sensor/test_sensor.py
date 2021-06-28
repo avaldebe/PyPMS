@@ -100,7 +100,7 @@ class GoodData(Enum):
     )
 
     @classmethod
-    def test_param(cls) -> Generator[pytest.param, None, None]:  # type: ignore
+    def test_param(cls) -> Generator[pytest.param, None, None]:  # type: ignore[valid-type]
         for sensor in cls:
             data = sensor.value
             yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
@@ -108,7 +108,7 @@ class GoodData(Enum):
             yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
 
     @classmethod
-    def test_obs(cls, secs: int = 1567201793) -> Generator[pytest.param, None, None]:  # type: ignore
+    def test_obs(cls, secs: int = 1567201793) -> Generator[pytest.param, None, None]:  # type: ignore[valid-type]
         for sensor in cls:
             obs = Sensor[sensor.name].decode(sensor.value.msg, time=secs)
             yield pytest.param(obs, id=sensor.name)
