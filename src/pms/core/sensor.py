@@ -85,7 +85,7 @@ class Sensor(Enum):
             time = self.now()
 
         data = self.Message.decode(buffer, self.Commands.passive_read)
-        return self.Data(time, *data)  # type: ignore
+        return self.Data(time, *data)  # type: ignore[operator]
 
 
 class Supported(str, Enum):
@@ -94,7 +94,7 @@ class Supported(str, Enum):
     _ignore_ = "s Supported"
 
     Supported = vars()
-    for s in Sensor:  # type: ignore
+    for s in Sensor:
         Supported[s.name] = s.name
 
     default = "PMSx003"

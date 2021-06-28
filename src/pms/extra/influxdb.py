@@ -6,7 +6,7 @@ from mypy_extensions import NamedArg
 from typer import Abort, Context, Option, colors, echo, style
 
 try:
-    from influxdb import InfluxDBClient as client
+    from influxdb import InfluxDBClient as client  # type: ignore
 except ModuleNotFoundError:
     client = None  # type: ignore
 

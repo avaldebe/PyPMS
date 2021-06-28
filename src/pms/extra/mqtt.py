@@ -5,7 +5,7 @@ from typing import Callable, Dict, NamedTuple, Union
 from typer import Abort, Context, Option, colors, echo, style
 
 try:
-    from paho.mqtt import client
+    from paho.mqtt import client  # type: ignore
 except ModuleNotFoundError:
     client = None  # type: ignore
 

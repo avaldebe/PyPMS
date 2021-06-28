@@ -60,7 +60,7 @@ class SensorReader:
         samples: Optional[int] = None,
     ) -> None:
         """Configure serial port"""
-        self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]  # type: ignore
+        self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]
         self.pre_heat = self.sensor.pre_heat
         self.serial = Serial()
         self.serial.port = port

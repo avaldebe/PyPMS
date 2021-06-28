@@ -55,7 +55,7 @@ class Message(metaclass=ABCMeta):
     def decode(cls, message: bytes, command: Cmd) -> Tuple[float, ...]:
         header = command.answer_header
         length = command.answer_length
-        return cls.unpack(message, header, length)[cls.data_records]  # type: ignore
+        return cls.unpack(message, header, length)[cls.data_records]  # type: ignore[call-overload]
 
     @property
     @classmethod
@@ -89,7 +89,7 @@ class Message(metaclass=ABCMeta):
         pass
 
 
-@dataclass  # type: ignore
+@dataclass  # type: ignore[misc]
 class ObsData(metaclass=ABCMeta):
     """Measurements
 

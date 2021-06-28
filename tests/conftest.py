@@ -13,7 +13,7 @@ captured_data = Path("tests/captured_data/data.csv")
 
 
 def read_captured_data(sensor: str) -> Generator[RawData, None, None]:
-    with MessageReader(captured_data, Sensor[sensor]) as reader:  # type: ignore
+    with MessageReader(captured_data, Sensor[sensor]) as reader:
         for raw in reader(raw=True):
             yield raw
 
@@ -30,7 +30,7 @@ class CapturedData(Enum):
 
     @property
     def sensor(self) -> Sensor:
-        return Sensor[self.name]  # type: ignore
+        return Sensor[self.name]
 
     @property
     def data(self) -> Generator[bytes, None, None]:
