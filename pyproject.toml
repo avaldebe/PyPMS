@@ -134,11 +134,11 @@ skip_covered =  true
 fail_under = 100
 
 [tool.black]
-target-version = ['py36']
+target-version = ['py38']
 line-length = 100
 
 [tool.isort]
-py_version = "37" # dataclasses in standard library
+py_version = "38"
 profile = "black"
 src_paths = ["src", "tests"]
 line_length = 100
@@ -158,4 +158,6 @@ overrides = [
     { ignore_missing_imports = true, module = "influxdb" },
     { ignore_missing_imports = true, module = "serial" },
     { ignore_missing_imports = true, module = "aenum" },
+    { warn_unused_ignores = false, module = "pms.extra.mqtt" },
+    { warn_unused_ignores = false, module = "pms.extra.influxdb" },
 ]
