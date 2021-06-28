@@ -60,34 +60,32 @@ class Message(metaclass=ABCMeta):
     @property
     @classmethod
     @abstractmethod
-    def data_records(cls) -> slice:  # pragma: no cover
+    def data_records(cls) -> slice:
         pass
 
     @property
     @abstractmethod
-    def header(self) -> bytes:  # pragma: no cover
+    def header(self) -> bytes:
         pass
 
     @property
     @abstractmethod
-    def payload(self) -> bytes:  # pragma: no cover
+    def payload(self) -> bytes:
         pass
 
     @property
     @abstractmethod
-    def checksum(self) -> int:  # pragma: no cover
+    def checksum(self) -> int:
         pass
 
     @classmethod
     @abstractmethod
-    def _validate(
-        self, message: bytes, header: bytes, length: int
-    ) -> "Message":  # pragma: no cover
+    def _validate(self, message: bytes, header: bytes, length: int) -> "Message":
         pass
 
     @staticmethod
     @abstractmethod
-    def _unpack(message: bytes) -> Tuple[float, ...]:  # pragma: no cover
+    def _unpack(message: bytes) -> Tuple[float, ...]:
         pass
 
 
@@ -126,9 +124,7 @@ class ObsData(metaclass=ABCMeta):
     def __format__(self, spec: str) -> str:
         if spec == "header":  # header for csv file
             return ", ".join(asdict(self).keys())
-        raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+        raise ValueError(f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'")
 
     def __str__(self):
         return self.__format__("pm")

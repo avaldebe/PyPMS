@@ -121,7 +121,7 @@ source = ["pms"]
 omit = ["*/__init__.py", "*/__main__.py"]
 
 [tool.coverage.report]
-exclude_lines = ["pragma: no cover", "@overload", "def __repr__", "def __str__"]
+exclude_lines = ["pragma: no cover", "@overload", "@abstractmethod", "def __repr__", "def __str__"]
 show_missing = true
 skip_covered =  true
 fail_under = 100
