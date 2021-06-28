@@ -6,7 +6,7 @@ from typer import Abort, Context, Option, colors, echo, style
 
 try:
     from paho.mqtt import client
-except ModuleNotFoundError:  # pragma: no cover
+except ModuleNotFoundError:
     client = None  # type: ignore
 
 from pms import logger
