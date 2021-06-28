@@ -97,12 +97,13 @@ skipsdist=True
 commands =
     black --check .
     isort --check .
-    mypy src/
+    mypy .
 deps =
     black
     isort
     mypy>=0.902
     types-dataclasses
+    pytest
 
 [gh-actions]
 python =
