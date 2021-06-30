@@ -66,11 +66,14 @@ class CapturedData(Enum):
 
 @pytest.fixture(params=list(CapturedData))
 def capture_data(request) -> CapturedData:
+    """captured data from real sensors"""
     return request.param
 
 
 @pytest.fixture()
 def capture(monkeypatch, capture_data) -> CapturedData:
+    """mock pms.core.reader.Serial and some pms.core.reader.SensorReader internals"""
+
     class MockSerial:
         port = None
         baudrate = None
