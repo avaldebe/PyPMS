@@ -46,6 +46,7 @@ influxdb = ["influxdb"]
 [tool.poetry.dev-dependencies]
 pytest = ">=6.2.4"
 pytest-cov = ">=2.12.1"
+pytest-sugar = ">=0.9.4"
 mypy = ">=0.902"
 types-dataclasses = ">=0.1.5"
 
@@ -87,7 +88,7 @@ isolated_build = True
 
 [testenv]
 commands =
-    pytest --cov {posargs}
+    pytest -ra -q --cov {posargs}
 deps =
     pytest
     pytest-cov
@@ -115,7 +116,7 @@ python =
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q -Werror"
+addopts = "--lf -Werror"
 
 [tool.coverage.run]
 source = ["pms"]
