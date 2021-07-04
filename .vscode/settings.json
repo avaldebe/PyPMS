@@ -58,8 +58,10 @@
         "gmail",
         "hhbh",
         "hpma",
+        "inlinehilite",
         "jtag",
         "lcsc",
+        "materialx",
         "mqttpassword",
         "mqttuser",
         "platformio",
@@ -73,6 +75,7 @@
         "senserion",
         "skipif",
         "superfences",
+        "twemoji",
         "winsen"
     ]
 }
