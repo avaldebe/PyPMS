@@ -1,6 +1,6 @@
 # Serial Air Quality Sensors
 
-Tools for reading Air Quality Sensors with serial (UART) interface, data acquisition and logging.
+Data acquisition and logging for Air Quality Sensors with UART interface
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pypms)](https://pypi.org/project/pypms)
 [![PyPI](https://img.shields.io/pypi/v/pypms)](https://pypi.org/project/pypms)

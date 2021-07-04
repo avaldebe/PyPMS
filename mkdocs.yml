@@ -1,0 +1,38 @@
+site_name: PyPMS
+site_url: https://avaldebe.github.io/pypms
+repo_url: https://github.com/avaldebe/PyPMS
+
+theme:
+  name: material
+  features:
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: purple
+      accent: deep purple
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+
+nav:
+  - 'index.md'
+  - Senors:
+    - Plantower: 'sensors/Plantower.md'
+    - NovaFitness: 'sensors/NovaFitness.md'
+    - Honeywell: 'sensors/Honeywell.md'
+    - Senserion: 'sensors/Senserion.md'
+    - Winsen: 'sensors/Winsen.md'
+    - Bosch Sensortec: 'sensors/mcu680.md'
+  - 'library_usage.md'

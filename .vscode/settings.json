@@ -61,14 +61,17 @@
         "lcsc",
         "mqttpassword",
         "mqttuser",
+        "platformio",
         "pmsa",
         "pmsx",
         "pwsh",
+        "pymdownx",
         "pypa",
         "pypoetry",
         "pyproject",
         "senserion",
         "skipif",
+        "superfences",
         "winsen"
     ]
 }
