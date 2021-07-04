@@ -19,10 +19,14 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
 
 
 markdown_extensions:
   - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
   - pymdownx.superfences
 
 

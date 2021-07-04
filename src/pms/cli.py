@@ -77,7 +77,7 @@ def serial(
     format: Optional[Format] = Option(None, "--format", "-f", help="formatted output"),
     decode: Optional[Path] = Option(None, help="decode captured messages"),
 ):
-    """Read sensor and print measurements"""
+    """Read sensor and print formatted measurements"""
     reader = ctx.obj["reader"]
     if decode:
         reader = MessageReader(decode, reader.sensor, reader.samples)
@@ -103,7 +103,7 @@ def csv(
     overwrite: bool = Option(False, "--overwrite", help="overwrite file, if already exists"),
     path: Path = Argument(Path(), help="csv formatted file", show_default=False),
 ):
-    """Read sensor and print measurements"""
+    """Read sensor and save measurements to a CSV file"""
     if path.is_dir():  # pragma: no cover
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
