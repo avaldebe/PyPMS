@@ -1,4 +1,4 @@
-name: Test New Package Version
+name: New Package Version
 
 on:
   push:
