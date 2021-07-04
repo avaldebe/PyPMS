@@ -1,10 +1,24 @@
 # [Winsen] sensors
 
-| Sensor  | `--sensor-model` |  PM1  | PM2.5 | PM10  | CO2 | Datasheet  | Dimensions   | Connector |
-| ------- | ---------------- | :---: | :---: | :---: | --- | ---------- | ------------ | --------- |
-| ZH03B   | [ZH0xx][]        |   X   |   X   |   X   |     | [en][zh03] | 50x32x21 mm³ | [8 pin][] |
-| ZH06-I  | [ZH0xx][]        |   X   |   X   |   X   |     | [en][zh06] | 47×37×12 mm³ | [8 pin][] |
-| MH-Z19B | [MHZ19B][]       |       |       |       | X   | [en][z19b] | 40×20×9 mm³  | [7 pin][] |
+!!! warning
+    This sensors are 3.3V devices. They require 5V power to operate.
+    However, on some sensors the I/O pins are not 5V tolerant and the sensor will be damaged by 5V logic.
+
+=== "sensor"
+
+    | Sensor  | `--sensor-model` |       PM1        |      PM2.5       |       PM10       | CO2              |
+    | ------- | ---------------- | :--------------: | :--------------: | :--------------: | ---------------- |
+    | MH-Z19B | [MHZ19B]         |                  |                  |                  | :material-check: |
+    | ZH03B   | [ZH0xx]          | :material-check: | :material-check: | :material-check: |                  |
+    | ZH06-I  | [ZH0xx]          | :material-check: | :material-check: | :material-check: |                  |
+
+=== "datasheet"
+
+    | Sensor  | Datasheet  | Dimensions   | Connector |
+    | ------- | ---------- | ------------ | --------- |
+    | MH-Z19B | [en][z19b] | 40×20×9 mm³  | [7 pin]   |
+    | ZH03B   | [en][zh03] | 50x32x21 mm³ | [8 pin]   |
+    | ZH06-I  | [en][zh06] | 47×37×12 mm³ | [8 pin]   |
 
 [Winsen]:https://www.winsen-sensor.com
 [zh03]:  https://www.winsen-sensor.com/d/files/ZH03B.pdf
@@ -13,102 +27,220 @@
 
 [ZH0xx]:   #zh0xx
 [MHZ19B]:  #mhz19b
-[7 pin]:   #7-pin-connector
-[8 pin]:   #8-pin-connector
+[7 pin]:   #connector
+[8 pin]:   #connector
 
-## WARNING
+## Connector
 
-This sensors are 3.3V devices. They require 5V power to operate.
-However, on some sensors the I/O pins are not 5V tolerant and the sensor will be damaged by 5V logic.
+=== "7 pin"
 
-## 7 Pin connector
+    7 pin Molex 1.25mm "PicoBlade" 51021 compatible, found online as 1.25mm JST.
 
-7 pin Molex 1.25mm "PicoBlade" 51021 compatible, found online as 1.25mm JST.
+    | Pin | Name | Voltage  | Function    |
+    | --- | ---- | -------- | ----------- |
+    | 1/2 |      |          | reserved    |
+    | 3   | GND  | 0V       |
+    | 4   | VCC  | 5V       |
+    | 5   | RX   | 3.3V TTL | serial port |
+    | 6   | TX   | 3.3V TTL | serial port |
+    | 7   |      |          | reserved    |
 
-| Pin | Name | Voltage  | Function    |
-| --- | ---- | -------- | ----------- |
-| 1/2 |      |          | reserved    |
-| 3   | GND  | 0V       |
-| 4   | VCC  | 5V       |
-| 5   | RX   | 3.3V TTL | serial port |
-| 6   | TX   | 3.3V TTL | serial port |
-| 7   |      |          | reserved    |
+=== "8 pin"
 
-## 8 Pin connector
+    8 pin Molex 1.25mm "PicoBlade" 51021 compatible, found online as 1.25mm JST.
 
-8 pin Molex 1.25mm "PicoBlade" 51021 compatible, found online as 1.25mm JST.
+    | Pin | Name | Voltage  | Function           |
+    | --- | ---- | -------- | ------------------ |
+    | 1   | VCC  | 5V       |
+    | 2   | GND  | 0V       |
+    | 3   |      |          | reserved           |
+    | 4   | RX   | 3.3V TTL | serial port        |
+    | 5   | TX   | 3.3V TTL | serial port        |
+    | 6/7 | NC   |          | reserved           |
+    | 8   | PWM  | 3.3V PWM | PM2.5 0-1000 μg/m³ |
 
-| Pin | Name | Voltage  | Function           |
-| --- | ---- | -------- | ------------------ |
-| 1   | VCC  | 5V       |
-| 2   | GND  | 0V       |
-| 3   |      |          | reserved           |
-| 4   | RX   | 3.3V TTL | serial port        |
-| 5   | TX   | 3.3V TTL | serial port        |
-| 6/7 | NC   |          | reserved           |
-| 8   | PWM  | 3.3V PWM | PM2.5 0-1000 μg/m³ |
+## Protocol
 
-## Serial communication
+Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
+!!! note
+    The [MHZ19B datasheet][z19b] advertized interface as 5V tolerant.
+    However, the this sensor has only been tested with a 3.3V interface.
 
-Serial protocol is UART 9600 8N1 ([3.3V TTL](#warning)).
-The [`MHZ19B`][] datasheet advertized interface as 5V tolerant.
-However, the this sensor has only been tested with a 3.3V interface.
+    The datasheet also mentions that this sensor needs to warm up for 180 s.
+    Therefore, no measurements will be requested until the warm up period is completed.
 
-### Commands
+=== "commands"
 
-| Command        | `--sensor-model`           | Description                           | `message`                    |
-| -------------- | -------------------------- | ------------------------------------- | ---------------------------- |
-| `active_mode`  | [`ZH0xx`][]                | continuous operation                  | `FF 01 78 40 00 00 00 00 47` |
-| `passive_mode` | [`ZH0xx`][] & [`MHZ19B`][] | single-shot operation                 | `FF 01 78 41 00 00 00 00 46` |
-| `passive_read` | [`ZH0xx`][]                | trigger single-shot measurement       | `FF 01 86 00 00 00 00 00 79` |
-| `sleep`        | [`ZH0xx`][]                | sleep mode                            | `FF 01 A7 01 00 00 00 00 57` |
-| `wake`         | [`ZH0xx`][]                | wake up from sleep mode               | `FF 01 A7 00 00 00 00 00 58` |
-|                | [`MHZ19B`][]               | 400 ppm CO2 (zero point) calibration  | `FF 01 87 00 00 00 00 00 78` |
-|                | [`MHZ19B`][]               | 1000 ppm CO2 (span point) calibration | `FF 01 88 03 E8 00 00 00 8C` |
-|                | [`MHZ19B`][]               | 2000 ppm CO2 (span point) calibration | `FF 01 88 07 D0 00 00 00 A0` |
+    | Command        | `--sensor-model`   | Description                           | `message`                    |
+    | -------------- | ------------------ | ------------------------------------- | ---------------------------- |
+    | `active_mode`  | [ZH0xx]            | continuous operation                  | `FF 01 78 40 00 00 00 00 47` |
+    | `passive_mode` | [ZH0xx] & [MHZ19B] | single-shot operation                 | `FF 01 78 41 00 00 00 00 46` |
+    | `passive_read` | [ZH0xx]            | trigger single-shot measurement       | `FF 01 86 00 00 00 00 00 79` |
+    | `sleep`        | [ZH0xx]            | sleep mode                            | `FF 01 A7 01 00 00 00 00 57` |
+    | `wake`         | [ZH0xx]            | wake up from sleep mode               | `FF 01 A7 00 00 00 00 00 58` |
+    |                | [MHZ19B]           | 400 ppm CO2 (zero point) calibration  | `FF 01 87 00 00 00 00 00 78` |
+    |                | [MHZ19B]           | 1000 ppm CO2 (span point) calibration | `FF 01 88 03 E8 00 00 00 8C` |
+    |                | [MHZ19B]           | 2000 ppm CO2 (span point) calibration | `FF 01 88 07 D0 00 00 00 A0` |
 
-### Measurements
+=== "message"
 
-Messages containing measurements consist of unsigned short integers.
-The last bit of the message should contain `0x100 - sum(message[1:-1]) % 0x100`.
+    Messages containing measurements consist of unsigned short integers.
+    The last bit of the message should contain `0x100 - sum(message[1:-1]) % 0x100`.
 
-| `message` | [`MHZ19B`][]         | [`ZH0xx`][] |
-| --------- | -------------------- | ----------- |
-|           | 9 bits               | 9           |
-| header    | 2 bits               | 2 bits      |
-|           | `FF 86`              | `FF 86`     |
-| body      | 6 bits               | 6 bits      |
-|           | 1 values, 2 reserved | 3 values    |
-| checksum  | 1 bit                | 1 bit       |
+    | `message` | [MHZ19B]             | [ZH0xx]  |
+    | --------- | -------------------- | -------- |
+    |           | 9 bits               | 9        |
+    | header    | 2 bits               | 2 bits   |
+    |           | `FF 86`              | `FF 86`  |
+    | body      | 6 bits               | 6 bits   |
+    |           | 1 values, 2 reserved | 3 values |
+    | checksum  | 1 bit                | 1 bit    |
 
-### MHZ19B
+=== "MHZ19B"
 
-The message body (`message[2:4]`) contains 1 value:
+    The message body (`message[2:4]`) contains 1 value:
 
-- co2: CO2 concentration [ppm]
+    - co2: CO2 concentration [ppm]
 
-The following hexdump (`pms -m MHZ19B -n 10 -i 10 serial -f hexdump`) shows one message per line
+=== "ZH0xx"
 
-```hexdump
-00000000: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000009: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000012: ff 86 02 8a 44 00 00 00 aa  ....D....
-0000001b: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000024: ff 86 02 8a 44 00 00 00 aa  ....D....
-0000002d: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000036: ff 86 02 8a 44 00 00 00 aa  ....D....
-0000003f: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000048: ff 86 02 8a 44 00 00 00 aa  ....D....
-00000051: ff 86 02 8a 44 00 00 00 aa  ....D....
-```
+    The message body (`message[2:8]`) contains 3 values:
 
-### ZH0xx
+    - pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]
 
-The message body (`message[2:8]`) contains 3 values:
+## MHZ19B
 
-- pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]
+=== "info"
 
-The following hexdump (`pms -m ZH0xx -n 10 -i 10 serial -f hexdump`) shows one message per line
+    About the MHZ19B sensor (`-m MHZ19B`)
 
-```hexdump
-```
+    ``` bash
+    pms -m MHZ19B info
+    ```
+
+    ``` man
+    Winsen MH-Z19B sensor observations
+
+    time                                    measurement time [seconds since epoch]
+    CO2                                     CO2 concentration [ppm]
+
+    String formats: co2 (default), csv and header
+    ```
+
+=== "serial"
+
+    Read 10 samples (`-n 10`), one sample every 10 seconds (`-i 10`)
+
+    ``` bash
+    pms -m MHZ19B -n 10 -i 10 serial
+    ```
+
+    ``` csv
+    2021-07-04 19:17:36: CO2 636 ppm
+    2021-07-04 19:17:46: CO2 636 ppm
+    2021-07-04 19:17:56: CO2 636 ppm
+    2021-07-04 19:18:06: CO2 636 ppm
+    2021-07-04 19:18:16: CO2 636 ppm
+    2021-07-04 19:18:26: CO2 636 ppm
+    2021-07-04 19:18:36: CO2 636 ppm
+    2021-07-04 19:18:46: CO2 636 ppm
+    2021-07-04 19:18:56: CO2 635 ppm
+    2021-07-04 19:19:06: CO2 633 ppm
+    ```
+
+=== "csv"
+
+    Print on CSV format (`-f csv`)
+
+
+    ``` bash
+    pms -m MHZ19B -n 10 -i 10 serial -f csv
+    ```
+
+    ``` csv
+    time, CO2
+    1625419066, 636
+    1625419076, 636
+    1625419086, 636
+    1625419096, 636
+    1625419106, 636
+    1625419116, 636
+    1625419126, 636
+    1625419136, 635
+    1625419146, 633
+    ```
+
+=== "hexdump"
+
+    Print on hexdump format (`-f hexdump`)
+
+    ``` bash
+    pms -m MHZ19B -n 10 -i 10 serial -f hexdump
+    ```
+
+    ``` hexdump
+    00000000: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    00000009: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    00000012: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    0000001b: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    00000024: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    0000002d: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    00000036: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    0000003f: ff 86 02 7c 42 00 00 00 ba  ...|B....
+    00000048: ff 86 02 7b 42 00 00 00 bb  ...{B....
+    00000051: ff 86 02 79 42 00 00 00 bd  ...yB....
+    ```
+
+## ZH0xx
+
+=== "info"
+
+    About the sensors supported by the ZH0xx protocol (`-m ZH0xx`)
+
+    ``` bash
+    pms -m ZH0xx info
+    ```
+
+    ``` csv
+    Winsen ZH03B and ZH06-I sensor observations
+
+    time                                    measurement time [seconds since epoch]
+    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+
+    String formats: pm (default), csv and header
+    ```
+
+=== "serial"
+
+    Read 10 samples (`-n 10`), one sample every 10 seconds (`-i 10`)
+
+    ``` bash
+    pms -m ZH0xx -n 10 -i 10 serial
+    ```
+
+    ``` csv
+    ```
+
+=== "csv"
+
+    Print on CSV format (`-f csv`)
+
+
+    ``` bash
+    pms -m ZH0xx -n 10 -i 10 serial -f csv
+    ```
+
+    ``` csv
+    ```
+
+=== "hexdump"
+
+    Print on hexdump format (`-f hexdump`)
+
+
+    ``` bash
+    pms -m ZH0xx -n 10 -i 10 serial -f hexdump
+    ```
+
+    ``` hexdump
+    ```
