@@ -2,16 +2,16 @@
 
 | Sensor    | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | Datasheet     | Dimensions   | Connector  |
 | --------- | ---------------- | :---: | :---: | :---: | :---: | ------------- | ------------ | ---------- |
-| HPMA115S0 | [`HPMA115S0`][]  |       |   X   |       |   X   | [en][HPMA115] | 43x36x24 mm³ | [8 pin][]  |
-| HPMA115C0 | [`HPMA115C0`][]  |   X   |   X   |   X   |   X   | [en][HPMA115] | 44X36X12 mm³ | [10 pin][] |
+| HPMA115S0 | [HPMA115S0][]    |       |   X   |       |   X   | [en][HPMA115] | 43x36x24 mm³ | [8 pin][]  |
+| HPMA115C0 | [HPMA115C0][]    |   X   |   X   |   X   |   X   | [en][HPMA115] | 44X36X12 mm³ | [10 pin][] |
 
 [Honeywell]: https://sensing.honeywell.com/sensors/particle-sensors/hpm-series
-[HPMA115]: https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
+[HPMA115]:   https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
 
-[`HPMA115S0`]:#HPMA115S0
-[`HPMA115C0`]:#HPMA115C0
-[8 pin]:      #8_Pin_connector
-[10 pin]:     #10_Pin_connector
+[HPMA115S0]: #hpma115s0
+[HPMA115C0]: #hpma115c0
+[8 pin]:     #8-pin-connector
+[10 pin]:    #10-pin-connector
 
 ## WARNING
 
@@ -69,7 +69,7 @@ All the Honeywell PM sensors can be fully controlled with serial commands:
 Messages containing measurements consist of unsigned short integers.
 The last bit of the message should contain `sum(message[3:-1])%0x100`.
 
-| `message` | [`HPMA115S0`][]             | [`HPMA115C0`][]              |
+| `message` | [HPMA115S0][]               | [HPMA115C0][]                |
 | --------- | --------------------------- | ---------------------------- |
 |           | 8 bits (32b on active mode) | 16 bits (32b on active mode) |
 | header    | 3 bits                      | 3 bits                       |

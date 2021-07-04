@@ -2,10 +2,10 @@
 
 | Sensor | `--sensor-model` | PM2.5 | PM10  | PM100 | Datasheet    | Dimensions   | Connector |
 | ------ | ---------------- | :---: | :---: | :---: | ------------ | ------------ | --------- |
-| SDS011 | [`SDS01x`][]     |   X   |   X   |       | [en][SDS011] | 70x70x25 mm³ | [7 Pin][] |
-| SDS018 | [`SDS01x`][]     |   X   |   X   |       | [en][SDS018] | 60x46x20 mm³ | [7 Pin][] |
-| SDS021 | [`SDS01x`][]     |   X   |   X   |       | [en][SDS021] | 43x32x24 mm³ | [5 Pin][] |
-| SDS198 | [`SDS198`][]     |       |       |   X   | [en][SDS198] | 70x70x25 mm³ | [7 Pin][] |
+| SDS011 | [SDS01x][]       |   X   |   X   |       | [en][SDS011] | 70x70x25 mm³ | [7 Pin][] |
+| SDS018 | [SDS01x][]       |   X   |   X   |       | [en][SDS018] | 60x46x20 mm³ | [7 Pin][] |
+| SDS021 | [SDS01x][]       |   X   |   X   |       | [en][SDS021] | 43x32x24 mm³ | [5 Pin][] |
+| SDS198 | [SDS198][]       |       |       |   X   | [en][SDS198] | 70x70x25 mm³ | [7 Pin][] |
 
 [NovaFitness]: http://inovafitness.com/en/a/index.html
 [SDS011]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS011%20laser%20PM2.5%20sensor%20specification-V1.3.pdf
@@ -13,10 +13,10 @@
 [SDS021]: https://cdn.sparkfun.com/assets/parts/1/2/2/7/5/SDS021_laser_PM2.5_sensor_specification-V1.0.pdf
 [SDS198]: https://www-sd-nf.oss-cn-beijing.aliyuncs.com/官网下载/SDS198%20laser%20PM100%20sensor%20specification-V1.2.pdf
 
-[`SDS01x`]: #SDS01x
-[`SDS198`]: #SDS198
-[5 pin]:    #5_Pin_connector
-[7 pin]:    #7_Pin_connector
+[SDS01x]: #sds01x
+[SDS198]: #sds198
+[5 pin]:  #5-pin-connector
+[7 pin]:  #7-pin-connector
 
 ## WARNING
 
@@ -71,7 +71,7 @@ can be fully controlled with serial commands:
 Messages containing measurements consist of unsigned short integers.
 The second to last bit of the message should contain `sum(message[2:-2])%0x100`.
 
-| `message` | [`SDS01x`][]   | [`SDS198`][]              |
+| `message` | [SDS01x][]     | [SDS198][]                |
 | --------- | -------------- | ------------------------- |
 |           | 10 bits        | 10 bits                   |
 | header    | 2 bits         | 2 bits                    |

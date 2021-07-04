@@ -2,14 +2,14 @@
 
 | Sensor    | `--sensor-model` |  PM1  | PM2.5 | PM10  | size bins | Other                  | Datasheet                     | Dimensions   | Connector  |
 | --------- | ---------------- | :---: | :---: | :---: | :-------: | ---------------------- | ----------------------------- | ------------ | ---------- |
-| PMS1003   | [`PMSx003`][]    |   X   |   X   |   X   |     6     |                        | [en][g1_aqmd],  [cn][g1_lcsc] | 42x65x23 mm³ | [8 pin][]  |
-| PMS3003   | [`PMS3003`][]    |   X   |   X   |   X   |           | No passive mode read   | [en][g3_aqmon], [cn][g3_lcsc] | 43x50x21 mm³ | [8 pin][]  |
-| PMS5003   | [`PMSx003`][]    |   X   |   X   |   X   |     6     |                        | [en][g5_aqmd],  [cn][g5_lcsc] | 38x50x21 mm³ | [8 pin][]  |
-| PMS5003T  | [`PMS5003T`][]   |   X   |   X   |   X   |     4     | temp. & rel.hum.       |                               | 38x50x21 mm³ | [8 pin][]  |
-| PMS5003S  | [`PMS5003S`][]   |   X   |   X   |   X   |     6     | HCHO concentration     |                               | 38x50x21 mm³ | [8 pin][]  |
-| PMS5003ST | [`PMS5003ST`][]  |   X   |   X   |   X   |     6     | HCHO, temp. & rel.hum. |                               | 38x50x21 mm³ | [8 pin][]  |
-| PMS7003   | [`PMSx003`][]    |   X   |   X   |   X   |     6     |                        | [cn][g7_lcsc]                 | 37x48x12 mm³ | [10 pin][] |
-| PMSA003   | [`PMSx003`][]    |   X   |   X   |   X   |     6     |                        | [cn][gA_lcsc]                 |              | [10 pin][] |
+| PMS1003   | [PMSx003][]      |   X   |   X   |   X   |     6     |                        | [en][g1_aqmd],  [cn][g1_lcsc] | 42x65x23 mm³ | [8 pin][]  |
+| PMS3003   | [PMS3003][]      |   X   |   X   |   X   |           | No passive mode read   | [en][g3_aqmon], [cn][g3_lcsc] | 43x50x21 mm³ | [8 pin][]  |
+| PMS5003   | [PMSx003][]      |   X   |   X   |   X   |     6     |                        | [en][g5_aqmd],  [cn][g5_lcsc] | 38x50x21 mm³ | [8 pin][]  |
+| PMS5003T  | [PMS5003T][]     |   X   |   X   |   X   |     4     | temp. & rel.hum.       |                               | 38x50x21 mm³ | [8 pin][]  |
+| PMS5003S  | [PMS5003S][]     |   X   |   X   |   X   |     6     | HCHO concentration     |                               | 38x50x21 mm³ | [8 pin][]  |
+| PMS5003ST | [PMS5003ST][]    |   X   |   X   |   X   |     6     | HCHO, temp. & rel.hum. |                               | 38x50x21 mm³ | [8 pin][]  |
+| PMS7003   | [PMSx003][]      |   X   |   X   |   X   |     6     |                        | [cn][g7_lcsc]                 | 37x48x12 mm³ | [10 pin][] |
+| PMSA003   | [PMSx003][]      |   X   |   X   |   X   |     6     |                        | [cn][gA_lcsc]                 |              | [10 pin][] |
 
 [plantower]:  http://www.plantower.com/
 [g1_aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
@@ -22,13 +22,13 @@
 [g7_lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS7003_C84815.pdf
 [gA_lcsc]:    https://datasheet.lcsc.com/szlcsc/PMSA003-A_C132744.pdf
 
-[`PMSx003`]:  #PMSx003
-[`PMS3003`]:  #PMS3003
-[`PMS5003T`]: #PMS5003T
-[`PMS5003S`]: #PMS5003S
-[`PMS5003ST`]:#PMS5003ST
-[8 pin]:      #8_Pin_connector
-[10 pin]:     #10_Pin_connector
+[PMSx003]:    #pmsx003
+[PMS3003]:    #pms3003
+[PMS5003T]:   #pms5003t
+[PMS5003S]:   #pms5003s
+[PMS5003ST]:  #pms5003st
+[8 pin]:      #8-pin-connector
+[10 pin]:     #10-pin-connector
 
 ## WARNING
 
@@ -70,7 +70,7 @@ Serial protocol is UART 9600 8N1 ([3.3V TTL](#warning)).
 
 ### Commands
 
-With the exception of the [`PMS3003`][], all the Plantower PM sensors
+With the exception of the [PMS3003][], all the Plantower PM sensors
 can be fully controlled with serial commands:
 
 | Command        | Description                     | `message`              |
@@ -86,14 +86,14 @@ can be fully controlled with serial commands:
 Messages containing measurements consist of unsigned short integers.
 The last 2 bits of the message should contain `sum(message[:2])`.
 
-| `message` | [`PMS3003`][]        | [`PMSx003`][]         | [`PMS5003T`][] | [`PMS5003S`][] | [`PMS5003ST`][]       |
-| --------- | -------------------- | --------------------- | -------------- | -------------- | --------------------- |
-|           | 24 bits              | 32 bits               | 32 bits        | 32 bits        | 40 bits               |
-| header    | 4 bits               | 4 bits                | 4 bits         | 4 bits         | 4 bits                |
-|           | `42 4d 00 14`        | `42 4d 00 1c`         | `42 4d 00 1c`  | `42 4d 00 1c`  | `42 4d 00 24`         |
-| body      | 18 bits              | 26 bits               | 26 bits        | 26 bits        | 34 bits               |
-|           | 6 values, 3 reserved | 12 values, 1 reserved | 13 values      | 13 values      | 15 values, 2 reserved |
-| checksum  | 2 bits               | 2 bits                | 2 bits         | 2 bits         | 2 bits                |
+| `message` | [PMS3003][]          | [PMSx003][]           | [PMS5003T][]  | [PMS5003S][]  | [PMS5003ST][]         |
+| --------- | -------------------- | --------------------- | ------------- | ------------- | --------------------- |
+|           | 24 bits              | 32 bits               | 32 bits       | 32 bits       | 40 bits               |
+| header    | 4 bits               | 4 bits                | 4 bits        | 4 bits        | 4 bits                |
+|           | `42 4d 00 14`        | `42 4d 00 1c`         | `42 4d 00 1c` | `42 4d 00 1c` | `42 4d 00 24`         |
+| body      | 18 bits              | 26 bits               | 26 bits       | 26 bits       | 34 bits               |
+|           | 6 values, 3 reserved | 12 values, 1 reserved | 13 values     | 13 values     | 15 values, 2 reserved |
+| checksum  | 2 bits               | 2 bits                | 2 bits        | 2 bits        | 2 bits                |
 
 ### PMS3003
 

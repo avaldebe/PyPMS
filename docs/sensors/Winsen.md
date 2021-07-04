@@ -2,19 +2,19 @@
 
 | Sensor  | `--sensor-model` |  PM1  | PM2.5 | PM10  | CO2 | Datasheet  | Dimensions   | Connector |
 | ------- | ---------------- | :---: | :---: | :---: | --- | ---------- | ------------ | --------- |
-| ZH03B   | [`ZH0xx`][]      |   X   |   X   |   X   |     | [en][zh03] | 50x32x21 mm³ | [8 pin][] |
-| ZH06-I  | [`ZH0xx`][]      |   X   |   X   |   X   |     | [en][zh06] | 47×37×12 mm³ | [8 pin][] |
-| MH-Z19B | [`MHZ19B`][]     |       |       |       | X   | [en][z19b] | 40×20×9 mm³  | [7 pin][] |
+| ZH03B   | [ZH0xx][]        |   X   |   X   |   X   |     | [en][zh03] | 50x32x21 mm³ | [8 pin][] |
+| ZH06-I  | [ZH0xx][]        |   X   |   X   |   X   |     | [en][zh06] | 47×37×12 mm³ | [8 pin][] |
+| MH-Z19B | [MHZ19B][]       |       |       |       | X   | [en][z19b] | 40×20×9 mm³  | [7 pin][] |
 
 [Winsen]:https://www.winsen-sensor.com
 [zh03]:  https://www.winsen-sensor.com/d/files/ZH03B.pdf
 [zh06]:  https://www.winsen-sensor.com/d/files/ZH06.pdf
 [z19b]:  https://www.winsen-sensor.com/d/files/infrared-gas-sensor/ndir-co2-sensor/mh-z19b-co2-manual(ver1_6).pdf
 
-[`ZH0xx`]:   #ZH0xx
-[`MHZ19B`]:  #MHZ19B
-[7 pin]:     #7_Pin_connector
-[8 pin]:     #8_Pin_connector
+[ZH0xx]:   #zh0xx
+[MHZ19B]:  #mhz19b
+[7 pin]:   #7-pin-connector
+[8 pin]:   #8-pin-connector
 
 ## WARNING
 

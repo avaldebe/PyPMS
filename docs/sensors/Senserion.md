@@ -2,13 +2,13 @@
 
 | Sensor | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                 | Datasheet   | Dimensions | Connector |
 | ------ | ---------------- | :---: | :---: | :---: | :---: | :-------: | --------------------- | ----------- | ---------- | --------- |
-| SPS30  | [`SPS30`][]      |   X   |   X   |   X   |   X   |     5     | typical particle size | [en][SPS30] |            | [5 pin][] |
+| SPS30  | [SPS30][]        |   X   |   X   |   X   |   X   |     5     | typical particle size | [en][SPS30] |            | [5 pin][] |
 
 [Senserion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
 [SPS30]: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.6_Particulate_Matter/Datasheets/Sensirion_PM_Sensors_SPS30_Datasheet.pdf
 
-[`SPS30`]:  #SPS30
-[5 pin]:    #5_Pin_connector
+[SPS30]: #sps30
+[5 pin]: #5-pin-connector
 
 ## 5 Pin connector
 
@@ -49,7 +49,7 @@ which are not implemented. As `deep-sleep` disable the UART interface and `wake-
 Messages containing measurements consist of floats.
 The second to last bit of the message should contain `0xFF-sum(message[1:-2])%0x100`.
 
-| `message` | [`SPS30`][]      |
+| `message` | [SPS30][]        |
 | --------- | ---------------- |
 |           | 47 bits          |
 | header    | 5 bits           |
