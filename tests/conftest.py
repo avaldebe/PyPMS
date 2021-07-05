@@ -27,6 +27,7 @@ class CapturedData(Enum):
     SDS01x = tuple(read_captured_data("SDS01x"))
     SDS198 = tuple(read_captured_data("SDS198"))
     MCU680 = tuple(read_captured_data("MCU680"))
+    MHZ19B = tuple(read_captured_data("MHZ19B"))
 
     @property
     def sensor(self) -> Sensor:
