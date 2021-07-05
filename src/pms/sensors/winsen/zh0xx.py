@@ -33,7 +33,7 @@ class Message(mhz19b.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """
-    Winsen ZH03B/ZH06I sensor observations
+    Winsen ZH03B and ZH06-I sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]

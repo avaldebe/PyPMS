@@ -69,7 +69,7 @@ class Message(base.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """
-    Plantower MH-Z19B sensor observations
+    Winsen MH-Z19B sensor observations
 
     time                                    measurement time [seconds since epoch]
     CO2                                     CO2 concentration [ppm]
