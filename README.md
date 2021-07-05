@@ -138,7 +138,6 @@ For more details visit the [project site].
 [BME680]:   https://avaldebe.github.io/PyPMS/sensors/mcu680/#bme680
 [BSEC]:     https://www.bosch-sensortec.com/software-tools/software/bsec/
 
-
 ## Want More Sensors
 
 For more Air Quality sensors [open an issue][issue].

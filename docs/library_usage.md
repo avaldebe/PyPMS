@@ -39,6 +39,7 @@ Each sensor provides different data fields. The `pms -m SENSOR_MODEL info` comma
 The following table shows all possible data fields and the type provided by each sensor:
 
 === "particulate matter"
+
     | `--sensor-model` | pm01  | pm25  | pms04 | pm10  | pm100 | raw01 | raw25 | raw10 |
     | ---------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
     | [PMS3003]        |  int  |  int  |       |  int  |       |  int  |  int  |  int  |
@@ -56,6 +57,7 @@ The following table shows all possible data fields and the type provided by each
     | [MCU680]         |
 
 === "number count"
+
     | `--sensor-model` | n0_3  | n0_5  | n1_0  | n2_5  | n4_0  | n5_0  | n10_0 |
     | ---------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
     | [PMS3003]        | float | float | float | float |       | float | float |
@@ -73,6 +75,7 @@ The following table shows all possible data fields and the type provided by each
     | [MCU680]         |
 
 === "environmental"
+
     | `--sensor-model` | time  | temp  | rhum  | pres  | HCHO  |  CO2  |
     | ---------------- | :---: | :---: | :---: | :---: | :---: | :---: |
     | [PMS3003]        |  int  |
@@ -90,6 +93,7 @@ The following table shows all possible data fields and the type provided by each
     | [MCU680]         |  int  | float | float | float |
 
 === "other"
+
     | `--sensor-model` | diam  | IAQ_acc |  IAQ  |  gas  |  alt  |
     | ---------------- | :---: | :-----: | :---: | :---: | :---: |
     | [PMS3003]        |
