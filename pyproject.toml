@@ -38,14 +38,10 @@ aenum = {version = ">=3.1", python = "~3.6"}
 importlib-metadata = { version=">=3.6", python=">=3.6,<3.10" }
 paho-mqtt = { version=">=1.4.0", optional=true }
 influxdb = { version=">=5.2.0", optional=true }
-mkdocs = {version = "^1.2.1", optional = true}
-mkdocs-material = {version = "^7.1.9", optional = true}
-pymdown-extensions = {version = "^8.2", optional = true}
 
 [tool.poetry.extras]
 mqtt = ["paho-mqtt"]
 influxdb = ["influxdb"]
-docs = ["mkdocs", "mkdocs-material", "pymdown-extensions"]
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.2.4"
@@ -86,13 +82,13 @@ bridge   = "pms.extra.bridge:cli"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, py36, py37, py38, py39
+envlist = lint, docs, py36, py37, py38, py39
 skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
 commands =
-    pytest -ra -q --cov {posargs}
+    pytest -ra -q --cov
 deps =
     pytest
     pytest-cov
@@ -109,6 +105,19 @@ deps =
     mypy>=0.902
     types-dataclasses
     pytest
+
+[testenv:docs]
+skip_install=True
+commands =
+    mkdocs build --clean
+deps =
+    mkdocs
+    mkdocs-material
+    pymdown-extensions
+
+[testenv:docs-deploy]
+deps = {[testenv:docs]deps}
+commands = mkdocs gh-deploy --clean
 
 [gh-actions]
 python =
