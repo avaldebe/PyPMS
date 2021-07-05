@@ -8,6 +8,7 @@ version = "0.6.0"
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = ["Alvaro Valdebenito <avaldebe@gmail.com>"]
 readme = "README.md"
+homepage = "https://avaldebe.github.io/PyPMS"
 repository = "https://github.com/avaldebe/PyPMS"
 keywords = ["air quality", "particulate matter"]
 classifiers = [
