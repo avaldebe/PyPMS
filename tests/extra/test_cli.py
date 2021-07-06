@@ -2,9 +2,9 @@ from dataclasses import fields
 from typing import Any, Callable, Dict, Union
 
 import pytest
-from mypy_extensions import NamedArg
 from typer.testing import CliRunner
 
+from pms.extra.influxdb import PubFunction
 from pms.extra.mqtt import Data
 
 runner = CliRunner()
@@ -51,14 +51,7 @@ def mock_influxdb(monkeypatch):
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
-    ) -> Callable[
-        [
-            NamedArg(int, "time"),
-            NamedArg(Dict[str, str], "tags"),
-            NamedArg(Dict[str, float], "data"),
-        ],
-        None,
-    ]:
+    ) -> PubFunction:
         def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
             pass
 
@@ -81,14 +74,7 @@ def mock_bridge(monkeypatch, capture_data):
 
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
-    ) -> Callable[
-        [
-            NamedArg(int, "time"),
-            NamedArg(Dict[str, str], "tags"),
-            NamedArg(Dict[str, float], "data"),
-        ],
-        None,
-    ]:
+    ) -> PubFunction:
         def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
             tag = ",".join(f"{k},{v}" for k, v in tags.items())
             for key, val in data.items():

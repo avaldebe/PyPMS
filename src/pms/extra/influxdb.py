@@ -1,8 +1,13 @@
 import json
+import sys
 from dataclasses import fields
-from typing import Callable, Dict
+from typing import Dict
 
-from mypy_extensions import NamedArg
+if sys.version_info >= (3, 8):  # pragma: no cover
+    from typing import Protocol
+else:  # pragma: no cover
+    from typing_extensions import Protocol
+
 from typer import Abort, Context, Option, colors, echo, style
 
 try:
@@ -31,12 +36,14 @@ Or, if you installed {package} with pipx
     raise Abort()
 
 
+class PubFunction(Protocol):  # pragma: no cover
+    def __call__(self, *, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+        ...
+
+
 def client_pub(
     *, host: str, port: int, username: str, password: str, db_name: str
-) -> Callable[
-    [NamedArg(int, "time"), NamedArg(Dict[str, str], "tags"), NamedArg(Dict[str, float], "data")],
-    None,
-]:  # pragma: no cover
+) -> PubFunction:  # pragma: no cover
     if client is None:
         __missing_influxdb()
     c = client(host, port, username, password, None)
