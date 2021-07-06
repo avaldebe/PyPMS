@@ -88,6 +88,8 @@ skip_missing_interpreters = True
 isolated_build = True
 
 [testenv]
+commands_pre =
+    python --version
 commands =
     pytest -ra -q --cov
 deps =
@@ -119,13 +121,6 @@ deps =
 [testenv:docs-deploy]
 deps = {[testenv:docs]deps}
 commands = mkdocs gh-deploy --clean
-
-[gh-actions]
-python =
-    3.6: py36
-    3.7: py37
-    3.8: py38
-    3.9: py39
 """
 
 [tool.pytest.ini_options]
