@@ -34,9 +34,10 @@ packages = [{ include="pms", from="src" }]
 python = ">=3.6,<4.0"
 pyserial = ">=3.0"
 mypy-extensions = ">=0.4"
+typing-extensions = { version=">=3.10", python=">=3.6,<3.8" }
 typer = ">=0.3"
 dataclasses = { version=">=0.6", python="~3.6" }
-aenum = {version = ">=3.1", python = "~3.6"}
+aenum = { version=">=3.1", python="~3.6" }
 importlib-metadata = { version=">=3.6", python=">=3.6,<3.10" }
 paho-mqtt = { version=">=1.4.0", optional=true }
 influxdb = { version=">=5.2.0", optional=true }
@@ -130,19 +131,19 @@ addopts = "--lf -Werror"
 
 [tool.coverage.run]
 source = ["pms"]
-omit = ["*/__init__.py", "*/__main__.py"]
+omit = ["*/__init__.py", "*/__main__.py", "*/core/types.py"]
 
 [tool.coverage.report]
 exclude_lines = [
-    "pragma: no cover", 
-    "@overload", 
-    "@abstractmethod", 
+    "pragma: no cover",
+    "@overload",
+    "@abstractmethod",
     "ModuleNotFoundError",
-    "def __repr__", 
-    "def __str__"
+    "def __repr__",
+    "def __str__",
 ]
 show_missing = true
-skip_covered =  true
+skip_covered = true
 fail_under = 100
 
 [tool.black]
@@ -166,10 +167,10 @@ show_error_codes = true
 pretty = true
 sqlite_cache = true
 overrides = [
-    { ignore_missing_imports = true, module = "paho.mqtt" },
-    { ignore_missing_imports = true, module = "influxdb" },
-    { ignore_missing_imports = true, module = "serial" },
-    { ignore_missing_imports = true, module = "aenum" },
-    { warn_unused_ignores = false, module = "pms.extra.mqtt" },
-    { warn_unused_ignores = false, module = "pms.extra.influxdb" },
+    { ignore_missing_imports=true, module="paho.mqtt" },
+    { ignore_missing_imports=true, module="influxdb" },
+    { ignore_missing_imports=true, module="serial" },
+    { ignore_missing_imports=true, module="aenum" },
+    { warn_unused_ignores=false, module="pms.extra.mqtt" },
+    { warn_unused_ignores=false, module="pms.extra.influxdb" },
 ]

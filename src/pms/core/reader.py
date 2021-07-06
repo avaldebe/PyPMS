@@ -18,7 +18,8 @@ from typer import progressbar
 
 from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
 from pms.core import Sensor, Supported
-from pms.sensors import base
+
+from .types import ObsData
 
 """translation table for raw.hexdump(n)"""
 HEXDUMP_TABLE = bytes.maketrans(
@@ -134,7 +135,7 @@ class SensorReader:
         self.serial.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self) -> Generator[ObsData, None, None]:
         ...
 
     @overload
@@ -188,7 +189,7 @@ class MessageReader:
         self.csv.close()
 
     @overload
-    def __call__(self) -> Generator[base.ObsData, None, None]:
+    def __call__(self) -> Generator[ObsData, None, None]:
         ...
 
     @overload

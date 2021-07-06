@@ -24,7 +24,8 @@ else:  # pragma: no cover
     import importlib_metadata as metadata
 
 from pms import WrongMessageChecksum, WrongMessageFormat
-from pms.sensors import base
+
+from .types import Cmd, Commands, Message, ObsData
 
 
 class Sensor(Enum):
@@ -49,15 +50,15 @@ class Sensor(Enum):
         return self.name
 
     @property
-    def Message(self) -> base.Message:
+    def Message(self) -> Message:
         return self.value.Message
 
     @property
-    def Data(self) -> base.ObsData:
+    def Data(self) -> ObsData:
         return self.value.ObsData
 
     @property
-    def Commands(self) -> base.Commands:
+    def Commands(self) -> Commands:
         return self.value.commands
 
     @property
@@ -77,7 +78,7 @@ class Sensor(Enum):
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
-    def command(self, cmd: str) -> base.Cmd:
+    def command(self, cmd: str) -> Cmd:
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
 
@@ -90,7 +91,7 @@ class Sensor(Enum):
         else:
             return True
 
-    def decode(self, buffer: bytes, *, time: int = None) -> base.ObsData:
+    def decode(self, buffer: bytes, *, time: int = None) -> ObsData:
         """Exract observations from serial buffer"""
         if not time:  # pragma: no cover
             time = self.now()
