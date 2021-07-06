@@ -92,7 +92,7 @@ class SensorReader:
         if not self.pre_heat:
             return
 
-        logger.info(f"pre-heating {self.sensor.name} sensor {self.pre_heat} sec")
+        logger.info(f"pre-heating {self.sensor} sensor {self.pre_heat} sec")
         with progressbar(range(self.pre_heat), label="pre-heating") as progress:
             for _ in progress:
                 time.sleep(1)
@@ -108,7 +108,7 @@ class SensorReader:
             self.serial.reset_input_buffer()
 
         # wake sensor and set passive mode
-        logger.debug(f"wake {self.sensor.name}")
+        logger.debug(f"wake {self.sensor}")
         buffer = self._cmd("wake")
         self._pre_heat()
         buffer += self._cmd("passive_mode")
@@ -128,7 +128,7 @@ class SensorReader:
 
     def __exit__(self, exception_type, exception_value, traceback) -> None:
         """Put sensor to sleep and close serial port"""
-        logger.debug(f"sleep {self.sensor.name}")
+        logger.debug(f"sleep {self.sensor}")
         buffer = self._cmd("sleep")
         logger.debug(f"close {self.serial.port}")
         self.serial.close()

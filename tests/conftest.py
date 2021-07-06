@@ -29,6 +29,9 @@ class CapturedData(Enum):
     MCU680 = tuple(read_captured_data("MCU680"))
     MHZ19B = tuple(read_captured_data("MHZ19B"))
 
+    def __str__(self) -> str:
+        return self.name
+
     @property
     def sensor(self) -> Sensor:
         return Sensor[self.name]
@@ -55,17 +58,17 @@ class CapturedData(Enum):
             serial_csv=f"serial -f csv",
             serial_hexdump=f"serial -f hexdump",
             csv=f"csv --overwrite {self.name}_test.csv",
-            capture=f"csv --overwrite  --capture {self.name}_pypms.csv",
-            decode=f"serial -f csv --decode {self.name}_pypms.csv",
+            capture=f"csv --overwrite  --capture {self}_pypms.csv",
+            decode=f"serial -f csv --decode {self}_pypms.csv",
         ).get(command, command)
         return f"{capture} --debug {cmd}".split()
 
     def output(self, ending: str) -> str:
-        path = captured_data.parent / f"{self.name}.{ending}"
+        path = captured_data.parent / f"{self}.{ending}"
         return path.read_text()
 
 
-@pytest.fixture(params=list(CapturedData))
+@pytest.fixture(params=list(CapturedData), ids=str)
 def capture_data(request) -> CapturedData:
     """captured data from real sensors"""
     return request.param

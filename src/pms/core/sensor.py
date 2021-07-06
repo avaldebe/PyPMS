@@ -45,6 +45,9 @@ class Sensor(Enum):
         for alias in Sensor[ep.name].ALIASES:
             Sensor[alias] = Sensor[ep.name]
 
+    def __str__(self) -> str:
+        return self.name
+
     @property
     def Message(self) -> base.Message:
         return self.value.Message
