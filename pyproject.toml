@@ -83,7 +83,7 @@ bridge   = "pms.extra.bridge:cli"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, docs, py36, py37, py38, py39
+envlist = lint, docs, py36, py37, py38, py39, py310
 skip_missing_interpreters = True
 isolated_build = True
 
