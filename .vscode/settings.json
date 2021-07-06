@@ -78,6 +78,7 @@
         "pyproject",
         "senserion",
         "skipif",
+        "softprops",
         "superfences",
         "twemoji",
         "winsen"

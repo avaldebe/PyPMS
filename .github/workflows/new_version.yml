@@ -52,3 +52,16 @@ jobs:
           echo "SEM_VER=$(poetry version -s)" >> $GITHUB_ENV
           echo "GIT_TAG=$(git describe)"      >> $GITHUB_ENV
           test $SEM_VER = $GIT_TAG
+
+    release:
+      runs-on: ubuntu-latest
+      after: [docs, test]
+      steps:
+        - uses: actions/checkout@v2
+        - name: Release
+          uses: softprops/action-gh-release@v1
+          with:
+            draft: true
+            body_path: README.md
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
