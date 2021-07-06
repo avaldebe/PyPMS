@@ -11,6 +11,14 @@ else:  # pragma: no cover
     from aenum import Enum
 
 if sys.version_info >= (3, 10):  # pragma: no cover
+    from enum import StrEnum
+else:  # pragma: no cover
+
+    class StrEnum(str, Enum):
+        pass
+
+
+if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib import metadata
 else:  # pragma: no cover
     import importlib_metadata as metadata
@@ -88,7 +96,7 @@ class Sensor(Enum):
         return self.Data(time, *data)  # type: ignore[operator]
 
 
-class Supported(str, Enum):
+class Supported(StrEnum):
     """Supported sensor names"""
 
     _ignore_ = "s Supported"

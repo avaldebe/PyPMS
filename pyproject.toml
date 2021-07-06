@@ -91,7 +91,7 @@ isolated_build = True
 commands_pre =
     python --version
 commands =
-    pytest -ra -q --cov
+    pytest -ra -q {posargs:--cov}
 deps =
     pytest
     pytest-cov
