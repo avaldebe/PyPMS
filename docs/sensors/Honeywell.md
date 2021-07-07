@@ -129,6 +129,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "HPMA115S0.txt"
     ```
 
 === "csv"
@@ -140,6 +141,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "HPMA115S0.csv"
     ```
 
 === "hexdump"
@@ -151,6 +153,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` hexdump
+    --8<-- "HPMA115S0.hexdump"
     ```
 
 ## HPMA115C0
@@ -181,6 +184,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "HPMA115C0.txt"
     ```
 
 === "csv"
@@ -192,6 +196,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "HPMA115C0.csv"
     ```
 
 === "hexdump"
@@ -203,4 +208,5 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` hexdump
+    --8<-- "HPMA115C0.hexdump"
     ```

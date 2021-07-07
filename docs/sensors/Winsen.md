@@ -136,16 +136,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
-    2021-07-04 19:17:36: CO2 636 ppm
-    2021-07-04 19:17:46: CO2 636 ppm
-    2021-07-04 19:17:56: CO2 636 ppm
-    2021-07-04 19:18:06: CO2 636 ppm
-    2021-07-04 19:18:16: CO2 636 ppm
-    2021-07-04 19:18:26: CO2 636 ppm
-    2021-07-04 19:18:36: CO2 636 ppm
-    2021-07-04 19:18:46: CO2 636 ppm
-    2021-07-04 19:18:56: CO2 635 ppm
-    2021-07-04 19:19:06: CO2 633 ppm
+    --8<-- "MHZ19B.txt"
     ```
 
 === "csv"
@@ -158,16 +149,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
-    time, CO2
-    1625419066, 636
-    1625419076, 636
-    1625419086, 636
-    1625419096, 636
-    1625419106, 636
-    1625419116, 636
-    1625419126, 636
-    1625419136, 635
-    1625419146, 633
+    --8<-- "MHZ19B.csv"
     ```
 
 === "hexdump"
@@ -179,16 +161,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` hexdump
-    00000000: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    00000009: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    00000012: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    0000001b: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    00000024: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    0000002d: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    00000036: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    0000003f: ff 86 02 7c 42 00 00 00 ba  ...|B....
-    00000048: ff 86 02 7b 42 00 00 00 bb  ...{B....
-    00000051: ff 86 02 79 42 00 00 00 bd  ...yB....
+    --8<-- "MHZ19B.hexdump"
     ```
 
 ## ZH0xx
@@ -219,6 +192,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "ZH0xx.txt"
     ```
 
 === "csv"
@@ -231,6 +205,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
+    --8<-- "ZH0xx.csv"
     ```
 
 === "hexdump"
@@ -243,4 +218,5 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` hexdump
+    --8<-- "ZH0xx.hexdump"
     ```

@@ -105,22 +105,24 @@ Serial protocol is UART 115200 8N1 5V TTL :material-alert: 3.3V compatible.
 
     Read 10 samples (`-n 10`), one sample every 10 seconds (`-i 10`)
 
-    ```
+    ``` bash
     pms -m SPS30 -n 10 -i 10 serial
     ```
 
     ``` csv
+    --8<-- "SPS30.txt"
     ```
 
 === "csv"
 
     Print on CSV format (`-f csv`)
 
-    ```
+    ``` bash
     pms -m SPS30 -n 10 -i 10 csv
     ```
 
     ``` csv
+    --8<-- "SPS30.csv"
     ```
 
 === "hexdump"
@@ -132,4 +134,5 @@ Serial protocol is UART 115200 8N1 5V TTL :material-alert: 3.3V compatible.
     ```
 
     ``` hexdump
+    --8<-- "SPS30.hexdump"
     ```

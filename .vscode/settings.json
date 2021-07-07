@@ -9,7 +9,10 @@
     "python.sortImports.path": "isort",
     "markdownlint.run": "onSave",
     "markdownlint.ignore": [
-        "**/library_usage.md"
+        "**/library_usage.md",
+        "**/*.txt",
+        "**/*.csv",
+        "**/*.hexdump"
     ],
     "cSpell.words": [
         "BSEC",
