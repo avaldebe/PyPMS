@@ -94,10 +94,11 @@ def serial(
             for n, raw in enumerate(reader(raw=True)):
                 echo(raw.hexdump(n))
         elif format:
-            if format == "csv":
-                obs = next(reader())
-                echo(f"{obs:header}")
+            print_header = format == "csv"
             for obs in reader():
+                if print_header:
+                    echo(f"{obs:header}")
+                    print_header = False
                 echo(f"{obs:{format}}")
         else:  # pragma: no cover
             for obs in reader():
@@ -121,10 +122,11 @@ def csv(
         if not capture:
             logger.debug(f"capture {sensor_name} observations to {path}")
             # add header to new files
-            if path.stat().st_size == 0:
-                obs = next(reader())
-                csv.write(f"{obs:header}\n")
+            print_header = path.stat().st_size == 0
             for obs in reader():
+                if print_header:
+                    csv.write(f"{obs:header}\n")
+                    print_header = False
                 csv.write(f"{obs:csv}\n")
         else:
             logger.debug(f"capture {sensor_name} messages to {path}")

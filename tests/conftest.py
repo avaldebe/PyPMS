@@ -51,7 +51,7 @@ class CapturedData(Enum):
 
     def options(self, command: str) -> List[str]:
         samples = len(self.value)
-        if "csv" in command or command == "mqtt":
+        if command == "mqtt":
             samples -= 1
         capture = f"-m {self.name} -n {samples} -i 0"
         cmd = dict(
