@@ -100,7 +100,7 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
-- 0.6 WIP
+- 0.6.0
   - [project site]
   - reorganize internal modules
     - `pms.core`: core functionality, such as `Sensor` and `SensorReader`
