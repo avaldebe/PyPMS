@@ -121,7 +121,7 @@ deps =
 
 [testenv:docs-deploy]
 deps = {[testenv:docs]deps}
-commands = mkdocs gh-deploy --clean
+commands = mkdocs gh-deploy {posargs:--clean}
 """
 
 [tool.pytest.ini_options]

@@ -19,7 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tox
       - name: Update docs
-        run: tox -e docs-deploy
+        run: tox -e docs-deploy -- --force
 
   test:
     runs-on: ubuntu-latest
