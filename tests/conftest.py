@@ -1,9 +1,14 @@
-from contextlib import contextmanager
+import sys
+from contextlib import closing, contextmanager
 from csv import DictReader
-from enum import Enum
 from pathlib import Path
 from sqlite3 import connect
 from typing import Generator, List
+
+if sys.version_info >= (3, 7):  # pragma: no cover
+    from enum import Enum
+else:  # pragma: no cover
+    from aenum import Enum
 
 import pytest
 
@@ -18,10 +23,10 @@ captured_data = Path("tests/captured_data/data.csv")
 @contextmanager
 def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
     db = connect(db_str)
-    with db:
-        db.execute(
+    with db, closing(db.cursor()) as cur:
+        cur.execute(
             """
-            CREATE TABLE IF NOT EXISTS raw_messages (
+            CREATE TABLE IF NOT EXISTS messages (
                 time DATETIME NOT NULL, 
                 sensor TEXT NOT NULL, 
                 message BLOB NOT NULL,
@@ -32,13 +37,15 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
 
     if data is not None and data.exists():
         db.create_function("bytes", 1, bytes.fromhex)
-        insert = "INSERT OR IGNORE INTO raw_messages (time, sensor, message) VALUES (:time, :sensor, bytes(:hex))"
-        with db, data.open() as csv:
-            db.executemany(insert, DictReader(csv))
+        insert = "INSERT OR IGNORE INTO messages (time, sensor, message) VALUES (:time, :sensor, bytes(:hex))"
+        with db, closing(db.cursor()) as cur, data.open() as csv:
+            cur.executemany(insert, DictReader(csv))
 
     def reader(sensor: str) -> Generator[RawData, None, None]:
-        select = f"SELECT time, message FROM raw_messages WHERE sensor IS '{sensor}'"
-        return (RawData(*row) for row in db.execute(select))
+        select = f"SELECT time, message FROM messages WHERE sensor IS '{sensor}'"
+        with closing(db.cursor()) as cur:
+            cur.execute(select)
+            return (RawData(*row) for row in cur.fetchall())
 
     try:
         yield reader
@@ -47,16 +54,16 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
 
 
 class CapturedData(Enum):
-    """Captured data from /docs/sensors"""
+    """Captured data from tests/captured_data"""
+
+    _ignore_ = "name capt CapturedData"
 
     with captured_data_reader(data=captured_data) as reader:
-        PMS3003 = tuple(reader("PMS3003"))
-        PMSx003 = tuple(reader("PMSx003"))
-        PMS5003T = tuple(reader("PMS5003T"))
-        SDS01x = tuple(reader("SDS01x"))
-        SDS198 = tuple(reader("SDS198"))
-        MCU680 = tuple(reader("MCU680"))
-        MHZ19B = tuple(reader("MHZ19B"))
+        CapturedData = vars()
+        for name in [s.name for s in Sensor]:
+            capt = tuple(reader(name))
+            if capt:
+                CapturedData[name] = capt
 
     def __str__(self) -> str:
         return self.name
