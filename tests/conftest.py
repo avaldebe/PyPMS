@@ -1,33 +1,62 @@
+from contextlib import contextmanager
+from csv import DictReader
 from enum import Enum
 from pathlib import Path
+from sqlite3 import connect
 from typing import Generator, List
 
 import pytest
 
 from pms import logger
-from pms.core import MessageReader, Sensor
+from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
 
 captured_data = Path("tests/captured_data/data.csv")
 
 
-def read_captured_data(sensor: str) -> Generator[RawData, None, None]:
-    with MessageReader(captured_data, Sensor[sensor]) as reader:
-        for raw in reader(raw=True):
-            yield raw
+@contextmanager
+def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
+    db = connect(db_str)
+    with db:
+        db.execute(
+            """
+            CREATE TABLE IF NOT EXISTS raw_messages (
+                time DATETIME NOT NULL, 
+                sensor TEXT NOT NULL, 
+                message BLOB NOT NULL,
+                UNIQUE (time, sensor)
+            )
+            """
+        )
+
+    if data is not None and data.exists():
+        db.create_function("bytes", 1, bytes.fromhex)
+        insert = "INSERT OR IGNORE INTO raw_messages (time, sensor, message) VALUES (:time, :sensor, bytes(:hex))"
+        with db, data.open() as csv:
+            db.executemany(insert, DictReader(csv))
+
+    def reader(sensor: str) -> Generator[RawData, None, None]:
+        select = f"SELECT time, message FROM raw_messages WHERE sensor IS '{sensor}'"
+        return (RawData(*row) for row in db.execute(select))
+
+    try:
+        yield reader
+    finally:
+        db.close()
 
 
 class CapturedData(Enum):
     """Captured data from /docs/sensors"""
 
-    PMS3003 = tuple(read_captured_data("PMS3003"))
-    PMSx003 = tuple(read_captured_data("PMSx003"))
-    PMS5003T = tuple(read_captured_data("PMS5003T"))
-    SDS01x = tuple(read_captured_data("SDS01x"))
-    SDS198 = tuple(read_captured_data("SDS198"))
-    MCU680 = tuple(read_captured_data("MCU680"))
-    MHZ19B = tuple(read_captured_data("MHZ19B"))
+    with captured_data_reader(data=captured_data) as reader:
+        PMS3003 = tuple(reader("PMS3003"))
+        PMSx003 = tuple(reader("PMSx003"))
+        PMS5003T = tuple(reader("PMS5003T"))
+        SDS01x = tuple(reader("SDS01x"))
+        SDS198 = tuple(reader("SDS198"))
+        MCU680 = tuple(reader("MCU680"))
+        MHZ19B = tuple(reader("MHZ19B"))
 
     def __str__(self) -> str:
         return self.name
