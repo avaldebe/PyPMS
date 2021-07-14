@@ -2,8 +2,8 @@
 
 from pms.core import SensorReader
 
-# read 4 samples, one sample every 15 seconds
-reader = SensorReader("PMSx003", "/dev/ttyUSB0", interval=15, samples=4)
+# read 4 samples, one sample every 20 seconds
+reader = SensorReader("PMSx003", "/dev/ttyUSB0", interval=20, samples=4)
 
 # read 4 samples and print PM fields (default format)
 with reader:

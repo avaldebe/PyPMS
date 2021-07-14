@@ -45,4 +45,6 @@ nav:
     - Senserion: 'sensors/Senserion.md'
     - Winsen: 'sensors/Winsen.md'
     - Bosch Sensortec: 'sensors/mcu680.md'
-  - 'library_usage.md'
+  - Library usage:
+    - Intro: 'library_usage.md'
+    - 'sqlite_example.md'
