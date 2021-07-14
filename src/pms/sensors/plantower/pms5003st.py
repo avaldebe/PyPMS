@@ -66,13 +66,10 @@ class ObsData(pms5003s.ObsData):
         self.rhum /= 10
 
     def __format__(self, spec: str) -> str:
-        if spec in ["header", "pm", "raw", "cf", "num", "hcho"]:
-            return super().__format__(spec)
         if spec == "csv":
             csv = super().__format__(spec)
             return f"{csv}, {self.temp:.1f}, {self.rhum:.1f}"
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
-        raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+
+        return super().__format__(spec)

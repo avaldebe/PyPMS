@@ -80,15 +80,12 @@ class ObsData(base.ObsData):
     CO2: int = field(metadata=base.metadata("CO2", "ppm", "concentration"))
 
     def __format__(self, spec: str) -> str:
-        if spec == "header":
-            return super().__format__(spec)
         if spec == "co2":
             return f"{self.date:%F %T}: CO2 {self.CO2} ppm"
         if spec == "csv":
             return f"{self.time}, {self.CO2}"
-        raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+
+        return super().__format__(spec)
 
     def __str__(self):
         return self.__format__("co2")

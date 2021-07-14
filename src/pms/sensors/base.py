@@ -117,13 +117,21 @@ class ObsData(metaclass=ABCMeta):
             obs = {k: v for k, v in asdict(self).items() if k != "time"}
         if obs:
             return obs
-        raise ValueError(f"Unknown subset code '{spec}' for object of type '{__name__}.ObsData'")
+
+        raise ValueError(
+            f"Unknown subset code '{spec}' for object of type '{type(self).__module__}.ObsData'"
+        )
 
     @abstractmethod
     def __format__(self, spec: str) -> str:
         if spec == "header":  # header for csv file
             return ", ".join(asdict(self).keys())
-        raise ValueError(f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'")
+        if spec == "":
+            return str(self)
+
+        raise ValueError(
+            f"Unknown format code '{spec}' for object of type '{self.__module__}.ObsData'"
+        )
 
     def __str__(self):
         return self.__format__("pm")

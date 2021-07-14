@@ -44,13 +44,10 @@ class ObsData(pmsx003.ObsData):
         self.HCHO /= 1000
 
     def __format__(self, spec: str) -> str:
-        if spec in ["header", "pm", "raw", "cf", "num"]:
-            return super().__format__(spec)
         if spec == "csv":
             csv = super().__format__(spec)
             return f"{csv}, {self.HCHO:.3f}"
         if spec == "hcho":
             return f"{self.date:%F %T}: HCHO {self.HCHO:.3f} mg/m3"
-        raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+
+        return super().__format__(spec)

@@ -111,8 +111,6 @@ class ObsData(base.ObsData):
         self.gas /= 1000
 
     def __format__(self, spec: str) -> str:
-        if spec == "header":
-            return super().__format__(spec)
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa"
         if spec == "bme":
@@ -122,9 +120,7 @@ class ObsData(base.ObsData):
         if spec == "csv":
             return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
 
-        raise ValueError(  # pragma: no cover
-            f"Unknown format code '{spec}' for object of type '{__name__}.ObsData'"
-        )
+        return super().__format__(spec)
 
     def __str__(self):
         return self.__format__("bme")
