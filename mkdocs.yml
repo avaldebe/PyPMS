@@ -30,7 +30,7 @@ markdown_extensions:
   - pymdownx.tabbed
   - pymdownx.superfences
   - pymdownx.snippets:
-      base_path: "tests/captured_data/"
+      base_path: ["tests/captured_data/", "docs/examples/"]
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg

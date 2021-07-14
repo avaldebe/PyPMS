@@ -3,34 +3,10 @@
 `PyPMS`/`pms` is meant as a command line application.
 This section contain some help for those brave enough to use its internals as a library.
 
-## Example
+## Basic example
 
-```python
-"""Read PMSx003 sensor on /dev/ttyUSB0"""
-
-from pms.core import SensorReader
-
-# read 4 samples, one sample every 15 seconds
-reader = SensorReader("PMSx003", "/dev/ttyUSB0", 15, 4)
-
-# read 4 samples and print PM fields (default format)
-with reader:
-    for obs in reader():
-        print(obs)
-
-# read 4 samples and print all fields as csv
-with reader:
-    for obs in reader():
-        print(f"{obs:csv}")
-
-# read 4 samples and print as csv with header
-with reader:
-    print_header = True
-    for obs in reader():
-        if print_header:
-            print(f"{obs:header}")
-            print_header = False
-        print(f"{obs:csv}")
+``` python
+--8<-- "read_sensor.py"
 ```
 
 ## Observation data fields
@@ -126,19 +102,8 @@ The following table shows all possible data fields and the type provided by each
 
 On the previous example, `obs` is a [dataclasses.dataclass] instance which an be inspected as follows
 
-```python
-"""Inspect PMSx003 data fields"""
-
-from dataclasses import fields
-from typing import Dict
-from pms.core import Sensor
-from pms.sensors import base
-
-def types(obs: base.ObsData) -> Dict[str, str]:
-    """return a dictionary containing the type of each data field"""""
-    return {field.name: field.type for field in fields(obs)}
-
-print(types(Sensor["PMSx003"].Data))
+``` python
+--8<-- "inspect_data_fields.py"
 ```
 
 [dataclasses.dataclass]: https://docs.python.org/3/library/dataclasses.html#dataclasses.dataclass
