@@ -9,14 +9,6 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from enum import StrEnum
-else:  # pragma: no cover
-
-    class StrEnum(str, Enum):
-        pass
-
-
 from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms import logger
@@ -65,7 +57,7 @@ def info(ctx: Context):  # pragma: no cover
     echo(sensor.Data.__doc__)
 
 
-class Format(StrEnum):
+class Format(str, Enum):
     csv = "csv"
     pm = "pm"
     num = "num"
