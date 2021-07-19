@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Store measurements from 2 different sensors on a sqlite DB as a "tall table",
-with a "wide table" view for each sensor.
+Read measurements from 2 different sensors and store them
+on a sqlite DB as a "tall table" with a "wide table" view for each sensor.
+After reading the sensor, get all measurements from the DB amd print them by sensor.
 
 - PMSx003 senor on /dev/ttyUSB0
 - MCU680 sensor on /dev/ttyUSB1
-- read 4 samples for each sensor
-- read one sample from each sensor every 20 seconds
+- read 4 samples for each sensor, by default
+- read one sample from each sensor every 20 seconds, by default
 
 NOTE:
 the read_obs function creates a subclass of sensor.Data in order to avoid the
@@ -20,30 +21,40 @@ from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 from typing import Callable, ContextManager, Generator
 
+from typer import Argument, Option, progressbar
+
 from pms.core import Sensor, SensorReader
 from pms.core.reader import ObsData
 
-# read 4 samples, one sample every 20 seconds
-reader = dict(
-    pms=SensorReader("PMSx003", "/dev/ttyUSB0", interval=20, samples=4),
-    bme=SensorReader("MCU680", "/dev/ttyUSB1", interval=20, samples=4),
-)
 
-# path to messages BB
-db_path = Path("sensor_measurements.sqlite")
+def main(
+    db_path: Path = Argument(Path("pypms.sqlite"), help="sensor measurements DB"),
+    samples: int = Option(4, "--samples", "-n"),
+    interval: int = Option(20, "--interval", "-i"),
+):
+    """
+    Read measurements from 2 different sensors
+    (PMSx003 on /dev/ttyUSB0 and MCU680 on /dev/ttyUSB1)
+    and store them on a sqlite DB as a "tall table" with a "wide table" view for each sensor.
 
-
-def main():
+    After reading the sensors, get all measurements from the DB amd print them by sensor.
+    """
 
     # get DB context manager
     measurements_db = pypms_db(db_path)
 
-    # write 4 samples for each sensor
+    reader = dict(
+        pms=SensorReader("PMSx003", "/dev/ttyUSB0", interval, samples),
+        bme=SensorReader("MCU680", "/dev/ttyUSB1", interval, samples),
+    )
+
+    # read from each sensor and write to DB
     with measurements_db() as db, reader["pms"] as pms, reader["bme"] as bme:
         # read one obs from each sensor at the time
-        for pms_obs, env_obs in zip(pms(), bme()):
-            write_measurements(db, pms.sensor, pms_obs)
-            write_measurements(db, bme.sensor, env_obs)
+        with progressbar(zip(pms(), bme()), length=samples, label="reading sensors") as progress:
+            for pms_obs, env_obs in progress:
+                write_measurements(db, pms.sensor, pms_obs)
+                write_measurements(db, bme.sensor, env_obs)
 
     # read all measurements on the DB and reconstruct sensor.Data objects
     with measurements_db() as db:
@@ -140,7 +151,9 @@ def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Generator[ObsData, None,
 
 
 if __name__ == "__main__":
+    from typer import run
+
     try:
-        main()
+        run(main)
     except KeyboardInterrupt:
         print("")

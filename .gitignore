@@ -1,7 +1,7 @@
 .*.swp
 test.csv
 *_pypms.csv
-sensor_*.sqlite
+pypms.sqlite
 
 
 # Byte-compiled / optimized / DLL files

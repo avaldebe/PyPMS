@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Store raw messages from 2 different sensors on a sqlite DB.
-Decode the messages after read them from the DB
+Read raw messages from 2 different sensors and store them on a sqlite DB.
+After reading the sensor, decode all messages on DB and print them.
 
 - PMSx003 senor on /dev/ttyUSB0
 - MCU680 sensor on /dev/ttyUSB1
-- read 4 samples for each sensor
-- read one sample from each sensor every 20 seconds
+- read 4 samples for each sensor, by default
+- read one sample from each sensor every 20 seconds, by default
 
 NOTE:
 When reading 2 or more sensors only the timing of the first sensor is guarantied.
@@ -18,30 +18,42 @@ from contextlib import closing, contextmanager
 from pathlib import Path
 from typing import Callable, ContextManager, Generator
 
+from typer import Argument, Option, progressbar
+
 from pms.core import Sensor, SensorReader
 from pms.core.reader import ObsData, RawData
 
-# read 4 samples, one sample every 20 seconds
-reader = dict(
-    pms=SensorReader("PMSx003", "/dev/ttyUSB0", interval=20, samples=4),
-    bme=SensorReader("MCU680", "/dev/ttyUSB1", interval=20, samples=4),
-)
 
-# path to messages BB
-db_path = Path("sensor_messages.sqlite")
+def main(
+    db_path: Path = Argument(Path("pypms.sqlite"), help="sensor messages DB"),
+    samples: int = Option(4, "--samples", "-n"),
+    interval: int = Option(20, "--interval", "-i"),
+):
+    """
+    Read raw messages from 2 different sensors
+    (PMSx003 on /dev/ttyUSB0 and MCU680 on /dev/ttyUSB1)
+    and store them on a sqlite DB.
 
-
-def main():
+    After reading the sensor, decode all messages on DB and print them.
+    """
 
     # get DB context manager
     message_db = pypms_db(db_path)
 
-    # write 4 samples for each sensor
+    reader = dict(
+        pms=SensorReader("PMSx003", "/dev/ttyUSB0", interval, samples),
+        bme=SensorReader("MCU680", "/dev/ttyUSB1", interval, samples),
+    )
+
+    # read from each sensor and write to DB
     with message_db() as db, reader["pms"] as pms, reader["bme"] as bme:
         # read one obs from each sensor at the time
-        for pms_obs, env_obs in zip(pms(raw=True), bme(raw=True)):
-            write_message(db, pms.sensor, pms_obs)
-            write_message(db, bme.sensor, env_obs)
+        with progressbar(
+            zip(pms(raw=True), bme(raw=True)), length=samples, label="reading sensors"
+        ) as progress:
+            for pms_obs, env_obs in progress:
+                write_message(db, pms.sensor, pms_obs)
+                write_message(db, bme.sensor, env_obs)
 
     # read and decode all messages on the DB
     with message_db() as db:
@@ -113,7 +125,9 @@ def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Generator[ObsData, None,
 
 
 if __name__ == "__main__":
+    from typer import run
+
     try:
-        main()
+        run(main)
     except KeyboardInterrupt:
         print("")
