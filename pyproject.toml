@@ -140,6 +140,7 @@ exclude_lines = [
     "ModuleNotFoundError",
     "def __repr__",
     "def __str__",
+    'if spec == "":',
 ]
 show_missing = true
 skip_covered = true
