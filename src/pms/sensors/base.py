@@ -119,7 +119,7 @@ class ObsData(metaclass=ABCMeta):
             return obs
 
         raise ValueError(
-            f"Unknown subset code '{spec}' for object of type '{type(self).__module__}.ObsData'"
+            f"Unknown subset code '{spec}' for object of type '{self.__class__.__qualname__}'"
         )
 
     @abstractmethod
@@ -130,7 +130,7 @@ class ObsData(metaclass=ABCMeta):
             return str(self)
 
         raise ValueError(
-            f"Unknown format code '{spec}' for object of type '{self.__module__}.ObsData'"
+            f"Unknown format code '{spec}' for object of type '{self.__class__.__qualname__}'"
         )
 
     def __str__(self):
