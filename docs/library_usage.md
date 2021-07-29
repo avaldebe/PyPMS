@@ -3,11 +3,30 @@
 `PyPMS`/`pms` is meant as a command line application.
 This section contain some help for those brave enough to use its internals as a library.
 
-## Basic example
+## Basic examples
 
-``` python
---8<-- "read_sensor.py"
-```
+
+=== "read one sensor"
+
+    ``` python
+    --8<-- "read_one_sensor.py"
+    ```
+
+    ```
+    --8<-- "read_one_sensor.out"
+    ```
+
+
+=== "read two sensors"
+
+    ``` python
+    --8<-- "read_two_sensors.py"
+    ```
+
+    ```
+    --8<-- "read_two_sensors.out"
+    ```
+
 
 ## Observation data fields
 
@@ -104,6 +123,10 @@ On the previous example, `obs` is a [dataclasses.dataclass] instance which an be
 
 ``` python
 --8<-- "inspect_data_fields.py"
+```
+
+```
+--8<-- "inspect_data_fields.out"
 ```
 
 [dataclasses.dataclass]: https://docs.python.org/3/library/dataclasses.html#dataclasses.dataclass
