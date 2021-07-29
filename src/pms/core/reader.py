@@ -144,6 +144,8 @@ class SensorReader:
 
     def __call__(self, *, raw: Optional[bool] = None):
         """Passive mode reading at regular intervals"""
+
+        sample = 0
         while self.serial.is_open:
             try:
                 buffer = self._cmd("passive_read")
@@ -158,10 +160,9 @@ class SensorReader:
                     self.serial.reset_input_buffer()
                 else:
                     yield RawData(obs.time, buffer) if raw else obs
-                    if self.samples:
-                        self.samples -= 1
-                        if self.samples <= 0:
-                            break
+                    sample += 1
+                    if self.samples is not None and sample >= self.samples:
+                        break
                     if self.interval:  # pragma: no cover
                         delay = self.interval - (time.time() - obs.time)
                         if delay > 0:
