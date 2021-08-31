@@ -1,4 +1,4 @@
-# [Senserion] sensors
+# [Sensirion] sensors
 
 === "sensor"
 
@@ -12,7 +12,7 @@
     | ------ | ----------- | ---------- | --------- |
     | SPS30  | [en][sps30] |            | [5 pin]   |
 
-[Senserion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
+[Sensirion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
 [sps30]: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.6_Particulate_Matter/Datasheets/Sensirion_PM_Sensors_Datasheet_SPS30.pdf
 
 [SPS30]: #sps30
@@ -91,7 +91,7 @@ Serial protocol is UART 115200 8N1 5V TTL :material-alert: 3.3V compatible.
     ```
 
     ``` man
-    Senserion SPS30 sensor observations
+    Sensirion SPS30 sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [μg/m3]

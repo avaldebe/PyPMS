@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pypms"
-version = "0.6.0"
+version = "0.6.1"
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = ["Alvaro Valdebenito <avaldebe@gmail.com>"]
 readme = "README.md"
@@ -68,8 +68,8 @@ SDS198    = "pms.sensors.novafitness.sds198"
 # docs/sensors/Honeywell.md
 HPMA115S0 = "pms.sensors.honeywell.hpma115s0"
 HPMA115C0 = "pms.sensors.honeywell.hpma115c0"
-# docs/sensors/Senserion.md
-SPS30     = "pms.sensors.senserion.sps30"
+# docs/sensors/Sensirion.md
+SPS30     = "pms.sensors.sensirion.sps30"
 # docs/sensors/mcu680.md
 MCU680    = "pms.sensors.bosch_sensortec.mcu680"
 # docs/sensors/Winsen.md

@@ -42,7 +42,7 @@ nav:
     - Plantower: 'sensors/Plantower.md'
     - NovaFitness: 'sensors/NovaFitness.md'
     - Honeywell: 'sensors/Honeywell.md'
-    - Senserion: 'sensors/Senserion.md'
+    - Sensirion: 'sensors/Sensirion.md'
     - Winsen: 'sensors/Winsen.md'
     - Bosch Sensortec: 'sensors/mcu680.md'
   - Library usage:

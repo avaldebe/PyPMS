@@ -114,7 +114,7 @@ The following table shows all possible data fields and the type provided by each
 [SDS198]:   sensors/NovaFitness.md#sds198
 [HPMA115S0]:sensors/Honeywell.md#hpma115s0
 [HPMA115C0]:sensors/Honeywell.md#hpma115c0
-[SPS30]:    sensors/Senserion.md#sps30
+[SPS30]:    sensors/Sensirion.md#sps30
 [ZH0xx]:    sensors/Winsen.md#zh0xx
 [MHZ19B]:   sensors/Winsen.md#mhz19b
 [MCU680]:   sensors/mcu680.md#mcu680

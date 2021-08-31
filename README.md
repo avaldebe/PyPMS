@@ -45,7 +45,7 @@ Please visit [project site] for details.
 | [Honeywell]       |
 | HPMA115S0         | [HPMA115S0]      |       |   ✔️   |       |   ✔️   |           |                        |        |
 | HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |        |
-| [Senserion]       |
+| [Sensirion]       |
 | SPS30             | [SPS30]          |   ✔️   |   ✔️   |   ✔️   |   ✔️   |     5     | typical particle size  |        |
 | [Winsen]          |
 | ZH03B             | [ZH0xx]          |   ✔️   |   ✔️   |   ✔️   |       |           |                        |        |
@@ -66,8 +66,8 @@ Please visit [project site] for details.
 [HPMA115S0]:  https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115s0
 [HPMA115C0]:  https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115c0
 
-[Senserion]:  https://avaldebe.github.io/PyPMS/sensors/Senserion
-[SPS30]:      https://avaldebe.github.io/PyPMS/sensors/Senserion/#sps30
+[Sensirion]:  https://avaldebe.github.io/PyPMS/sensors/Sensirion
+[SPS30]:      https://avaldebe.github.io/PyPMS/sensors/Sensirion/#sps30
 
 [Winsen]:     https://avaldebe.github.io/PyPMS/sensors/Winsen
 [ZH0xx]:      https://avaldebe.github.io/PyPMS/sensors/Winsen/#zh0xx
@@ -100,6 +100,8 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
+- WIP 0.6.1
+  - fix `pms.sensors.sensirion` module name and docs
 - 0.6.0
   - [project site]
   - reorganize internal modules
@@ -136,5 +138,5 @@ The [project site] contain some help for those brave enough to use its internals
   - support [BME680] sensor ([MCU680] module)
 - 0.1.*
   - widen project scope beyond [Plantower] PM sensors
-  - support [NovaFitness], [Honeywell] and [Senserion] PM sensors
+  - support [NovaFitness], [Honeywell] and [Sensirion] PM sensors
   - cli for logging to csv file, InfluxDB server or MQTT server

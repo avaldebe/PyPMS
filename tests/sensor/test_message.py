@@ -5,7 +5,7 @@ from pms.sensors.bosch_sensortec import mcu680
 from pms.sensors.honeywell import hpma115s0
 from pms.sensors.novafitness import sds01x
 from pms.sensors.plantower import pms3003, pmsx003
-from pms.sensors.senserion import sps30
+from pms.sensors.sensirion import sps30
 from pms.sensors.winsen import mhz19b
 
 

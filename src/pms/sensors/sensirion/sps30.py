@@ -1,5 +1,5 @@
 """
-Senserion SPS30 sensors
+Sensirion SPS30 sensors
 - message protocol implements byte-stuffing
 - there is no active mode read
 - passive read messages are 47b long
@@ -30,7 +30,7 @@ commands = base.Commands(
 
 
 class Message(base.Message):
-    """Messages from Senserion SPS30 sensors"""
+    """Messages from Sensirion SPS30 sensors"""
 
     data_records = slice(10)
 
@@ -93,7 +93,7 @@ class Message(base.Message):
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
     """
-    Senserion SPS30 sensor observations
+    Sensirion SPS30 sensor observations
 
     time                                    measurement time [seconds since epoch]
     pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [μg/m3]
