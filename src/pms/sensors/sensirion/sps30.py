@@ -10,7 +10,7 @@ import struct
 from dataclasses import dataclass, field
 from typing import Tuple
 
-from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat, logger
 
 from .. import base
 
@@ -34,23 +34,33 @@ class Message(base.Message):
 
     data_records = slice(10)
 
+    @classmethod
+    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[float, ...]:
+        # error messages: recoverable errors (throw away observation)
+        if message.endswith(b"\x7E\x00\x00\x43\x00\xBC\x7E"):
+            raise SensorWarmingUp("short message: command not allowed in current state")
+        if message.endswith(b"\x7E\x00\x03\x00\x00\xFC\x7E"):
+            raise SensorWarmingUp("short message: no data")
+
+        # byte de-stuffing
+        for k, v in {
+            b"\x7D\x5E": b"\x7E",
+            b"\x7D\x5D": b"\x7D",
+            b"\x7D\x31": b"\x11",
+            b"\x7D\x33": b"\x13",
+        }.items():
+            if k in message:  # pragma: no cover
+                message = message.replace(k, v)
+        print(message)
+        return super().unpack(message, header, length)
+
     @property
     def header(self) -> bytes:
         return self.message[:5]
 
     @property
     def payload(self) -> bytes:
-        """byte de-stuffing"""
-        p = self.message[5:-2]
-        for k, v in {
-            b"\x7E": b"\x7D\x5E",
-            b"\x7D": b"\x7D\x5D",
-            b"\x11": b"\x7D\x31",
-            b"\x13": b"\x7D\x33",
-        }.items():
-            if v in p:  # pragma: no cover
-                p = p.replace(v, k)
-        return p
+        return self.message[5:-2]
 
     @property
     def checksum(self) -> int:
@@ -71,6 +81,7 @@ class Message(base.Message):
         assert length == len_payload + 7, f"wrong payload length {length} != {len_payload+7}"
 
         # validate message: recoverable errors (throw away observation)
+        print(message)
         msg = cls(message)
         if msg.header != header:
             raise WrongMessageFormat(f"message header: {msg.header!r}")

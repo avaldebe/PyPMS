@@ -100,8 +100,8 @@ from pms.sensors.winsen import mhz19b
         ),
         pytest.param(
             sps30,
-            "7E00030000FC7E",
-            r"message header: b'~\x00\x03\x00\x00'",
+            "7E00000000FF7E",
+            r"message header: b'~\x00\x00\x00\x00'",
             id="SPS30 wrong header",
         ),
         pytest.param(
@@ -121,6 +121,18 @@ from pms.sensors.winsen import mhz19b
             "7E0003002800000000000000000000000000000000000000000000000000000000000000000000000000000000D47E",
             "message empty: warming up sensor",
             id="SPS30 empty message",
+        ),
+        pytest.param(
+            sps30,
+            "7E00000000FF7E7E00004300BC7E",
+            "short message: command not allowed in current state",
+            id="SPS30 command not allowed",
+        ),
+        pytest.param(
+            sps30,
+            "7E00000000FF7E7E00030000FC7E",
+            "short message: no data",
+            id="SPS30 no data",
         ),
         pytest.param(
             mcu680, "5A5A3F0F0835198A0188", "message length: 10", id="MCU680 short message"
