@@ -16,7 +16,13 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
-from pms import WrongMessageChecksum, WrongMessageFormat, logger
+from pms import (
+    InconsistentObservation,
+    SensorWarmingUp,
+    WrongMessageChecksum,
+    WrongMessageFormat,
+    logger,
+)
 
 from .types import Cmd, Commands, Message, ObsData
 
@@ -82,6 +88,9 @@ class Sensor(Enum):
         except (WrongMessageFormat, WrongMessageChecksum) as e:
             logger.debug(f"decode error {e}")
             return False
+        except (SensorWarmingUp, InconsistentObservation) as e:
+            logger.debug(f"decode error {e}")
+            return True
         else:
             return True
 

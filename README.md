@@ -100,7 +100,7 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
-- WIP 0.6.1
+- 0.6.1
   - fix `pms.sensors.sensirion` module name and docs
   - reliably recognize SPS30 sensor [#25](https://github.com/avaldebe/PyPMS/issues/25)
 - 0.6.0
