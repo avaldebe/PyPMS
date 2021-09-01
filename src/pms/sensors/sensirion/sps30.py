@@ -10,7 +10,7 @@ import struct
 from dataclasses import dataclass, field
 from typing import Tuple
 
-from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat, logger
+from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
 from .. import base
 
@@ -51,7 +51,6 @@ class Message(base.Message):
         }.items():
             if k in message:  # pragma: no cover
                 message = message.replace(k, v)
-        print(message)
         return super().unpack(message, header, length)
 
     @property
@@ -81,7 +80,6 @@ class Message(base.Message):
         assert length == len_payload + 7, f"wrong payload length {length} != {len_payload+7}"
 
         # validate message: recoverable errors (throw away observation)
-        print(message)
         msg = cls(message)
         if msg.header != header:
             raise WrongMessageFormat(f"message header: {msg.header!r}")
