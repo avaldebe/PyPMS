@@ -166,6 +166,7 @@ warn_unreachable = true
 show_error_codes = true
 pretty = true
 sqlite_cache = true
+exclude = "site"
 overrides = [
     { ignore_missing_imports=true, module="paho.mqtt" },
     { ignore_missing_imports=true, module="influxdb" },
