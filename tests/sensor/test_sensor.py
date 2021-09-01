@@ -127,6 +127,40 @@ def test_check(sensor, msg, raw, secs=1567201793):
         assert not other.check(msg, "passive_read")
 
 
+@pytest.mark.parametrize(
+    "sensor,hex",
+    [
+        pytest.param(
+            "PMSx003",
+            "424d001c000000000000000000000000000000000000000000000000000000ab",
+            id="PMSx003 empty message",
+        ),
+        pytest.param(
+            "PMS3003",
+            "424d001400000000000000000000000000000000000000a3",
+            id="PMS3003 empty message",
+        ),
+        pytest.param(
+            "SDS01x",
+            "AAC000000000000000AB",
+            id="SDS01x empty message",
+        ),
+        pytest.param(
+            "HPMA115S0",
+            "40050400000000B7",
+            id="HPMA115S0 empty message",
+        ),
+        pytest.param(
+            "SPS30",
+            "7E0003002800000000000000000000000000000000000000000000000000000000000000000000000000000000D47E",
+            id="SPS30 empty message",
+        ),
+    ],
+)
+def test_check_warming_up(sensor: str, hex: str):
+    assert Sensor[sensor].check(bytes.fromhex(hex), "passive_read")
+
+
 @pytest.mark.parametrize("sensor,msg,raw", GoodData.test_param())
 def test_decode(sensor, msg, raw, secs=1567201793):
     assert Sensor[sensor].decode(msg, time=secs) == Sensor[sensor].Data(secs, *raw)
