@@ -4,11 +4,7 @@ Winsen ZH03B/ZH06I sensors
 - active mode is not pupported
 """
 
-import struct
 from dataclasses import dataclass, field
-from typing import Tuple
-
-from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
 from .. import base
 from . import mhz19b
