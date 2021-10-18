@@ -11,7 +11,7 @@ from . import hpma115s0
 
 commands = hpma115s0.commands._replace(
     passive_read=base.Cmd(  # Read Particle Measuring Results
-        b"\x68\x01\x04\x93", b"\x40\x05\x04", 16
+        b"\x68\x01\x04\x93", b"\x40\x0d\x04", 16
     )
 )
 
