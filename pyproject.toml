@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pypms"
-version = "0.6.1"
+version = "0.6.2"
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = ["Alvaro Valdebenito <avaldebe@gmail.com>"]
 readme = "README.md"
