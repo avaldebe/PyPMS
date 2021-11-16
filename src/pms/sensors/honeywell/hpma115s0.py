@@ -41,12 +41,16 @@ class Message(base.Message):
         return self.message[-1]
 
     @classmethod
-    def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
-        # validate ACK message
-        if header == b"\xA5\xA5" and length == 2:
-            assert message.endswith(header)
-            return cls(message)
+    def decode(cls, message: bytes, command: base.Cmd) -> Tuple[float, ...]:
+        # decode ACK message
+        if command.answer_header == b"\xA5\xA5" and command.answer_length == 2:
+            if not message.endswith(command.answer_header):
+                raise WrongMessageFormat("message does not end in ACK")
+            return tuple()
+        return super().decode(message, command)
 
+    @classmethod
+    def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
         # consistency check: bug in message singnature
         assert len(header) == 3, f"wrong header length {len(header)}"
         assert header[:1] == b"\x40", f"wrong header start {header!r}"

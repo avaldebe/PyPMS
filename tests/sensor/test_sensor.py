@@ -3,7 +3,7 @@ from typing import Generator, NamedTuple
 
 import pytest
 
-from pms import SensorWarning, sensors
+from pms import SensorWarning, WrongMessageFormat
 from pms.core import Sensor, Supported
 
 
@@ -33,9 +33,17 @@ def test_pre_heat(sensor):
 
 @pytest.mark.parametrize("sensor", ["HPMA115S0", "HPMA115C0"])
 @pytest.mark.parametrize("command", ["passive_mode", "wake"])
-@pytest.mark.parametrize("buffer", [b"\xA5\xA5", b"\xA5\xA5\xA5\xA5"])
-def test_HPMA115xx_ACK_message(sensor, command, buffer):
-    assert Sensor[sensor].check(buffer, command)
+@pytest.mark.parametrize(
+    "buffer,check",
+    [
+        pytest.param(b"\xA5\xA5", True, id="ACK"),
+        pytest.param(b"\xA5\xA5\xA5\xA5", True, id="ACK ACK"),
+        pytest.param(b"\x40\x0d\x04", False, id="no ACK"),
+        pytest.param(b"\xA5\xA5\x40\x0d\x04", False, id="no ACK at end"),
+    ],
+)
+def test_HPMA115xx_ACK_message(sensor, command, buffer, check):
+    assert Sensor[sensor].check(buffer, command) == check
 
 
 class RawData(NamedTuple):
