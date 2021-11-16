@@ -3,7 +3,7 @@ from typing import Generator, NamedTuple
 
 import pytest
 
-from pms import SensorWarning
+from pms import SensorWarning, sensors
 from pms.core import Sensor, Supported
 
 
@@ -29,6 +29,12 @@ def test_baud(sensor):
 def test_pre_heat(sensor):
     pre_heat = 0 if sensor != "MHZ19B" else 180
     assert Sensor[sensor].pre_heat == pre_heat
+
+
+@pytest.mark.parametrize("sensor", ["HPMA115S0", "HPMA115C0"])
+@pytest.mark.parametrize("command", ["passive_mode", "wake"])
+def test_HPMA115xx_ACK_message(sensor, command):
+    assert Sensor[sensor].check(b"\xA5\xA5", command)
 
 
 class RawData(NamedTuple):
