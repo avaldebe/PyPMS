@@ -33,8 +33,9 @@ def test_pre_heat(sensor):
 
 @pytest.mark.parametrize("sensor", ["HPMA115S0", "HPMA115C0"])
 @pytest.mark.parametrize("command", ["passive_mode", "wake"])
-def test_HPMA115xx_ACK_message(sensor, command):
-    assert Sensor[sensor].check(b"\xA5\xA5", command)
+@pytest.mark.parametrize("buffer", [b"\xA5\xA5", b"\xA5\xA5\xA5\xA5"])
+def test_HPMA115xx_ACK_message(sensor, command, buffer):
+    assert Sensor[sensor].check(buffer, command)
 
 
 class RawData(NamedTuple):

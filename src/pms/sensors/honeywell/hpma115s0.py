@@ -44,7 +44,7 @@ class Message(base.Message):
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
         # validate ACK message
         if header == b"\xA5\xA5" and length == 2:
-            assert message == header
+            assert message.endswith(header)
             return cls(message)
 
         # consistency check: bug in message singnature
