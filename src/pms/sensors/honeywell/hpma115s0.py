@@ -42,11 +42,15 @@ class Message(base.Message):
 
     @classmethod
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
+        # validate ACK message
+        if header == b"\xA5\xA5" and length == 2:
+            assert message == header
+            return cls(message)
 
         # consistency check: bug in message singnature
         assert len(header) == 3, f"wrong header length {len(header)}"
         assert header[:1] == b"\x40", f"wrong header start {header!r}"
-        assert length in [5, 8, 16], f"wrong payload length {length}"
+        assert length in [8, 16], f"wrong payload length {length}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
