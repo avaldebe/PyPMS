@@ -20,7 +20,7 @@
     | HPMA115C0 | [en][HPMA115] | 44X36X12 mm³ | [10 pin]  |
 
 [Honeywell]: https://sensing.honeywell.com/sensors/particle-sensors/hpm-series
-[HPMA115]:   https://sensing.honeywell.com/honeywell-sensing-particulate-hpm-series-datasheet-32322550
+[HPMA115]:   https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/siot/en-us/products/sensors/particulate-matter-sensors-hpm-series/documents/sps-siot-particulate-hpm-series-datasheet-32322550-ciid-165855.pdf?download=false
 
 [HPMA115S0]: #hpma115s0
 [HPMA115C0]: #hpma115c0
