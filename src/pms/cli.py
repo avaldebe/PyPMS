@@ -1,3 +1,5 @@
+import logging
+import os
 import sys
 from datetime import datetime
 from enum import Enum
@@ -25,6 +27,9 @@ for ep in metadata.entry_points(group="pypms.extras"):
     main.command(name=ep.name)(ep.load())
 
 
+logging.basicConfig(level=os.getenv("LEVEL", "WARNING"))
+
+
 def version_callback(value: bool):  # pragma: no cover
     if not value:
         return
@@ -45,8 +50,7 @@ def callback(
     version: Optional[bool] = Option(None, "--version", "-V", callback=version_callback),
 ):
     """Read serial sensor"""
-    if debug:  # pragma: no cover
-        logger.setLevel("DEBUG")
+    logger.setLevel("DEBUG" if debug else os.getenv("LEVEL", "WARNING"))
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
 
 
