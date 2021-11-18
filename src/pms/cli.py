@@ -131,3 +131,7 @@ def csv(
                 csv.write("time,sensor,hex\n")
             for raw in reader(raw=True):
                 csv.write(f"{raw.time},{sensor_name},{raw.hex}\n")
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
