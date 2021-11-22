@@ -44,7 +44,7 @@ Please visit [project site] for details.
 | SDS198            | [SDS198]         |       |       |       |       |           | PM100                  |   ✔️    |
 | [Honeywell]       |
 | HPMA115S0         | [HPMA115S0]      |       |   ✔️   |       |   ✔️   |           |                        |        |
-| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |        |
+| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |   ✗    |
 | [Sensirion]       |
 | SPS30             | [SPS30]          |   ✔️   |   ✔️   |   ✔️   |   ✔️   |     5     | typical particle size  |   ✔️    |
 | [Winsen]          |
@@ -100,6 +100,10 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
+- Work in progress
+  - fix HPMA115C0 header [#26](https://github.com/avaldebe/PyPMS/issues/26)
+- 0.6.2
+  - move logger config to CLI module [PR#28](https://github.com/avaldebe/PyPMS/pull/28)
 - 0.6.1
   - fix `pms.sensors.sensirion` module name and docs
   - reliably recognize SPS30 sensor [#25](https://github.com/avaldebe/PyPMS/issues/25)
