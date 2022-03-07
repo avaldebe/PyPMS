@@ -18,12 +18,15 @@ from contextlib import closing, contextmanager
 from pathlib import Path
 from typing import Callable, ContextManager, Generator
 
-from typer import Argument, Option, progressbar
+from typer import Argument, Option, Typer, progressbar
 
 from pms.core import Sensor, SensorReader
 from pms.core.reader import ObsData, RawData
 
+app = Typer(add_completion=False)
 
+
+@app.command()
 def main(
     db_path: Path = Argument(Path("pypms.sqlite"), help="sensor messages DB"),
     samples: int = Option(4, "--samples", "-n"),
@@ -125,9 +128,7 @@ def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Generator[ObsData, None,
 
 
 if __name__ == "__main__":
-    from typer import run
-
     try:
-        run(main)
+        app()
     except KeyboardInterrupt:
         print("")
