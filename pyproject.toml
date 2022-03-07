@@ -49,7 +49,7 @@ influxdb = ["influxdb"]
 pytest = ">=6.2.4"
 pytest-cov = ">=2.12.1"
 pytest-sugar = ">=0.9.4"
-mypy = ">=0.902"
+mypy = ">=0.931"
 types-dataclasses = ">=0.1.5"
 
 [tool.poetry.scripts]
@@ -172,6 +172,7 @@ overrides = [
     { ignore_missing_imports=true, module="influxdb" },
     { ignore_missing_imports=true, module="serial" },
     { ignore_missing_imports=true, module="aenum" },
+    { ignore_missing_imports=true, module="importlib_metadata" },
     { warn_unused_ignores=false, module="pms.extra.mqtt" },
     { warn_unused_ignores=false, module="pms.extra.influxdb" },
 ]

@@ -33,7 +33,7 @@ class Sensor(Enum):
     sensor modules are loaded from plugins (entry points) advertized as `"pypms.sensors"`
     """
 
-    _ignore_ = "ep alias Sensor"
+    _ignore_ = "ep alias Sensor"  # type:ignore[misc]
 
     Sensor = vars()
     for ep in metadata.entry_points(group="pypms.sensors"):
@@ -106,7 +106,7 @@ class Sensor(Enum):
 class Supported(str, Enum):
     """Supported sensor names"""
 
-    _ignore_ = "s Supported"
+    _ignore_ = "s Supported"  # type:ignore[misc]
 
     Supported = vars()
     for s in Sensor:

@@ -56,7 +56,7 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
 class CapturedData(Enum):
     """Captured data from tests/captured_data"""
 
-    _ignore_ = "name capt CapturedData"
+    _ignore_ = "name capt CapturedData"  # type:ignore[misc]
 
     with captured_data_reader(data=captured_data) as reader:
         CapturedData = vars()
