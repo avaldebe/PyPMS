@@ -2,47 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://avaldebe.github.io/PyPMS/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/library_usage/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sqlite_example/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/Honeywell/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/NovaFitness/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/Plantower/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/Sensirion/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/Winsen/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://avaldebe.github.io/PyPMS/sensors/mcu680/</loc>
-         <lastmod>2021-11-22</lastmod>
+         <lastmod>2022-03-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
