@@ -507,7 +507,9 @@
 <p>This sensors are 3.3V devices. They require 5V power to operate the laser and fan.
 However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V logic.</p>
 </div>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">sensor</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sensor</label><label for="__tabbed_1_2">datasheet</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -550,7 +552,7 @@ However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V l
 </tbody>
 </table>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">datasheet</label><div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -589,8 +591,11 @@ However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V l
 </table>
 </div>
 </div>
+</div>
 <h2 id="connector">Connector</h2>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">5 pin</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">5 pin</label><label for="__tabbed_2_2">7 pin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>5 pin ????, comes with sensor</p>
 <table>
 <thead>
@@ -635,7 +640,7 @@ However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V l
 </tbody>
 </table>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">7 pin</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>7 pin JST XH (2.5mm pitch), comes with sensor</p>
 <table>
 <thead>
@@ -693,9 +698,12 @@ However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V l
 </table>
 </div>
 </div>
+</div>
 <h2 id="protocol">Protocol</h2>
 <p>Serial protocol is UART 9600 8N1 <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2 1 21z"/></svg></span> 3.3V TTL.</p>
-<div class="tabbed-set" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">commands</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">commands</label><label for="__tabbed_3_2">message</label><label for="__tabbed_3_3">SDS01x</label><label for="__tabbed_3_4">SDS198</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>All the NovaFitness PM sensors
 can be fully controlled with serial commands:</p>
 <table>
@@ -735,7 +743,7 @@ can be fully controlled with serial commands:</p>
 </tbody>
 </table>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">message</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Messages containing measurements consist of unsigned short integers.
 The second to last bit of the message should contain <code>sum(message[2:-2])%0x100</code>.</p>
 <table>
@@ -790,21 +798,24 @@ The second to last bit of the message should contain <code>sum(message[2:-2])%0x
 </tbody>
 </table>
 </div>
-<input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><label for="__tabbed_3_3">SDS01x</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>The message body (<code>message[2:6]</code>) contains 2 values:</p>
 <ul>
 <li>pm25, pm10: PM2.5, PM10 [μg/m³] (raw values [0.1 μg/m³])</li>
 </ul>
 </div>
-<input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><label for="__tabbed_3_4">SDS198</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>The message body (<code>message[4:6]</code>) contains 1 value:</p>
 <ul>
 <li>pm100: PM100 [μg/m³]</li>
 </ul>
 </div>
 </div>
+</div>
 <h2 id="sds01x">SDS01x</h2>
-<div class="tabbed-set" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">info</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">info</label><label for="__tabbed_4_2">serial</label><label for="__tabbed_4_3">csv</label><label for="__tabbed_4_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>About the sensors supported by the SDS01x protocol (<code>-m SDS01x</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS01x info
 </code></pre></div>
@@ -816,7 +827,7 @@ pm25, pm10                              PM2.5, PM10 [μg/m3]
 String formats: pm (default), csv and header    
 </code></pre></div>
 </div>
-<input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><label for="__tabbed_4_2">serial</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS01x -n <span class="m">10</span> -i <span class="m">10</span> serial
 </code></pre></div>
@@ -832,7 +843,7 @@ String formats: pm (default), csv and header
 2020-09-27 20:12:50: PM2.5 0.8, PM10 0.8 μg/m3
 </code></pre></div>
 </div>
-<input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><label for="__tabbed_4_3">csv</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on CSV format (<code>-f csv</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS01x -n <span class="m">10</span> -i <span class="m">10</span> serial -f csv
 </code></pre></div>
@@ -849,7 +860,7 @@ String formats: pm (default), csv and header
 1601230370, 0.8, 0.8
 </code></pre></div>
 </div>
-<input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><label for="__tabbed_4_4">hexdump</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on hexdump format (<code>-f hexdump</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS01x -n <span class="m">10</span> -i <span class="m">10</span> serial -f hexdump
 </code></pre></div>
@@ -866,8 +877,11 @@ String formats: pm (default), csv and header
 </code></pre></div>
 </div>
 </div>
+</div>
 <h2 id="sds198">SDS198</h2>
-<div class="tabbed-set" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><label for="__tabbed_5_1">info</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">info</label><label for="__tabbed_5_2">serial</label><label for="__tabbed_5_3">csv</label><label for="__tabbed_5_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>About the SDS198 sensor (<code>-m SDS198</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS198 info
 </code></pre></div>
@@ -879,7 +893,7 @@ pm100                                   PM100 [μg/m3]
 String formats: pm (default), csv and header
 </code></pre></div>
 </div>
-<input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><label for="__tabbed_5_2">serial</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Read 6 samples (<code>-n 6</code>), one sample every 10 seconds <code>(-i 10</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS198 -n <span class="m">6</span> -i <span class="m">10</span> serial
 </code></pre></div>
@@ -891,7 +905,7 @@ String formats: pm (default), csv and header
 2020-09-09 14:59:20: PM100 1.0 μg/m3
 </code></pre></div>
 </div>
-<input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><label for="__tabbed_5_3">csv</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on CSV format (-f csv)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS198 -n <span class="m">6</span> -i <span class="m">10</span> serial -f csv
 </code></pre></div>
@@ -904,7 +918,7 @@ String formats: pm (default), csv and header
 1599656360, 1.0
 </code></pre></div>
 </div>
-<input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><label for="__tabbed_5_4">hexdump</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on hexdump format (<code>-f hexdump</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SDS198 -n <span class="m">6</span> -i <span class="m">10</span> serial -f hexdump
 </code></pre></div>
@@ -915,6 +929,7 @@ String formats: pm (default), csv and header
 <span class="nl">00000028</span><span class="p">:</span><span class="w"> </span><span class="mh">aa</span><span class="w"> </span><span class="mh">cf</span><span class="w"> </span><span class="mh">0b</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e9</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">0d</span><span class="w"> </span><span class="mh">ab</span><span class="w">  </span><span class="s">..........</span><span class="w"></span>
 <span class="nl">00000032</span><span class="p">:</span><span class="w"> </span><span class="mh">aa</span><span class="w"> </span><span class="mh">cf</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e9</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">f6</span><span class="w"> </span><span class="mh">ab</span><span class="w">  </span><span class="s">..........</span><span class="w"></span>
 </code></pre></div>
+</div>
 </div>
 </div>
 

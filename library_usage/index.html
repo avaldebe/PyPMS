@@ -498,7 +498,9 @@
 <p><code>PyPMS</code>/<code>pms</code> is meant as a command line application.
 This section contain some help for those brave enough to use its internals as a library.</p>
 <h2 id="basic-examples">Basic examples</h2>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">read one sensor</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">read one sensor</label><label for="__tabbed_1_2">read two sensors</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Read PMSx003 sensor on /dev/ttyUSB0.</span>
 
@@ -549,7 +551,7 @@ time, raw01, raw25, raw10, pm01, pm25, pm10, n0_3, n0_5, n1_0, n2_5, n5_0, n10_0
 1627567227, 2, 2, 2, 2.0, 2.0, 2.0, 3.63, 1.21, 0.03, 0.00, 0.00, 0.00
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">read two sensors</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Read PMSx003 sensor on /dev/ttyUSB0</span>
 <span class="sd">and MCU680 sensor on /dev/ttyUSB1</span>
@@ -609,10 +611,13 @@ PMSx003, 1627567517, 0, 0, 0, 0.0, 0.0, 0.0, 2.16, 0.72, 0.00, 0.00, 0.00, 0.00,
 </code></pre></div>
 </div>
 </div>
+</div>
 <h2 id="observation-data-fields">Observation data fields</h2>
 <p>Each sensor provides different data fields. The <code>pms -m SENSOR_MODEL info</code> command will provide information about data fields and their units.
 The following table shows all possible data fields and the type provided by each sensor:</p>
-<div class="tabbed-set" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">particulate matter</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">particulate matter</label><label for="__tabbed_2_2">number count</label><label for="__tabbed_2_3">environmental</label><label for="__tabbed_2_4">other</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -774,7 +779,7 @@ The following table shows all possible data fields and the type provided by each
 </tbody>
 </table>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">number count</label><div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -922,7 +927,7 @@ The following table shows all possible data fields and the type provided by each
 </tbody>
 </table>
 </div>
-<input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><label for="__tabbed_2_3">environmental</label><div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -1056,7 +1061,7 @@ The following table shows all possible data fields and the type provided by each
 </tbody>
 </table>
 </div>
-<input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><label for="__tabbed_2_4">other</label><div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -1175,6 +1180,7 @@ The following table shows all possible data fields and the type provided by each
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 <p>On the previous example, <code>obs</code> is a <a href="https://docs.python.org/3/library/dataclasses.html#dataclasses.dataclass">dataclasses.dataclass</a> instance which an be inspected as follows</p>

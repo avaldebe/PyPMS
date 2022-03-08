@@ -495,7 +495,9 @@
 
 
 <h1 id="sensirion-sensors"><a href="https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/">Sensirion</a> sensors</h1>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">sensor</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sensor</label><label for="__tabbed_1_2">datasheet</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -523,7 +525,7 @@
 </tbody>
 </table>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">datasheet</label><div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
@@ -544,8 +546,11 @@
 </table>
 </div>
 </div>
+</div>
 <h2 id="connector">Connector</h2>
-<div class="tabbed-set" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">5 pin</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">5 pin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>5 pin JST ZH (1.50mm pitch)</p>
 <table>
 <thead>
@@ -591,9 +596,12 @@
 </table>
 </div>
 </div>
+</div>
 <h2 id="protocol">Protocol</h2>
 <p>Serial protocol is UART 115200 8N1 5V TTL <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2 1 21z"/></svg></span> 3.3V compatible.</p>
-<div class="tabbed-set" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">commands</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">commands</label><label for="__tabbed_3_2">message</label><label for="__tabbed_3_3">SPS30</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <a href="#sps30">SPS30</a> only support continuous operation, at about one measurement per second.
@@ -641,7 +649,7 @@ which are not implemented. As <code>deep-sleep</code> disable the UART interface
 </tbody>
 </table>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">message</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Messages containing measurements consist of floats.
 The second to last bit of the message should contain <code>0xFF-sum(message[1:-2])%0x100</code>.</p>
 <table>
@@ -687,7 +695,7 @@ The second to last bit of the message should contain <code>0xFF-sum(message[1:-2
 </tbody>
 </table>
 </div>
-<input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><label for="__tabbed_3_3">SPS30</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>The message body (<code>message[5:-2]</code>) contains 10 values:</p>
 <ul>
 <li>pm01, pm25, pm04, pm10: PM1.0, PM2.5, PM4.0, PM10 [ug/m³]</li>
@@ -696,8 +704,11 @@ The second to last bit of the message should contain <code>0xFF-sum(message[1:-2
 </ul>
 </div>
 </div>
+</div>
 <h2 id="sps30">SPS30</h2>
-<div class="tabbed-set" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">info</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">info</label><label for="__tabbed_4_2">serial</label><label for="__tabbed_4_3">csv</label><label for="__tabbed_4_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>About the SPS30 sensor (<code>-m SPS30</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SPS30 info
 </code></pre></div>
@@ -711,7 +722,7 @@ diam                                    typical particle size [μm]
 String formats: pm (default), num, diam, csv and header
 </code></pre></div>
 </div>
-<input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><label for="__tabbed_4_2">serial</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SPS30 -n <span class="m">10</span> -i <span class="m">10</span> serial
 </code></pre></div>
@@ -727,7 +738,7 @@ String formats: pm (default), num, diam, csv and header
 2021-09-07 07:07:10: PM1 8.5, PM2.5 10.3, PM4 11.4, PM10 11.6 μg/m3
 </code></pre></div>
 </div>
-<input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><label for="__tabbed_4_3">csv</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on CSV format (<code>-f csv</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SPS30 -n <span class="m">10</span> -i <span class="m">10</span> csv
 </code></pre></div>
@@ -744,7 +755,7 @@ String formats: pm (default), num, diam, csv and header
 1630991230, 8.5, 10.3, 11.4, 11.6, 55.63, 65.90, 67.56, 67.88, 67.94, 0.7
 </code></pre></div>
 </div>
-<input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><label for="__tabbed_4_4">hexdump</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Print on hexdump format (<code>-f hexdump</code>)</p>
 <div class="highlight"><pre><span></span><code>pms -m SPS30 -n <span class="m">10</span> -i <span class="m">10</span> serial -f hexdump
 </code></pre></div>
@@ -759,6 +770,7 @@ String formats: pm (default), num, diam, csv and header
 <span class="nl">00000178</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">0c</span><span class="w"> </span><span class="mh">43</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">2b</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">da</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">92</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">bc</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">65</span><span class="w"> </span><span class="mh">9c</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">88</span><span class="w"> </span><span class="mh">2f</span><span class="w"> </span><span class="mh">76</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">be</span><span class="w"> </span><span class="mh">32</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8c</span><span class="w"> </span><span class="mh">6c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8c</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">b8</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A.C.A+..A=..</span><span class="mh">AA</span><span class="err">B.</span><span class="mh">Be</span><span class="err">..B./vB..</span><span class="mh">2B</span><span class="err">.l.B...?&gt;Z...</span><span class="w"></span>
 <span class="nl">000001a7</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">e5</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">a7</span><span class="w"> </span><span class="mh">bf</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">d7</span><span class="w"> </span><span class="mh">db</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">39</span><span class="w"> </span><span class="mh">47</span><span class="w"> </span><span class="mh">db</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">cd</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">a7</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">c2</span><span class="w"> </span><span class="mh">f8</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">de</span><span class="w"> </span><span class="mh">e9</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">be</span><span class="w"> </span><span class="mh">a6</span><span class="w"> </span><span class="mh">ff</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A...A$..</span><span class="mh">A5</span><span class="err">..</span><span class="mh">A9</span><span class="err">G.B^.</span><span class="mh">5B</span><span class="err">...B.</span><span class="w"> </span><span class="err">.B...B...?=....</span><span class="w"></span>
 </code></pre></div>
+</div>
 </div>
 </div>
 

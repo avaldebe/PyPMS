@@ -509,13 +509,16 @@
 <h2 id="about">About</h2>
 <p><code>pms</code> is a data acquisition and logging tool for for Air Quality Sensors with UART interface.</p>
 <h2 id="installation">Installation</h2>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">pip</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">pipx</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>python3 -m pip install pypms
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">pipx</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pipx install pypms
 </code></pre></div>
+</div>
 </div>
 </div>
 <p>Will allow you yo access to sensors via serial port (<code>pms serial</code>),
@@ -524,17 +527,22 @@ and save observations to a csv file (<code>pms csv</code>).</p>
 <p>Additional packages are required for pushing observations to an mqtt server
 (<code>pms mqtt</code>), to an influxdb server (<code>pms influxdb</code>), or provide a bridge
 between mqtt and influxdb servers (<code>pms bridge</code>).</p>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">pip</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">pip</label><label for="__tabbed_2_2">pipx</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>python3 -m pip install pypms<span class="o">[</span>mqtt,influxdb<span class="o">]</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">pipx</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pipx install pypms<span class="o">[</span>mqtt,influxdb<span class="o">]</span>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h2 id="command-line-options">Command line options</h2>
-<div class="tabbed-set" data-tabs="3:7"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">pms</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:7"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><input id="__tabbed_3_5" name="__tabbed_3" type="radio" /><input id="__tabbed_3_6" name="__tabbed_3" type="radio" /><input id="__tabbed_3_7" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">pms</label><label for="__tabbed_3_2">pms info</label><label for="__tabbed_3_3">pms serial</label><label for="__tabbed_3_4">pms csv</label><label for="__tabbed_3_5">pms mqtt</label><label for="__tabbed_3_6">pms influxdb</label><label for="__tabbed_3_7">pms bridge</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms [OPTIONS] COMMAND [ARGS]...
@@ -570,7 +578,7 @@ Commands:
   serial    Read sensor and print measurements
 </code></pre></div>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">pms info</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms info --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms info [OPTIONS]
@@ -581,7 +589,7 @@ Options:
   --help  Show this message and exit.
 </code></pre></div>
 </div>
-<input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><label for="__tabbed_3_3">pms serial</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms serial --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms serial [OPTIONS]
@@ -595,7 +603,7 @@ Options:
   --help                          Show this message and exit.
 </code></pre></div>
 </div>
-<input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><label for="__tabbed_3_4">pms csv</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms csv --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms csv [OPTIONS] [PATH]
@@ -611,7 +619,7 @@ Options:
   --help       Show this message and exit.
 </code></pre></div>
 </div>
-<input id="__tabbed_3_5" name="__tabbed_3" type="radio" /><label for="__tabbed_3_5">pms mqtt</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms mqtt --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms mqtt [OPTIONS]
@@ -627,7 +635,7 @@ Options:
   --help               Show this message and exit.
 </code></pre></div>
 </div>
-<input id="__tabbed_3_6" name="__tabbed_3" type="radio" /><label for="__tabbed_3_6">pms influxdb</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms influxdb --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms influxdb [OPTIONS]
@@ -644,7 +652,7 @@ Options:
   --help             Show this message and exit.
 </code></pre></div>
 </div>
-<input id="__tabbed_3_7" name="__tabbed_3" type="radio" /><label for="__tabbed_3_7">pms bridge</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>pms bridge --help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Usage: pms bridge [OPTIONS]
@@ -664,6 +672,7 @@ Options:
   --db-name TEXT       database name  [default: homie]
   --help               Show this message and exit.
 </code></pre></div>
+</div>
 </div>
 </div>
 
