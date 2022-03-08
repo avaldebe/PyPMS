@@ -110,18 +110,16 @@ deps =
     types-dataclasses
     pytest
 
-[testenv:docs]
+[testenv:docs{,-serve,-deploy}]
 skip_install=True
 commands =
-    mkdocs build --clean
+    docs:        mkdocs build --clean
+    docs-serve:  mkdocs serve
+    docs-deploy: mkdocs gh-deploy {posargs:--clean}
 deps =
-    mkdocs
-    mkdocs-material
+    mkdocs>=1.2.3
+    mkdocs-material>=8.2.5
     pymdown-extensions
-
-[testenv:docs-deploy]
-deps = {[testenv:docs]deps}
-commands = mkdocs gh-deploy {posargs:--clean}
 """
 
 [tool.pytest.ini_options]
