@@ -19,7 +19,7 @@ import sqlite3
 from contextlib import closing, contextmanager
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
-from typing import Callable, ContextManager, Generator
+from typing import Callable, ContextManager, Iterator
 
 from typer import Argument, Option, Typer, progressbar
 
@@ -75,7 +75,7 @@ def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
     """
 
     @contextmanager
-    def connect() -> Generator[sqlite3.Connection, None, None]:
+    def connect() -> Iterator[sqlite3.Connection]:
         db = sqlite3.connect(str(db_path))
         try:
             yield db
@@ -139,7 +139,7 @@ def write_measurements(db: sqlite3.Connection, sensor: Sensor, obs: ObsData):
         cur.executemany(insert, values)
 
 
-def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Generator[ObsData, None, None]:
+def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Iterator[ObsData]:
     """read measurements from DB and return observations"""
 
     @dataclass
