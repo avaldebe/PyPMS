@@ -500,9 +500,8 @@
             <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">:</span>
                 <span class="n">write_message</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">sensor</span><span class="p">,</span> <span class="n">obs</span><span class="p">)</span>
 
-    <span class="c1"># read and decode all messages on the DB</span>
+    <span class="c1"># read and decode all `sensor` messages on the DB</span>
     <span class="k">with</span> <span class="n">message_db</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
-        <span class="c1"># extract obs from one sensor at the time</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">read_obs</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">sensor</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>

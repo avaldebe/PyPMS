@@ -45,9 +45,8 @@ def main(
             for obs in progress:
                 write_message(db, sensor, obs)
 
-    # read and decode all messages on the DB
+    # read and decode all `sensor` messages on the DB
     with message_db() as db:
-        # extract obs from one sensor at the time
         print(sensor)
         for obs in read_obs(db, sensor):
             print(obs)
