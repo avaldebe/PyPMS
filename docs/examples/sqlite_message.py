@@ -16,7 +16,7 @@ In this example, the second sensor will be read right after the first sensor.
 import sqlite3
 from contextlib import closing, contextmanager
 from pathlib import Path
-from typing import Callable, ContextManager, Generator
+from typing import Callable, ContextManager, Iterator
 
 from typer import Argument, Option, Typer, progressbar
 
@@ -74,7 +74,7 @@ def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
     """
 
     @contextmanager
-    def connect() -> Generator[sqlite3.Connection, None, None]:
+    def connect() -> Iterator[sqlite3.Connection]:
         db = sqlite3.connect(str(db_path))
         try:
             yield db
@@ -108,7 +108,7 @@ def write_message(db: sqlite3.Connection, sensor: Sensor, message: RawData):
         cur.execute(insert, (message.time, sensor.name, message.data))
 
 
-def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Generator[ObsData, None, None]:
+def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Iterator[ObsData]:
     """read messages from DB and return decoded observations"""
 
     select = """
