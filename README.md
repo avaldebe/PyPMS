@@ -44,7 +44,7 @@ Please visit [project site] for details.
 | SDS198            | [SDS198]         |       |       |       |       |           | PM100                  |   ✔️    |
 | [Honeywell]       |
 | HPMA115S0         | [HPMA115S0]      |       |   ✔️   |       |   ✔️   |           |                        |        |
-| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |   ✗    |
+| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |   ✔️    |
 | [Sensirion]       |
 | SPS30             | [SPS30]          |   ✔️   |   ✔️   |   ✔️   |   ✔️   |     5     | typical particle size  |   ✔️    |
 | [Winsen]          |
