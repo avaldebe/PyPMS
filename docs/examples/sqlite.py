@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Read raw messages from a supportred sensor and store them on a sqlite DB.
+Read raw messages from a supported sensor and store them on a sqlite DB.
 After reading the sensor, decode all messages on DB and print them.
 
 - PMSx003 senor on /dev/ttyUSB0 by default

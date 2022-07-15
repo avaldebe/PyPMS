@@ -11,7 +11,7 @@ After reading the sensor, get all measurements from the DB amd print them by sen
 
 NOTE:
 the read_obs function creates a subclass of sensor.Data in order to avoid the
-callin to __post_init__, as this was already tone when the sensor message was decoded.
+__post_init__ call, as this was already tone when the sensor message was decoded.
 Please open an issue or submit a PR i you know of a cleaner way to achieve this.
 """
 
@@ -71,7 +71,7 @@ def main(
 def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
     """
     create db and table and update sensor views, if do not exists already
-    and return a context managet for a DB connection
+    and return a context manager for a DB connection
     """
 
     @contextmanager
@@ -97,7 +97,7 @@ def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
     with connect() as db, db, closing(db.cursor()) as cur:
         cur.executescript(create_table)
 
-        # create a "wide table" view for every suppoorted sensor
+        # create a "wide table" view for every supported sensor
         for sensor in Sensor:
             view_fields = ",\n".join(
                 f"MAX(CASE WHEN field='{field.name}' THEN value ELSE NULL END) {field.name}"
