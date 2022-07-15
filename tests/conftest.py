@@ -1,14 +1,10 @@
 import sys
 from contextlib import closing, contextmanager
 from csv import DictReader
+from enum import Enum
 from pathlib import Path
 from sqlite3 import connect
 from typing import Iterator, List
-
-if sys.version_info >= (3, 7):  # pragma: no cover
-    from enum import Enum
-else:  # pragma: no cover
-    from aenum import Enum
 
 import pytest
 
