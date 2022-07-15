@@ -33,7 +33,7 @@ class Sensor(Enum):
     sensor modules are loaded from plugins (entry points) advertized as `"pypms.sensors"`
     """
 
-    _ignore_ = "ep alias Sensor"  # type:ignore[misc]
+    _ignore_ = "ep alias Sensor"
 
     Sensor = vars()
     for ep in metadata.entry_points(group="pypms.sensors"):
@@ -95,7 +95,7 @@ class Sensor(Enum):
             return True
 
     def decode(self, buffer: bytes, *, time: int = None) -> ObsData:
-        """Exract observations from serial buffer"""
+        """Extract observations from serial buffer"""
         if not time:  # pragma: no cover
             time = self.now()
 
@@ -106,7 +106,7 @@ class Sensor(Enum):
 class Supported(str, Enum):
     """Supported sensor names"""
 
-    _ignore_ = "s Supported"  # type:ignore[misc]
+    _ignore_ = "s Supported"
 
     Supported = vars()
     for s in Sensor:

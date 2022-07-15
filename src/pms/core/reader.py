@@ -11,7 +11,7 @@ import time
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
-from typing import Generator, NamedTuple, Optional, Union, overload
+from typing import Iterator, NamedTuple, Optional, Union, overload
 
 from serial import Serial
 from typer import progressbar
@@ -135,11 +135,11 @@ class SensorReader:
         self.serial.close()
 
     @overload
-    def __call__(self) -> Generator[ObsData, None, None]:
+    def __call__(self) -> Iterator[ObsData]:
         ...
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+    def __call__(self, *, raw: bool) -> Iterator[RawData]:
         ...
 
     def __call__(self, *, raw: Optional[bool] = None):
@@ -190,11 +190,11 @@ class MessageReader:
         self.csv.close()
 
     @overload
-    def __call__(self) -> Generator[ObsData, None, None]:
+    def __call__(self) -> Iterator[ObsData]:
         ...
 
     @overload
-    def __call__(self, *, raw: bool) -> Generator[RawData, None, None]:
+    def __call__(self, *, raw: bool) -> Iterator[RawData]:
         ...
 
     def __call__(self, *, raw: Optional[bool] = None):

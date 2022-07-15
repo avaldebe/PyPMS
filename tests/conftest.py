@@ -3,7 +3,7 @@ from contextlib import closing, contextmanager
 from csv import DictReader
 from pathlib import Path
 from sqlite3 import connect
-from typing import Generator, List
+from typing import Iterator, List
 
 if sys.version_info >= (3, 7):  # pragma: no cover
     from enum import Enum
@@ -41,7 +41,7 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
         with db, closing(db.cursor()) as cur, data.open() as csv:
             cur.executemany(insert, DictReader(csv))
 
-    def reader(sensor: str) -> Generator[RawData, None, None]:
+    def reader(sensor: str) -> Iterator[RawData]:
         select = f"SELECT time, message FROM messages WHERE sensor IS '{sensor}'"
         with closing(db.cursor()) as cur:
             cur.execute(select)
@@ -56,7 +56,7 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
 class CapturedData(Enum):
     """Captured data from tests/captured_data"""
 
-    _ignore_ = "name capt CapturedData"  # type:ignore[misc]
+    _ignore_ = "name capt CapturedData"
 
     with captured_data_reader(data=captured_data) as reader:
         CapturedData = vars()
@@ -73,15 +73,15 @@ class CapturedData(Enum):
         return Sensor[self.name]
 
     @property
-    def data(self) -> Generator[bytes, None, None]:
+    def data(self) -> Iterator[bytes]:
         return (msg.data for msg in self.value)
 
     @property
-    def time(self) -> Generator[int, None, None]:
+    def time(self) -> Iterator[int]:
         return (msg.time for msg in self.value)
 
     @property
-    def obs(self) -> Generator[ObsData, None, None]:
+    def obs(self) -> Iterator[ObsData]:
         sensor = self.sensor
         return (sensor.decode(msg.data, time=msg.time) for msg in self.value)
 
