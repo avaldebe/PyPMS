@@ -35,18 +35,27 @@ pyserial = ">=3.5"
 typing-extensions = { version = ">=3.10", python = "<3.8" }
 typer = ">=0.6.1"
 importlib-metadata = { version = ">=3.6", python = "<3.10" }
+# extras
 paho-mqtt = { version = ">=1.4.0", optional = true }
 influxdb = { version = ">=5.2.0", optional = true }
+# test
+pytest = { version = ">=7.1.2", optional = true }
+pytest-cov = { version = ">=2.12.1", optional = true }
+packaging = { version = "^21.3", optional = true }
+# docs
+mkdocs = { version = ">=1.2.3", optional = true }
+mkdocs-material = { version = ">=8.2.5", optional = true }
+pymdown-extensions = { version = ">=9.5", optional = true }
+
 
 [tool.poetry.extras]
 mqtt = ["paho-mqtt"]
 influxdb = ["influxdb"]
+test = ["pytest", "pytest-cov", "packaging"]
+docs = ["mkdocs", "mkdocs-material", "pymdown-extensions"]
 
 [tool.poetry.dev-dependencies]
-pytest = ">=6.2.4"
-pytest-cov = ">=2.12.1"
 pytest-sugar = ">=0.9.4"
-packaging = "^21.3"
 mypy = ">=0.971"
 
 [tool.poetry.scripts]
@@ -96,9 +105,8 @@ commands_pre =
     python --version
 commands =
     pytest -ra -q {posargs:--cov}
-deps =
-    pytest
-    pytest-cov
+extras = 
+    test
 
 [testenv:lint]
 skip_install=True
@@ -108,15 +116,12 @@ deps =
     pre-commit
 
 [testenv:docs{,-serve,-deploy}]
-skip_install=True
 commands =
     docs:        mkdocs build --clean
-    docs-serve:  mkdocs serve
-    docs-deploy: mkdocs gh-deploy {posargs:--clean}
-deps =
-    mkdocs>=1.2.3
-    mkdocs-material>=8.2.5
-    pymdown-extensions
+docs-serve:  mkdocs serve
+docs-deploy: mkdocs gh-deploy {posargs:--clean}
+extras = 
+    docs
 """
 
 [tool.pytest.ini_options]
