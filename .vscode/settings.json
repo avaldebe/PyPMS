@@ -83,6 +83,7 @@
         "pypa",
         "pypoetry",
         "pyproject",
+        "pytestmark",
         "sensirion",
         "skipif",
         "softprops",

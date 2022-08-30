@@ -1,10 +1,10 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pypms"
-version = "0.6.2"
+version = "0.0.0"
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = ["Alvaro Valdebenito <avaldebe@gmail.com>"]
 readme = "README.md"
@@ -46,6 +46,7 @@ influxdb = ["influxdb"]
 pytest = ">=6.2.4"
 pytest-cov = ">=2.12.1"
 pytest-sugar = ">=0.9.4"
+packaging = "^21.3"
 mypy = ">=0.961"
 types-dataclasses = ">=0.1.5"
 
@@ -77,6 +78,12 @@ ZH0xx = "pms.sensors.winsen.zh0xx"
 influxdb = "pms.extra.influxdb:cli"
 mqtt = "pms.extra.mqtt:cli"
 bridge = "pms.extra.bridge:cli"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+pattern = '^v?(?P<base>\d+(\.\d+)*)$'
 
 [tool.tox]
 legacy_tox_ini = """
