@@ -47,8 +47,7 @@ pytest = ">=6.2.4"
 pytest-cov = ">=2.12.1"
 pytest-sugar = ">=0.9.4"
 packaging = "^21.3"
-mypy = ">=0.961"
-types-dataclasses = ">=0.1.5"
+mypy = ">=0.971"
 
 [tool.poetry.scripts]
 pms = "pms.cli:main"
@@ -102,17 +101,11 @@ deps =
     pytest-cov
 
 [testenv:lint]
-skipsdist=True
+skip_install=True
 commands =
-    black --check .
-    isort --check .
-    mypy .
+    pre-commit run --all-files --show-diff-on-failure
 deps =
-    black
-    isort
-    mypy>=0.902
-    types-dataclasses
-    pytest
+    pre-commit
 
 [testenv:docs{,-serve,-deploy}]
 skip_install=True
@@ -169,11 +162,19 @@ show_error_codes = true
 pretty = true
 sqlite_cache = true
 exclude = "site"
-overrides = [
-    { ignore_missing_imports = true, module = "paho.mqtt" },
-    { ignore_missing_imports = true, module = "influxdb" },
-    { ignore_missing_imports = true, module = "serial" },
-    { ignore_missing_imports = true, module = "importlib_metadata" },
-    { warn_unused_ignores = false, module = "pms.extra.mqtt" },
-    { warn_unused_ignores = false, module = "pms.extra.influxdb" },
+
+[[tool.mypy.overrides]]
+module = [
+    "paho.mqtt",
+    "influxdb",
+    "serial",
+    "importlib_metadata",
+    "typer.*",
+    "packaging.*",
+    "pytest",
 ]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pms.extra.mqtt", "pms.extra.influxdb"]
+warn_unused_ignores = false
