@@ -60,6 +60,7 @@ class SensorReader:
         port: str = "/dev/ttyUSB0",
         interval: Optional[int] = None,
         samples: Optional[int] = None,
+        timeout: Optional[float] = None,
     ) -> None:
         """Configure serial port"""
         self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]
@@ -67,7 +68,7 @@ class SensorReader:
         self.serial = Serial()
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud
-        self.serial.timeout = 5  # max time to wake up sensor
+        self.serial.timeout = timeout or 5  # max time to wake up sensor
         self.interval = interval
         self.samples = samples
         logger.debug(
