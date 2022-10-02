@@ -8,7 +8,7 @@ else:  # pragma: no cover
 import pytest
 from packaging.version import Version
 
-from .sensor.test_sensor import GoodData
+from .sensors.test_sensor import GoodData
 
 version = Version(metadata.version("PyPMS"))
 pytestmark = pytest.mark.skipif(
