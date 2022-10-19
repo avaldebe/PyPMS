@@ -9,7 +9,7 @@ NOTE:
 import sys
 import time
 from abc import abstractmethod
-from contextlib import AbstractContextManager
+from contextlib import AbstractContextManager, contextmanager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
@@ -27,6 +27,10 @@ from .types import ObsData
 HEXDUMP_TABLE = bytes.maketrans(
     bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
 )
+
+
+class UnableToRead(Exception):
+    pass
 
 
 class RawData(NamedTuple):
@@ -127,12 +131,12 @@ class SensorReader(Reader):
         # check if the sensor answered
         if len(buffer) == 0:  # pragma: no cover
             logger.error(f"Sensor did not respond, check UART pin connections")
-            sys.exit(1)
+            raise UnableToRead("Sensor did not respond")
 
         # check against sensor type derived from buffer
         if not self.sensor.check(buffer, "passive_mode"):  # pragma: no cover
             logger.error(f"Sensor is not {self.sensor.name}")
-            sys.exit(1)
+            raise UnableToRead("Sensor failed validation")
 
         return self
 
@@ -214,3 +218,12 @@ class MessageReader(Reader):
                 self.samples -= 1
                 if self.samples <= 0:
                     break
+
+
+@contextmanager
+def exit_on_fail(reader: Reader):
+    try:
+        with reader:
+            yield reader
+    except UnableToRead:
+        sys.exit(1)

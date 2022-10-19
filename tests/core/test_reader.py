@@ -3,6 +3,22 @@ import pytest
 from pms.core import reader
 
 
+class MockReader(reader.Reader):
+    def __init__(self, raise_on_enter=False):
+        self.raise_on_enter = raise_on_enter
+
+    def __call__(self):
+        raise NotImplemented
+
+    def __enter__(self):
+        if self.raise_on_enter:
+            raise reader.UnableToRead()
+        self.entered = True
+
+    def __exit__(self, *_args):
+        self.exited = True
+
+
 @pytest.fixture
 def mock_sensor(mock_serial):
     mock_serial.stub(
@@ -76,3 +92,73 @@ def test_sensor_reader(mock_sensor, monkeypatch):
 
     # check sleep happened
     assert mock_sensor.stubs["sleep"].called
+
+
+def test_sensor_reader_sensor_mismatch(mock_sensor, monkeypatch):
+    sensor_reader = reader.SensorReader(
+        port=mock_sensor.port,
+        samples=0,  # exit immediately
+        sensor="PMSx003",  # match with stubs
+        timeout=0.01,  # low to avoid hanging on failure
+    )
+
+    mock_sensor.stub(
+        name="passive_mode",  # used for validation
+        receive_bytes=b"BM\xe1\x00\x00\x01p",
+        send_bytes=b"123",  # nonsense
+    )
+
+    # https://github.com/pyserial/pyserial/issues/625
+    monkeypatch.setattr(
+        sensor_reader.serial,
+        "flush",
+        lambda: None,
+    )
+
+    with pytest.raises(reader.UnableToRead) as e:
+        with sensor_reader as r:
+            list(r())
+
+    assert "failed validation" in str(e.value)
+
+
+def test_sensor_reader_sensor_no_response(mock_serial):
+    sensor_reader = reader.SensorReader(
+        port=mock_serial.port,
+        samples=0,  # exit immediately
+        sensor="PMS3003",  # arbitrary sensor
+        timeout=0.01,  # low to avoid hanging on failure
+    )
+
+    with pytest.raises(reader.UnableToRead) as e:
+        with sensor_reader as r:
+            list(r())
+
+    assert "did not respond" in str(e.value)
+
+
+def test_exit_on_fail_no_error(monkeypatch):
+    # prevent the helper exiting the test suite
+    monkeypatch.setattr(reader.sys, "exit", lambda: None)
+    mock_reader = MockReader()
+
+    with reader.exit_on_fail(mock_reader) as yielded:
+        assert yielded == mock_reader
+
+    assert mock_reader.entered
+    assert mock_reader.exited
+
+
+def test_exit_on_fail_error(monkeypatch):
+    def sys_exit(*_args):
+        raise Exception("exit")
+
+    # prevent the helper exiting the test suite
+    monkeypatch.setattr(reader.sys, "exit", sys_exit)
+    mock_reader = MockReader(raise_on_enter=True)
+
+    with pytest.raises(Exception) as e:
+        with reader.exit_on_fail(mock_reader):
+            raise Exception("should not get here")
+
+    assert "exit" in str(e.value)

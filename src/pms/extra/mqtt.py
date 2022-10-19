@@ -1,3 +1,4 @@
+import sys
 from dataclasses import fields
 from datetime import datetime
 from typing import Callable, Dict, NamedTuple, Union
@@ -10,6 +11,7 @@ except ModuleNotFoundError:
     client = None  # type: ignore
 
 from pms import logger
+from pms.core import exit_on_fail
 from pms.sensors.base import ObsData
 
 
@@ -152,7 +154,7 @@ def cli(
             data[f"{field.name}/{field.metadata['topic']}"] = getattr(obs, field.name)
         pub(data)
 
-    with ctx.obj["reader"] as reader:
+    with exit_on_fail(ctx.obj["reader"]) as reader:
         publish(next(reader()), metadata=True)
         for obs in reader():
             publish(obs)

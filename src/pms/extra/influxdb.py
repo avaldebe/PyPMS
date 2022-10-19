@@ -10,6 +10,8 @@ else:  # pragma: no cover
 
 from typer import Abort, Context, Option, colors, echo, style
 
+from pms.core import exit_on_fail
+
 try:
     from influxdb import InfluxDBClient as client  # type: ignore
 except ModuleNotFoundError:
@@ -77,7 +79,7 @@ def cli(
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)
     tags = json.loads(jtag.replace("'", '"'))
 
-    with ctx.obj["reader"] as reader:
+    with exit_on_fail(ctx.obj["reader"]) as reader:
         for obs in reader():
             data = {field.name: getattr(obs, field.name) for field in fields(obs) if field.metadata}
             pub(time=obs.time, tags=tags, data=data)
