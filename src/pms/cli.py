@@ -14,7 +14,7 @@ else:  # pragma: no cover
 from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms import logger
-from pms.core import MessageReader, SensorReader, Supported
+from pms.core import MessageReader, SensorReader, Supported, exit_on_fail
 
 main = Typer(help="Data acquisition and logging for Air Quality Sensors with UART interface")
 
@@ -85,7 +85,8 @@ def serial(
     reader = ctx.obj["reader"]
     if decode:
         reader = MessageReader(decode, reader.sensor, reader.samples)
-    with reader:
+
+    with exit_on_fail(reader):
         if format == "hexdump":
             for n, raw in enumerate(reader(raw=True)):
                 echo(raw.hexdump(n))
@@ -113,7 +114,8 @@ def csv(
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")
-    with ctx.obj["reader"] as reader, path.open(mode) as csv:
+
+    with exit_on_fail(ctx.obj["reader"]) as reader, path.open(mode) as csv:
         sensor_name = reader.sensor.name
         if not capture:
             logger.debug(f"capture {sensor_name} observations to {path}")
