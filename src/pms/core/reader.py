@@ -8,6 +8,8 @@ NOTE:
 
 import sys
 import time
+from abc import abstractmethod
+from contextlib import AbstractContextManager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
@@ -44,7 +46,13 @@ class RawData(NamedTuple):
         return f"{offset:08x}: {hex}  {dump}"
 
 
-class SensorReader:
+class Reader(AbstractContextManager):
+    @abstractmethod
+    def __call__(self, *, raw: Optional[bool] = None):
+        ...
+
+
+class SensorReader(Reader):
     """Read sensor messages from serial port
 
     The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
@@ -173,7 +181,7 @@ class SensorReader:
                 break
 
 
-class MessageReader:
+class MessageReader(Reader):
     def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
         self.path = path
         self.sensor = sensor
