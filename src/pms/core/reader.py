@@ -51,6 +51,14 @@ class RawData(NamedTuple):
 
 
 class Reader(AbstractContextManager):
+    @overload
+    def __call__(self) -> Iterator[ObsData]:
+        ...
+
+    @overload
+    def __call__(self, *, raw: bool) -> Iterator[RawData]:
+        ...
+
     @abstractmethod
     def __call__(self, *, raw: Optional[bool] = None):
         ...
@@ -147,14 +155,6 @@ class SensorReader(Reader):
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
 
-    @overload
-    def __call__(self) -> Iterator[ObsData]:
-        ...
-
-    @overload
-    def __call__(self, *, raw: bool) -> Iterator[RawData]:
-        ...
-
     def __call__(self, *, raw: Optional[bool] = None):
         """Passive mode reading at regular intervals"""
 
@@ -201,14 +201,6 @@ class MessageReader(Reader):
     def __exit__(self, exception_type, exception_value, traceback) -> None:
         logger.debug(f"close {self.path}")
         self.csv.close()
-
-    @overload
-    def __call__(self) -> Iterator[ObsData]:
-        ...
-
-    @overload
-    def __call__(self, *, raw: bool) -> Iterator[RawData]:
-        ...
 
     def __call__(self, *, raw: Optional[bool] = None):
         for row in self.data:
