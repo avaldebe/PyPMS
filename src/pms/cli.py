@@ -74,6 +74,9 @@ class Format(str, Enum):
     bsec = "bsec"
     hex = "hexdump"
 
+    def __str__(self) -> str:
+        return self.value
+
 
 @main.command()
 def serial(

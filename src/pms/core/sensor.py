@@ -108,3 +108,6 @@ class Supported(str, Enum):
         Supported[s.name] = s.name
 
     default = "PMSx003"
+
+    def __str__(self) -> str:
+        return self.value
