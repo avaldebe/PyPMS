@@ -1,6 +1,8 @@
 import pytest
 
 from pms.core import reader
+from pms.core.sensor import Sensor
+from tests.conftest import captured_data
 
 
 class MockReader(reader.Reader):
@@ -162,3 +164,15 @@ def test_exit_on_fail_error(monkeypatch):
             raise Exception("should not get here")
 
     assert "exit" in str(e.value)
+
+
+def test_message_reader():
+    message_reader = reader.MessageReader(
+        path=captured_data,
+        sensor=Sensor["PMS3003"],
+    )
+
+    with message_reader:
+        values = list(message_reader())
+
+    assert len(values) == 10

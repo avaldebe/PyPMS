@@ -203,7 +203,7 @@ class MessageReader(Reader):
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
             yield RawData(time, message) if raw else self.sensor.decode(message, time=time)
-            if self.samples:  # pragma: no cover
+            if self.samples:
                 self.samples -= 1
                 if self.samples <= 0:
                     break
