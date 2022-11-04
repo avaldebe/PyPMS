@@ -22,6 +22,22 @@ class MockReader(reader.Reader):
 
 
 @pytest.fixture
+def mock_sleep(monkeypatch):
+    def sleep(seconds):
+        sleep.slept_for += seconds
+
+    sleep.slept_for = 0
+
+    monkeypatch.setattr(
+        reader.time,
+        "sleep",
+        sleep,
+    )
+
+    return sleep
+
+
+@pytest.fixture
 def mock_sensor(mock_serial):
     mock_serial.stub(
         name="wake",
@@ -94,6 +110,32 @@ def test_sensor_reader(mock_sensor, monkeypatch):
 
     # check sleep happened
     assert mock_sensor.stubs["sleep"].called
+
+
+def test_sensor_reader_sleep(mock_sensor, monkeypatch, mock_sleep):
+    sensor_reader = reader.SensorReader(
+        port=mock_sensor.port,
+        samples=2,  # try to read twice
+        interval=5,  # sleep between samples
+        sensor="PMSx003",  # match with stubs
+        timeout=0.01,  # low to avoid hanging on failure
+    )
+
+    # https://github.com/pyserial/pyserial/issues/625
+    monkeypatch.setattr(
+        sensor_reader.serial,
+        "flush",
+        lambda: None,
+    )
+
+    with sensor_reader as r:
+        obs = list(r())
+
+    # check we read twice
+    assert len(obs) == 2
+
+    # check we slept between reads
+    assert 0 < mock_sleep.slept_for < 5
 
 
 def test_sensor_reader_sensor_mismatch(mock_sensor, monkeypatch):

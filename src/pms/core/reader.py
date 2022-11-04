@@ -173,7 +173,7 @@ class SensorReader(Reader):
                     sample += 1
                     if self.samples is not None and sample >= self.samples:
                         break
-                    if self.interval:  # pragma: no cover
+                    if self.interval:
                         delay = self.interval - (time.time() - obs.time)
                         if delay > 0:
                             time.sleep(delay)
