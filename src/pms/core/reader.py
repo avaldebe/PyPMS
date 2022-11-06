@@ -11,6 +11,7 @@ import time
 from abc import abstractmethod
 from contextlib import AbstractContextManager, contextmanager
 from csv import DictReader
+from dataclasses import dataclass
 from pathlib import Path
 from textwrap import wrap
 from typing import Iterator, NamedTuple, Optional, Union, overload
@@ -48,6 +49,20 @@ class RawData(NamedTuple):
         hex = " ".join(wrap(self.data.hex(), 2))  # raw.hex(" ") in python3.8+
         dump = self.data.translate(HEXDUMP_TABLE).decode()
         return f"{offset:08x}: {hex}  {dump}"
+
+
+@dataclass
+class Reading:
+    buffer: bytes
+    obs_data: ObsData
+
+    @property
+    def raw_data(self) -> RawData:
+        return RawData(self.time, self.buffer)
+
+    @property
+    def time(self) -> int:
+        return self.obs_data.time
 
 
 class Reader(AbstractContextManager):
@@ -162,6 +177,7 @@ class SensorReader(Reader):
 
                 try:
                     obs = self.sensor.decode(buffer)
+                    reading = Reading(buffer=buffer, obs_data=obs)
                 except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
                     time.sleep(5)
@@ -169,12 +185,12 @@ class SensorReader(Reader):
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
-                    yield RawData(obs.time, buffer) if raw else obs
+                    yield reading.raw_data if raw else reading.obs_data
                     sample += 1
                     if self.samples is not None and sample >= self.samples:
                         break
                     if self.interval:
-                        delay = self.interval - (time.time() - obs.time)
+                        delay = self.interval - (time.time() - reading.time)
                         if delay > 0:
                             time.sleep(delay)
             except KeyboardInterrupt:  # pragma: no cover
@@ -205,7 +221,9 @@ class MessageReader(Reader):
 
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
-            yield RawData(time, message) if raw else self.sensor.decode(message, time=time)
+            obs = self.sensor.decode(message, time=time)
+            reading = Reading(buffer=message, obs_data=obs)
+            yield reading.raw_data if raw else reading.obs_data
             if self.samples:
                 self.samples -= 1
                 if self.samples <= 0:
