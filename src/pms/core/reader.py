@@ -93,7 +93,7 @@ class SensorReader(Reader):
             f"from {port} every {interval if interval else '?'} secs"
         )
 
-    def _cmd(self, command: str) -> bytes:  # pragma: no cover
+    def _cmd(self, command: str) -> bytes:
         """Write command to sensor and return answer"""
 
         # send command
@@ -101,7 +101,7 @@ class SensorReader(Reader):
         if cmd.command:
             self.serial.write(cmd.command)
             self.serial.flush()
-        elif command.endswith("read"):
+        elif command.endswith("read"):  # pragma: no cover
             self.serial.reset_input_buffer()
 
         # return full buffer
