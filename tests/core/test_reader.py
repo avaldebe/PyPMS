@@ -107,20 +107,36 @@ def mock_sensor_warm_up(mock_serial):
     )
 
 
-def test_sensor_reader(mock_sensor, monkeypatch):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
+@pytest.fixture
+def sensor_reader_factory(monkeypatch, mock_sensor):
+    def factory(
+        *,
         samples=0,  # exit immediately
+        interval=None,
         sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
+    ):
+        sensor_reader = reader.SensorReader(
+            port=mock_sensor.port,
+            samples=samples,
+            interval=interval,
+            sensor=sensor,
+            timeout=0.01,  # low to avoid hanging on failure
+        )
 
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
-    )
+        # https://github.com/pyserial/pyserial/issues/625
+        monkeypatch.setattr(
+            sensor_reader.serial,
+            "flush",
+            lambda: None,
+        )
+
+        return sensor_reader
+
+    return factory
+
+
+def test_sensor_reader(mock_sensor, sensor_reader_factory):
+    sensor_reader = sensor_reader_factory()
 
     with sensor_reader as r:
         obs = list(r())
@@ -137,20 +153,10 @@ def test_sensor_reader(mock_sensor, monkeypatch):
     assert mock_sensor.stubs["sleep"].called
 
 
-def test_sensor_reader_sleep(mock_sensor, monkeypatch, mock_sleep):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
+def test_sensor_reader_sleep(sensor_reader_factory, mock_sleep):
+    sensor_reader = sensor_reader_factory(
         samples=2,  # try to read twice
         interval=5,  # sleep between samples
-        sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
-
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
     )
 
     with sensor_reader as r:
@@ -163,37 +169,14 @@ def test_sensor_reader_sleep(mock_sensor, monkeypatch, mock_sleep):
     assert 0 < mock_sleep.slept_for < 5
 
 
-def test_sensor_reader_closed(mock_sensor, monkeypatch):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
-        sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
-
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
-    )
-
+def test_sensor_reader_closed(mock_sensor, sensor_reader_factory):
+    sensor_reader = sensor_reader_factory()
     obs = list(sensor_reader())
     assert len(obs) == 0
 
 
-def test_sensor_reader_preheat(mock_sensor, monkeypatch, mock_sleep):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
-        sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
-
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
-    )
+def test_sensor_reader_preheat(sensor_reader_factory, mock_sleep):
+    sensor_reader = sensor_reader_factory()
 
     # override pre heat duration
     sensor_reader.pre_heat = 5
@@ -207,23 +190,11 @@ def test_sensor_reader_preheat(mock_sensor, monkeypatch, mock_sleep):
 
 def test_sensor_reader_warm_up(
     mock_sensor,
-    monkeypatch,
+    sensor_reader_factory,
     mock_sleep,
     mock_sensor_warm_up,
 ):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
-        samples=0,
-        sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
-
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
-    )
+    sensor_reader = sensor_reader_factory()
 
     with sensor_reader as r:
         obs = list(r())
@@ -233,25 +204,13 @@ def test_sensor_reader_warm_up(
     assert len(obs) == 1
 
 
-def test_sensor_reader_sensor_mismatch(mock_sensor, monkeypatch):
-    sensor_reader = reader.SensorReader(
-        port=mock_sensor.port,
-        samples=0,  # exit immediately
-        sensor="PMSx003",  # match with stubs
-        timeout=0.01,  # low to avoid hanging on failure
-    )
+def test_sensor_reader_sensor_mismatch(mock_sensor, sensor_reader_factory):
+    sensor_reader = sensor_reader_factory()
 
     mock_sensor.stub(
         name="passive_mode",  # used for validation
         receive_bytes=b"BM\xe1\x00\x00\x01p",
         send_bytes=b"123",  # nonsense
-    )
-
-    # https://github.com/pyserial/pyserial/issues/625
-    monkeypatch.setattr(
-        sensor_reader.serial,
-        "flush",
-        lambda: None,
     )
 
     with pytest.raises(reader.UnableToRead) as e:
@@ -261,12 +220,9 @@ def test_sensor_reader_sensor_mismatch(mock_sensor, monkeypatch):
     assert "failed validation" in str(e.value)
 
 
-def test_sensor_reader_sensor_no_response(mock_serial):
-    sensor_reader = reader.SensorReader(
-        port=mock_serial.port,
-        samples=0,  # exit immediately
+def test_sensor_reader_sensor_no_response(sensor_reader_factory):
+    sensor_reader = sensor_reader_factory(
         sensor="PMS3003",  # arbitrary sensor
-        timeout=0.01,  # low to avoid hanging on failure
     )
 
     with pytest.raises(reader.UnableToRead) as e:
