@@ -107,7 +107,7 @@ class SensorReader(Reader):
         # return full buffer
         return self.serial.read(max(cmd.answer_length, self.serial.in_waiting))
 
-    def _pre_heat(self):  # pragma: no cover
+    def _pre_heat(self):
         if not self.pre_heat:
             return
 
