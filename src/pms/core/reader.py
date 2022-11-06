@@ -134,6 +134,24 @@ class SensorReader(Reader):
         # only pre-heat the firs time
         self.pre_heat = 0
 
+    def read_one(self) -> Reading:
+        """Return a single passive mode reading"""
+
+        if not self.serial.is_open:
+            raise StopIteration
+
+        buffer = self._cmd("passive_read")
+
+        try:
+            obs = self.sensor.decode(buffer)
+            return Reading(buffer=buffer, obs_data=obs)
+        except (SensorWarmingUp, InconsistentObservation) as e:
+            # no special hardware handling
+            raise
+        except SensorWarning as e:  # pragma: no cover
+            self.serial.reset_input_buffer()
+            raise
+
     def __enter__(self) -> "SensorReader":
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
@@ -171,19 +189,15 @@ class SensorReader(Reader):
         """Passive mode reading at regular intervals"""
 
         sample = 0
-        while self.serial.is_open:
-            try:
-                buffer = self._cmd("passive_read")
-
+        try:
+            while True:
                 try:
-                    obs = self.sensor.decode(buffer)
-                    reading = Reading(buffer=buffer, obs_data=obs)
+                    reading = self.read_one()
                 except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
                     time.sleep(5)
                 except SensorWarning as e:  # pragma: no cover
                     logger.debug(e)
-                    self.serial.reset_input_buffer()
                 else:
                     yield reading.raw_data if raw else reading.obs_data
                     sample += 1
@@ -193,9 +207,10 @@ class SensorReader(Reader):
                         delay = self.interval - (time.time() - reading.time)
                         if delay > 0:
                             time.sleep(delay)
-            except KeyboardInterrupt:  # pragma: no cover
-                print()
-                break
+        except KeyboardInterrupt:  # pragma: no cover
+            print()
+        except StopIteration:
+            pass
 
 
 class MessageReader(Reader):
@@ -203,6 +218,15 @@ class MessageReader(Reader):
         self.path = path
         self.sensor = sensor
         self.samples = samples
+
+    def read_one(self) -> Reading:
+        if not hasattr(self, "data"):
+            raise StopIteration
+
+        row = next(self.data)
+        time, message = int(row["time"]), bytes.fromhex(row["hex"])
+        obs = self.sensor.decode(message, time=time)
+        return Reading(buffer=message, obs_data=obs)
 
     def __enter__(self) -> "MessageReader":
         logger.debug(f"open {self.path}")
@@ -216,18 +240,16 @@ class MessageReader(Reader):
         self.csv.close()
 
     def __call__(self, *, raw: Optional[bool] = None):
-        if not hasattr(self, "data"):
+        try:
+            while True:
+                reading = self.read_one()
+                yield reading.raw_data if raw else reading.obs_data
+                if self.samples:
+                    self.samples -= 1
+                    if self.samples <= 0:
+                        break
+        except StopIteration:
             return
-
-        for row in self.data:
-            time, message = int(row["time"]), bytes.fromhex(row["hex"])
-            obs = self.sensor.decode(message, time=time)
-            reading = Reading(buffer=message, obs_data=obs)
-            yield reading.raw_data if raw else reading.obs_data
-            if self.samples:
-                self.samples -= 1
-                if self.samples <= 0:
-                    break
 
 
 @contextmanager
