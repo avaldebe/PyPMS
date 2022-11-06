@@ -200,6 +200,9 @@ class MessageReader(Reader):
         self.csv.close()
 
     def __call__(self, *, raw: Optional[bool] = None):
+        if not hasattr(self, "data"):
+            return
+
         for row in self.data:
             time, message = int(row["time"]), bytes.fromhex(row["hex"])
             yield RawData(time, message) if raw else self.sensor.decode(message, time=time)
