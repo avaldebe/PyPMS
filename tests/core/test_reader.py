@@ -150,7 +150,7 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
 
         # https://github.com/pyserial/pyserial/issues/625
         monkeypatch.setattr(
-            sensor_reader.serial,
+            sensor_reader.stream.serial,
             "flush",
             lambda: None,
         )
@@ -204,7 +204,7 @@ def test_sensor_reader_preheat(sensor_reader_factory, mock_sleep):
     sensor_reader = sensor_reader_factory()
 
     # override pre heat duration
-    sensor_reader.pre_heat = 5
+    sensor_reader.stream.pre_heat = 5
 
     with sensor_reader as r:
         pass

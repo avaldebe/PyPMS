@@ -108,7 +108,7 @@ def capture_data(request) -> CapturedData:
 
 @pytest.fixture()
 def capture(monkeypatch, capture_data) -> CapturedData:
-    """mock pms.core.reader.Serial and some pms.core.reader.SensorReader internals"""
+    """mock pms.core.reader internals"""
 
     class MockSerial:
         port = None
@@ -130,7 +130,7 @@ def capture(monkeypatch, capture_data) -> CapturedData:
     sensor = capture_data.sensor
     data = capture_data.data
 
-    def mock_reader__cmd(self, command: str) -> bytes:
+    def mock_stream__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
         logger.debug(f"mock write/read: {command}")
         # nonlocal data
@@ -141,12 +141,12 @@ def capture(monkeypatch, capture_data) -> CapturedData:
 
         return b""
 
-    monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
+    monkeypatch.setattr("pms.core.reader.SensorStream._cmd", mock_stream__cmd)
 
     def mock_reader__pre_heat(self):
         pass
 
-    monkeypatch.setattr("pms.core.reader.SensorReader._pre_heat", mock_reader__pre_heat)
+    monkeypatch.setattr("pms.core.reader.SensorStream._pre_heat", mock_reader__pre_heat)
 
     def mock_sensor_check(self, buffer: bytes, command: str) -> bool:
         """don't check if message matches sensor"""

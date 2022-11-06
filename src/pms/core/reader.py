@@ -9,7 +9,7 @@ NOTE:
 import sys
 import time
 from abc import abstractmethod
-from contextlib import AbstractContextManager, contextmanager
+from contextlib import contextmanager
 from csv import DictReader
 from dataclasses import dataclass
 from pathlib import Path
@@ -65,7 +65,28 @@ class Reading:
         return self.obs_data.time
 
 
-class Reader(AbstractContextManager):
+class Stream:
+    """
+    Standard interface to read data.
+    """
+
+    @abstractmethod
+    def read(self) -> Reading:
+        ...
+
+    @abstractmethod
+    def open(self) -> None:
+        ...
+
+    @abstractmethod
+    def close(self) -> None:
+        ...
+
+
+class Reader:
+    def __init__(self, *, stream: Stream) -> None:
+        self.stream = stream
+
     @abstractmethod
     def __call__(self, *, raw: Optional[bool]) -> Iterator[Union[RawData, ObsData]]:
         """
@@ -75,12 +96,16 @@ class Reader(AbstractContextManager):
         """
         ...
 
+    def __enter__(self):
+        self.stream.open()
+        return self
 
-class SensorReader(Reader):
+    def __exit__(self, *args) -> None:
+        self.stream.close()
+
+
+class SensorStream(Stream):
     """Read sensor messages from serial port
-
-    The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
-    While the serial port is open, the sensor is read in passive mode.
 
     PMS3003 sensors do not accept serial commands, such as wake/sleep or passive mode read.
     Valid messages are extracted from the serial buffer.
@@ -88,10 +113,9 @@ class SensorReader(Reader):
 
     def __init__(
         self,
+        *,
         sensor: Union[Sensor, Supported, str] = Supported.default,
         port: str = "/dev/ttyUSB0",
-        interval: Optional[int] = None,
-        samples: Optional[int] = None,
         timeout: Optional[float] = None,
     ) -> None:
         """Configure serial port"""
@@ -101,12 +125,6 @@ class SensorReader(Reader):
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud
         self.serial.timeout = timeout or 5  # max time to wake up sensor
-        self.interval = interval
-        self.samples = samples
-        logger.debug(
-            f"capture {samples if samples else '?'} {sensor} obs "
-            f"from {port} every {interval if interval else '?'} secs"
-        )
 
     def _cmd(self, command: str) -> bytes:
         """Write command to sensor and return answer"""
@@ -134,7 +152,7 @@ class SensorReader(Reader):
         # only pre-heat the firs time
         self.pre_heat = 0
 
-    def read_one(self) -> Reading:
+    def read(self) -> Reading:
         """Return a single passive mode reading"""
 
         if not self.serial.is_open:
@@ -152,7 +170,7 @@ class SensorReader(Reader):
             self.serial.reset_input_buffer()
             raise
 
-    def __enter__(self) -> "SensorReader":
+    def open(self) -> None:
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             logger.debug(f"open {self.serial.port}")
@@ -176,14 +194,47 @@ class SensorReader(Reader):
             logger.error(f"Sensor is not {self.sensor.name}")
             raise UnableToRead("Sensor failed validation")
 
-        return self
-
-    def __exit__(self, exception_type, exception_value, traceback) -> None:
+    def close(self) -> None:
         """Put sensor to sleep and close serial port"""
         logger.debug(f"sleep {self.sensor}")
         buffer = self._cmd("sleep")
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
+
+
+class SensorReader(Reader):
+    """Read sensor messages from serial port
+
+    The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
+    While the serial port is open, the sensor is read in passive mode.
+    """
+
+    def __init__(
+        self,
+        sensor: Union[Sensor, Supported, str] = Supported.default,
+        port: str = "/dev/ttyUSB0",
+        interval: Optional[int] = None,
+        samples: Optional[int] = None,
+        timeout: Optional[float] = None,
+    ) -> None:
+        super().__init__(
+            stream=SensorStream(
+                sensor=sensor,
+                port=port,
+                timeout=timeout,
+            )
+        )
+
+        self.interval = interval
+        self.samples = samples
+        logger.debug(
+            f"capture {samples if samples else '?'} {sensor} obs "
+            f"from {port} every {interval if interval else '?'} secs"
+        )
+
+    @property
+    def sensor(self):
+        return self.stream.sensor
 
     def __call__(self, *, raw: Optional[bool] = None):
         """Passive mode reading at regular intervals"""
@@ -192,7 +243,7 @@ class SensorReader(Reader):
         try:
             while True:
                 try:
-                    reading = self.read_one()
+                    reading = self.stream.read()
                 except SensorNotReady as e:
                     logger.debug(e)
                     time.sleep(5)
@@ -213,13 +264,12 @@ class SensorReader(Reader):
             pass
 
 
-class MessageReader(Reader):
-    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
+class MessageStream(Stream):
+    def __init__(self, *, path: Path, sensor: Sensor) -> None:
         self.path = path
         self.sensor = sensor
-        self.samples = samples
 
-    def read_one(self) -> Reading:
+    def read(self) -> Reading:
         if not hasattr(self, "data"):
             raise StopIteration
 
@@ -228,21 +278,29 @@ class MessageReader(Reader):
         obs = self.sensor.decode(message, time=time)
         return Reading(buffer=message, obs_data=obs)
 
-    def __enter__(self) -> "MessageReader":
+    def open(self) -> None:
         logger.debug(f"open {self.path}")
         self.csv = self.path.open()
         reader = DictReader(self.csv)
         self.data = (row for row in reader if row["sensor"] == self.sensor.name)
-        return self
 
-    def __exit__(self, exception_type, exception_value, traceback) -> None:
+    def close(self) -> None:
         logger.debug(f"close {self.path}")
         self.csv.close()
+
+
+class MessageReader(Reader):
+    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
+        super().__init__(
+            stream=MessageStream(path=path, sensor=sensor),
+        )
+
+        self.samples = samples
 
     def __call__(self, *, raw: Optional[bool] = None):
         try:
             while True:
-                reading = self.read_one()
+                reading = self.stream.read()
                 yield reading.raw_data if raw else reading.obs_data
                 if self.samples:
                     self.samples -= 1
