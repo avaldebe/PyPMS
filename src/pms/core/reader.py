@@ -134,12 +134,12 @@ class SensorReader(Reader):
         logger.debug(f"buffer length: {len(buffer)}")
 
         # check if the sensor answered
-        if len(buffer) == 0:  # pragma: no cover
+        if len(buffer) == 0:
             logger.error(f"Sensor did not respond, check UART pin connections")
             raise UnableToRead("Sensor did not respond")
 
         # check against sensor type derived from buffer
-        if not self.sensor.check(buffer, "passive_mode"):  # pragma: no cover
+        if not self.sensor.check(buffer, "passive_mode"):
             logger.error(f"Sensor is not {self.sensor.name}")
             raise UnableToRead("Sensor failed validation")
 
