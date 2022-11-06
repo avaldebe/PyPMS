@@ -162,7 +162,7 @@ class SensorReader(Reader):
 
                 try:
                     obs = self.sensor.decode(buffer)
-                except (SensorWarmingUp, InconsistentObservation) as e:  # pragma: no cover
+                except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
                     time.sleep(5)
                 except SensorWarning as e:  # pragma: no cover
