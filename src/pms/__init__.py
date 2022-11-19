@@ -21,13 +21,19 @@ class WrongMessageChecksum(SensorWarning):
     pass
 
 
-class SensorWarmingUp(SensorWarning):
+class SensorNotReady(SensorWarning):
+    """Sensor not ready to read: observations not reliable"""
+
+    pass
+
+
+class SensorWarmingUp(SensorNotReady):
     """Empty message: throw away observation and wait until sensor warms up"""
 
     pass
 
 
-class InconsistentObservation(SensorWarning):
+class InconsistentObservation(SensorNotReady):
     """Message payload makes no sense: throw away observation"""
 
     pass

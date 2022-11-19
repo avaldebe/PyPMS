@@ -18,7 +18,7 @@ from typing import Iterator, NamedTuple, Optional, Union, overload
 from serial import Serial
 from typer import progressbar
 
-from pms import InconsistentObservation, SensorWarmingUp, SensorWarning, logger
+from pms import SensorNotReady, SensorWarning, logger
 from pms.core import Sensor, Supported
 
 from .types import ObsData
@@ -162,7 +162,7 @@ class SensorReader(Reader):
 
                 try:
                     obs = self.sensor.decode(buffer)
-                except (SensorWarmingUp, InconsistentObservation) as e:
+                except SensorNotReady as e:
                     logger.debug(e)
                     time.sleep(5)
                 except SensorWarning as e:
