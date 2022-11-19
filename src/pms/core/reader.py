@@ -34,6 +34,14 @@ class UnableToRead(Exception):
     pass
 
 
+class StreamNotReady(Exception):
+    pass
+
+
+class TemporaryFailure(Exception):
+    pass
+
+
 class RawData(NamedTuple):
     """raw messages with timestamp"""
 
@@ -84,17 +92,47 @@ class Stream:
 
 
 class Reader:
-    def __init__(self, *, stream: Stream) -> None:
+    def __init__(
+        self,
+        *,
+        stream: Stream,
+        interval: Optional[int] = None,
+        samples: Optional[int] = None,
+    ) -> None:
+        self.interval = interval
+        self.samples = samples
         self.stream = stream
 
-    @abstractmethod
-    def __call__(self, *, raw: Optional[bool]) -> Iterator[Union[RawData, ObsData]]:
+    def __call__(self, *, raw: Optional[bool] = None) -> Iterator[Union[RawData, ObsData]]:
         """
         Return an iterator of ObsData.
 
         If "raw" is set to True, then ObsData is replaced with RawData.
         """
-        ...
+
+        sample = 0
+        try:
+            while True:
+                try:
+                    reading = self.stream.read()
+                except StreamNotReady as e:
+                    logger.debug(e)
+                    time.sleep(5)
+                except TemporaryFailure as e:
+                    logger.debug(e)
+                else:
+                    yield reading.raw_data if raw else reading.obs_data
+                    sample += 1
+                    if self.samples is not None and sample >= self.samples:
+                        break
+                    if self.interval:
+                        delay = self.interval - (time.time() - reading.time)
+                        if delay > 0:
+                            time.sleep(delay)
+        except KeyboardInterrupt:  # pragma: no cover
+            print()
+        except StopIteration:
+            pass
 
     def __enter__(self):
         self.stream.open()
@@ -165,10 +203,10 @@ class SensorStream(Stream):
             return Reading(buffer=buffer, obs_data=obs)
         except SensorNotReady as e:
             # no special hardware handling
-            raise
+            raise StreamNotReady
         except SensorWarning as e:  # pragma: no cover
             self.serial.reset_input_buffer()
-            raise
+            raise TemporaryFailure
 
     def open(self) -> None:
         """Open serial port and sensor setup"""
@@ -222,11 +260,10 @@ class SensorReader(Reader):
                 sensor=sensor,
                 port=port,
                 timeout=timeout,
-            )
+            ),
+            samples=samples,
+            interval=interval,
         )
-
-        self.interval = interval
-        self.samples = samples
         logger.debug(
             f"capture {samples if samples else '?'} {sensor} obs "
             f"from {port} every {interval if interval else '?'} secs"
@@ -235,33 +272,6 @@ class SensorReader(Reader):
     @property
     def sensor(self):
         return self.stream.sensor
-
-    def __call__(self, *, raw: Optional[bool] = None):
-        """Passive mode reading at regular intervals"""
-
-        sample = 0
-        try:
-            while True:
-                try:
-                    reading = self.stream.read()
-                except SensorNotReady as e:
-                    logger.debug(e)
-                    time.sleep(5)
-                except SensorWarning as e:
-                    logger.debug(e)
-                else:
-                    yield reading.raw_data if raw else reading.obs_data
-                    sample += 1
-                    if self.samples is not None and sample >= self.samples:
-                        break
-                    if self.interval:
-                        delay = self.interval - (time.time() - reading.time)
-                        if delay > 0:
-                            time.sleep(delay)
-        except KeyboardInterrupt:  # pragma: no cover
-            print()
-        except StopIteration:
-            pass
 
 
 class MessageStream(Stream):
@@ -293,21 +303,8 @@ class MessageReader(Reader):
     def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
         super().__init__(
             stream=MessageStream(path=path, sensor=sensor),
+            samples=samples,
         )
-
-        self.samples = samples
-
-    def __call__(self, *, raw: Optional[bool] = None):
-        try:
-            while True:
-                reading = self.stream.read()
-                yield reading.raw_data if raw else reading.obs_data
-                if self.samples:
-                    self.samples -= 1
-                    if self.samples <= 0:
-                        break
-        except StopIteration:
-            return
 
 
 @contextmanager
