@@ -27,6 +27,16 @@ This section contain some help for those brave enough to use its internals as a 
     --8<-- "read_two_sensors.out"
     ```
 
+=== "sensor stream (low-level API)"
+
+    ``` python
+    --8<-- "sensor_stream.py"
+    ```
+
+    ```
+    --8<-- "sensor_stream.out"
+    ```
+
 
 ## Observation data fields
 
