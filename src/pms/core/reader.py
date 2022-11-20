@@ -196,7 +196,7 @@ class SensorReader(Reader):
                 except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
                     time.sleep(5)
-                except SensorWarning as e:  # pragma: no cover
+                except SensorWarning as e:
                     logger.debug(e)
                 else:
                     yield reading.raw_data if raw else reading.obs_data

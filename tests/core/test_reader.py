@@ -108,6 +108,31 @@ def mock_sensor_warm_up(mock_serial):
 
 
 @pytest.fixture
+def mock_sensor_temp_failure(mock_serial):
+    def passive_read(n):
+        if n == 1:
+            # first return garbage data (bad checksum)
+            return (
+                b"BM\x00\x1c"  # expected header
+                + b"\0" * 26  # payload (to total 32 bytes)
+                + b"\x00\xFF"  # checksum
+            )
+        else:
+            # then behave like the original stub again
+            return (
+                b"BM\x00\x1c"  # expected header
+                + b".........................."  # payload
+                + b"\x05W"  # checksum
+            )
+
+    mock_serial.stub(
+        name="passive_read",
+        receive_bytes=b"BM\xe2\x00\x00\x01q",
+        send_fn=passive_read,
+    )
+
+
+@pytest.fixture
 def sensor_reader_factory(monkeypatch, mock_sensor):
     def factory(
         *,
@@ -202,6 +227,23 @@ def test_sensor_reader_warm_up(
     # check we slept for warm up
     assert mock_sleep.slept_for == 5
     assert len(obs) == 1
+
+
+def test_sensor_reader_temp_failure(
+    mock_sensor,
+    sensor_reader_factory,
+    mock_sensor_temp_failure,
+):
+    sensor_reader = sensor_reader_factory()
+
+    with sensor_reader as r:
+        obs = list(r())
+
+    # check one sample still acquired
+    assert len(obs) == 1
+
+    # check two samples were attempted
+    assert mock_sensor.stubs["passive_read"].calls == 2
 
 
 def test_sensor_reader_sensor_mismatch(mock_sensor, sensor_reader_factory):
