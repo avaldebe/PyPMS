@@ -165,7 +165,7 @@ class SensorReader(Reader):
                 except (SensorWarmingUp, InconsistentObservation) as e:
                     logger.debug(e)
                     time.sleep(5)
-                except SensorWarning as e:  # pragma: no cover
+                except SensorWarning as e:
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
