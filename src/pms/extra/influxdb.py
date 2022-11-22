@@ -1,12 +1,6 @@
 import json
-import sys
 from dataclasses import fields
-from typing import Dict
-
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Protocol
-else:  # pragma: no cover
-    from typing_extensions import Protocol
+from typing import Dict, Protocol
 
 from typer import Abort, Context, Option, colors, echo, style
 
