@@ -84,11 +84,14 @@
         "pypoetry",
         "pyproject",
         "pytestmark",
+        "qualname",
         "sensirion",
+        "sensordata",
         "skipif",
         "softprops",
         "superfences",
         "twemoji",
+        "userdata",
         "winsen"
     ]
 }
