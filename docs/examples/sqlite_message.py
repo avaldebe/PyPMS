@@ -79,7 +79,7 @@ def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
         try:
             yield db
         except sqlite3.Error as e:
-            exit(e)
+            exit(str(e))
         finally:
             db.close()
 
