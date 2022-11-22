@@ -1,4 +1,5 @@
-import sys
+from __future__ import annotations
+
 from contextlib import closing, contextmanager
 from csv import DictReader
 from enum import Enum
@@ -17,7 +18,7 @@ captured_data = Path("tests/captured_data/data.csv")
 
 
 @contextmanager
-def captured_data_reader(db_str: str = ":memory:", *, data: Path = None):
+def captured_data_reader(db_str: str = ":memory:", *, data: Path | None = None):
     db = connect(db_str)
     with db, closing(db.cursor()) as cur:
         cur.execute(
