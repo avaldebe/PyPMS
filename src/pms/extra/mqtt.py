@@ -1,7 +1,8 @@
-import sys
+from __future__ import annotations
+
 from dataclasses import fields
 from datetime import datetime
-from typing import Callable, Dict, NamedTuple, Union
+from typing import Callable, NamedTuple
 
 from typer import Abort, Context, Option, colors, echo, style
 
@@ -37,7 +38,7 @@ Or, if you installed {package} with pipx
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
-) -> Callable[[Dict[str, Union[int, str]]], None]:  # pragma: no cover
+) -> Callable[[dict[str, int | str]], None]:  # pragma: no cover
     if client is None:
         __missing_mqtt()
     c = client.Client(topic)
@@ -52,7 +53,7 @@ def client_pub(
     c.connect(host, port, 60)
     c.loop_start()
 
-    def pub(data: Dict[str, Union[int, str]]) -> None:
+    def pub(data: dict[str, int | str]) -> None:
         for k, v in data.items():
             c.publish(f"{topic}/{k}", v, 1, True)
 
@@ -71,7 +72,7 @@ class Data(NamedTuple):
         return int(datetime.now().timestamp())
 
     @classmethod
-    def decode(cls, topic: str, payload: str, *, time: int = None) -> "Data":
+    def decode(cls, topic: str, payload: str, *, time: int | None = None) -> "Data":
         """Decode a MQTT message
 
         For example

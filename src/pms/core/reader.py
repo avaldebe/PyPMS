@@ -5,6 +5,7 @@ NOTE:
 - Sensors are read on passive mode.
 - Tested on PMS3003, PMS7003, PMSA003, SDS011 and MCU680
 """
+from __future__ import annotations
 
 import sys
 import time
@@ -13,7 +14,7 @@ from contextlib import AbstractContextManager, contextmanager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
-from typing import Iterator, NamedTuple, Optional, Union, overload
+from typing import Iterator, NamedTuple
 
 from serial import Serial
 from typer import progressbar
@@ -43,7 +44,7 @@ class RawData(NamedTuple):
     def hex(self) -> str:
         return self.data.hex()
 
-    def hexdump(self, line: Optional[int] = None) -> str:
+    def hexdump(self, line: int | None = None) -> str:
         offset = time if line is None else line * len(self.data)
         hex = " ".join(wrap(self.data.hex(), 2))  # raw.hex(" ") in python3.8+
         dump = self.data.translate(HEXDUMP_TABLE).decode()
@@ -52,7 +53,7 @@ class RawData(NamedTuple):
 
 class Reader:
     @abstractmethod
-    def __call__(self, *, raw: Optional[bool]) -> Iterator[Union[RawData, ObsData]]:
+    def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
         """
         Return an iterator of ObsData.
 
@@ -88,12 +89,12 @@ class SensorReader(Reader):
 
     def __init__(
         self,
-        sensor: Union[Sensor, Supported, str] = Supported.default,
+        sensor: Sensor | Supported | str = Supported.default,
         port: str = "/dev/ttyUSB0",
-        interval: Optional[int] = None,
-        samples: Optional[int] = None,
-        timeout: Optional[float] = None,
-        max_retries: Optional[int] = None,
+        interval: int | None = None,
+        samples: int | None = None,
+        timeout: float | None = None,
+        max_retries: int | None = None,
     ) -> None:
         """Configure serial port"""
         self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]
@@ -167,7 +168,7 @@ class SensorReader(Reader):
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
 
-    def __call__(self, *, raw: Optional[bool] = None):
+    def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
         """Passive mode reading at regular intervals"""
 
         sample = 0
@@ -205,7 +206,7 @@ class SensorReader(Reader):
 
 
 class MessageReader(Reader):
-    def __init__(self, path: Path, sensor: Sensor, samples: Optional[int] = None) -> None:
+    def __init__(self, path: Path, sensor: Sensor, samples: int | None = None) -> None:
         self.path = path
         self.sensor = sensor
         self.samples = samples
@@ -220,7 +221,7 @@ class MessageReader(Reader):
         logger.debug(f"close {self.path}")
         self.csv.close()
 
-    def __call__(self, *, raw: Optional[bool] = None):
+    def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
         if not hasattr(self, "data"):
             return
 

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 from dataclasses import fields
-from typing import Dict, Protocol
+from typing import Protocol
 
 from typer import Abort, Context, Option, colors, echo, style
 
@@ -33,7 +35,7 @@ Or, if you installed {package} with pipx
 
 
 class PubFunction(Protocol):  # pragma: no cover
-    def __call__(self, *, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+    def __call__(self, *, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
         ...
 
 
@@ -48,7 +50,7 @@ def client_pub(
         c.create_database(db_name)
     c.switch_database(db_name)
 
-    def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+    def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
         c.write_points(
             [
                 {"measurement": k, "tags": tags, "time": time, "fields": {"value": v}}
