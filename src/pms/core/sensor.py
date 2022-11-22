@@ -1,6 +1,7 @@
 """
 Access supported sensors from a single object
 """
+from __future__ import annotations
 
 import sys
 from datetime import datetime
@@ -89,7 +90,7 @@ class Sensor(Enum):
         else:
             return True
 
-    def decode(self, buffer: bytes, *, time: int = None) -> ObsData:
+    def decode(self, buffer: bytes, *, time: int | None = None) -> ObsData:
         """Extract observations from serial buffer"""
         if not time:  # pragma: no cover
             time = self.now()

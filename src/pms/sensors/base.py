@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import warnings
 from abc import ABCMeta, abstractmethod
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Dict, NamedTuple, Tuple
+from typing import NamedTuple, Tuple
 
 from pms import WrongMessageFormat, logger
 
@@ -58,7 +60,7 @@ class Message(metaclass=ABCMeta):
         length = command.answer_length
         return cls.unpack(message, header, length)[cls.data_records]  # type: ignore[call-overload]
 
-    @property
+    @property  # type:ignore[misc]
     @classmethod
     @abstractmethod
     def data_records(cls) -> slice:
@@ -90,7 +92,7 @@ class Message(metaclass=ABCMeta):
         pass
 
 
-@dataclass  # type: ignore[misc]
+@dataclass
 class ObsData(metaclass=ABCMeta):
     """Measurements
 
@@ -105,7 +107,7 @@ class ObsData(metaclass=ABCMeta):
         """measurement time as datetime object"""
         return datetime.fromtimestamp(self.time)
 
-    def subset(self, spec: str = None) -> Dict[str, float]:  # pragma: no cover
+    def subset(self, spec: str | None = None) -> dict[str, float]:  # pragma: no cover
         warnings.warn(
             "obs.subset is deprecated, use dataclasses.asdict(obs) for a dictionary mapping",
             DeprecationWarning,
