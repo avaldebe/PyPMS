@@ -1,11 +1,5 @@
-import sys
 from datetime import datetime
-from typing import Tuple
-
-if sys.version_info >= (3, 8):
-    from typing import Protocol
-else:
-    from typing_extensions import Protocol
+from typing import Protocol, Tuple
 
 
 class Cmd(Protocol):
