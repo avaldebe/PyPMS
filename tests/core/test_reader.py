@@ -12,12 +12,12 @@ class MockReader(reader.Reader):
     def __call__(self):
         raise NotImplemented
 
-    def __enter__(self):
+    def open(self):
         if self.raise_on_enter:
             raise reader.UnableToRead()
         self.entered = True
 
-    def __exit__(self, *_args):
+    def close(self):
         self.exited = True
 
 

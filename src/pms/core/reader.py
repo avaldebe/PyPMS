@@ -50,7 +50,7 @@ class RawData(NamedTuple):
         return f"{offset:08x}: {hex}  {dump}"
 
 
-class Reader(AbstractContextManager):
+class Reader:
     @abstractmethod
     def __call__(self, *, raw: Optional[bool]) -> Iterator[Union[RawData, ObsData]]:
         """
@@ -59,6 +59,21 @@ class Reader(AbstractContextManager):
         If "raw" is set to True, then ObsData is replaced with RawData.
         """
         ...
+
+    @abstractmethod
+    def open(self) -> None:
+        ...
+
+    @abstractmethod
+    def close(self) -> None:
+        ...
+
+    def __enter__(self):
+        self.open()
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback) -> None:
+        self.close()
 
 
 class SensorReader(Reader):
@@ -119,7 +134,7 @@ class SensorReader(Reader):
         # only pre-heat the firs time
         self.pre_heat = 0
 
-    def __enter__(self) -> "SensorReader":
+    def open(self) -> None:
         """Open serial port and sensor setup"""
         if not self.serial.is_open:
             logger.debug(f"open {self.serial.port}")
@@ -143,9 +158,7 @@ class SensorReader(Reader):
             logger.error(f"Sensor is not {self.sensor.name}")
             raise UnableToRead("Sensor failed validation")
 
-        return self
-
-    def __exit__(self, exception_type, exception_value, traceback) -> None:
+    def close(self) -> None:
         """Put sensor to sleep and close serial port"""
         logger.debug(f"sleep {self.sensor}")
         buffer = self._cmd("sleep")
@@ -188,14 +201,13 @@ class MessageReader(Reader):
         self.sensor = sensor
         self.samples = samples
 
-    def __enter__(self) -> "MessageReader":
+    def open(self) -> None:
         logger.debug(f"open {self.path}")
         self.csv = self.path.open()
         reader = DictReader(self.csv)
         self.data = (row for row in reader if row["sensor"] == self.sensor.name)
-        return self
 
-    def __exit__(self, exception_type, exception_value, traceback) -> None:
+    def close(self) -> None:
         logger.debug(f"close {self.path}")
         self.csv.close()
 
