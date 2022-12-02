@@ -1,5 +1,6 @@
 import pytest
 
+import pms
 from pms.core import reader
 from pms.core.sensor import Sensor
 from tests.conftest import captured_data
@@ -139,6 +140,7 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
         samples=0,  # exit immediately
         interval=None,
         sensor="PMSx003",  # match with stubs
+        max_retries=None,
     ):
         sensor_reader = reader.SensorReader(
             port=mock_sensor.port,
@@ -146,6 +148,7 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
             interval=interval,
             sensor=sensor,
             timeout=0.01,  # low to avoid hanging on failure
+            max_retries=max_retries,
         )
 
         # https://github.com/pyserial/pyserial/issues/625
@@ -229,6 +232,18 @@ def test_sensor_reader_warm_up(
     assert len(obs) == 1
 
 
+def test_sensor_reader_warm_up_exhaust_retries(
+    mock_sensor,
+    sensor_reader_factory,
+    mock_sensor_warm_up,
+):
+    sensor_reader = sensor_reader_factory(max_retries=0)
+
+    with sensor_reader as r:
+        with pytest.raises(pms.SensorWarmingUp):
+            list(r())
+
+
 def test_sensor_reader_temp_failure(
     mock_sensor,
     sensor_reader_factory,
@@ -244,6 +259,18 @@ def test_sensor_reader_temp_failure(
 
     # check two samples were attempted
     assert mock_sensor.stubs["passive_read"].calls == 2
+
+
+def test_sensor_reader_temp_failure_exhaust_retries(
+    mock_sensor,
+    sensor_reader_factory,
+    mock_sensor_temp_failure,
+):
+    sensor_reader = sensor_reader_factory(max_retries=0)
+
+    with sensor_reader as r:
+        with pytest.raises(pms.SensorWarning):
+            list(r())
 
 
 def test_sensor_reader_sensor_mismatch(mock_sensor, sensor_reader_factory):
