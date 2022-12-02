@@ -93,6 +93,7 @@ class SensorReader(Reader):
         interval: Optional[int] = None,
         samples: Optional[int] = None,
         timeout: Optional[float] = None,
+        max_retries: Optional[int] = None,
     ) -> None:
         """Configure serial port"""
         self.sensor = sensor if isinstance(sensor, Sensor) else Sensor[sensor]
@@ -101,6 +102,7 @@ class SensorReader(Reader):
         self.serial.port = port
         self.serial.baudrate = self.sensor.baud
         self.serial.timeout = timeout or 5  # max time to wake up sensor
+        self.max_retries = max_retries
         self.interval = interval
         self.samples = samples
         logger.debug(
@@ -169,6 +171,7 @@ class SensorReader(Reader):
         """Passive mode reading at regular intervals"""
 
         sample = 0
+        failures = 0
         while self.serial.is_open:
             try:
                 buffer = self._cmd("passive_read")
@@ -176,9 +179,15 @@ class SensorReader(Reader):
                 try:
                     obs = self.sensor.decode(buffer)
                 except SensorNotReady as e:
+                    failures += 1
+                    if self.max_retries is not None and failures > self.max_retries:
+                        raise
                     logger.debug(e)
                     time.sleep(5)
                 except SensorWarning as e:
+                    failures += 1
+                    if self.max_retries is not None and failures > self.max_retries:
+                        raise
                     logger.debug(e)
                     self.serial.reset_input_buffer()
                 else:
