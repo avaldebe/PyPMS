@@ -29,7 +29,12 @@ def test_baud(sensor):
 
 @pytest.mark.parametrize("sensor", Supported)
 def test_pre_heat(sensor):
-    pre_heat = 0 if sensor != "MHZ19B" else 180
+    if sensor == "MHZ19B":
+        pre_heat = 180
+    elif sensor == "PMSx003":
+        pre_heat = 10
+    else:
+        pre_heat = 0
     assert Sensor[sensor].pre_heat == pre_heat
 
 

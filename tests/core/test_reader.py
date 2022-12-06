@@ -158,6 +158,8 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
             lambda: None,
         )
 
+        sensor_reader.pre_heat = 0  # disable any preheat
+
         return sensor_reader
 
     return factory
