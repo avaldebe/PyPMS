@@ -13,6 +13,7 @@ from . import pms3003
 
 ALIASES = ("PMS1003", "G1", "PMS5003", "G5", "PMS7003", "G7", "PMSA003", "G10")
 
+PREHEAT = 10  # 10 seconds
 
 commands = base.Commands(
     passive_read=base.Cmd(b"\x42\x4D\xE2\x00\x00\x01\x71", b"\x42\x4D\x00\x1c", 32),
