@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import logging
 import warnings
 from abc import ABCMeta, abstractmethod
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import NamedTuple, Tuple
 
-from pms import WrongMessageFormat, logger
+from pms import WrongMessageFormat
+
+logger = logging.getLogger(__name__)
 
 
 class Cmd(NamedTuple):

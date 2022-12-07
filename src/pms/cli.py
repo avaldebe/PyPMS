@@ -13,10 +13,10 @@ else:  # pragma: no cover
 
 from typer import Argument, Context, Exit, Option, Typer, echo
 
-from pms import logger
 from pms.core import MessageReader, SensorReader, Supported, exit_on_fail
 
 main = Typer(help="Data acquisition and logging for Air Quality Sensors with UART interface")
+logger = logging.getLogger(__package__)
 
 """
 Extra cli commands from plugins

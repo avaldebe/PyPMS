@@ -7,6 +7,7 @@ NOTE:
 """
 from __future__ import annotations
 
+import logging
 import sys
 import time
 from abc import abstractmethod
@@ -19,10 +20,11 @@ from typing import Iterator, NamedTuple
 from serial import Serial
 from typer import progressbar
 
-from pms import SensorNotReady, SensorWarning, logger
+from pms import SensorNotReady, SensorWarning
 from pms.core import Sensor, Supported
 from pms.core.types import ObsData
 
+logger = logging.getLogger(__name__)
 """translation table for raw.hexdump(n)"""
 HEXDUMP_TABLE = bytes.maketrans(
     bytes(range(0x20)) + bytes(range(0x7E, 0x100)), b"." * (0x20 + 0x100 - 0x7E)
