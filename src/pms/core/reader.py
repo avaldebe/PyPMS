@@ -10,7 +10,7 @@ from __future__ import annotations
 import sys
 import time
 from abc import abstractmethod
-from contextlib import AbstractContextManager, contextmanager
+from contextlib import contextmanager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap

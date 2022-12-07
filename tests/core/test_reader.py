@@ -1,21 +1,21 @@
 import pytest
 
-import pms
-from pms.core import reader
+from pms import SensorWarmingUp, SensorWarning
+from pms.core.reader import MessageReader, Reader, SensorReader, UnableToRead, exit_on_fail
 from pms.core.sensor import Sensor
 from tests.conftest import captured_data
 
 
-class MockReader(reader.Reader):
+class MockReader(Reader):
     def __init__(self, raise_on_enter=False):
         self.raise_on_enter = raise_on_enter
 
     def __call__(self):
-        raise NotImplemented
+        raise NotImplementedError()
 
     def open(self):
         if self.raise_on_enter:
-            raise reader.UnableToRead()
+            raise UnableToRead()
         self.entered = True
 
     def close(self):
@@ -29,12 +29,7 @@ def mock_sleep(monkeypatch):
 
     sleep.slept_for = 0
 
-    monkeypatch.setattr(
-        reader.time,
-        "sleep",
-        sleep,
-    )
-
+    monkeypatch.setattr("pms.core.reader.time.sleep", sleep)
     return sleep
 
 
@@ -142,7 +137,7 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
         sensor="PMSx003",  # match with stubs
         max_retries=None,
     ):
-        sensor_reader = reader.SensorReader(
+        sensor_reader = SensorReader(
             port=mock_sensor.port,
             samples=samples,
             interval=interval,
@@ -168,8 +163,8 @@ def sensor_reader_factory(monkeypatch, mock_sensor):
 def test_sensor_reader(mock_sensor, sensor_reader_factory):
     sensor_reader = sensor_reader_factory()
 
-    with sensor_reader as r:
-        obs = list(r())
+    with sensor_reader:
+        obs = tuple(sensor_reader())
 
     # check warm up happened
     assert mock_sensor.stubs["wake"].called
@@ -189,8 +184,8 @@ def test_sensor_reader_sleep(sensor_reader_factory, mock_sleep):
         interval=5,  # sleep between samples
     )
 
-    with sensor_reader as r:
-        obs = list(r())
+    with sensor_reader:
+        obs = tuple(sensor_reader())
 
     # check we read twice
     assert len(obs) == 2
@@ -201,7 +196,7 @@ def test_sensor_reader_sleep(sensor_reader_factory, mock_sleep):
 
 def test_sensor_reader_closed(mock_sensor, sensor_reader_factory):
     sensor_reader = sensor_reader_factory()
-    obs = list(sensor_reader())
+    obs = tuple(sensor_reader())
     assert len(obs) == 0
 
 
@@ -211,7 +206,7 @@ def test_sensor_reader_preheat(sensor_reader_factory, mock_sleep):
     # override pre heat duration
     sensor_reader.pre_heat = 5
 
-    with sensor_reader as r:
+    with sensor_reader:
         pass
 
     # check we slept between reads
@@ -226,8 +221,8 @@ def test_sensor_reader_warm_up(
 ):
     sensor_reader = sensor_reader_factory()
 
-    with sensor_reader as r:
-        obs = list(r())
+    with sensor_reader:
+        obs = tuple(sensor_reader())
 
     # check we slept for warm up
     assert mock_sleep.slept_for == 5
@@ -241,9 +236,9 @@ def test_sensor_reader_warm_up_exhaust_retries(
 ):
     sensor_reader = sensor_reader_factory(max_retries=0)
 
-    with sensor_reader as r:
-        with pytest.raises(pms.SensorWarmingUp):
-            list(r())
+    with sensor_reader:
+        with pytest.raises(SensorWarmingUp):
+            next(sensor_reader())
 
 
 def test_sensor_reader_temp_failure(
@@ -253,8 +248,8 @@ def test_sensor_reader_temp_failure(
 ):
     sensor_reader = sensor_reader_factory()
 
-    with sensor_reader as r:
-        obs = list(r())
+    with sensor_reader:
+        obs = tuple(sensor_reader())
 
     # check one sample still acquired
     assert len(obs) == 1
@@ -270,9 +265,9 @@ def test_sensor_reader_temp_failure_exhaust_retries(
 ):
     sensor_reader = sensor_reader_factory(max_retries=0)
 
-    with sensor_reader as r:
-        with pytest.raises(pms.SensorWarning):
-            list(r())
+    with sensor_reader:
+        with pytest.raises(SensorWarning):
+            next(sensor_reader())
 
 
 def test_sensor_reader_sensor_mismatch(mock_sensor, sensor_reader_factory):
@@ -284,9 +279,9 @@ def test_sensor_reader_sensor_mismatch(mock_sensor, sensor_reader_factory):
         send_bytes=b"123",  # nonsense
     )
 
-    with pytest.raises(reader.UnableToRead) as e:
+    with pytest.raises(UnableToRead) as e:
         with sensor_reader as r:
-            list(r())
+            pass
 
     assert "failed validation" in str(e.value)
 
@@ -296,19 +291,19 @@ def test_sensor_reader_sensor_no_response(sensor_reader_factory):
         sensor="PMS3003",  # arbitrary sensor
     )
 
-    with pytest.raises(reader.UnableToRead) as e:
-        with sensor_reader as r:
-            list(r())
+    with pytest.raises(UnableToRead) as e:
+        with sensor_reader:
+            pass
 
     assert "did not respond" in str(e.value)
 
 
 def test_exit_on_fail_no_error(monkeypatch):
     # prevent the helper exiting the test suite
-    monkeypatch.setattr(reader.sys, "exit", lambda: None)
+    monkeypatch.setattr("pms.core.reader.sys.exit", lambda: None)
     mock_reader = MockReader()
 
-    with reader.exit_on_fail(mock_reader) as yielded:
+    with exit_on_fail(mock_reader) as yielded:
         assert yielded == mock_reader
 
     assert mock_reader.entered
@@ -320,33 +315,27 @@ def test_exit_on_fail_error(monkeypatch):
         raise Exception("exit")
 
     # prevent the helper exiting the test suite
-    monkeypatch.setattr(reader.sys, "exit", sys_exit)
+    monkeypatch.setattr("pms.core.reader.sys.exit", sys_exit)
     mock_reader = MockReader(raise_on_enter=True)
 
     with pytest.raises(Exception) as e:
-        with reader.exit_on_fail(mock_reader):
+        with exit_on_fail(mock_reader):
             raise Exception("should not get here")
 
     assert "exit" in str(e.value)
 
 
 def test_message_reader():
-    message_reader = reader.MessageReader(
-        path=captured_data,
-        sensor=Sensor["PMS3003"],
-    )
+    message_reader = MessageReader(captured_data, Sensor["PMS3003"])
 
     with message_reader:
-        values = list(message_reader())
+        values = tuple(message_reader())
 
     assert len(values) == 10
 
 
 def test_message_reader_closed():
-    message_reader = reader.MessageReader(
-        path=captured_data,
-        sensor=Sensor["PMS3003"],
-    )
+    message_reader = MessageReader(captured_data, Sensor["PMS3003"])
 
-    values = list(message_reader())
+    values = tuple(message_reader())
     assert len(values) == 0
