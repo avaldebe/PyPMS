@@ -3,7 +3,6 @@ Access supported sensors from a single object
 """
 from __future__ import annotations
 
-import logging
 import sys
 from datetime import datetime
 from enum import Enum
@@ -13,10 +12,10 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
+from loguru import logger
+
 from pms import InconsistentObservation, SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 from pms.core.types import Cmd, Commands, Message, ObsData
-
-logger = logging.getLogger(__name__)
 
 
 class Sensor(Enum):

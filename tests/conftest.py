@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from contextlib import closing, contextmanager
 from csv import DictReader
 from enum import Enum
@@ -9,12 +8,12 @@ from sqlite3 import connect
 from typing import Iterator, List
 
 import pytest
+from loguru import logger
 
 from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
 
-logger = logging.getLogger(__name__)
 captured_data = Path("tests/captured_data/data.csv")
 
 
@@ -95,7 +94,7 @@ class CapturedData(Enum):
             capture=f"csv --overwrite  --capture {self}_pypms.csv",
             decode=f"serial -f csv --decode {self}_pypms.csv",
         ).get(command, command)
-        return f"{capture} --debug {cmd}".split()
+        return f"{capture} {cmd}".split()
 
     def output(self, ending: str) -> str:
         path = captured_data.parent / f"{self}.{ending}"
