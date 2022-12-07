@@ -21,8 +21,7 @@ from typer import progressbar
 
 from pms import SensorNotReady, SensorWarning, logger
 from pms.core import Sensor, Supported
-
-from .types import ObsData
+from pms.core.types import ObsData
 
 """translation table for raw.hexdump(n)"""
 HEXDUMP_TABLE = bytes.maketrans(

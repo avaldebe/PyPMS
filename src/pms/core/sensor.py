@@ -19,8 +19,7 @@ from pms import (
     WrongMessageFormat,
     logger,
 )
-
-from .types import Cmd, Commands, Message, ObsData
+from pms.core.types import Cmd, Commands, Message, ObsData
 
 
 class Sensor(Enum):
