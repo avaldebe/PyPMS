@@ -10,7 +10,7 @@ class SensorWarning(UserWarning):
 
 
 class WrongMessageFormat(SensorWarning):
-    """Wrongly formattted message: throw away observation"""
+    """Wrongly formatted message: throw away observation"""
 
     pass
 
