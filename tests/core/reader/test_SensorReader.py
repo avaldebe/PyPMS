@@ -140,7 +140,7 @@ def test_reader(reader: SensorReader, mock_serial):
 
     # check data was read
     assert len(obs) == 1
-    assert obs[0].pm10 == 11822
+    assert obs[0].pm10 == 11822  # type:ignore
 
     # check sleep happened
     assert mock_serial.stubs["sleep"].called
