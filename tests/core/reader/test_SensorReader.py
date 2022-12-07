@@ -1,25 +1,7 @@
 import pytest
 
 from pms import SensorWarmingUp, SensorWarning
-from pms.core.reader import MessageReader, Reader, SensorReader, UnableToRead, exit_on_fail
-from pms.core.sensor import Sensor
-from tests.conftest import captured_data
-
-
-class MockReader(Reader):
-    def __init__(self, raise_on_enter=False):
-        self.raise_on_enter = raise_on_enter
-
-    def __call__(self):
-        raise NotImplementedError()
-
-    def open(self):
-        if self.raise_on_enter:
-            raise UnableToRead()
-        self.entered = True
-
-    def close(self):
-        self.exited = True
+from pms.core.reader import SensorReader, UnableToRead
 
 
 @pytest.fixture
@@ -296,46 +278,3 @@ def test_sensor_reader_sensor_no_response(sensor_reader_factory):
             pass
 
     assert "did not respond" in str(e.value)
-
-
-def test_exit_on_fail_no_error(monkeypatch):
-    # prevent the helper exiting the test suite
-    monkeypatch.setattr("pms.core.reader.sys.exit", lambda: None)
-    mock_reader = MockReader()
-
-    with exit_on_fail(mock_reader) as yielded:
-        assert yielded == mock_reader
-
-    assert mock_reader.entered
-    assert mock_reader.exited
-
-
-def test_exit_on_fail_error(monkeypatch):
-    def sys_exit(*_args):
-        raise Exception("exit")
-
-    # prevent the helper exiting the test suite
-    monkeypatch.setattr("pms.core.reader.sys.exit", sys_exit)
-    mock_reader = MockReader(raise_on_enter=True)
-
-    with pytest.raises(Exception) as e:
-        with exit_on_fail(mock_reader):
-            raise Exception("should not get here")
-
-    assert "exit" in str(e.value)
-
-
-def test_message_reader():
-    message_reader = MessageReader(captured_data, Sensor["PMS3003"])
-
-    with message_reader:
-        values = tuple(message_reader())
-
-    assert len(values) == 10
-
-
-def test_message_reader_closed():
-    message_reader = MessageReader(captured_data, Sensor["PMS3003"])
-
-    values = tuple(message_reader())
-    assert len(values) == 0
