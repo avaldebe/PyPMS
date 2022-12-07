@@ -1,5 +1,3 @@
-import logging
-import os
 import sys
 from datetime import datetime
 from enum import Enum
@@ -11,12 +9,13 @@ if sys.version_info >= (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
+from loguru import logger
 from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms.core import MessageReader, SensorReader, Supported, exit_on_fail
 
 main = Typer(help="Data acquisition and logging for Air Quality Sensors with UART interface")
-logger = logging.getLogger(__package__)
+
 
 """
 Extra cli commands from plugins
@@ -25,9 +24,6 @@ additional Typer commands are loaded from plugins (entry points) advertized as `
 """
 for ep in metadata.entry_points(group="pypms.extras"):
     main.command(name=ep.name)(ep.load())
-
-
-logging.basicConfig(level=os.getenv("LEVEL", "WARNING"))
 
 
 def version_callback(value: bool):  # pragma: no cover
@@ -50,7 +46,17 @@ def callback(
     version: Optional[bool] = Option(None, "--version", "-V", callback=version_callback),
 ):
     """Read serial sensor"""
-    logger.setLevel("DEBUG" if debug else os.getenv("LEVEL", "WARNING"))
+    if not debug:
+        logger.configure(
+            handlers=[
+                {
+                    "sink": sys.stderr,
+                    "format": "<level>{message}</level>",
+                    "level": "INFO",
+                },
+            ],
+        )
+
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
 
 
@@ -136,7 +142,3 @@ def csv(
                 csv.write("time,sensor,hex\n")
             for raw in reader(raw=True):
                 csv.write(f"{raw.time},{sensor_name},{raw.hex}\n")
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()

@@ -33,6 +33,7 @@ packages = [{ include = "pms", from = "src" }]
 python = ">=3.8,<4.0"
 pyserial = ">=3.5"
 typer = ">=0.6.1"
+loguru = ">=0.6.0"
 importlib-metadata = { version = ">=3.6", python = "<3.10" }
 # extras
 paho-mqtt = { version = ">=1.4.0", optional = true }
@@ -177,6 +178,7 @@ module = [
     "typer.*",
     "packaging.*",
     "pytest",
+    "loguru",
 ]
 ignore_missing_imports = true
 
