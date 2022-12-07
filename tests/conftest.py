@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from contextlib import closing, contextmanager
 from csv import DictReader
 from enum import Enum
@@ -9,11 +10,11 @@ from typing import Iterator, List
 
 import pytest
 
-from pms import logger
 from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
 
+logger = logging.getLogger(__name__)
 captured_data = Path("tests/captured_data/data.csv")
 
 

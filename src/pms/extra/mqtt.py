@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import fields
 from datetime import datetime
 from typing import Callable, NamedTuple
@@ -11,9 +12,10 @@ try:
 except ModuleNotFoundError:
     client = None  # type: ignore
 
-from pms import logger
 from pms.core import exit_on_fail
 from pms.sensors.base import ObsData
+
+logger = logging.getLogger(__name__)
 
 
 def __missing_mqtt():  # pragma: no cover
