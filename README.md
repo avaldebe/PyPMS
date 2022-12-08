@@ -100,7 +100,8 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
-- Work in progress
+- 0.7.0
+  - add Python 3.11 support and drop Python 3.7 support
   - pre-heat for PMSx003 sensors [PR#35](https://github.com/avaldebe/PyPMS/pull/35)
   - `open`/`close` methods for granular SensorReader operation [PR#33](https://github.com/avaldebe/PyPMS/pull/33)
   - fix HPMA115C0 header [#26](https://github.com/avaldebe/PyPMS/issues/26)
