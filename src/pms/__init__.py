@@ -1,3 +1,8 @@
+from loguru import logger
+
+logger.disable("pms")  # disable logging by default
+
+
 class SensorWarning(UserWarning):
     """Recoverable errors"""
 

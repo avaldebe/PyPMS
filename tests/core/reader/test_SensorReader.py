@@ -1,8 +1,17 @@
 import pytest
+from _pytest.logging import LogCaptureFixture
+from loguru import logger
 
 from pms import SensorWarmingUp, SensorWarning
 from pms.core.reader import SensorReader, UnableToRead
 from pms.core.sensor import Sensor
+
+
+@pytest.fixture
+def caplog(caplog: LogCaptureFixture):
+    handler_id = logger.add(caplog.handler, format="{message}")
+    yield caplog
+    logger.remove(handler_id)
 
 
 @pytest.fixture
@@ -233,3 +242,15 @@ def test_reader_sensor_no_response(reader: SensorReader):
             pass
 
     assert "did not respond" in str(e.value)
+
+
+def test_logging(reader: SensorReader, capfd, caplog):
+    with reader:
+        obs = tuple(reader())
+
+    # check data was read
+    assert len(obs) == 1
+    assert obs[0].pm10 == 11822  # type:ignore
+
+    # check no logs output
+    assert caplog.text == ""
