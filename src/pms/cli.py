@@ -25,7 +25,8 @@ for ep in metadata.entry_points(group="pypms.extras"):
     app.command(name=ep.name)(ep.load())
 
 
-def main():
+def main():  # pragma: no cover
+    logger.enable("pms")
     app()
 
 
