@@ -39,9 +39,9 @@ def mock_mqtt(monkeypatch):
 
 def test_mqtt(capture, mock_mqtt):
 
-    from pms.cli import main
+    from pms.cli import app
 
-    result = runner.invoke(main, capture.options("mqtt"))
+    result = runner.invoke(app, capture.options("mqtt"))
     assert result.exit_code == 0
 
 
@@ -62,9 +62,9 @@ def mock_influxdb(monkeypatch):
 
 def test_influxdb(capture, mock_influxdb):
 
-    from pms.cli import main
+    from pms.cli import app
 
-    result = runner.invoke(main, capture.options("influxdb"))
+    result = runner.invoke(app, capture.options("influxdb"))
     assert result.exit_code == 0
 
 
@@ -110,8 +110,8 @@ def mock_bridge(monkeypatch, capture_data):
 
 def test_bridge(mock_bridge):
 
-    from pms.cli import main
+    from pms.cli import app
 
     capture = mock_bridge
-    result = runner.invoke(main, capture.options("bridge"))
+    result = runner.invoke(app, capture.options("bridge"))
     assert result.exit_code == 0
