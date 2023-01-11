@@ -100,6 +100,8 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
+- 0.7.1
+  - disable logging unless CLI is running [PR#37](https://github.com/avaldebe/PyPMS/pull/37)
 - 0.7.0
   - add Python 3.11 support and drop Python 3.7 support
   - pre-heat for PMSx003 sensors [PR#35](https://github.com/avaldebe/PyPMS/pull/35)
