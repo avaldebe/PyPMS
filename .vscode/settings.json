@@ -63,6 +63,7 @@
         "aqmd",
         "avaldebe",
         "baudrate",
+        "caplog",
         "executemany",
         "executescript",
         "fontawesome",

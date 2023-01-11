@@ -68,7 +68,7 @@ class RawData(NamedTuple):
         return self._replace(hex=buffer[6:], id="data at the end of the buffer")
 
 
-class GoodData(Enum):
+class GoodData(RawData, Enum):
 
     PMSx003 = RawData(
         "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
@@ -132,7 +132,7 @@ class GoodData(Enum):
     @classmethod
     def test_obs(cls, secs: int = 1567201793) -> Iterator[pytest.ParameterSet]:
         for sensor in cls:
-            obs = Sensor[sensor.name].decode(sensor.value.msg, time=secs)
+            obs = Sensor[sensor.name].decode(sensor.msg, time=secs)
             yield pytest.param(obs, id=sensor.name)
 
 
