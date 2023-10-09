@@ -3,12 +3,15 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
+    "git.untrackedChanges": "separate",
     "python.testing.pytestEnabled": true,
-    "python.linting.enabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyPath": ".venv/bin/mypy",
-    "python.formatting.provider": "black",
-    "python.sortImports.path": "isort",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
     "markdownlint.run": "onSave",
     "markdownlint.ignore": [
         "**/library_usage.md",
