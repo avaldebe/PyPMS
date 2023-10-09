@@ -57,7 +57,7 @@ docs = ["mkdocs", "mkdocs-material", "pymdown-extensions"]
 
 [tool.poetry.dev-dependencies]
 pytest-sugar = ">=0.9.4"
-mypy = ">=0.991"
+mypy = ">=1.5.1"
 
 [tool.poetry.scripts]
 pms = "pms.cli:main"

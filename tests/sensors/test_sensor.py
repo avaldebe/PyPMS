@@ -69,7 +69,6 @@ class RawData(NamedTuple):
 
 
 class GoodData(RawData, Enum):
-
     PMSx003 = RawData(
         "424d001c0005000d00160005000d001602fd00fc001d000f00060006970003c5",
         (5, 13, 22, 5, 13, 22, 765, 252, 29, 15, 6, 6),

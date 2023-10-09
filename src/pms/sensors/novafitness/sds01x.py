@@ -66,7 +66,6 @@ class Message(base.Message):
 
     @classmethod
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
-
         # consistency check: bug in message singnature
         assert len(header) == 2, f"wrong header length {len(header)}"
         assert header[:1] == b"\xAA", f"wrong header start {header!r}"

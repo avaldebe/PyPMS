@@ -38,7 +38,6 @@ def mock_mqtt(monkeypatch):
 
 
 def test_mqtt(capture, mock_mqtt):
-
     from pms.cli import app
 
     result = runner.invoke(app, capture.options("mqtt"))
@@ -61,7 +60,6 @@ def mock_influxdb(monkeypatch):
 
 
 def test_influxdb(capture, mock_influxdb):
-
     from pms.cli import app
 
     result = runner.invoke(app, capture.options("influxdb"))
@@ -93,7 +91,6 @@ def mock_bridge(monkeypatch, capture_data):
         *,
         on_sensordata: Callable[[Any], None],
     ) -> None:
-
         for obs in capture_data.obs:
             for field in fields(obs):
                 if not field.metadata:
@@ -109,7 +106,6 @@ def mock_bridge(monkeypatch, capture_data):
 
 
 def test_bridge(mock_bridge):
-
     from pms.cli import app
 
     capture = mock_bridge

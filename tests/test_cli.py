@@ -8,7 +8,6 @@ runner = CliRunner()
 
 @pytest.mark.parametrize("format", {"csv", "hexdump"})
 def test_serial(capture, format):
-
     from pms.cli import app
 
     result = runner.invoke(app, capture.options(f"serial_{format}"))
@@ -17,7 +16,6 @@ def test_serial(capture, format):
 
 
 def test_csv(capture):
-
     from pms.cli import app
 
     result = runner.invoke(app, capture.options("csv"))
@@ -30,7 +28,6 @@ def test_csv(capture):
 
 
 def test_capture_decode(capture):
-
     from pms.cli import app
 
     result = runner.invoke(app, capture.options("capture"))
