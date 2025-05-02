@@ -2,12 +2,12 @@ import pytest
 
 from pms.core.reader import MessageReader
 from pms.core.sensor import Sensor
-from tests.conftest import captured_data
+from tests.conftest import CAPTURED_DATA
 
 
 @pytest.fixture
 def reader() -> MessageReader:
-    return MessageReader(captured_data, Sensor["PMS3003"])
+    return MessageReader(CAPTURED_DATA, Sensor["PMS3003"])
 
 
 def test_reader(reader: MessageReader):

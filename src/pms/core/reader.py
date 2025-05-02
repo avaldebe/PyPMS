@@ -78,12 +78,15 @@ class Reader:
 
 
 class SensorReader(Reader):
-    """Read sensor messages from serial port
+    """
+    Read sensor messages from serial port
 
-    The sensor is woken up after opening the serial port, and put to sleep when before closing the port.
+    The sensor is woken up after opening the serial port,
+    and put to sleep when before closing the port.
     While the serial port is open, the sensor is read in passive mode.
 
-    PMS3003 sensors do not accept serial commands, such as wake/sleep or passive mode read.
+    PMS3003 sensors do not accept serial commands,
+    such as wake/sleep or passive mode read.
     Valid messages are extracted from the serial buffer.
     """
 
@@ -164,7 +167,7 @@ class SensorReader(Reader):
     def close(self) -> None:
         """Put sensor to sleep and close serial port"""
         logger.debug(f"sleep {self.sensor}")
-        buffer = self._cmd("sleep")
+        self._cmd("sleep")
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
 

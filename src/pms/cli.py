@@ -10,7 +10,7 @@ else:  # pragma: no cover
     import importlib_metadata as metadata
 
 from loguru import logger
-from typer import Argument, Context, Exit, Option, Typer, echo, run
+from typer import Argument, Context, Exit, Option, Typer, echo
 
 from pms.core import MessageReader, SensorReader, Supported, exit_on_fail
 

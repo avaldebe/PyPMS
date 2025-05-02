@@ -14,29 +14,33 @@ from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
 
-captured_data = Path("tests/captured_data/data.csv")
+CAPTURED_DATA = Path("tests/captured_data/data.csv")
+CREATE_MESSAGES = """
+CREATE TABLE IF NOT EXISTS messages (
+    time DATETIME NOT NULL, 
+    sensor TEXT NOT NULL, 
+    message BLOB NOT NULL,
+    UNIQUE (time, sensor)
+)
+"""
+INSERT_MESSAGES = """
+INSERT OR IGNORE INTO messages
+    (time, sensor, message)
+VALUES
+    (:time, :sensor, bytes(:hex))
+"""
 
 
 @contextmanager
 def captured_data_reader(db_str: str = ":memory:", *, data: Path | None = None):
     db = connect(db_str)
     with db, closing(db.cursor()) as cur:
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS messages (
-                time DATETIME NOT NULL, 
-                sensor TEXT NOT NULL, 
-                message BLOB NOT NULL,
-                UNIQUE (time, sensor)
-            )
-            """
-        )
+        cur.execute(CREATE_MESSAGES)
 
     if data is not None and data.exists():
         db.create_function("bytes", 1, bytes.fromhex)
-        insert = "INSERT OR IGNORE INTO messages (time, sensor, message) VALUES (:time, :sensor, bytes(:hex))"
         with db, closing(db.cursor()) as cur, data.open() as csv:
-            cur.executemany(insert, DictReader(csv))
+            cur.executemany(INSERT_MESSAGES, DictReader(csv))
 
     def reader(sensor: str) -> Iterator[RawData]:
         select = f"SELECT time, message FROM messages WHERE sensor IS '{sensor}'"
@@ -55,7 +59,7 @@ class CapturedData(Enum):
 
     _ignore_ = "name capt CapturedData"
 
-    with captured_data_reader(data=captured_data) as reader:
+    with captured_data_reader(data=CAPTURED_DATA) as reader:
         CapturedData = vars()
         for name in [s.name for s in Sensor]:
             capt = tuple(reader(name))
@@ -97,7 +101,7 @@ class CapturedData(Enum):
         return f"{capture} {cmd}".split()
 
     def output(self, ending: str) -> str:
-        path = captured_data.parent / f"{self}.{ending}"
+        path = CAPTURED_DATA.parent / f"{self}.{ending}"
         return path.read_text()
 
 

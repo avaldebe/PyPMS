@@ -109,7 +109,10 @@ def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Iterator[ObsData]:
         ORDER BY
             time;
         """
-    decode = lambda row: sensor.decode(row[0], time=row[1])
+
+    def decode(row):
+        return sensor.decode(row[0], time=row[1])
+
     with closing(db.cursor()) as cur:
         cur.execute(select, (sensor.name,))
         return (decode(row) for row in cur.fetchall())

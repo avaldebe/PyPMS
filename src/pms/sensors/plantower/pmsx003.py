@@ -3,7 +3,6 @@ Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensors
 - messages are 32b long
 """
 
-import re
 from dataclasses import dataclass
 
 from pms import InconsistentObservation
@@ -68,9 +67,16 @@ class ObsData(pms3003.ObsData):
     def __format__(self, spec: str) -> str:
         if spec == "csv":
             csv = super().__format__(spec)
-            return f"{csv}, {self.n0_3:.2f}, {self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, {self.n5_0:.2f}, {self.n10_0:.2f}"
+            return (
+                f"{csv}, {self.n0_3:.2f}, {self.n0_5:.2f}, "
+                f"{self.n1_0:.2f}, {self.n2_5:.2f}, {self.n5_0:.2f}, {self.n10_0:.2f}"
+            )
         if spec == "num":
-            return f"{self.date:%F %T}: N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f}, N5.0 {self.n5_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
+            return (
+                f"{self.date:%F %T}: N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, "
+                f"N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f}, N5.0 {self.n5_0:.2f}, "
+                f"N10 {self.n10_0:.2f} #/cm3"
+            )
         if spec == "":
             return str(self)
 

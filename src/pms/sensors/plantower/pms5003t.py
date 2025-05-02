@@ -74,9 +74,15 @@ class ObsData(pms3003.ObsData):
     def __format__(self, spec: str) -> str:
         if spec == "csv":
             pm = super().__format__(spec)
-            return f"{pm}, {self.n0_3:.2f}, {self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, {self.temp:.1f}, {self.rhum:.1f}"
+            return (
+                f"{pm}, {self.n0_3:.2f}, {self.n0_5:.2f}, {self.n1_0:.2f}, "
+                f"{self.n2_5:.2f}, {self.temp:.1f}, {self.rhum:.1f}"
+            )
         if spec == "num":
-            return f"{self.date:%F %T}: N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f} #/cm3"
+            return (
+                f"{self.date:%F %T}: N0.3 {self.n0_3:.2f}, N0.5 {self.n0_5:.2f}, "
+                f"N1.0 {self.n1_0:.2f}, N2.5 {self.n2_5:.2f} #/cm3"
+            )
         if spec == "atm":
             return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
 

@@ -156,12 +156,6 @@ fail_under = 100
 [tool.ruff]
 line-length = 100
 lint.select = ["E", "F", "I", "UP", "FA"]
-lint.ignore = [
-    "F401", # https://docs.astral.sh/ruff/rules/unused-import/
-    "F841", # https://docs.astral.sh/ruff/rules/unused-variable/
-    "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
-    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
-]
 
 [tool.ruff.lint.per-file-ignores]
 "cli.py" = [

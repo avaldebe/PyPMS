@@ -132,11 +132,20 @@ class ObsData(base.ObsData):
 
     def __format__(self, spec: str) -> str:
         if spec == "pm":
-            return f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
+            return (
+                f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, "
+                f"PM10 {self.pm10:.1f} μg/m3"
+            )
         if spec == "csv":
-            return f"{self.time}, {self.raw01}, {self.raw25}, {self.raw10}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm10:.1f}"
+            return (
+                f"{self.time}, {self.raw01}, {self.raw25}, {self.raw10}, "
+                f"{self.pm01:.1f}, {self.pm25:.1f}, {self.pm10:.1f}"
+            )
         if spec == "cf":
-            return f"{self.date:%F %T}: CF1 {self.cf01:.0%}, CF2.5 {self.cf25:.0%}, CF10 {self.cf10:.0%}"
+            return (
+                f"{self.date:%F %T}: CF1 {self.cf01:.0%}, CF2.5 {self.cf25:.0%}, "
+                f"CF10 {self.cf10:.0%}"
+            )
         if spec == "raw":
             return (
                 f"{self.date:%F %T}: PM1 {self.raw01}, PM2.5 {self.raw25}, PM10 {self.raw10} μg/m3"

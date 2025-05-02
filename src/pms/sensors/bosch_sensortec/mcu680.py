@@ -110,13 +110,25 @@ class ObsData(base.ObsData):
 
     def __format__(self, spec: str) -> str:
         if spec == "atm":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa"
+            return (
+                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                f"Press {self.pres:.2f} hPa"
+            )
         if spec == "bme":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa, {self.gas:.1f} kΩ"
+            return (
+                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                f"Press {self.pres:.2f} hPa, {self.gas:.1f} kΩ"
+            )
         if spec == "bsec":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, Press {self.pres:.2f} hPa, {self.IAQ} IAQ"
+            return (
+                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                f"Press {self.pres:.2f} hPa, {self.IAQ} IAQ"
+            )
         if spec == "csv":
-            return f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, {self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
+            return (
+                f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, "
+                f"{self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
+            )
 
         return super().__format__(spec)
 

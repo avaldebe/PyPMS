@@ -43,7 +43,7 @@ class Message(metaclass=ABCMeta):
         try:
             # validate full message
             msg = cls._validate(message, header, length)
-        except WrongMessageFormat as e:
+        except WrongMessageFormat:
             # search last complete message on buffer
             start = message.rfind(header, 0, len(header) - length)
             if start < 0:  # No match found

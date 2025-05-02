@@ -18,7 +18,7 @@ pytestmark = pytest.mark.skipif(
 
 def test_deprecated_module():
     with pytest.deprecated_call():
-        import pms.sensor
+        import pms.sensor  # noqa: F401
 
 
 @pytest.mark.parametrize("obs", GoodData.test_obs())

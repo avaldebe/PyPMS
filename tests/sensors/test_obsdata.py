@@ -18,7 +18,8 @@ def test_PMSx003_format(fmt, data=tuple(range(1, 13)), secs=1_567_198_523, senso
     obs_fmt = dict(
         raw="{0}: PM1 {1:d}, PM2.5 {2:d}, PM10 {3:d} μg/m3",
         pm="{0}: PM1 {4:.1f}, PM2.5 {5:.1f}, PM10 {6:.1f} μg/m3",
-        num="{0}: N0.3 {7:.2f}, N0.5 {8:.2f}, N1.0 {9:.2f}, N2.5 {10:.2f}, N5.0 {11:.2f}, N10 {12:.2f} #/cm3",
+        num="{0}: N0.3 {7:.2f}, N0.5 {8:.2f}, N1.0 {9:.2f}, "
+        "N2.5 {10:.2f}, N5.0 {11:.2f}, N10 {12:.2f} #/cm3",
     )
     date = time.strftime("%F %T", time.localtime(secs))
     if fmt in obs_fmt:
@@ -26,7 +27,10 @@ def test_PMSx003_format(fmt, data=tuple(range(1, 13)), secs=1_567_198_523, senso
     elif fmt == "header":
         assert f"{obs:{fmt}}" == ", ".join(asdict(obs).keys())
     elif fmt == "csv":
-        csv = "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}"
+        csv = (
+            "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, "
+            "{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}"
+        )
         assert f"{obs:{fmt}}" == csv.format(secs, *data)
     elif fmt == "cf":
         cf = "{}: CF1 {:.0%}, CF2.5 {:.0%}, CF10 {:.0%}"
@@ -49,7 +53,8 @@ def test_PMS5003ST_format(fmt, data=list(range(1, 16)), secs=1_567_198_523, sens
     obs_fmt = dict(
         raw="{0}: PM1 {1:d}, PM2.5 {2:d}, PM10 {3:d} μg/m3",
         pm="{0}: PM1 {4:.1f}, PM2.5 {5:.1f}, PM10 {6:.1f} μg/m3",
-        num="{0}: N0.3 {7:.2f}, N0.5 {8:.2f}, N1.0 {9:.2f}, N2.5 {10:.2f}, N5.0 {11:.2f}, N10 {12:.2f} #/cm3",
+        num="{0}: N0.3 {7:.2f}, N0.5 {8:.2f}, N1.0 {9:.2f}, "
+        "N2.5 {10:.2f}, N5.0 {11:.2f}, N10 {12:.2f} #/cm3",
         hcho="{0}: HCHO {13:.3f} mg/m3",
         atm="{0}: Temp. {14:.1f} °C, Rel.Hum. {15:.1f} %",
     )
@@ -59,7 +64,10 @@ def test_PMS5003ST_format(fmt, data=list(range(1, 16)), secs=1_567_198_523, sens
     elif fmt == "header":
         assert f"{obs:{fmt}}" == ", ".join(asdict(obs).keys())
     elif fmt == "csv":
-        csv = "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.3f}, {:.1f}, {:.1f}"
+        csv = (
+            "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, "
+            "{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.3f}, {:.1f}, {:.1f}"
+        )
         assert f"{obs:{fmt}}" == csv.format(secs, *data)
     elif fmt == "cf":
         cf = "{}: CF1 {:.0%}, CF2.5 {:.0%}, CF10 {:.0%}"
@@ -88,7 +96,10 @@ def test_PMS5003T_format(fmt, data=tuple(range(1, 13)), secs=1_567_198_523, sens
     elif fmt == "header":
         assert f"{obs:{fmt}}" == ", ".join(asdict(obs).keys())
     elif fmt == "csv":
-        csv = "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.1f}, {:.1f}"
+        csv = (
+            "{}, {:d}, {:d}, {:d}, {:.1f}, {:.1f}, {:.1f}, "
+            "{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.1f}, {:.1f}"
+        )
         assert f"{obs:{fmt}}" == csv.format(secs, *data)
     elif fmt == "cf":
         cf = "{}: CF1 {:.0%}, CF2.5 {:.0%}, CF10 {:.0%}"

@@ -228,7 +228,7 @@ def test_reader_sensor_mismatch(reader: SensorReader, mock_serial):
     )
 
     with pytest.raises(UnableToRead) as e:
-        with reader as r:
+        with reader as r:  # noqa: F841
             pass
 
     assert "failed validation" in str(e.value)
