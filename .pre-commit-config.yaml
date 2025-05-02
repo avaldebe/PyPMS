@@ -17,7 +17,7 @@ repos:
   hooks:
     - id: uv-sync
       name: update venv
-      stages: [post-checkout, post-commit, post-merge, post-rewrite]
+      stages: [manual, post-checkout, post-commit, post-merge, post-rewrite]
       entry: uv sync --all-extras --dev
       language: system
       always_run: true

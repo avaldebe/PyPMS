@@ -2,19 +2,19 @@ import sys
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional, Union
 
 if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib import metadata
 else:  # pragma: no cover
     import importlib_metadata as metadata
 
+import typer
 from loguru import logger
-from typer import Argument, Context, Exit, Option, Typer, echo
 
-from pms.core import MessageReader, SensorReader, Supported, exit_on_fail
+from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
-app = Typer(help="Data acquisition and logging for Air Quality Sensors with UART interface")
+app = typer.Typer(add_completion=False, no_args_is_help=True)
 
 """
 Extra cli commands from plugins
@@ -31,26 +31,32 @@ def main():  # pragma: no cover
 
 
 def version_callback(value: bool):  # pragma: no cover
-    from pms import __version__
-
     if not value:
         return
 
-    echo(f"PyPMS v{__version__}")
-    raise Exit()
+    from pms import __version__
+
+    typer.echo(f"PyPMS v{__version__}")
+    raise typer.Exit()
 
 
 @app.callback()
 def callback(
-    ctx: Context,
-    model: Supported = Option(Supported.default, "--sensor-model", "-m", help="sensor model"),
-    port: str = Option("/dev/ttyUSB0", "--serial-port", "-s", help="serial port"),
-    seconds: int = Option(60, "--interval", "-i", help="seconds to wait between updates"),
-    samples: Optional[int] = Option(None, "--samples", "-n", help="stop after N samples"),
-    debug: bool = Option(False, "--debug", help="print DEBUG/logging messages"),
-    version: Optional[bool] = Option(None, "--version", "-V", callback=version_callback),
+    ctx: typer.Context,
+    model: Annotated[
+        Supported, typer.Option("--sensor-model", "-m", help="sensor model")
+    ] = Supported.default,
+    port: Annotated[str, typer.Option("--serial-port", "-s", help="serial port")] = "/dev/ttyUSB0",
+    seconds: Annotated[
+        int, typer.Option("--interval", "-i", min=0, help="seconds to wait between updates")
+    ] = 60,
+    samples: Annotated[
+        Optional[int], typer.Option("--samples", "-n", min=1, help="stop after N samples")
+    ] = None,
+    debug: Annotated[bool, typer.Option("--debug", help="print DEBUG/logging messages")] = False,
+    version: Annotated[bool, typer.Option("--version", "-V", callback=version_callback)] = False,
 ):
-    """Read serial sensor"""
+    """Data acquisition and logging for Air Quality Sensors with UART interface"""
     if not debug:
         logger.configure(
             handlers=[
@@ -66,10 +72,10 @@ def callback(
 
 
 @app.command()
-def info(ctx: Context):  # pragma: no cover
+def info(ctx: typer.Context):  # pragma: no cover
     """Information about the sensor observations"""
-    sensor = ctx.obj["reader"].sensor
-    echo(sensor.Data.__doc__)
+    sensor: Sensor = ctx.obj["reader"].sensor
+    typer.echo(sensor.Data.__doc__)
 
 
 class Format(str, Enum):
@@ -91,37 +97,43 @@ class Format(str, Enum):
 
 @app.command()
 def serial(
-    ctx: Context,
-    format: Optional[Format] = Option(None, "--format", "-f", help="formatted output"),
-    decode: Optional[Path] = Option(None, help="decode captured messages"),
+    ctx: typer.Context,
+    format: Annotated[
+        Optional[Format], typer.Option("--format", "-f", help="formatted output")
+    ] = None,
+    decode: Annotated[Optional[Path], typer.Option(help="decode captured messages")] = None,
 ):
     """Read sensor and print formatted measurements"""
-    reader = ctx.obj["reader"]
+    reader: Union[SensorReader, MessageReader] = ctx.obj["reader"]
     if decode:
         reader = MessageReader(decode, reader.sensor, reader.samples)
 
     with exit_on_fail(reader):
         if format == "hexdump":
             for n, raw in enumerate(reader(raw=True)):
-                echo(raw.hexdump(n))
+                typer.echo(raw.hexdump(n))
         elif format:
             print_header = format == "csv"
             for obs in reader():
                 if print_header:
-                    echo(f"{obs:header}")
+                    typer.echo(f"{obs:header}")
                     print_header = False
-                echo(f"{obs:{format}}")
+                typer.echo(f"{obs:{format}}")
         else:  # pragma: no cover
             for obs in reader():
-                echo(str(obs))
+                typer.echo(str(obs))
 
 
 @app.command()
 def csv(
-    ctx: Context,
-    capture: bool = Option(False, "--capture", help="write raw messages instead of observations"),
-    overwrite: bool = Option(False, "--overwrite", help="overwrite file, if already exists"),
-    path: Path = Argument(Path(), help="csv formatted file", show_default=False),
+    ctx: typer.Context,
+    capture: Annotated[
+        bool, typer.Option("--capture", help="write raw messages instead of observations")
+    ] = False,
+    overwrite: Annotated[
+        bool, typer.Option("--overwrite", help="overwrite file, if already exists")
+    ] = False,
+    path: Annotated[Path, typer.Argument(help="csv formatted file", show_default=False)] = Path(),
 ):
     """Read sensor and save measurements to a CSV file"""
     if path.is_dir():  # pragma: no cover

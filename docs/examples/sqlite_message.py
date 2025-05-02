@@ -17,21 +17,21 @@ import sqlite3
 from collections.abc import Iterator
 from contextlib import AbstractContextManager, closing, contextmanager
 from pathlib import Path
-from typing import Callable
+from typing import Annotated, Callable
 
-from typer import Argument, Option, Typer, progressbar
+import typer
 
 from pms.core import Sensor, SensorReader
 from pms.core.reader import ObsData, RawData
 
-app = Typer(add_completion=False)
+app = typer.Typer(add_completion=False)
 
 
 @app.command()
 def main(
-    db_path: Path = Argument(Path("pypms.sqlite"), help="sensor messages DB"),
-    samples: int = Option(4, "--samples", "-n"),
-    interval: int = Option(20, "--interval", "-i"),
+    db_path: Annotated[Path, typer.Argument(help="sensor messages DB")] = Path("pypms.sqlite"),
+    samples: Annotated[int, typer.Option("--samples", "-n", min=1)] = 4,
+    interval: Annotated[int, typer.Option("--interval", "-i", min=0)] = 20,
 ):
     """
     Read raw messages from 2 different sensors
@@ -52,7 +52,7 @@ def main(
     # read from each sensor and write to DB
     with message_db() as db, reader["pms"] as pms, reader["bme"] as bme:
         # read one obs from each sensor at the time
-        with progressbar(
+        with typer.progressbar(
             zip(pms(raw=True), bme(raw=True)), length=samples, label="reading sensors"
         ) as progress:
             for pms_obs, env_obs in progress:

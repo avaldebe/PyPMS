@@ -4,7 +4,7 @@ import json
 from dataclasses import fields
 from functools import partial
 from textwrap import dedent
-from typing import Protocol
+from typing import Annotated, Protocol
 
 import typer
 
@@ -65,12 +65,18 @@ def client_pub(
 
 def cli(
     ctx: typer.Context,
-    host: str = typer.Option("influxdb", "--db-host", help="database server"),
-    port: int = typer.Option(8086, "--db-port", help="server port"),
-    user: str = typer.Option("root", "--db-user", envvar="DB_USER", help="server username"),
-    word: str = typer.Option("root", "--db-pass", envvar="DB_PASS", help="server password"),
-    name: str = typer.Option("homie", "--db-name", help="database name"),
-    jtag: str = typer.Option(json.dumps({"location": "test"}), "--tags", help="measurement tags"),
+    host: Annotated[str, typer.Option("--db-host", help="database server")] = "influxdb",
+    port: Annotated[int, typer.Option("--db-port", help="server port")] = 8086,
+    user: Annotated[
+        str, typer.Option("--db-user", envvar="DB_USER", help="server username")
+    ] = "root",
+    word: Annotated[
+        str, typer.Option("--db-pass", envvar="DB_PASS", help="server password")
+    ] = "root",
+    name: Annotated[str, typer.Option("--db-name", help="database name")] = "homie",
+    jtag: Annotated[str, typer.Option("--tags", help="measurement tags")] = json.dumps(
+        {"location": "test"}
+    ),
 ):
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)

@@ -12,23 +12,23 @@ import sqlite3
 from collections.abc import Iterator
 from contextlib import AbstractContextManager, closing, contextmanager
 from pathlib import Path
-from typing import Callable
+from typing import Annotated, Callable
 
-from typer import Argument, Option, Typer, progressbar
+import typer
 
 from pms.core import Sensor, SensorReader, Supported
 from pms.core.reader import ObsData, RawData
 
-app = Typer(add_completion=False)
+app = typer.Typer(add_completion=False)
 
 
 @app.command()
 def main(
-    model: Supported = Argument(Supported.default, help="sensor model"),
-    port: str = Argument("/dev/ttyUSB0", help="serial port"),
-    db_path: Path = Argument(Path("pypms.sqlite"), help="sensor messages DB"),
-    samples: int = Option(4, "--samples", "-n"),
-    interval: int = Option(20, "--interval", "-i"),
+    model: Annotated[Supported, typer.Argument(help="sensor model")],
+    port: Annotated[str, typer.Argument(help="serial port")] = "/dev/ttyUSB0",
+    db_path: Annotated[Path, typer.Argument(help="sensor messages DB")] = Path("pypms.sqlite"),
+    samples: Annotated[int, typer.Option("--samples", "-n", min=1)] = 4,
+    interval: Annotated[int, typer.Option("--interval", "-i", min=0)] = 20,
 ):
     """
     Read raw messages from a supported sensor and store them on a sqlite DB.
@@ -44,7 +44,9 @@ def main(
     msg: RawData
     with message_db() as db, SensorReader(sensor, port, interval, samples) as reader:
         # read one obs from each sensor at the time
-        with progressbar(reader(raw=True), length=samples, label=f"reading {sensor}") as progress:
+        with typer.progressbar(
+            reader(raw=True), length=samples, label=f"reading {sensor}"
+        ) as progress:
             for msg in progress:
                 write_message(db, sensor, msg)
 

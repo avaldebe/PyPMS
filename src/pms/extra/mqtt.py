@@ -4,7 +4,7 @@ from dataclasses import fields
 from datetime import datetime
 from functools import partial
 from textwrap import dedent
-from typing import Callable, NamedTuple
+from typing import Annotated, Callable, NamedTuple
 
 import typer
 from loguru import logger
@@ -132,15 +132,17 @@ def client_sub(
 
 def cli(
     ctx: typer.Context,
-    topic: str = typer.Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
-    host: str = typer.Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
-    port: int = typer.Option(1883, "--mqtt-port", help="server port"),
-    user: str = typer.Option(
-        "", "--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False
-    ),
-    word: str = typer.Option(
-        "", "--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False
-    ),
+    topic: Annotated[str, typer.Option("--topic", "-t", help="mqtt root/topic")] = "homie/test",
+    host: Annotated[str, typer.Option("--mqtt-host", help="mqtt server")] = "mqtt.eclipse.org",
+    port: Annotated[int, typer.Option("--mqtt-port", help="server port")] = 1883,
+    user: Annotated[
+        str,
+        typer.Option("--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False),
+    ] = "",
+    word: Annotated[
+        str,
+        typer.Option("--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False),
+    ] = "",
 ):
     """Read sensor and push PM measurements to a MQTT server"""
     pub = client_pub(topic=topic, host=host, port=port, username=user, password=word)
