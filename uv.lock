@@ -595,7 +595,7 @@ requires-dist = [
     { name = "importlib-metadata", marker = "python_full_version < '3.10'", specifier = ">=3.6" },
     { name = "influxdb", marker = "extra == 'influxdb'", specifier = ">=5.2.0" },
     { name = "loguru", specifier = ">=0.7.0" },
-    { name = "paho-mqtt", marker = "extra == 'mqtt'", specifier = ">=1.4.0" },
+    { name = "paho-mqtt", marker = "extra == 'mqtt'", specifier = ">=2.1.0" },
     { name = "pyserial", specifier = ">=3.5" },
     { name = "typer-slim", specifier = ">=0.12.0" },
 ]

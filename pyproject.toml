@@ -34,8 +34,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-mqtt = ["paho-mqtt>=1.4.0"]
-influxdb = ["influxdb>=5.2.0"]
+mqtt = ["paho-mqtt >=2.1.0"]
+influxdb = ["influxdb >=5.2.0"]
 
 [project.urls]
 Homepage = "https://avaldebe.github.io/PyPMS"

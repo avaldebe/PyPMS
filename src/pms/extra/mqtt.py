@@ -41,9 +41,9 @@ def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[dict[str, int | str]], None]:  # pragma: no cover
     if client is None:
-        __missing_mqtt()
-    c = client.Client(topic)
-    c.enable_logger(logger)
+        __missing_mqtt()  # type:ignore[unreachable]
+    c = client.Client(client_id=topic)
+    c.enable_logger(logger)  # type:ignore[arg-type]
     if username:
         c.username_pw_set(username, password)
 
@@ -116,9 +116,9 @@ def client_sub(
             on_sensordata(data)
 
     if client is None:
-        __missing_mqtt()
-    c = client.Client(topic)
-    c.enable_logger(logger)
+        __missing_mqtt()  # type:ignore[unreachable]
+    c = client.Client(client_id=topic)
+    c.enable_logger(logger)  # type:ignore[arg-type]
     if username:
         c.username_pw_set(username, password)
 
