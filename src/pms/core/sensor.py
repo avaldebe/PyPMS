@@ -8,9 +8,9 @@ import sys
 from datetime import datetime
 from enum import Enum
 
-if sys.version_info >= (3, 10):  # pragma: no cover
+if sys.version_info >= (3, 10):
     from importlib import metadata
-else:  # pragma: no cover
+else:
     import importlib_metadata as metadata
 
 from loguru import logger

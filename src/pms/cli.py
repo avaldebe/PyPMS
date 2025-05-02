@@ -4,9 +4,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Annotated, Optional, Union
 
-if sys.version_info >= (3, 10):  # pragma: no cover
+if sys.version_info >= (3, 10):
     from importlib import metadata
-else:  # pragma: no cover
+else:
     import importlib_metadata as metadata
 
 import typer

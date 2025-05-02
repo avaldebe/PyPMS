@@ -571,6 +571,7 @@ mqtt = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "coverage", marker = "sys_platform == 'linux'" },
     { name = "mock-serial", marker = "sys_platform == 'linux'" },
     { name = "mypy", marker = "sys_platform == 'linux'" },
     { name = "packaging", marker = "sys_platform == 'linux'" },
@@ -585,10 +586,10 @@ docs = [
     { name = "pymdown-extensions", marker = "sys_platform == 'linux'" },
 ]
 test = [
+    { name = "coverage", marker = "sys_platform == 'linux'" },
     { name = "mock-serial", marker = "sys_platform == 'linux'" },
     { name = "packaging", marker = "sys_platform == 'linux'" },
     { name = "pytest", marker = "sys_platform == 'linux'" },
-    { name = "pytest-cov", marker = "sys_platform == 'linux'" },
 ]
 
 [package.metadata]
@@ -604,6 +605,7 @@ provides-extras = ["influxdb", "mqtt"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "coverage", specifier = ">=7.8" },
     { name = "mock-serial" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "packaging", specifier = ">=25.0" },
@@ -618,10 +620,10 @@ docs = [
     { name = "pymdown-extensions", specifier = ">=9.5" },
 ]
 test = [
+    { name = "coverage", specifier = ">=7.8" },
     { name = "mock-serial" },
     { name = "packaging", specifier = ">=25.0" },
     { name = "pytest", specifier = ">=8.3.5" },
-    { name = "pytest-cov", specifier = ">=6.1.1" },
 ]
 
 [[package]]

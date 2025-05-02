@@ -45,6 +45,12 @@ jobs:
           enable-cache: true
       - name: Run tests
         run: uvx --with tox-uv tox r -e py
+      - name: Store coverage files
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: .coverage
+          include-hidden-files: true
 
   build-and-release:
     needs: [test, lint-and-docs]
@@ -61,6 +67,14 @@ jobs:
           python-version: 3.13
       - name: Build package
         run: uv build
+      - name: Get coverage files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          path: .coverage
+          merge-multiple: true
+      - name: Combined coverage report
+        run: uvx --with tox-uv tox r -e report
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'

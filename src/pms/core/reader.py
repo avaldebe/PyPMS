@@ -211,7 +211,7 @@ class SensorReader(Reader):
                         delay = self.interval - (time.time() - obs.time)
                         if delay > 0:
                             time.sleep(delay)
-            except KeyboardInterrupt:  # pragma: no cover
+            except KeyboardInterrupt:
                 print()
                 break
 

@@ -1,5 +1,5 @@
 default_install_hook_types: [pre-commit, post-checkout, post-commit, post-merge, post-rewrite]
-default_stages: [pre-commit]
+default_stages: [manual, pre-commit]
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0

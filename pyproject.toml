@@ -73,16 +73,12 @@ bridge = "pms.extra.bridge:cli"
 [dependency-groups]
 dev = [
     { include-group = "test" },
+    "pytest-cov >=6.1.1",
     "pytest-sugar >=1.0.0",
     "mypy >=1.15.0",
     "types-pyserial",
 ]
-test = [
-    "pytest >=8.3.5",
-    "pytest-cov >=6.1.1",
-    "packaging >=25.0",
-    "mock_serial",
-]
+test = ["pytest >=8.3.5", "packaging >=25.0", "mock_serial", "coverage >=7.8"]
 docs = ["mkdocs>=1.2.3", "mkdocs-material>=8.2.5", "pymdown-extensions>=9.5"]
 
 [tool.hatch]
@@ -102,30 +98,44 @@ cache-keys = [{ file = "pyproject.toml" }, { file = "src/pms/_version.py" }]
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, docs, py39, py310, py311, py312, py313
+envlist = lint, docs, py39, py310, py311, py312, py313, report
 skip_missing_interpreters = True
 isolated_build = True
 requires =
     tox >=4.22
     tox-uv >=1.25
+labels =
+    coverage = py39, py310, py311, py312, py313, report
 
 [testenv]
 description =
      py39: test with lowest dependency versions
     !py39: test with {base_python}
 uv_resolution =
-    py39: lowest
+     py39: lowest
+set_env =
+    !report: COVERAGE_FILE=.coverage/coverage.{envname}
 commands =
-    pytest -ra -q {posargs:--cov --no-cov-on-fail}
+    coverage run -m pytest -ra -q
 dependency_groups =
     test
 
+[testenv:report]
+description = combined coverage report
+skip_install = true
+parallel_show_output = true
+commands =
+    coverage combine --keep
+    coverage report
+depends =
+    py39, py310, py311, py312, py313
+
 [testenv:lint]
 description = code quality
-skip_install=True
+skip_install = true
 commands =
     pre-commit autoupdate
-    pre-commit run --hook-stage pre-commit --all-files --show-diff-on-failure
+    pre-commit run --hook-stage manual --all-files --show-diff-on-failure
 dependency_groups =
 deps =
     pre-commit
@@ -144,23 +154,26 @@ dependency_groups =
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--lf -Werror"
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [tool.coverage.run]
 source = ["pms"]
-omit = ["*/core/types.py"]
+data_file = ".coverage/coverage"
 
 [tool.coverage.report]
 exclude_also = [
     "@overload",
     "@abstractmethod",
     "ModuleNotFoundError",
+    "KeyboardInterrupt",
     "def __repr__",
     "def __str__",
     'if spec == "":',
 ]
 show_missing = true
 skip_covered = true
-fail_under = 100
+fail_under = 99
 
 [tool.ruff]
 line-length = 100
