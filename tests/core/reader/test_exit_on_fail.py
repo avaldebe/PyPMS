@@ -49,4 +49,4 @@ def test_reader_error(reader_error: MockReader):
         with exit_on_fail(reader_error):
             raise Exception("should not get here")
 
-    assert "exit" in str(e.value)  # type:ignore[unreachable]
+    assert "exit" in str(e.value)  # type:ignore[unreachable,unused-ignore]

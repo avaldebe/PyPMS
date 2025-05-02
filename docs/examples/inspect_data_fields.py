@@ -9,7 +9,11 @@ from pms.core.types import ObsData
 
 def field_types(obs: ObsData) -> Dict[str, str]:
     """return a dictionary containing the type of each data field"""
-    return {field.name: field.type.__name__ for field in fields(obs)}
+
+    return {
+        field.name: field.type.__name__ if hasattr(field.type, "__name__") else str(field.type)
+        for field in fields(obs)  # type:ignore[arg-type]
+    }
 
 
 for sensor in Sensor:

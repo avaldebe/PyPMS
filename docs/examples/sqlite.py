@@ -39,11 +39,13 @@ def main(
     sensor = Sensor[model]
 
     # read from sensor and write to DB
+    progress: Iterator[RawData]
+    msg: RawData
     with message_db() as db, SensorReader(sensor, port, interval, samples) as reader:
         # read one obs from each sensor at the time
         with progressbar(reader(raw=True), length=samples, label=f"reading {sensor}") as progress:
-            for obs in progress:
-                write_message(db, sensor, obs)
+            for msg in progress:
+                write_message(db, sensor, msg)
 
     # read and decode all `sensor` messages on the DB
     with message_db() as db:

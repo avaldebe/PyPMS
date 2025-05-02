@@ -70,7 +70,12 @@ mqtt = "pms.extra.mqtt:cli"
 bridge = "pms.extra.bridge:cli"
 
 [dependency-groups]
-dev = [{ include-group = "test" }, "pytest-sugar >=1.0.0", "mypy >=1.15.0"]
+dev = [
+    { include-group = "test" },
+    "pytest-sugar >=1.0.0",
+    "mypy >=1.15.0",
+    "types-pyserial",
+]
 test = [
     "pytest >=8.3.5",
     "pytest-cov >=6.1.1",
@@ -173,19 +178,6 @@ show_error_codes = true
 pretty = true
 sqlite_cache = true
 exclude = "site"
-
-[[tool.mypy.overrides]]
-module = [
-    "paho.mqtt",
-    "influxdb",
-    "serial",
-    "importlib_metadata",
-    "typer.*",
-    "packaging.*",
-    "pytest",
-    "loguru",
-]
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["pms.extra.mqtt", "pms.extra.influxdb"]

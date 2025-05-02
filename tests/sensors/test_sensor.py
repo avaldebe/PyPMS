@@ -121,7 +121,7 @@ class GoodData(RawData, Enum):
     )
 
     @classmethod
-    def test_param(cls) -> Iterator[pytest.ParameterSet]:
+    def test_param(cls) -> Iterator[NamedTuple]:
         for sensor in cls:
             data = sensor.value
             yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
@@ -129,7 +129,7 @@ class GoodData(RawData, Enum):
             yield pytest.param(sensor.name, data.msg, data.raw, id=f"{sensor.name} {data.id}")
 
     @classmethod
-    def test_obs(cls, secs: int = 1567201793) -> Iterator[pytest.ParameterSet]:
+    def test_obs(cls, secs: int = 1567201793) -> Iterator[NamedTuple]:
         for sensor in cls:
             obs = Sensor[sensor.name].decode(sensor.msg, time=secs)
             yield pytest.param(obs, id=sensor.name)

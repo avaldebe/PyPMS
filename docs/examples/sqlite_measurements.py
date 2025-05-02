@@ -101,7 +101,7 @@ def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
         for sensor in Sensor:
             view_fields = ",\n".join(
                 f"MAX(CASE WHEN field='{field.name}' THEN value ELSE NULL END) {field.name}"
-                for field in fields(sensor.Data)
+                for field in fields(sensor.Data)  # type:ignore[arg-type]
                 if field.name != "time"
             )
             sensor_view = f"""
@@ -132,7 +132,7 @@ def write_measurements(db: sqlite3.Connection, sensor: Sensor, obs: ObsData):
         """
     values = (
         (obs.time, sensor.name, field, value)
-        for field, value in asdict(obs).items()
+        for field, value in asdict(obs).items()  # type:ignore[call-overload]
         if field != "time"
     )
     with db, closing(db.cursor()) as cur:

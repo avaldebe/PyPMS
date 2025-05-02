@@ -15,7 +15,7 @@ from contextlib import contextmanager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
-from typing import Iterator, NamedTuple
+from typing import Iterator, Literal, NamedTuple, overload
 
 from loguru import logger
 from serial import Serial
@@ -53,14 +53,14 @@ class RawData(NamedTuple):
 
 
 class Reader:
-    @abstractmethod
-    def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
-        """
-        Return an iterator of ObsData.
+    @overload
+    def __call__(self, *, raw: Literal[False, None] = None) -> Iterator[ObsData]: ...
 
-        If "raw" is set to True, then ObsData is replaced with RawData.
-        """
-        ...
+    @overload
+    def __call__(self, *, raw: Literal[True]) -> Iterator[RawData]: ...
+
+    @abstractmethod
+    def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]: ...
 
     @abstractmethod
     def open(self) -> None: ...
@@ -167,8 +167,16 @@ class SensorReader(Reader):
         logger.debug(f"close {self.serial.port}")
         self.serial.close()
 
+    @overload
+    def __call__(self, *, raw: Literal[False, None] = None) -> Iterator[ObsData]:
+        """Observations from passive mode reading at regular intervals"""
+
+    @overload
+    def __call__(self, *, raw: Literal[True]) -> Iterator[RawData]:
+        """Raw observations from passive mode reading at regular intervals"""
+
     def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
-        """Passive mode reading at regular intervals"""
+        """(raw) Observations passive mode reading at regular intervals"""
 
         sample = 0
         failures = 0
@@ -220,7 +228,17 @@ class MessageReader(Reader):
         logger.debug(f"close {self.path}")
         self.csv.close()
 
+    @overload
+    def __call__(self, *, raw: Literal[False, None] = None) -> Iterator[ObsData]:
+        """Replay observations from pre-recorded messages"""
+
+    @overload
+    def __call__(self, *, raw: Literal[True]) -> Iterator[RawData]:
+        """Replay raw observations from pre-recorded messages"""
+
     def __call__(self, *, raw: bool | None = None) -> Iterator[RawData | ObsData]:
+        """Replay (raw) observations from pre-recorded messages"""
+
         if not hasattr(self, "data"):
             return
 
