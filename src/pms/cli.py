@@ -12,8 +12,10 @@ else:  # pragma: no cover
 import typer
 from loguru import logger
 
+from pms import __version__
 from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
+APP_VERSION = f"PyPMS v{__version__}"
 main = typer.Typer(add_completion=False, no_args_is_help=True)
 
 """
@@ -25,13 +27,11 @@ for ep in metadata.entry_points(group="pypms.extras"):
     main.command(name=ep.name)(ep.load())
 
 
-def version_callback(value: bool):  # pragma: no cover
+def version_callback(value: bool):
     if not value:
         return
 
-    from pms import __version__
-
-    typer.echo(f"PyPMS v{__version__}")
+    typer.echo(APP_VERSION)
     raise typer.Exit()
 
 
@@ -65,6 +65,7 @@ def callback(
             ],
         )
 
+    logger.debug(APP_VERSION)
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
 
 

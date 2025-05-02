@@ -3,13 +3,20 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from pms.cli import main
+from pms.cli import APP_VERSION, main
 
 runner = CliRunner()
 
 
+@pytest.mark.parametrize("cmd", {"--version", "-V"})
+def test_version(cmd: str, caplog: pytest.LogCaptureFixture):
+    result = runner.invoke(main, cmd)
+    assert result.exit_code == 0
+    assert result.stdout.strip() == APP_VERSION
+
+
 @pytest.mark.parametrize("format", {"csv", "hexdump"})
-def test_serial(capture, format):
+def test_serial(capture, format: str):
     result = runner.invoke(main, capture.options(f"serial_{format}"))
     assert result.exit_code == 0
     assert result.stdout == capture.output(format)

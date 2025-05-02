@@ -147,7 +147,7 @@ addopts = "--lf -Werror"
 
 [tool.coverage.run]
 source = ["pms"]
-omit = ["*/__init__.py", "*/__main__.py", "*/core/types.py"]
+omit = ["*/core/types.py"]
 
 [tool.coverage.report]
 exclude_also = [
