@@ -1,6 +1,19 @@
 default_install_hook_types: [pre-commit, post-checkout, post-commit, post-merge, post-rewrite]
 default_stages: [pre-commit]
 repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+    - id: check-merge-conflict
+    - id: check-added-large-files
+    - id: check-toml
+    - id: check-yaml
+      args: [--unsafe]
+    - id: check-json
+    - id: end-of-file-fixer
+    - id: trailing-whitespace
+      exclude: ^tests/captured_data/PMS5003T.hexdump$
+      args: [--markdown-linebreak-ext=md]
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.11.8
   hooks:
@@ -24,4 +37,3 @@ repos:
       language: system
       always_run: true
       pass_filenames: false
-

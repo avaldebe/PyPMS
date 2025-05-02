@@ -17,8 +17,8 @@ from pms.core.types import ObsData
 CAPTURED_DATA = Path("tests/captured_data/data.csv")
 CREATE_MESSAGES = """
 CREATE TABLE IF NOT EXISTS messages (
-    time DATETIME NOT NULL, 
-    sensor TEXT NOT NULL, 
+    time DATETIME NOT NULL,
+    sensor TEXT NOT NULL,
     message BLOB NOT NULL,
     UNIQUE (time, sensor)
 )

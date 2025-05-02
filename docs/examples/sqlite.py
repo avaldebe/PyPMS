@@ -103,11 +103,11 @@ def read_obs(db: sqlite3.Connection, sensor: Sensor) -> Iterator[ObsData]:
 
     select = """
         SELECT
-            message, time 
+            message, time
         FROM
-            messages 
+            messages
         WHERE
-            sensor IS ? 
+            sensor IS ?
         ORDER BY
             time;
         """

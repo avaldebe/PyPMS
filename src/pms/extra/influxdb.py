@@ -24,7 +24,7 @@ def __missing_influxdb():  # pragma: no cover
     msg = f"""
         {green(__name__, bold=True)} provides additional functionality to {package}.
         This functionality requires the {module} module, which is not installed.
-        
+
         You can install this additional dependency with
             {green("python3 -m pip install --upgrade")} {package}[{extra}]
         Or, if you installed {package} with {green("pipx")}

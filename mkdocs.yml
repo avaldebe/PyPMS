@@ -28,7 +28,7 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - pymdownx.superfences
   - pymdownx.snippets:
       base_path: ["tests/captured_data/", "docs/examples/"]

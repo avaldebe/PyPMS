@@ -105,12 +105,12 @@ legacy_tox_ini = """
 envlist = lint, docs, py39, py310, py311, py312, py313
 skip_missing_interpreters = True
 isolated_build = True
-requires = 
+requires =
     tox >=4.22
     tox-uv >=1.25
 
 [testenv]
-description = 
+description =
      py39: test with lowest dependency versions
     !py39: test with {base_python}
 uv_resolution =

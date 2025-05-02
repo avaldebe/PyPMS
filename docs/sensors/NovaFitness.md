@@ -122,7 +122,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     time                                    measurement time [seconds since epoch]
     pm25, pm10                              PM2.5, PM10 [μg/m3]
 
-    String formats: pm (default), csv and header    
+    String formats: pm (default), csv and header
     ```
 
 === "serial"

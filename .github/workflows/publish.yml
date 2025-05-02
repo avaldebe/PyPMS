@@ -12,7 +12,7 @@ jobs:
       name: pypi
       url: https://pypi.org/p/pypms
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing    
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
