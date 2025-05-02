@@ -31,11 +31,12 @@ def main():  # pragma: no cover
 
 
 def version_callback(value: bool):  # pragma: no cover
+    from pms import __version__
+
     if not value:
         return
 
-    package = "PyPMS"
-    echo(f"{package} version {metadata.version(package)}")
+    echo(f"PyPMS v{__version__}")
     raise Exit()
 
 

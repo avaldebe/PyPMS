@@ -1,5 +1,7 @@
 from loguru import logger
 
+from ._version import __version__  # noqa: F401
+
 logger.disable("pms")  # disable logging by default
 
 

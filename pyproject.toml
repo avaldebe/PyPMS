@@ -87,6 +87,7 @@ docs = ["mkdocs>=1.2.3", "mkdocs-material>=8.2.5", "pymdown-extensions>=9.5"]
 [tool.hatch]
 build.targets.sdist.include = ["src/pms"]
 build.targets.wheel.packages = ["src/pms"]
+build.hooks.version.path = "src/pms/_version.py"
 version.source = "uv-dynamic-versioning"
 
 [tool.uv-dynamic-versioning]
@@ -95,6 +96,7 @@ pattern = "default-unprefixed"
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/pms/_version.py" }]
 
 [tool.tox]
 legacy_tox_ini = """

@@ -13,3 +13,13 @@ repos:
   rev: 0.7.2
   hooks:
     - id: uv-lock
+- repo: local
+  hooks:
+    - id: uv-sync
+      name: update venv
+      stages: [post-checkout, post-commit, post-merge, post-rewrite]
+      entry: uv sync --all-extras --dev
+      language: system
+      always_run: true
+      pass_filenames: false
+
