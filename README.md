@@ -100,6 +100,11 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
+- 0.8.0
+  - add Python 3.12 and 3.13 support, drop Python 3.8 support
+  - require typer-slim instead of full typer
+  - require (optional) paho-mqtt v2+
+  - tidy up annotations
 - 0.7.1
   - disable logging unless CLI is running [PR#37](https://github.com/avaldebe/PyPMS/pull/37)
 - 0.7.0
