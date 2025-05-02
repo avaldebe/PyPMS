@@ -7,13 +7,12 @@ name = "pypms"
 dynamic = ["version"]
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = [{ name = "Alvaro Valdebenito", email = "avaldebe@gmail.com" }]
-requires-python = ">=3.8,<4.0"
+requires-python = ">=3.9,<4.0"
 readme = "README.md"
 keywords = ["air quality", "particulate matter"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -95,7 +94,7 @@ environments = ["sys_platform == 'linux'"]
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, docs, py38, py39, py310, py311, py312
+envlist = lint, docs, py39, py310, py311, py312
 skip_missing_interpreters = True
 isolated_build = True
 requires = 
@@ -150,17 +149,17 @@ skip_covered = true
 fail_under = 100
 
 [tool.black]
-target-version = ['py38']
+target-version = ['py39']
 line-length = 100
 
 [tool.isort]
-py_version = "38"
+py_version = "39"
 profile = "black"
 src_paths = ["src", "tests"]
 line_length = 100
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_unused_configs = true
 warn_unused_ignores = true
 warn_no_return = true
