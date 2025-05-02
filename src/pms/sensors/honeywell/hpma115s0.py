@@ -16,10 +16,10 @@ commands = base.Commands(
     passive_read=base.Cmd(  # Read Particle Measuring Results
         b"\x68\x01\x04\x93", b"\x40\x05\x04", 8
     ),
-    passive_mode=base.Cmd(b"\x68\x01\x20\x77", b"\xA5\xA5", 2),  # Stop Auto Send
-    active_mode=base.Cmd(b"\x68\x01\x40\x57", b"\xA5\xA5", 2),  # Enable Auto Send
-    sleep=base.Cmd(b"\x68\x01\x02\x95", b"\xA5\xA5", 2),  # Stop Particle Measurement
-    wake=base.Cmd(b"\x68\x01\x01\x96", b"\xA5\xA5", 2),  # Start Particle Measurement
+    passive_mode=base.Cmd(b"\x68\x01\x20\x77", b"\xa5\xa5", 2),  # Stop Auto Send
+    active_mode=base.Cmd(b"\x68\x01\x40\x57", b"\xa5\xa5", 2),  # Enable Auto Send
+    sleep=base.Cmd(b"\x68\x01\x02\x95", b"\xa5\xa5", 2),  # Stop Particle Measurement
+    wake=base.Cmd(b"\x68\x01\x01\x96", b"\xa5\xa5", 2),  # Start Particle Measurement
 )
 
 
@@ -43,7 +43,7 @@ class Message(base.Message):
     @classmethod
     def decode(cls, message: bytes, command: base.Cmd) -> Tuple[float, ...]:
         # decode ACK message
-        if command.answer_header == b"\xA5\xA5" and command.answer_length == 2:
+        if command.answer_header == b"\xa5\xa5" and command.answer_length == 2:
             if not message.endswith(command.answer_header):
                 raise WrongMessageFormat("message does not end in ACK")
             return tuple()
@@ -66,12 +66,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
         if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f">{len(message)//2}H", message)
+        return struct.unpack(f">{len(message) // 2}H", message)
 
 
 @dataclass(frozen=False)

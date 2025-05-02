@@ -6,12 +6,12 @@
     "git.untrackedChanges": "separate",
     "python.testing.pytestEnabled": true,
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        },
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
+    "mypy-type-checker.path": [
+        "mypy"
+    ],
     "markdownlint.run": "onSave",
     "markdownlint.ignore": [
         "**/library_usage.md",

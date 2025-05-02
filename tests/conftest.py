@@ -88,8 +88,8 @@ class CapturedData(Enum):
             samples -= 1
         capture = f"-m {self.name} -n {samples} -i 0"
         cmd = dict(
-            serial_csv=f"serial -f csv",
-            serial_hexdump=f"serial -f hexdump",
+            serial_csv="serial -f csv",
+            serial_hexdump="serial -f hexdump",
             csv=f"csv --overwrite {self.name}_test.csv",
             capture=f"csv --overwrite  --capture {self}_pypms.csv",
             decode=f"serial -f csv --decode {self}_pypms.csv",

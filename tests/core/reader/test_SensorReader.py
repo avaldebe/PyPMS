@@ -78,7 +78,7 @@ def mock_sensor_warm_up(mock_serial):
             return (
                 b"BM\x00\x1c"  # expected header
                 + b"\0" * 26  # payload (to total 32 bytes)
-                + b"\x00\xAB"  # checksum
+                + b"\x00\xab"  # checksum
             )
         else:
             # then behave like the original stub again
@@ -103,7 +103,7 @@ def mock_sensor_temp_failure(mock_serial):
             return (
                 b"BM\x00\x1c"  # expected header
                 + b"\0" * 26  # payload (to total 32 bytes)
-                + b"\x00\xFF"  # checksum
+                + b"\x00\xff"  # checksum
             )
         else:
             # then behave like the original stub again

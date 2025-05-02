@@ -15,13 +15,13 @@ from .. import base
 PREHEAT = 180  # 3 minutes
 
 commands = base.Commands(
-    passive_read=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
+    passive_read=base.Cmd(b"\xff\x01\x86\x00\x00\x00\x00\x00\x79", b"\xff\x86", 9),
     # same as passive_read for sensor.check
-    passive_mode=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
+    passive_mode=base.Cmd(b"\xff\x01\x86\x00\x00\x00\x00\x00\x79", b"\xff\x86", 9),
     active_mode=base.Cmd(b"", b"", 0),
     sleep=base.Cmd(b"", b"", 0),
     # same as passive_read for sensor.check
-    wake=base.Cmd(b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79", b"\xFF\x86", 9),
+    wake=base.Cmd(b"\xff\x01\x86\x00\x00\x00\x00\x00\x79", b"\xff\x86", 9),
 )
 
 
@@ -57,12 +57,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum 0x{msg.checksum:02X} != 0x{checksum:02X}")
         if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f">{len(message)//2}H", message)
+        return struct.unpack(f">{len(message) // 2}H", message)
 
 
 @dataclass(frozen=False)

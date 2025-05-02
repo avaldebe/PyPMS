@@ -11,8 +11,8 @@ from . import sds01x
 
 commands = sds01x.commands._replace(
     passive_read=base.Cmd(
-        b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-        b"\xAA\xCF",
+        b"\xaa\xb4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x02\xab",
+        b"\xaa\xcf",
         10,
     )
 )
@@ -26,7 +26,6 @@ class Message(sds01x.Message):
 
 @dataclass(frozen=False)
 class ObsData(base.ObsData):
-
     """
     NovaFitness SDS198 sensor observations
 

@@ -16,11 +16,11 @@ ALIASES = ("G3",)
 
 
 commands = base.Commands(
-    passive_read=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
-    passive_mode=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
-    active_mode=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
-    sleep=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
-    wake=base.Cmd(b"", b"\x42\x4D\x00\x14", 24),
+    passive_read=base.Cmd(b"", b"\x42\x4d\x00\x14", 24),
+    passive_mode=base.Cmd(b"", b"\x42\x4d\x00\x14", 24),
+    active_mode=base.Cmd(b"", b"\x42\x4d\x00\x14", 24),
+    sleep=base.Cmd(b"", b"\x42\x4d\x00\x14", 24),
+    wake=base.Cmd(b"", b"\x42\x4d\x00\x14", 24),
 )
 
 
@@ -47,7 +47,7 @@ class Message(base.Message):
         assert len(header) == 4, f"wrong header length {len(header)}"
         assert header[:2] == b"BM", f"wrong header start {header!r}"
         len_payload = cls._unpack(header[-2:])[0]
-        assert length == 4 + len_payload, f"wrong payload length {length} != {4+len_payload}"
+        assert length == 4 + len_payload, f"wrong payload length {length} != {4 + len_payload}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
@@ -59,12 +59,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
         if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f">{len(message)//2}H", message)
+        return struct.unpack(f">{len(message) // 2}H", message)
 
 
 @dataclass(frozen=False)

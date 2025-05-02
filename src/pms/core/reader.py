@@ -5,6 +5,7 @@ NOTE:
 - Sensors are read on passive mode.
 - Tested on PMS3003, PMS7003, PMSA003, SDS011 and MCU680
 """
+
 from __future__ import annotations
 
 import sys
@@ -62,12 +63,10 @@ class Reader:
         ...
 
     @abstractmethod
-    def open(self) -> None:
-        ...
+    def open(self) -> None: ...
 
     @abstractmethod
-    def close(self) -> None:
-        ...
+    def close(self) -> None: ...
 
     def __enter__(self):
         self.open()
@@ -153,7 +152,7 @@ class SensorReader(Reader):
 
         # check if the sensor answered
         if len(buffer) == 0:
-            logger.error(f"Sensor did not respond, check UART pin connections")
+            logger.error("Sensor did not respond, check UART pin connections")
             raise UnableToRead("Sensor did not respond")
 
         # check against sensor type derived from buffer

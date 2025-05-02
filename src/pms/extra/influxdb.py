@@ -35,8 +35,7 @@ Or, if you installed {package} with pipx
 
 
 class PubFunction(Protocol):  # pragma: no cover
-    def __call__(self, *, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
-        ...
+    def __call__(self, *, time: int, tags: dict[str, str], data: dict[str, float]) -> None: ...
 
 
 def client_pub(

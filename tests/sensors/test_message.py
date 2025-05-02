@@ -275,7 +275,7 @@ def test_decode_error(sensor, hex, error):
         ),
         pytest.param(
             sps30.Message,
-            b"\x7E\x01\x00\x00\x00",
+            b"\x7e\x01\x00\x00\x00",
             sps30.commands.passive_read.answer_length,
             r"wrong header start b'~\x01\x00\x00\x00'",
             id="SPS30 wrong header start",

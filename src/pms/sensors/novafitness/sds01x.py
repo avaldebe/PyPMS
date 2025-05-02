@@ -16,28 +16,28 @@ ALIASES = ("SDS011", "SDS018", "SDS021")
 
 commands = base.Commands(
     passive_read=base.Cmd(
-        b"\xAA\xB4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-        b"\xAA\xC0",
+        b"\xaa\xb4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x02\xab",
+        b"\xaa\xc0",
         10,
     ),
     passive_mode=base.Cmd(
-        b"\xAA\xB4\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x02\xAB",
-        b"\xAA\xC5",
+        b"\xaa\xb4\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x02\xab",
+        b"\xaa\xc5",
         10,
     ),
     active_mode=base.Cmd(
-        b"\xAA\xB4\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x01\xAB",
-        b"\xAA\xC5",
+        b"\xaa\xb4\x02\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x01\xab",
+        b"\xaa\xc5",
         10,
     ),
     sleep=base.Cmd(
-        b"\xAA\xB4\x06\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x05\xAB",
-        b"\xAA\xC5",
+        b"\xaa\xb4\x06\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x05\xab",
+        b"\xaa\xc5",
         10,
     ),
     wake=base.Cmd(
-        b"\xAA\xB4\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\x06\xAB",
-        b"\xAA\xC5",
+        b"\xaa\xb4\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x06\xab",
+        b"\xaa\xc5",
         10,
     ),
 )
@@ -68,7 +68,7 @@ class Message(base.Message):
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
         # consistency check: bug in message singnature
         assert len(header) == 2, f"wrong header length {len(header)}"
-        assert header[:1] == b"\xAA", f"wrong header start {header!r}"
+        assert header[:1] == b"\xaa", f"wrong header start {header!r}"
         assert length == 10, f"wrong payload length {length} != 10"
 
         # validate message: recoverable errors (throw away observation)
@@ -83,12 +83,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
         if sum(msg.payload[:-2]) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f"<{len(message)//2}H", message)
+        return struct.unpack(f"<{len(message) // 2}H", message)
 
 
 @dataclass(frozen=False)

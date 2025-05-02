@@ -18,14 +18,14 @@ BAUD = 115_200
 
 commands = base.Commands(
     # Read Measured Values
-    passive_read=base.Cmd(b"\x7E\x00\x03\x00\xFC\x7E", b"\x7E\x00\x03\x00\x28", 47),
+    passive_read=base.Cmd(b"\x7e\x00\x03\x00\xfc\x7e", b"\x7e\x00\x03\x00\x28", 47),
     # same as passive_read for sensor.check
-    passive_mode=base.Cmd(b"\x7E\x00\x03\x00\xFC\x7E", b"\x7E\x00\x03\x00\x28", 47),
+    passive_mode=base.Cmd(b"\x7e\x00\x03\x00\xfc\x7e", b"\x7e\x00\x03\x00\x28", 47),
     active_mode=base.Cmd(b"", b"", 0),
     # Stop Measurement
-    sleep=base.Cmd(b"\x7E\x00\x01\x00\xFE\x7E", b"\x7E\x00\x01\x00\x00", 7),
+    sleep=base.Cmd(b"\x7e\x00\x01\x00\xfe\x7e", b"\x7e\x00\x01\x00\x00", 7),
     # Start Measurement
-    wake=base.Cmd(b"\x7E\x00\x00\x02\x01\x03\xF9\x7E", b"\x7E\x00\x00", 7),
+    wake=base.Cmd(b"\x7e\x00\x00\x02\x01\x03\xf9\x7e", b"\x7e\x00\x00", 7),
 )
 
 
@@ -37,17 +37,17 @@ class Message(base.Message):
     @classmethod
     def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[float, ...]:
         # error messages: recoverable errors (throw away observation)
-        if message.endswith(b"\x7E\x00\x00\x43\x00\xBC\x7E"):
+        if message.endswith(b"\x7e\x00\x00\x43\x00\xbc\x7e"):
             raise SensorWarmingUp("short message: command not allowed in current state")
-        if message.endswith(b"\x7E\x00\x03\x00\x00\xFC\x7E"):
+        if message.endswith(b"\x7e\x00\x03\x00\x00\xfc\x7e"):
             raise SensorWarmingUp("short message: no data")
 
         # byte de-stuffing
         for k, v in {
-            b"\x7D\x5E": b"\x7E",
-            b"\x7D\x5D": b"\x7D",
-            b"\x7D\x31": b"\x11",
-            b"\x7D\x33": b"\x13",
+            b"\x7d\x5e": b"\x7e",
+            b"\x7d\x5d": b"\x7d",
+            b"\x7d\x31": b"\x11",
+            b"\x7d\x33": b"\x13",
         }.items():
             if k in message:  # pragma: no cover
                 message = message.replace(k, v)
@@ -73,10 +73,10 @@ class Message(base.Message):
     def _validate(cls, message: bytes, header: bytes, length: int) -> base.Message:
         # consistency check: bug in message singnature
         assert len(header) == 5, f"wrong header length {len(header)}"
-        assert header[:2] == b"\x7E\x00", f"wrong header start {header!r}"
+        assert header[:2] == b"\x7e\x00", f"wrong header start {header!r}"
         assert length in [7, 47], f"wrong payload length {length} != 4||47"
         len_payload = header[-1]
-        assert length == len_payload + 7, f"wrong payload length {length} != {len_payload+7}"
+        assert length == len_payload + 7, f"wrong payload length {length} != {len_payload + 7}"
 
         # validate message: recoverable errors (throw away observation)
         msg = cls(message)
@@ -90,12 +90,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
         if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[float, ...]:
-        return struct.unpack(f">{len(message)//4}f", message)
+        return struct.unpack(f">{len(message) // 4}f", message)
 
 
 @dataclass(frozen=False)

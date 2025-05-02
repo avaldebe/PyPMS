@@ -148,15 +148,19 @@ show_missing = true
 skip_covered = true
 fail_under = 100
 
-[tool.black]
-target-version = ['py39']
+[tool.ruff]
 line-length = 100
-
-[tool.isort]
-py_version = "39"
-profile = "black"
-src_paths = ["src", "tests"]
-line_length = 100
+lint.select = ["E", "F", "I", "UP", "FA"]
+lint.ignore = [
+    "F401",  # https://docs.astral.sh/ruff/rules/unused-import/
+    "F841",  # https://docs.astral.sh/ruff/rules/unused-variable/
+    "E501",  # https://docs.astral.sh/ruff/rules/line-too-long/
+    "E731",  # https://docs.astral.sh/ruff/rules/lambda-assignment/
+    "UP006", # https://docs.astral.sh/ruff/rules/non-pep585-annotation/
+    "UP035", # https://docs.astral.sh/ruff/rules/deprecated-import/
+    "UP037", # https://docs.astral.sh/ruff/rules/quoted-annotation/
+    "FA100", # https://docs.astral.sh/ruff/rules/future-rewritable-type-annotation/
+]
 
 [tool.mypy]
 python_version = "3.9"

@@ -1,6 +1,7 @@
 """
 Access supported sensors from a single object
 """
+
 from __future__ import annotations
 
 import sys

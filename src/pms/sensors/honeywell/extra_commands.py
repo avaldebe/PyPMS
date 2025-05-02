@@ -23,4 +23,4 @@ def write_cf(cf: int = 0) -> Cmd:
     """
 
     assert 30 <= cf <= 200, f"out of range: 30 <= {cf} <= 200"
-    return Cmd(bytes.fromhex(f"680208{cf:02X}{(0xff8e-cf)%0x100:02X}"), b"\xA5\xA5", 2)
+    return Cmd(bytes.fromhex(f"680208{cf:02X}{(0xFF8E - cf) % 0x100:02X}"), b"\xa5\xa5", 2)

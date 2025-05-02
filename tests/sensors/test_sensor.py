@@ -43,10 +43,10 @@ def test_pre_heat(sensor):
 @pytest.mark.parametrize(
     "buffer,check",
     [
-        pytest.param(b"\xA5\xA5", True, id="ACK"),
-        pytest.param(b"\xA5\xA5\xA5\xA5", True, id="ACK ACK"),
+        pytest.param(b"\xa5\xa5", True, id="ACK"),
+        pytest.param(b"\xa5\xa5\xa5\xa5", True, id="ACK ACK"),
         pytest.param(b"\x40\x0d\x04", False, id="no ACK"),
-        pytest.param(b"\xA5\xA5\x40\x0d\x04", False, id="no ACK at end"),
+        pytest.param(b"\xa5\xa5\x40\x0d\x04", False, id="no ACK at end"),
     ],
 )
 def test_HPMA115xx_ACK_message(sensor, command, buffer, check):

@@ -12,11 +12,11 @@ from .. import base
 from . import pms3003, pms5003s, pmsx003
 
 commands = base.Commands(
-    passive_read=base.Cmd(pmsx003.commands.passive_read.command, b"\x42\x4D\x00\x24", 40),
+    passive_read=base.Cmd(pmsx003.commands.passive_read.command, b"\x42\x4d\x00\x24", 40),
     passive_mode=pmsx003.commands.passive_mode,
-    active_mode=base.Cmd(pmsx003.commands.active_mode.command, b"\x42\x4D\x00\x24", 40),
+    active_mode=base.Cmd(pmsx003.commands.active_mode.command, b"\x42\x4d\x00\x24", 40),
     sleep=pmsx003.commands.sleep,
-    wake=base.Cmd(pmsx003.commands.wake.command, b"\x42\x4D\x00\x24", 40),
+    wake=base.Cmd(pmsx003.commands.wake.command, b"\x42\x4d\x00\x24", 40),
 )
 
 
@@ -29,7 +29,7 @@ class Message(pms3003.Message):
     def _unpack(message: bytes) -> Tuple[int, ...]:
         if len(message) == 34:
             # 14th record is signed (temp)
-            return struct.unpack(f">13Hh3H", message)
+            return struct.unpack(">13Hh3H", message)
         else:
             return pms3003.Message._unpack(message)
 

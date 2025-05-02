@@ -14,9 +14,9 @@ from .. import base
 ALIASES = ("BME680",)
 
 commands = base.Commands(
-    passive_read=base.Cmd(b"\xA5\x56\x01\xFC", b"\x5A\x5A\x3F\x0F", 20),
-    passive_mode=base.Cmd(b"\xA5\x56\x01\xFC", b"\x5A\x5A\x3F\x0F", 20),
-    active_mode=base.Cmd(b"\xA5\x56\x02\xFD", b"\x5A\x5A\x3F\x0F", 20),
+    passive_read=base.Cmd(b"\xa5\x56\x01\xfc", b"\x5a\x5a\x3f\x0f", 20),
+    passive_mode=base.Cmd(b"\xa5\x56\x01\xfc", b"\x5a\x5a\x3f\x0f", 20),
+    active_mode=base.Cmd(b"\xa5\x56\x02\xfd", b"\x5a\x5a\x3f\x0f", 20),
     sleep=base.Cmd(b"", b"", 0),
     wake=base.Cmd(b"", b"", 0),
 )
@@ -57,12 +57,12 @@ class Message(base.Message):
         if msg.checksum != checksum:
             raise WrongMessageChecksum(f"message checksum {msg.checksum} != {checksum}")
         if sum(msg.payload) == 0:
-            raise SensorWarmingUp(f"message empty: warming up sensor")
+            raise SensorWarmingUp("message empty: warming up sensor")
         return msg
 
     @staticmethod
     def _unpack(message: bytes) -> Tuple[int, ...]:
-        return struct.unpack(f">hHHBHLh", message)
+        return struct.unpack(">hHHBHLh", message)
 
 
 @dataclass(frozen=False)
