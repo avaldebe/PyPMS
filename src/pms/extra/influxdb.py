@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 from dataclasses import fields
+from functools import partial
+from textwrap import dedent
 from typing import Protocol
 
-from typer import Abort, Context, Option, colors, echo, style
+import typer
 
 from pms.core import exit_on_fail
 
@@ -15,23 +17,23 @@ except ModuleNotFoundError:
 
 
 def __missing_influxdb():  # pragma: no cover
-    name = style(__name__, fg=colors.GREEN, bold=True)
-    package = style("pypms", fg=colors.GREEN, bold=True)
-    module = style("influxdb", fg=colors.RED, bold=True)
-    extra = style("influxdb", fg=colors.RED, bold=True)
-    pip = style("python3 -m pip install --upgrade", fg=colors.GREEN)
-    pipx = style("pipx inject", fg=colors.GREEN)
-    echo(
-        f"""
-{name} provides additional functionality to {package}.
-This functionality requires the {module} module, which is not installed.
-You can install this additional dependency with
-\t{pip} {package}[{extra}]
-Or, if you installed {package} with pipx
-\t{pipx} {package} {module}
-"""
-    )
-    raise Abort()
+    green = partial(typer.style, fg=typer.colors.GREEN)
+    red = partial(typer.style, fg=typer.colors.GREEN)
+    package = green("pypms", bold=True)
+    extra = module = red("influxdb", bold=True)
+    msg = f"""
+        {green(__name__, bold=True)} provides additional functionality to {package}.
+        This functionality requires the {module} module, which is not installed.
+        
+        You can install this additional dependency with
+            {green("python3 -m pip install --upgrade")} {package}[{extra}]
+        Or, if you installed {package} with {green("pipx")}
+            {green("pipx inject")} {package} {module}
+        Or, if you installed {package} with {green("uv tool")}
+            {green("uv tool install")} {package}[{extra}]
+    """
+    typer.echo(dedent(msg))
+    raise typer.Abort()
 
 
 class PubFunction(Protocol):  # pragma: no cover
@@ -62,13 +64,13 @@ def client_pub(
 
 
 def cli(
-    ctx: Context,
-    host: str = Option("influxdb", "--db-host", help="database server"),
-    port: int = Option(8086, "--db-port", help="server port"),
-    user: str = Option("root", "--db-user", envvar="DB_USER", help="server username"),
-    word: str = Option("root", "--db-pass", envvar="DB_PASS", help="server password"),
-    name: str = Option("homie", "--db-name", help="database name"),
-    jtag: str = Option(json.dumps({"location": "test"}), "--tags", help="measurement tags"),
+    ctx: typer.Context,
+    host: str = typer.Option("influxdb", "--db-host", help="database server"),
+    port: int = typer.Option(8086, "--db-port", help="server port"),
+    user: str = typer.Option("root", "--db-user", envvar="DB_USER", help="server username"),
+    word: str = typer.Option("root", "--db-pass", envvar="DB_PASS", help="server password"),
+    name: str = typer.Option("homie", "--db-name", help="database name"),
+    jtag: str = typer.Option(json.dumps({"location": "test"}), "--tags", help="measurement tags"),
 ):
     """Read sensor and push PM measurements to an InfluxDB server"""
     pub = client_pub(host=host, port=port, username=user, password=word, db_name=name)

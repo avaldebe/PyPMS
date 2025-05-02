@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import fields
 from datetime import datetime
+from functools import partial
+from textwrap import dedent
 from typing import Callable, NamedTuple
 
+import typer
 from loguru import logger
-from typer import Abort, Context, Option, colors, echo, style
 
 try:
     from paho.mqtt import client  # type: ignore
@@ -18,23 +20,23 @@ from pms.sensors.base import ObsData
 
 
 def __missing_mqtt():  # pragma: no cover
-    name = style(__name__, fg=colors.GREEN, bold=True)
-    package = style("pypms", fg=colors.GREEN, bold=True)
-    module = style("paho-mqtt", fg=colors.RED, bold=True)
-    extra = style("mqtt", fg=colors.RED, bold=True)
-    pip = style("python3 -m pip install --upgrade", fg=colors.GREEN)
-    pipx = style("pipx inject", fg=colors.GREEN)
-    echo(
-        f"""
-{name} provides additional functionality to {package}.
-This functionality requires the {module} module, which is not installed.
-You can install this additional dependency with
-\t{pip} {package}[{extra}]
-Or, if you installed {package} with pipx
-\t{pipx} {package} {module}
-"""
-    )
-    raise Abort()
+    green = partial(typer.style, fg=typer.colors.GREEN)
+    red = partial(typer.style, fg=typer.colors.GREEN)
+    package = green("pypms", bold=True)
+    extra = module = red("paho-mqtt", bold=True)
+    msg = f"""
+        {green(__name__, bold=True)} provides additional functionality to {package}.
+        This functionality requires the {module} module, which is not installed.
+
+        You can install this additional dependency with
+            {green("python3 -m pip install --upgrade")} {package}[{extra}]
+        Or, if you installed {package} with {green("pipx")}
+            {green("pipx inject")} {package} {module}
+        Or, if you installed {package} with {green("uv tool")}
+            {green("uv tool install")} {package}[{extra}]
+    """
+    typer.echo(dedent(msg))
+    raise typer.Abort()
 
 
 def client_pub(
@@ -129,14 +131,14 @@ def client_sub(
 
 
 def cli(
-    ctx: Context,
-    topic: str = Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
-    host: str = Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
-    port: int = Option(1883, "--mqtt-port", help="server port"),
-    user: str = Option(
+    ctx: typer.Context,
+    topic: str = typer.Option("homie/test", "--topic", "-t", help="mqtt root/topic"),
+    host: str = typer.Option("mqtt.eclipse.org", "--mqtt-host", help="mqtt server"),
+    port: int = typer.Option(1883, "--mqtt-port", help="server port"),
+    user: str = typer.Option(
         "", "--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False
     ),
-    word: str = Option(
+    word: str = typer.Option(
         "", "--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False
     ),
 ):

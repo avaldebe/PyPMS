@@ -18,6 +18,12 @@
     pipx install pypms
     ```
 
+=== "uv tool"
+
+    ``` bash
+    uv tool install pypms
+    ```
+
 Will allow you yo access to sensors via serial port (`pms serial`),
 and save observations to a csv file (`pms csv`).
 
@@ -37,6 +43,12 @@ between mqtt and influxdb servers (`pms bridge`).
 
     ``` bash
     pipx install pypms[mqtt,influxdb]
+    ```
+
+=== "uv tool"
+
+    ``` bash
+    uv tool install pypms[mqtt,influxdb]
     ```
 
 ## Command line options
