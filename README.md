@@ -9,8 +9,6 @@ Data acquisition and logging for Air Quality Sensors with UART interface
 [![GitHub license](https://img.shields.io/github/license/avaldebe/PyPMS)](https://github.com/avaldebe/PyPMS/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/203110737.svg)](https://zenodo.org/badge/latestdoi/203110737)
 
-[project site]: https://avaldebe.github.io/PyPMS
-
 ## Installation
 
 This package can be pip installed.
@@ -26,77 +24,47 @@ Please visit [project site] for details.
 
 ## Particulate Matter Sensors
 
-| Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                  | Tested |
-| ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | ---------------------- | :----: |
-| [Plantower]       |
-| PMS1003 (aka G1)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |        |
-| PMS3003 (aka G3)  | [PMS3003]        |   ✔️   |   ✔️   |       |   ✔️   |           |                        |   ✔️    |
-| PMS5003 (aka G5)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |        |
-| PMS5003T          | [PMS5003T]       |   ✔️   |   ✔️   |       |   ✔️   |     4     | temp. & rel.hum.       |   ✔️    |
-| PMS5003S          | [PMS5003S]       |   ✔️   |   ✔️   |       |   ✔️   |     6     | HCHO concentration     |        |
-| PMS5003ST         | [PMS5003ST]      |   ✔️   |   ✔️   |       |   ✔️   |     6     | HCHO, temp. & rel.hum. |        |
-| PMS7003 (aka G7)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |   ✔️    |
-| PMSA003 (aka G10) | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |   ✔️    |
-| [NovaFitness]     |
-| SDS011            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |   ✔️    |
-| SDS018            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |        |
-| SDS021            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |        |
-| SDS198            | [SDS198]         |       |       |       |       |           | PM100                  |   ✔️    |
-| [Honeywell]       |
-| HPMA115S0         | [HPMA115S0]      |       |   ✔️   |       |   ✔️   |           |                        |        |
-| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |   ✔️    |
-| [Sensirion]       |
-| SPS30             | [SPS30]          |   ✔️   |   ✔️   |   ✔️   |   ✔️   |     5     | typical particle size  |   ✔️    |
-| [Winsen]          |
-| ZH03B             | [ZH0xx]          |   ✔️   |   ✔️   |   ✔️   |       |           |                        |        |
-| ZH06-I            | [ZH0xx]          |   ✔️   |   ✔️   |   ✔️   |       |           |                        |        |
-
-[plantower]:  https://avaldebe.github.io/PyPMS/sensors/Plantower
-[PMS3003]:    https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms3003
-[PMSx003]:    https://avaldebe.github.io/PyPMS/sensors/Plantower/#pmsx003
-[PMS5003T]:   https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003t
-[PMS5003S]:   https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003s
-[PMS5003ST]:  https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003st
-
-[NovaFitness]:https://avaldebe.github.io/PyPMS/sensors/NovaFitness
-[SDS01x]:     https://avaldebe.github.io/PyPMS/sensors/NovaFitness/#sds01x
-[SDS198]:     https://avaldebe.github.io/PyPMS/sensors/NovaFitness/#sds198
-
-[Honeywell]:  https://avaldebe.github.io/PyPMS/sensors/Honeywell
-[HPMA115S0]:  https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115s0
-[HPMA115C0]:  https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115c0
-
-[Sensirion]:  https://avaldebe.github.io/PyPMS/sensors/Sensirion
-[SPS30]:      https://avaldebe.github.io/PyPMS/sensors/Sensirion/#sps30
-
-[Winsen]:     https://avaldebe.github.io/PyPMS/sensors/Winsen
-[ZH0xx]:      https://avaldebe.github.io/PyPMS/sensors/Winsen/#zh0xx
-[MHZ19B]:     https://avaldebe.github.io/PyPMS/sensors/Winsen/#mhz19b
+| Sensor            | `--sensor-model` | PM1 | PM2.5 | PM4 | PM10 | size bins | Other                  | Tested |
+| ----------------- | ---------------- | :-: | :---: | :-: | :--: | :-------: | ---------------------- | :----: |
+| [Plantower]       |                  |     |       |     |      |           |                        |        |
+| PMS1003 (aka G1)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |        |
+| PMS3003 (aka G3)  | [PMS3003]        | ✔️  |  ✔️   |     |  ✔️  |           |                        |   ✔️   |
+| PMS5003 (aka G5)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |        |
+| PMS5003T          | [PMS5003T]       | ✔️  |  ✔️   |     |  ✔️  |     4     | temp. & rel.hum.       |   ✔️   |
+| PMS5003S          | [PMS5003S]       | ✔️  |  ✔️   |     |  ✔️  |     6     | HCHO concentration     |        |
+| PMS5003ST         | [PMS5003ST]      | ✔️  |  ✔️   |     |  ✔️  |     6     | HCHO, temp. & rel.hum. |        |
+| PMS7003 (aka G7)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |   ✔️   |
+| PMSA003 (aka G10) | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |   ✔️   |
+| [NovaFitness]     |                  |     |       |     |      |           |                        |        |
+| SDS011            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |   ✔️   |
+| SDS018            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |        |
+| SDS021            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |        |
+| SDS198            | [SDS198]         |     |       |     |      |           | PM100                  |   ✔️   |
+| [Honeywell]       |                  |     |       |     |      |           |                        |        |
+| HPMA115S0         | [HPMA115S0]      |     |  ✔️   |     |  ✔️  |           |                        |        |
+| HPMA115C0         | [HPMA115C0]      | ✔️  |  ✔️   | ✔️  |  ✔️  |           |                        |   ✔️   |
+| [Sensirion]       |                  |     |       |     |      |           |                        |        |
+| SPS30             | [SPS30]          | ✔️  |  ✔️   | ✔️  |  ✔️  |     5     | typical particle size  |   ✔️   |
+| [Winsen]          |                  |     |       |     |      |           |                        |        |
+| ZH03B             | [ZH0xx]          | ✔️  |  ✔️   | ✔️  |      |           |                        |        |
+| ZH06-I            | [ZH0xx]          | ✔️  |  ✔️   | ✔️  |      |           |                        |        |
 
 ## Other Sensors
 
 - [MCU680]:
   chinese module with a [BME680] sensor, a mirocontroller (μC) and 3.3V low-dropout regulator (LDO).
-  The μC acts as I2C/UART bridge, providing outputs from the [closed source integration library][BSEC].
+  The μC acts as I2C/UART bridge, providing outputs from the [closed source integration library][bsec].
 - [MHZ19B]:
   infrared CO2 sensor module from [Winsen].
-
-[MCU680]:   https://avaldebe.github.io/PyPMS/sensors/mcu680/#mcu680
-[BME680]:   https://avaldebe.github.io/PyPMS/sensors/mcu680/#bme680
-[BSEC]:     https://www.bosch-sensortec.com/software-tools/software/bsec/
 
 ## Want More Sensors
 
 For more Air Quality sensors [open an issue][issue].
 
-[issue]: https://github.com/avaldebe/PyPMS/issues
-
 ## Use as a library
 
 PyPMS/pms is meant as a command line application.
 The [project site] contain some help for those brave enough to use its internals as a [library].
-
-[library]: https://avaldebe.github.io/PyPMS/library_usage
 
 ## Changelog
 
@@ -148,10 +116,34 @@ The [project site] contain some help for those brave enough to use its internals
 - 0.3.0
   - option for a fix number of samples
   - PMSx003 consistency check after sleep/wake
-- 0.2.*
+- 0.2.\*
   - widen project scope from PM sensors to AQ sensors in general
   - support [BME680] sensor ([MCU680] module)
-- 0.1.*
+- 0.1.\*
   - widen project scope beyond [Plantower] PM sensors
   - support [NovaFitness], [Honeywell] and [Sensirion] PM sensors
   - cli for logging to csv file, InfluxDB server or MQTT server
+
+[bme680]: https://avaldebe.github.io/PyPMS/sensors/mcu680/#bme680
+[bsec]: https://www.bosch-sensortec.com/software-tools/software/bsec/
+[honeywell]: https://avaldebe.github.io/PyPMS/sensors/Honeywell
+[hpma115c0]: https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115c0
+[hpma115s0]: https://avaldebe.github.io/PyPMS/sensors/Honeywell/#hpma115s0
+[issue]: https://github.com/avaldebe/PyPMS/issues
+[library]: https://avaldebe.github.io/PyPMS/library_usage
+[mcu680]: https://avaldebe.github.io/PyPMS/sensors/mcu680/#mcu680
+[mhz19b]: https://avaldebe.github.io/PyPMS/sensors/Winsen/#mhz19b
+[novafitness]: https://avaldebe.github.io/PyPMS/sensors/NovaFitness
+[plantower]: https://avaldebe.github.io/PyPMS/sensors/Plantower
+[pms3003]: https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms3003
+[pms5003s]: https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003s
+[pms5003st]: https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003st
+[pms5003t]: https://avaldebe.github.io/PyPMS/sensors/Plantower/#pms5003t
+[pmsx003]: https://avaldebe.github.io/PyPMS/sensors/Plantower/#pmsx003
+[project site]: https://avaldebe.github.io/PyPMS
+[sds01x]: https://avaldebe.github.io/PyPMS/sensors/NovaFitness/#sds01x
+[sds198]: https://avaldebe.github.io/PyPMS/sensors/NovaFitness/#sds198
+[sensirion]: https://avaldebe.github.io/PyPMS/sensors/Sensirion
+[sps30]: https://avaldebe.github.io/PyPMS/sensors/Sensirion/#sps30
+[winsen]: https://avaldebe.github.io/PyPMS/sensors/Winsen
+[zh0xx]: https://avaldebe.github.io/PyPMS/sensors/Winsen/#zh0xx
