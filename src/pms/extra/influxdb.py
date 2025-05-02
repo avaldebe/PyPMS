@@ -10,13 +10,8 @@ import typer
 
 from pms.core import exit_on_fail
 
-try:
-    from influxdb import InfluxDBClient as client  # type: ignore
-except ModuleNotFoundError:
-    client = None  # type: ignore
 
-
-def __missing_influxdb():  # pragma: no cover
+def __missing_influxdb() -> str:  # pragma: no cover
     green = partial(typer.style, fg=typer.colors.GREEN)
     red = partial(typer.style, fg=typer.colors.GREEN)
     package = green("pypms", bold=True)
@@ -32,22 +27,22 @@ def __missing_influxdb():  # pragma: no cover
         Or, if you installed {package} with {green("uv tool")}
             {green("uv tool install")} {package}[{extra}]
     """
-    typer.echo(dedent(msg))
-    raise typer.Abort()
+    return dedent(msg)
 
 
-class PubFunction(Protocol):  # pragma: no cover
+class PubFunction(Protocol):
     def __call__(self, *, time: int, tags: dict[str, str], data: dict[str, float]) -> None: ...
 
 
-def client_pub(
-    *, host: str, port: int, username: str, password: str, db_name: str
-) -> PubFunction:  # pragma: no cover
-    if client is None:
-        __missing_influxdb()
+def client_pub(*, host: str, port: int, username: str, password: str, db_name: str) -> PubFunction:
+    try:
+        from influxdb import InfluxDBClient as client
+    except ModuleNotFoundError:  # pragma: no cover
+        typer.echo(__missing_influxdb())
+        raise typer.Abort()
+
     c = client(host, port, username, password, None)
-    databases = c.get_list_database()
-    if len(list(filter(lambda x: x["name"] == db_name, databases))) == 0:
+    if db_name not in {x["name"] for x in c.get_list_database()}:
         c.create_database(db_name)
     c.switch_database(db_name)
 

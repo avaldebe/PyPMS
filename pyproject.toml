@@ -167,13 +167,14 @@ exclude_also = [
     "@abstractmethod",
     "ModuleNotFoundError",
     "KeyboardInterrupt",
+    "UserWarning",
     "def __repr__",
     "def __str__",
     'if spec == "":',
 ]
 show_missing = true
 skip_covered = true
-fail_under = 99
+fail_under = 95
 
 [tool.ruff]
 line-length = 100

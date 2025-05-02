@@ -9,12 +9,6 @@ from typing import Annotated, Callable, NamedTuple
 import typer
 from loguru import logger
 
-try:
-    from paho.mqtt import client  # type: ignore
-except ModuleNotFoundError:
-    client = None  # type: ignore
-
-
 from pms.core import exit_on_fail
 from pms.sensors.base import ObsData
 
@@ -35,15 +29,18 @@ def __missing_mqtt():  # pragma: no cover
         Or, if you installed {package} with {green("uv tool")}
             {green("uv tool install")} {package}[{extra}]
     """
-    typer.echo(dedent(msg))
-    raise typer.Abort()
+    return dedent(msg)
 
 
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
-) -> Callable[[dict[str, int | str]], None]:  # pragma: no cover
-    if client is None:
-        __missing_mqtt()  # type:ignore[unreachable]
+) -> Callable[[dict[str, int | str]], None]:
+    try:
+        from paho.mqtt import client
+    except ModuleNotFoundError:  # pragma: no cover
+        typer.echo(__missing_mqtt())
+        raise typer.Abort()
+
     c = client.Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
     if username:
@@ -70,7 +67,7 @@ class Data(NamedTuple):
     value: float
 
     @staticmethod
-    def now() -> int:  # pragma: no cover
+    def now() -> int:
         """current time as seconds since epoch"""
         return int(datetime.now().timestamp())
 
@@ -82,7 +79,7 @@ class Data(NamedTuple):
         >>> decode("homie/test/pm10/concentration", "27")
         >>> Data(now(), "test", "pm10", 27)
         """
-        if not time:  # pragma: no cover
+        if not time:
             time = cls.now()
 
         fields = topic.split("/")
@@ -94,7 +91,7 @@ class Data(NamedTuple):
 
         try:
             value = float(payload)
-        except ValueError:  # pragma: no cover
+        except ValueError:
             raise UserWarning(f"non numeric payload: {payload}")
         else:
             return cls(time, location, measurement, value)
@@ -108,7 +105,7 @@ def client_sub(
     password: str,
     *,
     on_sensordata: Callable[[Data], None],
-) -> None:  # pragma: no cover
+) -> None:
     def on_message(client, userdata, msg):
         try:
             data = Data.decode(msg.topic, msg.payload)
@@ -117,8 +114,12 @@ def client_sub(
         else:
             on_sensordata(data)
 
-    if client is None:
-        __missing_mqtt()  # type:ignore[unreachable]
+    try:
+        from paho.mqtt import client
+    except ModuleNotFoundError:  # pragma: no cover
+        typer.echo(__missing_mqtt())
+        raise typer.Abort()
+
     c = client.Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
     if username:

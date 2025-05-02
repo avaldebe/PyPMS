@@ -52,7 +52,7 @@ def callback(
     version: Annotated[bool, typer.Option("--version", "-V", callback=version_callback)] = False,
 ):
     """Data acquisition and logging for Air Quality Sensors with UART interface"""
-    if debug:  # pragma: no cover
+    if debug:
         logger.enable("pms")
     else:
         logger.configure(
@@ -70,7 +70,7 @@ def callback(
 
 
 @main.command()
-def info(ctx: typer.Context):  # pragma: no cover
+def info(ctx: typer.Context):
     """Information about the sensor observations"""
     sensor: Sensor = ctx.obj["reader"].sensor
     typer.echo(sensor.Data.__doc__)
@@ -117,7 +117,7 @@ def serial(
                     typer.echo(f"{obs:header}")
                     print_header = False
                 typer.echo(f"{obs:{format}}")
-        else:  # pragma: no cover
+        else:
             for obs in reader():
                 typer.echo(str(obs))
 
@@ -134,7 +134,7 @@ def csv(
     path: Annotated[Path, typer.Argument(help="csv formatted file", show_default=False)] = Path(),
 ):
     """Read sensor and save measurements to a CSV file"""
-    if path.is_dir():  # pragma: no cover
+    if path.is_dir():
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")
