@@ -16,10 +16,11 @@ Please open an issue or submit a PR i you know of a cleaner way to achieve this.
 """
 
 import sqlite3
-from contextlib import closing, contextmanager
+from collections.abc import Iterator
+from contextlib import AbstractContextManager, closing, contextmanager
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
-from typing import Callable, ContextManager, Iterator
+from typing import Callable
 
 from typer import Argument, Option, Typer, progressbar
 
@@ -68,7 +69,7 @@ def main(
                 print(obs)
 
 
-def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
+def pypms_db(db_path: Path) -> Callable[[], AbstractContextManager[sqlite3.Connection]]:
     """
     create db and table and update sensor views, if do not exists already
     and return a context manager for a DB connection

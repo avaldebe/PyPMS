@@ -6,7 +6,6 @@ Plantower PMS5003ST sensors
 
 import struct
 from dataclasses import dataclass, field
-from typing import Tuple
 
 from .. import base
 from . import pms3003, pms5003s, pmsx003
@@ -26,7 +25,7 @@ class Message(pms3003.Message):
     data_records = slice(15)
 
     @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
+    def _unpack(message: bytes) -> tuple[int, ...]:
         if len(message) == 34:
             # 14th record is signed (temp)
             return struct.unpack(">13Hh3H", message)

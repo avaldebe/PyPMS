@@ -4,7 +4,7 @@ import warnings
 from abc import ABCMeta, abstractmethod
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import NamedTuple, Tuple
+from typing import NamedTuple
 
 from loguru import logger
 
@@ -39,7 +39,7 @@ class Message(metaclass=ABCMeta):
         self.message = message
 
     @classmethod
-    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[float, ...]:
+    def unpack(cls, message: bytes, header: bytes, length: int) -> tuple[float, ...]:
         try:
             # validate full message
             msg = cls._validate(message, header, length)
@@ -57,7 +57,7 @@ class Message(metaclass=ABCMeta):
         return payload
 
     @classmethod
-    def decode(cls, message: bytes, command: Cmd) -> Tuple[float, ...]:
+    def decode(cls, message: bytes, command: Cmd) -> tuple[float, ...]:
         header = command.answer_header
         length = command.answer_length
         return cls.unpack(message, header, length)[cls.data_records]  # type: ignore[call-overload]
@@ -85,12 +85,12 @@ class Message(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def _validate(self, message: bytes, header: bytes, length: int) -> "Message":
+    def _validate(self, message: bytes, header: bytes, length: int) -> Message:
         pass
 
     @staticmethod
     @abstractmethod
-    def _unpack(message: bytes) -> Tuple[float, ...]:
+    def _unpack(message: bytes) -> tuple[float, ...]:
         pass
 
 

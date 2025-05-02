@@ -6,7 +6,6 @@ Honeywell HPMA115S0 sensors
 
 import struct
 from dataclasses import dataclass, field
-from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -41,7 +40,7 @@ class Message(base.Message):
         return self.message[-1]
 
     @classmethod
-    def decode(cls, message: bytes, command: base.Cmd) -> Tuple[float, ...]:
+    def decode(cls, message: bytes, command: base.Cmd) -> tuple[float, ...]:
         # decode ACK message
         if command.answer_header == b"\xa5\xa5" and command.answer_length == 2:
             if not message.endswith(command.answer_header):
@@ -70,7 +69,7 @@ class Message(base.Message):
         return msg
 
     @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
+    def _unpack(message: bytes) -> tuple[int, ...]:
         return struct.unpack(f">{len(message) // 2}H", message)
 
 

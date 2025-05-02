@@ -8,7 +8,6 @@ Sensirion SPS30 sensors
 
 import struct
 from dataclasses import dataclass, field
-from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -35,7 +34,7 @@ class Message(base.Message):
     data_records = slice(10)
 
     @classmethod
-    def unpack(cls, message: bytes, header: bytes, length: int) -> Tuple[float, ...]:
+    def unpack(cls, message: bytes, header: bytes, length: int) -> tuple[float, ...]:
         # error messages: recoverable errors (throw away observation)
         if message.endswith(b"\x7e\x00\x00\x43\x00\xbc\x7e"):
             raise SensorWarmingUp("short message: command not allowed in current state")
@@ -94,7 +93,7 @@ class Message(base.Message):
         return msg
 
     @staticmethod
-    def _unpack(message: bytes) -> Tuple[float, ...]:
+    def _unpack(message: bytes) -> tuple[float, ...]:
         return struct.unpack(f">{len(message) // 4}f", message)
 
 

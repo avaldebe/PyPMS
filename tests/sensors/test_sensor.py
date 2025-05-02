@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from enum import Enum
-from typing import Iterator, NamedTuple
+from typing import NamedTuple
 
 import pytest
 
@@ -63,7 +64,7 @@ class RawData(NamedTuple):
         return bytes.fromhex(self.hex)
 
     @property
-    def long_buffer(self) -> "RawData":
+    def long_buffer(self) -> RawData:
         buffer = self.hex * 2
         return self._replace(hex=buffer[6:], id="data at the end of the buffer")
 

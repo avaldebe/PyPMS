@@ -6,7 +6,6 @@ Plantower PMS3003 sensors
 
 import struct
 from dataclasses import dataclass, field
-from typing import Tuple
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -63,7 +62,7 @@ class Message(base.Message):
         return msg
 
     @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
+    def _unpack(message: bytes) -> tuple[int, ...]:
         return struct.unpack(f">{len(message) // 2}H", message)
 
 

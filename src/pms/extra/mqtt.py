@@ -73,7 +73,7 @@ class Data(NamedTuple):
         return int(datetime.now().timestamp())
 
     @classmethod
-    def decode(cls, topic: str, payload: str, *, time: int | None = None) -> "Data":
+    def decode(cls, topic: str, payload: str, *, time: int | None = None) -> Data:
         """Decode a MQTT message
 
         For example

@@ -11,11 +11,12 @@ from __future__ import annotations
 import sys
 import time
 from abc import abstractmethod
+from collections.abc import Iterator
 from contextlib import contextmanager
 from csv import DictReader
 from pathlib import Path
 from textwrap import wrap
-from typing import Iterator, Literal, NamedTuple, overload
+from typing import Literal, NamedTuple, overload
 
 from loguru import logger
 from serial import Serial

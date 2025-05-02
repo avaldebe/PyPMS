@@ -6,7 +6,6 @@ Plantower PMS5003T sensors
 
 import struct
 from dataclasses import dataclass, field
-from typing import Tuple
 
 from pms import InconsistentObservation
 
@@ -22,7 +21,7 @@ class Message(pms3003.Message):
     data_records = slice(12)
 
     @staticmethod
-    def _unpack(message: bytes) -> Tuple[int, ...]:
+    def _unpack(message: bytes) -> tuple[int, ...]:
         if len(message) == 26:
             # 11th record is signed (temp)
             return struct.unpack(">10Hh2H", message)

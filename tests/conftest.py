@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import closing, contextmanager
 from csv import DictReader
 from enum import Enum
 from pathlib import Path
 from sqlite3 import connect
-from typing import Iterator, List
 
 import pytest
 from loguru import logger
@@ -82,7 +82,7 @@ class CapturedData(Enum):
         sensor = self.sensor
         return (sensor.decode(msg.data, time=msg.time) for msg in self.value)
 
-    def options(self, command: str) -> List[str]:
+    def options(self, command: str) -> list[str]:
         samples = len(self.value)
         if command == "mqtt":
             samples -= 1

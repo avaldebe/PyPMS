@@ -14,9 +14,10 @@ In this example, the second sensor will be read right after the first sensor.
 """
 
 import sqlite3
-from contextlib import closing, contextmanager
+from collections.abc import Iterator
+from contextlib import AbstractContextManager, closing, contextmanager
 from pathlib import Path
-from typing import Callable, ContextManager, Iterator
+from typing import Callable
 
 from typer import Argument, Option, Typer, progressbar
 
@@ -67,7 +68,7 @@ def main(
                 print(obs)
 
 
-def pypms_db(db_path: Path) -> Callable[[], ContextManager[sqlite3.Connection]]:
+def pypms_db(db_path: Path) -> Callable[[], AbstractContextManager[sqlite3.Connection]]:
     """
     create db and messages table, if do not exists already
     and return a context manager for a DB connection

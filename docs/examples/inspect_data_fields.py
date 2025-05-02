@@ -1,13 +1,12 @@
 """Inspect sensor data fields"""
 
 from dataclasses import fields
-from typing import Dict
 
 from pms.core import Sensor
 from pms.core.types import ObsData
 
 
-def field_types(obs: ObsData) -> Dict[str, str]:
+def field_types(obs: ObsData) -> dict[str, str]:
     """return a dictionary containing the type of each data field"""
 
     return {

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import fields
-from typing import Any, Callable, Dict, Union
+from typing import Any, Callable
 
 import pytest
 from typer.testing import CliRunner
@@ -16,8 +18,8 @@ def mock_mqtt(monkeypatch):
 
     def client_pub(
         *, topic: str, host: str, port: int, username: str, password: str
-    ) -> Callable[[Dict[str, Union[int, str]]], None]:
-        def pub(data: Dict[str, Union[int, str]]) -> None:
+    ) -> Callable[[dict[str, int | str]], None]:
+        def pub(data: dict[str, int | str]) -> None:
             pass
 
         return pub
@@ -51,7 +53,7 @@ def mock_influxdb(monkeypatch):
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
     ) -> PubFunction:
-        def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
             pass
 
         return pub
@@ -73,7 +75,7 @@ def mock_bridge(monkeypatch, capture_data):
     def client_pub(
         *, host: str, port: int, username: str, password: str, db_name: str
     ) -> PubFunction:
-        def pub(*, time: int, tags: Dict[str, str], data: Dict[str, float]) -> None:
+        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
             tag = ",".join(f"{k},{v}" for k, v in tags.items())
             for key, val in data.items():
                 print(f"{time},{tag},{key},{val}")

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Protocol, Tuple
+from typing import Protocol
 
 
 class Cmd(Protocol):
@@ -38,7 +38,7 @@ class Message(Protocol):
     """Message from sensor"""
 
     @classmethod
-    def decode(cls, message: bytes, command: Cmd) -> Tuple[float, ...]: ...
+    def decode(cls, message: bytes, command: Cmd) -> tuple[float, ...]: ...
 
 
 class ObsData(Protocol):

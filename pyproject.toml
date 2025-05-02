@@ -157,13 +157,14 @@ fail_under = 100
 line-length = 100
 lint.select = ["E", "F", "I", "UP", "FA"]
 lint.ignore = [
-    "F401",  # https://docs.astral.sh/ruff/rules/unused-import/
-    "F841",  # https://docs.astral.sh/ruff/rules/unused-variable/
-    "E501",  # https://docs.astral.sh/ruff/rules/line-too-long/
-    "E731",  # https://docs.astral.sh/ruff/rules/lambda-assignment/
-    "UP006", # https://docs.astral.sh/ruff/rules/non-pep585-annotation/
-    "UP035", # https://docs.astral.sh/ruff/rules/deprecated-import/
-    "UP037", # https://docs.astral.sh/ruff/rules/quoted-annotation/
+    "F401", # https://docs.astral.sh/ruff/rules/unused-import/
+    "F841", # https://docs.astral.sh/ruff/rules/unused-variable/
+    "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
+    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
+]
+
+[tool.ruff.lint.per-file-ignores]
+"cli.py" = [
     "FA100", # https://docs.astral.sh/ruff/rules/future-rewritable-type-annotation/
 ]
 
