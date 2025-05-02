@@ -125,7 +125,8 @@ description = code quality
 skip_install=True
 commands =
     pre-commit autoupdate
-    pre-commit run --all-files --show-diff-on-failure
+    pre-commit run --hook-stage pre-commit --all-files --show-diff-on-failure
+dependency_groups =
 deps =
     pre-commit
     pre-commit-uv
