@@ -14,7 +14,7 @@ from loguru import logger
 
 from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
-app = typer.Typer(add_completion=False, no_args_is_help=True)
+main = typer.Typer(add_completion=False, no_args_is_help=True)
 
 """
 Extra cli commands from plugins
@@ -22,12 +22,7 @@ Extra cli commands from plugins
 additional Typer commands are loaded from plugins (entry points) advertized as `"pypms.extras"`
 """
 for ep in metadata.entry_points(group="pypms.extras"):
-    app.command(name=ep.name)(ep.load())
-
-
-def main():  # pragma: no cover
-    logger.enable("pms")
-    app()
+    main.command(name=ep.name)(ep.load())
 
 
 def version_callback(value: bool):  # pragma: no cover
@@ -40,7 +35,7 @@ def version_callback(value: bool):  # pragma: no cover
     raise typer.Exit()
 
 
-@app.callback()
+@main.callback()
 def callback(
     ctx: typer.Context,
     model: Annotated[
@@ -57,7 +52,9 @@ def callback(
     version: Annotated[bool, typer.Option("--version", "-V", callback=version_callback)] = False,
 ):
     """Data acquisition and logging for Air Quality Sensors with UART interface"""
-    if not debug:
+    if debug:  # pragma: no cover
+        logger.enable("pms")
+    else:
         logger.configure(
             handlers=[
                 {
@@ -71,7 +68,7 @@ def callback(
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
 
 
-@app.command()
+@main.command()
 def info(ctx: typer.Context):  # pragma: no cover
     """Information about the sensor observations"""
     sensor: Sensor = ctx.obj["reader"].sensor
@@ -95,7 +92,7 @@ class Format(str, Enum):
         return self.value
 
 
-@app.command()
+@main.command()
 def serial(
     ctx: typer.Context,
     format: Annotated[
@@ -124,7 +121,7 @@ def serial(
                 typer.echo(str(obs))
 
 
-@app.command()
+@main.command()
 def csv(
     ctx: typer.Context,
     capture: Annotated[
