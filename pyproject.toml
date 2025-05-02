@@ -27,10 +27,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "pyserial>=3.5",
-    "typer>=0.6.1",
-    "loguru>=0.6.0",
-    "importlib-metadata>=3.6 ; python_version < '3.10'",
+    "pyserial >=3.5",
+    "typer-slim >=0.12.0",
+    "loguru >=0.7.0",
+    "importlib-metadata >=3.6 ; python_version < '3.10'",
 ]
 
 [project.optional-dependencies]
