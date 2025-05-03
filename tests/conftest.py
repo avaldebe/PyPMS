@@ -15,37 +15,40 @@ from pms.core.reader import RawData
 from pms.core.types import ObsData
 
 CAPTURED_DATA = Path("tests/captured_data/data.csv")
-CREATE_MESSAGES = """
-CREATE TABLE IF NOT EXISTS messages (
-    time DATETIME NOT NULL,
-    sensor TEXT NOT NULL,
-    message BLOB NOT NULL,
-    UNIQUE (time, sensor)
-)
-"""
-INSERT_MESSAGES = """
-INSERT OR IGNORE INTO messages
-    (time, sensor, message)
-VALUES
-    (:time, :sensor, bytes(:hex))
-"""
 
 
 @contextmanager
 def captured_data_reader(db_str: str = ":memory:", *, data: Path | None = None):
     db = connect(db_str)
     with db, closing(db.cursor()) as cur:
-        cur.execute(CREATE_MESSAGES)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            time DATETIME NOT NULL,
+            sensor TEXT NOT NULL,
+            message BLOB NOT NULL,
+            UNIQUE (time, sensor)
+        )
+        """)
 
     if data is not None and data.exists():
         db.create_function("bytes", 1, bytes.fromhex)
         with db, closing(db.cursor()) as cur, data.open() as csv:
-            cur.executemany(INSERT_MESSAGES, DictReader(csv))
+            cur.executemany(
+                """
+                INSERT OR IGNORE INTO messages
+                    (time, sensor, message)
+                VALUES
+                    (:time, :sensor, bytes(:hex))
+                """,
+                DictReader(csv),
+            )
 
     def reader(sensor: str) -> Iterator[RawData]:
-        select = f"SELECT time, message FROM messages WHERE sensor IS '{sensor}'"
         with closing(db.cursor()) as cur:
-            cur.execute(select)
+            cur.execute(
+                "SELECT time, message FROM messages WHERE sensor IS ?",
+                (sensor,),
+            )
             return (RawData(*row) for row in cur.fetchall())
 
     try:
@@ -61,7 +64,7 @@ class CapturedData(Enum):
 
     with captured_data_reader(data=CAPTURED_DATA) as reader:
         CapturedData = vars()
-        for name in [s.name for s in Sensor]:
+        for name in (s.name for s in Sensor):
             capt = tuple(reader(name))
             if capt:
                 CapturedData[name] = capt
@@ -95,24 +98,24 @@ class CapturedData(Enum):
             serial_csv="serial -f csv",
             serial_hexdump="serial -f hexdump",
             csv=f"csv --overwrite {self.name}_test.csv",
-            capture=f"csv --overwrite  --capture {self}_pypms.csv",
+            capture=f"csv --overwrite --capture {self}_pypms.csv",
             decode=f"serial -f csv --decode {self}_pypms.csv",
         ).get(command, command)
         return f"{capture} {cmd}".split()
 
     def output(self, ending: str) -> str:
-        path = CAPTURED_DATA.parent / f"{self}.{ending}"
+        path = CAPTURED_DATA.with_name(f"{self}.{ending}")
         return path.read_text()
 
 
-@pytest.fixture(params=list(CapturedData), ids=str)
-def capture_data(request) -> CapturedData:
+@pytest.fixture(params=CapturedData, ids=str)
+def capture_data(request: pytest.FixtureRequest) -> CapturedData:
     """captured data from real sensors"""
     return request.param
 
 
 @pytest.fixture()
-def capture(monkeypatch, capture_data) -> CapturedData:
+def capture(monkeypatch: pytest.MonkeyPatch, capture_data: CapturedData) -> CapturedData:
     """mock pms.core.reader.Serial and some pms.core.reader.SensorReader internals"""
 
     class MockSerial:
