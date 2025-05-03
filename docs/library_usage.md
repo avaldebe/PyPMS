@@ -106,10 +106,10 @@ The following table shows all possible data fields and the type provided by each
     | [MCU680]         |       |   int   |  int  |  int  |  int  |
 
 [PMS3003]:  sensors/Plantower.md#pms3003
-[PMSx003]:  sensors/Plantower.md#pmx3003
+[PMSx003]:  sensors/Plantower.md#pmsx003
 [PMS5003T]: sensors/Plantower.md#pms5003t
 [PMS5003S]: sensors/Plantower.md#pms5003s
-[PMS5003ST]:sensors/Plantower.md#pms5003St
+[PMS5003ST]:sensors/Plantower.md#pms5003st
 [SDS01x]:   sensors/NovaFitness.md#sds01x
 [SDS198]:   sensors/NovaFitness.md#sds198
 [HPMA115S0]:sensors/Honeywell.md#hpma115s0
