@@ -206,5 +206,9 @@ sqlite_cache = true
 exclude = "site"
 
 [[tool.mypy.overrides]]
+module = ["influxdb"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = ["pms.extra.mqtt", "pms.extra.influxdb"]
 warn_unused_ignores = false
