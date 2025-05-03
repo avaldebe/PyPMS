@@ -3,9 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from logot import Logot, logged
 from typer.testing import CliRunner
 
-from pms.cli import APP_VERSION, main
+from pms import __version__
+from pms.cli import main
 
 runner = CliRunner()
 
@@ -14,18 +16,21 @@ runner = CliRunner()
 def test_version(cmd: str):
     result = runner.invoke(main, cmd)
     assert result.exit_code == 0
-    assert result.stdout.strip() == APP_VERSION
+    assert result.stdout.strip() == f"PyPMS v{__version__}"
 
 
 @pytest.mark.parametrize("format", (None, "csv", "hexdump"))
-def test_serial(capture, format: str | None):
+def test_serial(capture, format: str | None, logot: Logot):
     cmd = "serial" if format is None else f"serial_{format}"
     result = runner.invoke(main, capture.options(cmd))
     assert result.exit_code == 0
     assert result.stdout == capture.output(format)
 
+    for msg in capture.debug_messages("serial"):
+        logot.assert_logged(logged.debug(msg))
 
-def test_csv(capture):
+
+def test_csv(capture, logot: Logot):
     result = runner.invoke(main, capture.options("csv"))
     assert result.exit_code == 0
 
@@ -34,8 +39,11 @@ def test_csv(capture):
     assert csv.read_text() == capture.output("csv")
     csv.unlink()
 
+    for msg in capture.debug_messages("csv"):
+        logot.assert_logged(logged.debug(msg))
 
-def test_capture_decode(capture):
+
+def test_capture_decode(capture, logot: Logot):
     result = runner.invoke(main, capture.options("capture"))
     assert result.exit_code == 0
 
@@ -46,3 +54,6 @@ def test_capture_decode(capture):
     assert result.exit_code == 0
     csv.unlink()
     assert result.stdout == capture.output("csv")
+
+    for msg in capture.debug_messages("decode"):
+        logot.assert_logged(logged.debug(msg))

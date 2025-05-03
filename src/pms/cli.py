@@ -15,7 +15,6 @@ from loguru import logger
 from pms import __version__
 from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
-APP_VERSION = f"PyPMS v{__version__}"
 main = typer.Typer(add_completion=False, no_args_is_help=True)
 
 """
@@ -31,7 +30,7 @@ def version_callback(value: bool):
     if not value:
         return
 
-    typer.echo(APP_VERSION)
+    typer.echo(f"PyPMS v{__version__}")
     raise typer.Exit()
 
 
@@ -65,7 +64,7 @@ def callback(
             ],
         )
 
-    logger.debug(APP_VERSION)
+    logger.debug(f"PyPMS v{__version__}")
     ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
 
 

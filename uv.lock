@@ -247,6 +247,23 @@ wheels = [
 ]
 
 [[package]]
+name = "logot"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.10' and sys_platform == 'linux'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/36/90/2c45c5aba12a221004f3fc8e26f80cfc3612a60236c47bb8dfe16952522e/logot-1.3.0.tar.gz", hash = "sha256:de392d182308828a0a9a442120e25e4ad2258fef52c4ed275e012aaffb0514a5", size = 14819, upload-time = "2024-03-23T20:38:47.927Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a8/aa/8369bea2895d72021cbe65612bba07b6a11861460dab6dbf05e8f5e211d6/logot-1.3.0-py3-none-any.whl", hash = "sha256:bb2e8cf8ca949015e1e096e45023095ebd5df06ea4627f5df47d53dcdf62b74e", size = 21784, upload-time = "2024-03-23T20:38:46.042Z" },
+]
+
+[package.optional-dependencies]
+loguru = [
+    { name = "loguru", marker = "sys_platform == 'linux'" },
+]
+
+[[package]]
 name = "loguru"
 version = "0.7.3"
 source = { registry = "https://pypi.org/simple" }
@@ -572,6 +589,7 @@ mqtt = [
 [package.dev-dependencies]
 dev = [
     { name = "coverage", marker = "sys_platform == 'linux'" },
+    { name = "logot", extra = ["loguru"], marker = "sys_platform == 'linux'" },
     { name = "mock-serial", marker = "sys_platform == 'linux'" },
     { name = "mypy", marker = "sys_platform == 'linux'" },
     { name = "packaging", marker = "sys_platform == 'linux'" },
@@ -587,6 +605,7 @@ docs = [
 ]
 test = [
     { name = "coverage", marker = "sys_platform == 'linux'" },
+    { name = "logot", extra = ["loguru"], marker = "sys_platform == 'linux'" },
     { name = "mock-serial", marker = "sys_platform == 'linux'" },
     { name = "packaging", marker = "sys_platform == 'linux'" },
     { name = "pytest", marker = "sys_platform == 'linux'" },
@@ -606,6 +625,7 @@ provides-extras = ["influxdb", "mqtt"]
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", specifier = ">=7.8" },
+    { name = "logot", extras = ["loguru"], specifier = ">=1.3.0" },
     { name = "mock-serial" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "packaging", specifier = ">=25.0" },
@@ -621,6 +641,7 @@ docs = [
 ]
 test = [
     { name = "coverage", specifier = ">=7.8" },
+    { name = "logot", extras = ["loguru"], specifier = ">=1.3.0" },
     { name = "mock-serial" },
     { name = "packaging", specifier = ">=25.0" },
     { name = "pytest", specifier = ">=8.3.5" },

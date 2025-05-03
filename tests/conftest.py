@@ -10,6 +10,7 @@ from sqlite3 import connect
 import pytest
 from loguru import logger
 
+from pms import __version__
 from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
@@ -89,11 +90,24 @@ class CapturedData(Enum):
         sensor = self.sensor
         return (sensor.decode(msg.data, time=msg.time) for msg in self.value)
 
+    @property
+    def msg_hex(self) -> Iterator[str]:
+        for message in self.value:
+            if self.name == "SPS30":
+                yield (
+                    message.hex.replace("7d5e", "7e")
+                    .replace("7d5d", "7d")
+                    .replace("7d31", "11")
+                    .replace("7d33", "13")
+                )
+            else:
+                yield message.hex
+
+    def samples(self, command: str) -> int:
+        return len(self.value) - (command == "mqtt")
+
     def options(self, command: str) -> list[str]:
-        samples = len(self.value)
-        if command == "mqtt":
-            samples -= 1
-        capture = f"-m {self.name} -n {samples} -i 0"
+        capture = f"-m {self.name} -n {self.samples(command)} -i 0"
         cmd = dict(
             serial_csv="serial -f csv",
             serial_hexdump="serial -f hexdump",
@@ -101,13 +115,28 @@ class CapturedData(Enum):
             capture=f"csv --overwrite --capture {self}_pypms.csv",
             decode=f"serial -f csv --decode {self}_pypms.csv",
         ).get(command, command)
-        return f"{capture} {cmd}".split()
+        return f"--debug {capture} {cmd}".split()
 
     def output(self, ending: str | None) -> str:
         if ending is None:
             ending = "txt"
         path = CAPTURED_DATA.with_name(f"{self}.{ending}")
         return path.read_text()
+
+    def debug_messages(self, command: str) -> Iterator[str]:
+        yield f"PyPMS v{__version__}"
+        if command == "decode":
+            yield f"open {self}_pypms.csv"
+            yield f"close {self}_pypms.csv"
+            return
+
+        yield f"capture {self.samples(command)} {self.name} obs from /dev/ttyUSB0 every ? secs"
+        yield "open /dev/ttyUSB0"
+        yield f"wake {self.name}"
+        for hex in self.msg_hex:
+            yield f"message hex: {hex}"
+        yield f"sleep {self.name}"
+        yield "close /dev/ttyUSB0"
 
 
 @pytest.fixture(params=CapturedData, ids=str)

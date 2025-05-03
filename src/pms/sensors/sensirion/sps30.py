@@ -48,7 +48,7 @@ class Message(base.Message):
             b"\x7d\x31": b"\x11",
             b"\x7d\x33": b"\x13",
         }.items():
-            if k in message:  # pragma: no cover
+            if k in message:
                 message = message.replace(k, v)
         return super().unpack(message, header, length)
 

@@ -78,7 +78,13 @@ dev = [
     "mypy >=1.15.0",
     "types-pyserial",
 ]
-test = ["pytest >=8.3.5", "packaging >=25.0", "mock_serial", "coverage >=7.8"]
+test = [
+    "pytest >=8.3.5",
+    "packaging >=25.0",
+    "mock_serial",
+    "logot[loguru]>=1.3.0",
+    "coverage >=7.8",
+]
 docs = ["mkdocs>=1.2.3", "mkdocs-material>=9.4", "pymdown-extensions>=9.5"]
 
 [tool.hatch]
@@ -157,6 +163,7 @@ minversion = "6.0"
 addopts = "--lf -Werror"
 pythonpath = ["src"]
 testpaths = ["tests"]
+logot_capturer = "logot.loguru.LoguruCapturer"
 
 [tool.coverage.run]
 source = ["pms"]
