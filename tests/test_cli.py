@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import pytest
@@ -8,16 +10,17 @@ from pms.cli import APP_VERSION, main
 runner = CliRunner()
 
 
-@pytest.mark.parametrize("cmd", {"--version", "-V"})
-def test_version(cmd: str, caplog: pytest.LogCaptureFixture):
+@pytest.mark.parametrize("cmd", ("--version", "-V"))
+def test_version(cmd: str):
     result = runner.invoke(main, cmd)
     assert result.exit_code == 0
     assert result.stdout.strip() == APP_VERSION
 
 
-@pytest.mark.parametrize("format", {"csv", "hexdump"})
-def test_serial(capture, format: str):
-    result = runner.invoke(main, capture.options(f"serial_{format}"))
+@pytest.mark.parametrize("format", (None, "csv", "hexdump"))
+def test_serial(capture, format: str | None):
+    cmd = "serial" if format is None else f"serial_{format}"
+    result = runner.invoke(main, capture.options(cmd))
     assert result.exit_code == 0
     assert result.stdout == capture.output(format)
 
@@ -27,7 +30,7 @@ def test_csv(capture):
     assert result.exit_code == 0
 
     csv = Path(capture.options("csv")[-1])
-    assert csv.exists()
+    assert csv.is_file()
     assert csv.read_text() == capture.output("csv")
     csv.unlink()
 

@@ -103,7 +103,9 @@ class CapturedData(Enum):
         ).get(command, command)
         return f"{capture} {cmd}".split()
 
-    def output(self, ending: str) -> str:
+    def output(self, ending: str | None) -> str:
+        if ending is None:
+            ending = "txt"
         path = CAPTURED_DATA.with_name(f"{self}.{ending}")
         return path.read_text()
 
