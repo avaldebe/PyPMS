@@ -134,7 +134,7 @@ def csv(
     path: Annotated[Path, typer.Argument(help="csv formatted file", show_default=False)] = Path(),
 ):
     """Read sensor and save measurements to a CSV file"""
-    if path.is_dir():
+    if path.is_dir():  # pragma: no cover
         path /= f"{datetime.now():%F}_pypms.csv"
     mode = "w" if overwrite else "a"
     logger.debug(f"open {path} on '{mode}' mode")
