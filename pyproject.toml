@@ -79,7 +79,7 @@ dev = [
     "types-pyserial",
 ]
 test = ["pytest >=8.3.5", "packaging >=25.0", "mock_serial", "coverage >=7.8"]
-docs = ["mkdocs>=1.2.3", "mkdocs-material>=8.2.5", "pymdown-extensions>=9.5"]
+docs = ["mkdocs>=1.2.3", "mkdocs-material>=9.4", "pymdown-extensions>=9.5"]
 
 [tool.hatch]
 build.targets.sdist.include = ["src/pms"]
@@ -142,6 +142,7 @@ deps =
     pre-commit-uv
 
 [testenv:docs{,-serve,-deploy}]
+env_name = docs
 description = build docs
 commands =
     docs:        mkdocs build --clean

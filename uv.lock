@@ -616,7 +616,7 @@ dev = [
 ]
 docs = [
     { name = "mkdocs", specifier = ">=1.2.3" },
-    { name = "mkdocs-material", specifier = ">=8.2.5" },
+    { name = "mkdocs-material", specifier = ">=9.4" },
     { name = "pymdown-extensions", specifier = ">=9.5" },
 ]
 test = [
