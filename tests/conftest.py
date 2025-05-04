@@ -3,9 +3,11 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import closing, contextmanager
 from csv import DictReader
+from datetime import datetime, tzinfo
 from enum import Enum
 from pathlib import Path
 from sqlite3 import connect
+from zoneinfo import ZoneInfo
 
 import pytest
 from loguru import logger
@@ -84,6 +86,10 @@ class CapturedData(Enum):
     @property
     def time(self) -> Iterator[int]:
         return (msg.time for msg in self.value)
+
+    @property
+    def tzinfo(self) -> tzinfo:
+        return ZoneInfo("Europe/Oslo")
 
     @property
     def obs(self) -> Iterator[ObsData]:
@@ -184,16 +190,23 @@ def capture(monkeypatch: pytest.MonkeyPatch, capture_data: CapturedData) -> Capt
         """don't check if message matches sensor"""
         return True
 
-    captured_time = capture_data.time
+    class mock_datetime(datetime):
+        captured_time = capture_data.time
 
-    def mock_sensor_now(self) -> int:
-        """mock pms.core.Sensor.now"""
-        return next(captured_time)
+        @classmethod
+        def fromtimestamp(cls, t, tz=capture_data.tzinfo):
+            assert tz == capture_data.tzinfo
+            return datetime.fromtimestamp(t, tz)
+
+        @classmethod
+        def now(cls, tz=capture_data.tzinfo):
+            return cls.fromtimestamp(next(cls.captured_time), tz)
 
     monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
     monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
     monkeypatch.setattr("pms.core.reader.SensorReader._pre_heat", mock_reader__pre_heat)
     monkeypatch.setattr("pms.core.reader.Sensor.check", mock_sensor_check)
-    monkeypatch.setattr("pms.core.reader.Sensor.now", mock_sensor_now)
+    monkeypatch.setattr("pms.core.sensor.datetime", mock_datetime)
+    monkeypatch.setattr("pms.sensors.base.datetime", mock_datetime)
 
     return capture_data
