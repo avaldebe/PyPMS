@@ -120,7 +120,7 @@ description =
 uv_resolution =
      py39: lowest
 set_env =
-    !report: COVERAGE_FILE=.coverage/coverage.{envname}
+    !report: COVERAGE_FILE={env:COVERAGE_FILE:.coverage/coverage.{envname}}
 commands =
     coverage run -m pytest -ra -q
 dependency_groups =

@@ -44,6 +44,8 @@ jobs:
           python-version:  ${{ matrix.python-version }}
           enable-cache: true
       - name: Run tests
+        env:
+          COVERAGE_FILE: .coverage/coverage.${{ matrix.python-version }}
         run: uvx --with tox-uv tox r -e py
       - name: Store coverage files
         uses: actions/upload-artifact@v4
