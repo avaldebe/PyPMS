@@ -164,42 +164,36 @@ def capture(monkeypatch: pytest.MonkeyPatch, capture_data: CapturedData) -> Capt
         def reset_input_buffer(self):
             pass
 
-    monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
-
-    sensor = capture_data.sensor
-    data = capture_data.data
+    captured_data = capture_data.data
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
         logger.debug(f"mock write/read: {command}")
         # nonlocal data
         if command == "passive_read":
-            return next(data)
-        if command in ["wake", "passive_mode"]:
-            return b"." * sensor.command(command).answer_length
+            return next(captured_data)
+        if command in {"wake", "passive_mode"}:
+            return b"." * self.sensor.command(command).answer_length
 
         return b""
 
-    monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
-
-    def mock_reader__pre_heat(self):
-        pass
-
-    monkeypatch.setattr("pms.core.reader.SensorReader._pre_heat", mock_reader__pre_heat)
+    def mock_reader__pre_heat(self) -> int:
+        return 0
 
     def mock_sensor_check(self, buffer: bytes, command: str) -> bool:
         """don't check if message matches sensor"""
         return True
 
-    monkeypatch.setattr("pms.core.reader.Sensor.check", mock_sensor_check)
-
-    time = capture_data.time
+    captured_time = capture_data.time
 
     def mock_sensor_now(self) -> int:
         """mock pms.core.Sensor.now"""
-        nonlocal time
-        return next(time)
+        return next(captured_time)
 
+    monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
+    monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
+    monkeypatch.setattr("pms.core.reader.SensorReader._pre_heat", mock_reader__pre_heat)
+    monkeypatch.setattr("pms.core.reader.Sensor.check", mock_sensor_check)
     monkeypatch.setattr("pms.core.reader.Sensor.now", mock_sensor_now)
 
     return capture_data

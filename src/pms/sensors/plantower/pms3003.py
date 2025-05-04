@@ -123,12 +123,12 @@ class ObsData(base.ObsData):
         return self._safe_div(self.pm10, self.raw10)
 
     @staticmethod
-    def _safe_div(x: int, y: int) -> float:
+    def _safe_div(x: int, y: int) -> float:  # pragma: no cover
         if y:
             return x / y
-        if x == y == 0:  # pragma: no cover
+        if x == y == 0:
             return 1
-        return 0  # pragma: no cover
+        return 0
 
     def __format__(self, spec: str) -> str:
         if spec == "pm":
