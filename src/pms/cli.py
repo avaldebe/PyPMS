@@ -34,6 +34,20 @@ def version_callback(value: bool):
     raise typer.Exit()
 
 
+def configure_logger(debug: bool):
+    logger.enable("pms")
+    if debug:
+        return
+
+    # replace default logger handler
+    try:
+        logger.remove(0)
+    except ValueError as e:
+        logger.debug(f"no default logger handler {e}")
+    else:
+        logger.add(sys.stderr, level="INFO", format="<level>{message}</level>")
+
+
 @main.callback()
 def callback(
     ctx: typer.Context,
@@ -47,23 +61,13 @@ def callback(
     samples: Annotated[
         Optional[int], typer.Option("--samples", "-n", min=1, help="stop after N samples")
     ] = None,
-    debug: Annotated[bool, typer.Option("--debug", help="print DEBUG/logging messages")] = False,
+    debug: Annotated[
+        bool,
+        typer.Option("--debug", help="print DEBUG/logging messages", callback=configure_logger),
+    ] = False,
     version: Annotated[bool, typer.Option("--version", "-V", callback=version_callback)] = False,
 ):
     """Data acquisition and logging for Air Quality Sensors with UART interface"""
-    if debug:
-        logger.enable("pms")
-    else:
-        logger.configure(
-            handlers=[
-                {
-                    "sink": sys.stderr,
-                    "format": "<level>{message}</level>",
-                    "level": "INFO",
-                },
-            ],
-        )
-
     logger.debug(f"PyPMS v{__version__}")
     obj = ctx.ensure_object(dict)
     obj.update(reader=SensorReader(model, port, seconds, samples))

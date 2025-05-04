@@ -112,7 +112,7 @@ class CapturedData(Enum):
     def samples(self, command: str) -> int:
         return len(self.value) - (command == "mqtt")
 
-    def options(self, command: str) -> list[str]:
+    def options(self, command: str, *, debug: bool = False) -> list[str]:
         capture = f"-m {self.name} -n {self.samples(command)} -i 0"
         cmd = dict(
             serial_csv="serial -f csv",
@@ -121,7 +121,9 @@ class CapturedData(Enum):
             capture=f"csv --overwrite --capture {self}_pypms.csv",
             decode=f"serial -f csv --decode {self}_pypms.csv",
         ).get(command, command)
-        return f"--debug {capture} {cmd}".split()
+        if debug:
+            return f"--debug {capture} {cmd}".split()
+        return f"{capture} {cmd}".split()
 
     def output(self, ending: str | None) -> str:
         if ending is None:

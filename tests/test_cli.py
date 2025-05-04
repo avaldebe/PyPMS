@@ -14,22 +14,24 @@ runner = CliRunner()
 
 
 @pytest.mark.parametrize("cmd", ("--version", "-V"))
-def test_version(cmd: str):
+def test_version(cmd: str, logot: Logot):
     result = runner.invoke(main, cmd)
     assert result.exit_code == 0
     assert result.stdout.strip() == f"PyPMS v{__version__}"
+    logot.assert_not_logged(logged.debug(f"PyPMS v{__version__}"))
 
 
-def test_info(capture):
+def test_info(capture, logot: Logot):
     result = runner.invoke(main, capture.options("info"))
     assert result.exit_code == 0
     assert dedent(result.stdout).strip() == capture.output("info").strip()
+    logot.assert_logged(logged.debug(f"PyPMS v{__version__}"))
 
 
 @pytest.mark.parametrize("format", (None, "csv", "hexdump"))
 def test_serial(capture, format: str | None, logot: Logot):
     cmd = "serial" if format is None else f"serial_{format}"
-    result = runner.invoke(main, capture.options(cmd))
+    result = runner.invoke(main, capture.options(cmd, debug=True))
     assert result.exit_code == 0
     assert result.stdout == capture.output(format)
 
@@ -38,7 +40,7 @@ def test_serial(capture, format: str | None, logot: Logot):
 
 
 def test_csv(capture, logot: Logot):
-    result = runner.invoke(main, capture.options("csv"))
+    result = runner.invoke(main, capture.options("csv", debug=True))
     assert result.exit_code == 0
 
     csv = Path(capture.options("csv")[-1])
@@ -53,9 +55,11 @@ def test_csv(capture, logot: Logot):
 def test_capture_decode(capture, logot: Logot):
     result = runner.invoke(main, capture.options("capture"))
     assert result.exit_code == 0
-
     csv = Path(capture.options("capture")[-1])
     assert csv.exists()
+
+    for msg in capture.debug_messages("capture"):
+        logot.assert_logged(logged.debug(msg))
 
     result = runner.invoke(main, capture.options("decode"))
     assert result.exit_code == 0
