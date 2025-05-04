@@ -119,12 +119,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Winsen MH-Z19B sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    CO2                                     CO2 concentration [ppm]
-
-    String formats: co2 (default), csv and header
+    --8<-- "MHZ19B.info"
     ```
 
 === "serial"
@@ -175,12 +170,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` csv
-    Winsen ZH03B and ZH06-I sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-
-    String formats: pm (default), csv and header
+    --8<-- "ZH0xx.info"
     ```
 
 === "serial"

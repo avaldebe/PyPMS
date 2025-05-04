@@ -117,12 +117,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    NovaFitness SDS011, SDS018 and SDS021 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm25, pm10                              PM2.5, PM10 [μg/m3]
-
-    String formats: pm (default), csv and header
+    --8<-- "SDS01x.info"
     ```
 
 === "serial"
@@ -172,12 +167,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    NovaFitness SDS198 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm100                                   PM100 [μg/m3]
-
-    String formats: pm (default), csv and header
+    --8<-- "SDS198.info"
     ```
 
 === "serial"

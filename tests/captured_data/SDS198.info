@@ -1,0 +1,6 @@
+NovaFitness SDS198 sensor observations
+
+time                                    measurement time [seconds since epoch]
+pm100                                   PM100 [μg/m3]
+
+String formats: pm (default), csv and header

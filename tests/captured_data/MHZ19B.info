@@ -1,0 +1,6 @@
+Winsen MH-Z19B sensor observations
+
+time                                    measurement time [seconds since epoch]
+CO2                                     CO2 concentration [ppm]
+
+String formats: co2 (default), csv and header

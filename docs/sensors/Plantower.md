@@ -168,13 +168,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Plantower PMS3003 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-
-    String formats: pm (default), raw, cf, csv and header
+    --8<-- "PMS3003.info"
     ```
 
 === "serial"
@@ -224,14 +218,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
-
-    String formats: pm (default), raw, cf, num, csv and header
+    --8<-- "PMSx003.info"
     ```
 
 === "serial"
@@ -281,16 +268,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Plantower PMS5003T sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-    n0_3, n0_5, n1_0, n2_5                  number concentrations over X.Y um [#/cm3]
-    temp                                    temperature [°C]
-    rhum                                    relative humidity [%]
-
-    String formats: pm (default), raw, cf, num, atm, csv and header
+    --8<-- "PMS5003T.info"
     ```
 
 === "serial"
@@ -340,15 +318,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Plantower PMS5003S sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
-    HCHO                                    formaldehyde concentration [mg/m3]
-
-    String formats: pm (default), raw, cf, num, hcho, csv and header
+    --8<-- "PMS5003S.info"
     ```
 
 === "serial"
@@ -398,17 +368,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Plantower PMS5003ST sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
-    pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
-    n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
-    HCHO                                    formaldehyde concentration [mg/m3]
-    temp                                    temperature [°C]
-    rhum                                    relative humidity [%]
-
-    String formats: pm (default), raw, cf, num, hcho, atm, csv and header
+    --8<-- "PMS5003ST.info"
     ```
 
 === "serial"

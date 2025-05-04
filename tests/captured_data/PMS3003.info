@@ -1,0 +1,7 @@
+Plantower PMS3003 sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+
+String formats: pm (default), raw, cf, csv and header

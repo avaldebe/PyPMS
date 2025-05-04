@@ -63,7 +63,7 @@ def captured_data_reader(db_str: str = ":memory:", *, data: Path | None = None):
 class CapturedData(Enum):
     """Captured data from tests/captured_data"""
 
-    _ignore_ = "name capt CapturedData"
+    _ignore_ = "name capt CapturedData reader"
 
     with captured_data_reader(data=CAPTURED_DATA) as reader:
         CapturedData = vars()

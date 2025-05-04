@@ -112,12 +112,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Honeywell HPMA115S0 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm25, pm10                              PM2.5, PM10 [μg/m3]
-
-    String formats: pm (default), csv and header
+    --8<-- "HPMA115S0.info"
     ```
 
 === "serial"
@@ -167,12 +162,7 @@ Serial protocol is UART 9600 8N1 :material-alert: 3.3V TTL.
     ```
 
     ``` man
-    Honeywell HPMA115C0 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0 PM10 [μg/m3]
-
-    String formats: pm (default), csv and header
+    --8<-- "HPMA115C0.info"
     ```
 
 === "serial"

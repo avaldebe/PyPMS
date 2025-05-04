@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 from logot import Logot, logged
@@ -17,6 +18,12 @@ def test_version(cmd: str):
     result = runner.invoke(main, cmd)
     assert result.exit_code == 0
     assert result.stdout.strip() == f"PyPMS v{__version__}"
+
+
+def test_info(capture):
+    result = runner.invoke(main, capture.options("info"))
+    assert result.exit_code == 0
+    assert dedent(result.stdout).strip() == capture.output("info").strip()
 
 
 @pytest.mark.parametrize("format", (None, "csv", "hexdump"))

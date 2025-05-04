@@ -1,0 +1,10 @@
+Plantower PMS5003T sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+n0_3, n0_5, n1_0, n2_5                  number concentrations over X.Y um [#/cm3]
+temp                                    temperature [°C]
+rhum                                    relative humidity [%]
+
+String formats: pm (default), raw, cf, num, atm, csv and header

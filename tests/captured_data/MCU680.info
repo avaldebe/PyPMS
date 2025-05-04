@@ -1,0 +1,12 @@
+Bosh Sensortec BME680 sensor observations
+
+time                                    measurement time [seconds since epoch]
+temp                                    temperature [°C]
+rhum                                    relative humidity [%]
+pres                                    atmospheric pressure [hPa]
+IAQ_acc                                 IAQ accuracy flag
+IAQ                                     index of air quality [0--500]
+gas                                     gas resistance [kΩ]
+alt                                     altitude estimate [m above sea level]
+
+String formats: atm, bme (default), bsec, csv and header

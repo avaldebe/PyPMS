@@ -91,14 +91,7 @@ Serial protocol is UART 115200 8N1 5V TTL :material-alert: 3.3V compatible.
     ```
 
     ``` man
-    Sensirion SPS30 sensor observations
-
-    time                                    measurement time [seconds since epoch]
-    pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [μg/m3]
-    n0_5, n1_0, n2_5, n4_0, n10_0           number concentrations between 0.3 and X.Y um [#/cm3]
-    diam                                    typical particle size [μm]
-
-    String formats: pm (default), num, diam, csv and header
+    --8<-- "SPS30.info"
     ```
 
 === "serial"

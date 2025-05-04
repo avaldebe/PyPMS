@@ -65,7 +65,8 @@ def callback(
         )
 
     logger.debug(f"PyPMS v{__version__}")
-    ctx.obj = {"reader": SensorReader(model, port, seconds, samples)}
+    obj = ctx.ensure_object(dict)
+    obj.update(reader=SensorReader(model, port, seconds, samples))
 
 
 @main.command()
