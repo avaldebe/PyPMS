@@ -2,46 +2,20 @@ from __future__ import annotations
 
 from dataclasses import fields
 from datetime import datetime
-from functools import partial
-from textwrap import dedent
 from typing import Annotated, Callable, NamedTuple
 
 import typer
 from loguru import logger
+from paho.mqtt.client import Client
 
 from pms.core import exit_on_fail
 from pms.sensors.base import ObsData
 
 
-def __missing_mqtt():  # pragma: no cover
-    green = partial(typer.style, fg=typer.colors.GREEN)
-    red = partial(typer.style, fg=typer.colors.GREEN)
-    package = green("pypms", bold=True)
-    extra = module = red("paho-mqtt", bold=True)
-    msg = f"""
-        {green(__name__, bold=True)} provides additional functionality to {package}.
-        This functionality requires the {module} module, which is not installed.
-
-        You can install this additional dependency with
-            {green("python3 -m pip install --upgrade")} {package}[{extra}]
-        Or, if you installed {package} with {green("pipx")}
-            {green("pipx inject")} {package} {module}
-        Or, if you installed {package} with {green("uv tool")}
-            {green("uv tool install")} {package}[{extra}]
-    """
-    return dedent(msg)
-
-
 def client_pub(
     *, topic: str, host: str, port: int, username: str, password: str
 ) -> Callable[[dict[str, int | str]], None]:
-    try:
-        from paho.mqtt import client
-    except ModuleNotFoundError:  # pragma: no cover
-        typer.echo(__missing_mqtt())
-        raise typer.Abort()
-
-    c = client.Client(client_id=topic)
+    c = Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
     if username:
         c.username_pw_set(username, password)
@@ -50,7 +24,7 @@ def client_pub(
         f"{topic}/$online", "true", 1, True
     )
     c.will_set(f"{topic}/$online", "false", 1, True)
-    c.connect(host, port, 60)
+    c.connect(host, port)
     c.loop_start()
 
     def pub(data: dict[str, int | str]) -> None:
@@ -106,7 +80,7 @@ def client_sub(
     *,
     on_sensordata: Callable[[Data], None],
 ) -> None:
-    def on_message(client, userdata, msg):
+    def on_message(client: Client, userdata, msg):
         try:
             data = Data.decode(msg.topic, msg.payload)
         except UserWarning as e:
@@ -114,20 +88,14 @@ def client_sub(
         else:
             on_sensordata(data)
 
-    try:
-        from paho.mqtt import client
-    except ModuleNotFoundError:  # pragma: no cover
-        typer.echo(__missing_mqtt())
-        raise typer.Abort()
-
-    c = client.Client(client_id=topic)
+    c = Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
     if username:
         c.username_pw_set(username, password)
 
     c.on_connect = lambda client, userdata, flags, rc: client.subscribe(topic)
     c.on_message = on_message
-    c.connect(host, port, 60)
+    c.connect(host, port)
     c.loop_forever()
 
 

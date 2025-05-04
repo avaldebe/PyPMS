@@ -2,32 +2,12 @@ from __future__ import annotations
 
 import json
 from dataclasses import fields
-from functools import partial
-from textwrap import dedent
 from typing import Annotated, Protocol
 
 import typer
+from influxdb import InfluxDBClient as Client
 
 from pms.core import exit_on_fail
-
-
-def __missing_influxdb() -> str:  # pragma: no cover
-    green = partial(typer.style, fg=typer.colors.GREEN)
-    red = partial(typer.style, fg=typer.colors.GREEN)
-    package = green("pypms", bold=True)
-    extra = module = red("influxdb", bold=True)
-    msg = f"""
-        {green(__name__, bold=True)} provides additional functionality to {package}.
-        This functionality requires the {module} module, which is not installed.
-
-        You can install this additional dependency with
-            {green("python3 -m pip install --upgrade")} {package}[{extra}]
-        Or, if you installed {package} with {green("pipx")}
-            {green("pipx inject")} {package} {module}
-        Or, if you installed {package} with {green("uv tool")}
-            {green("uv tool install")} {package}[{extra}]
-    """
-    return dedent(msg)
 
 
 class PubFunction(Protocol):
@@ -35,13 +15,7 @@ class PubFunction(Protocol):
 
 
 def client_pub(*, host: str, port: int, username: str, password: str, db_name: str) -> PubFunction:
-    try:
-        from influxdb import InfluxDBClient as client
-    except ModuleNotFoundError:  # pragma: no cover
-        typer.echo(__missing_influxdb())
-        raise typer.Abort()
-
-    c = client(host, port, username, password, None)
+    c = Client(host, port, username, password, None)
     if db_name not in {x["name"] for x in c.get_list_database()}:
         c.create_database(db_name)
     c.switch_database(db_name)

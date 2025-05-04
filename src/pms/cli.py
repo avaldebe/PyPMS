@@ -1,13 +1,17 @@
+import re
 import sys
 from datetime import datetime
 from enum import Enum
+from functools import partial
 from pathlib import Path
+from textwrap import dedent
 from typing import Annotated, Optional, Union
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
 else:
     import importlib_metadata as metadata
+
 
 import typer
 from loguru import logger
@@ -17,13 +21,50 @@ from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fai
 
 main = typer.Typer(add_completion=False, no_args_is_help=True)
 
+
+def pluggin_missing_extras(*extras: str, package: str = "pypms"):  # pragma: no cover
+    green = partial(typer.style, fg=typer.colors.GREEN)
+    red = partial(typer.style, fg=typer.colors.RED)
+
+    required = metadata.requires(package)
+    assert required is not None
+    regex = re.compile(rf"extra == '({'|'.join(extras)})'")
+    missing = tuple(
+        dep for dep, _, markers in (req.partition(";") for req in required) if regex.search(markers)
+    )
+    extra = ", ".join(red(extra, bold=True) for extra in extras)
+    package = green(package, bold=True)
+
+    def command(ctx: typer.Context):
+        sub_cmd = ctx.command_path
+        dependencies = " ".join(f"'{red(dep, bold=True)}'" for dep in missing)
+        msg = f"""
+            {green(sub_cmd, bold=True)} require dependencies which are not installed.
+
+            You can install the required dependencies with
+                {green("python3 -m pip install --upgrade")} {package}[{extra}]
+            Or, if you installed {package} with {green("pipx")}
+                {green("pipx inject")} {package} {dependencies}
+            Or, if you installed {package} with {green("uv tool")}
+                {green("uv tool install")} {package}[{extra}]
+        """
+        typer.echo(dedent(msg))
+
+    command.__doc__ = f"needs {', '.join(missing)}"
+    return command
+
+
 """
 Extra cli commands from plugins
 
 additional Typer commands are loaded from plugins (entry points) advertized as `"pypms.extras"`
 """
+ep: metadata.EntryPoint
 for ep in metadata.entry_points(group="pypms.extras"):
-    main.command(name=ep.name)(ep.load())
+    try:
+        main.command(name=ep.name)(ep.load())
+    except ModuleNotFoundError:  # pragma: no cover
+        main.command(name=ep.name)(pluggin_missing_extras(*ep.extras))
 
 
 def version_callback(value: bool):
