@@ -6,7 +6,7 @@ from typing import Callable
 import pytest
 from typer.testing import CliRunner
 
-from pms.cli import main
+from pms.main import main
 
 runner = CliRunner()
 

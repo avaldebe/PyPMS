@@ -44,7 +44,7 @@ Homepage = "https://avaldebe.github.io/PyPMS"
 Repository = "https://github.com/avaldebe/PyPMS"
 
 [project.scripts]
-pms = "pms.cli:main"
+pms = "pms.main:main"
 
 [project.entry-points."pypms.sensors"]
 # docs/sensors/Plantower.md

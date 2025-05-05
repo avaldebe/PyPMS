@@ -8,7 +8,7 @@ from logot import Logot, logged
 from typer.testing import CliRunner
 
 from pms import __version__
-from pms.cli import main
+from pms.main import main
 
 runner = CliRunner()
 

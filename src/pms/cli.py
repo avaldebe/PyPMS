@@ -4,31 +4,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Annotated, Optional, Union
 
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
-
-
 import typer
 from loguru import logger
 
 from pms import __version__
 from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
-logger.enable("pms")
 main = typer.Typer(add_completion=False, no_args_is_help=True)
-
-
-"""
-Load extra cli commands from plugins from plugins (entry points) advertized as `"pypms.extras"`
-"""
-ep: metadata.EntryPoint
-for ep in metadata.entry_points(group="pypms.extras"):
-    try:
-        main.command(name=ep.name)(ep.load())
-    except ModuleNotFoundError as e:  # pragma: no cover
-        logger.error(f"loading CLI plugin {ep.name} from {ep.pattern} raised {e}")
 
 
 def version_callback(value: bool):
@@ -41,6 +23,8 @@ def version_callback(value: bool):
 
 def configure_logger(debug: bool):
     """replace default logger handler"""
+    logger.enable("pms")
+
     if debug:
         return
 
