@@ -581,7 +581,8 @@ dependencies = [
 [package.optional-dependencies]
 influxdb = [
     { name = "influxdb", marker = "sys_platform == 'linux'" },
-    { name = "pytz", marker = "python_full_version < '3.10' and sys_platform == 'linux'" },
+    { name = "pytz", marker = "sys_platform == 'linux'" },
+    { name = "requests", marker = "sys_platform == 'linux'" },
 ]
 mqtt = [
     { name = "paho-mqtt", marker = "sys_platform == 'linux'" },
@@ -622,7 +623,8 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.0" },
     { name = "paho-mqtt", marker = "extra == 'mqtt'", specifier = ">=2.1.0" },
     { name = "pyserial", specifier = ">=3.5" },
-    { name = "pytz", marker = "python_full_version < '3.10' and extra == 'influxdb'", specifier = ">=2020" },
+    { name = "pytz", marker = "extra == 'influxdb'", specifier = ">=2020" },
+    { name = "requests", marker = "extra == 'influxdb'", specifier = ">=2.32.0" },
     { name = "typer-slim", specifier = ">=0.12.0" },
 ]
 provides-extras = ["influxdb", "mqtt"]
