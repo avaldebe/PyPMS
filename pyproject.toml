@@ -173,8 +173,10 @@ logot_capturer = "logot.loguru.LoguruCapturer"
 filterwarnings = [
     # DeprecationWarning from pypms are errors
     "error::DeprecationWarning:(pms|tests).*:",
-    # Python3.9 urlib3-1.21.1
+    # Python3.9 urllib3-1.21.1
     "ignore:Using or importing the ABCs:DeprecationWarning:urllib3.*",
+    # Python3.9 python-dateutil-2.6.0
+    "ignore:invalid escape sequence:DeprecationWarning:dateutil.*",
     # Python3.12 influxdb-5.3.2
     "ignore:datetime.datetime.utcfromtimestamp:DeprecationWarning:influxdb.*",
 ]
