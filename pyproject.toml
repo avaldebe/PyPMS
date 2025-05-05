@@ -170,6 +170,7 @@ minversion = "6.0"
 addopts = "--ff"
 pythonpath = ["src"]
 testpaths = ["tests"]
+required_plugins = ["mock-serial", "logot"]
 logot_capturer = "logot.loguru.LoguruCapturer"
 filterwarnings = [
     # DeprecationWarning from pypms are errors
@@ -224,7 +225,7 @@ sqlite_cache = true
 exclude = "site"
 
 [[tool.mypy.overrides]]
-module = ["influxdb"]
+module = ["influxdb", "mock_serial"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

@@ -76,15 +76,11 @@ class CapturedData(Enum):
         return self.name
 
     @property
-    def sensor(self) -> Sensor:
-        return Sensor[self.name]
-
-    @property
-    def data(self) -> Iterator[bytes]:
+    def raw_message(self) -> Iterator[bytes]:
         return (msg.data for msg in self.value)
 
     @property
-    def time(self) -> Iterator[int]:
+    def message_timestamp(self) -> Iterator[int]:
         return (msg.time for msg in self.value)
 
     @property
@@ -93,7 +89,7 @@ class CapturedData(Enum):
 
     @property
     def obs(self) -> Iterator[ObsData]:
-        sensor = self.sensor
+        sensor = Sensor[self.name]
         return (sensor.decode(msg.data, time=msg.time) for msg in self.value)
 
     @property
@@ -148,13 +144,35 @@ class CapturedData(Enum):
 
 
 @pytest.fixture(params=CapturedData, ids=str)
-def capture_data(request: pytest.FixtureRequest) -> CapturedData:
+def captured_data(request: pytest.FixtureRequest) -> CapturedData:
     """captured data from real sensors"""
     return request.param
 
 
-@pytest.fixture()
-def capture(monkeypatch: pytest.MonkeyPatch, capture_data: CapturedData) -> CapturedData:
+@pytest.fixture
+def replay_time(monkeypatch: pytest.MonkeyPatch, captured_data: CapturedData) -> None:
+    """mock datetime at `pms.core.sensor`, `pms.sensors.base` and `pms.sensors.mqtt`"""
+    captured_data = captured_data
+
+    class mock_datetime(datetime):
+        message_timestamp = captured_data.message_timestamp
+
+        @classmethod
+        def fromtimestamp(cls, t, tz=captured_data.tzinfo):
+            assert tz == captured_data.tzinfo
+            return datetime.fromtimestamp(t, tz)
+
+        @classmethod
+        def now(cls, tz=captured_data.tzinfo):
+            return cls.fromtimestamp(next(cls.message_timestamp), tz)
+
+    monkeypatch.setattr("pms.core.sensor.datetime", mock_datetime)
+    monkeypatch.setattr("pms.sensors.base.datetime", mock_datetime)
+    monkeypatch.setattr("pms.extra.mqtt.datetime", mock_datetime)
+
+
+@pytest.fixture
+def replay_serial(monkeypatch: pytest.MonkeyPatch, captured_data: CapturedData) -> None:
     """mock pms.core.reader.Serial and some pms.core.reader.SensorReader internals"""
 
     class MockSerial:
@@ -172,43 +190,32 @@ def capture(monkeypatch: pytest.MonkeyPatch, capture_data: CapturedData) -> Capt
         def reset_input_buffer(self):
             pass
 
-    captured_data = capture_data.data
+    raw_message = captured_data.raw_message
 
     def mock_reader__cmd(self, command: str) -> bytes:
         """bypass serial.write/read"""
         logger.debug(f"mock write/read: {command}")
         # nonlocal data
         if command == "passive_read":
-            return next(captured_data)
+            return next(raw_message)
         if command in {"wake", "passive_mode"}:
             return b"." * self.sensor.command(command).answer_length
 
         return b""
 
-    def mock_reader__pre_heat(self) -> int:
-        return 0
-
     def mock_sensor_check(self, buffer: bytes, command: str) -> bool:
         """don't check if message matches sensor"""
         return True
 
-    class mock_datetime(datetime):
-        captured_time = capture_data.time
-
-        @classmethod
-        def fromtimestamp(cls, t, tz=capture_data.tzinfo):
-            assert tz == capture_data.tzinfo
-            return datetime.fromtimestamp(t, tz)
-
-        @classmethod
-        def now(cls, tz=capture_data.tzinfo):
-            return cls.fromtimestamp(next(cls.captured_time), tz)
-
     monkeypatch.setattr("pms.core.reader.Serial", MockSerial)
     monkeypatch.setattr("pms.core.reader.SensorReader._cmd", mock_reader__cmd)
-    monkeypatch.setattr("pms.core.reader.SensorReader._pre_heat", mock_reader__pre_heat)
     monkeypatch.setattr("pms.core.reader.Sensor.check", mock_sensor_check)
-    monkeypatch.setattr("pms.core.sensor.datetime", mock_datetime)
-    monkeypatch.setattr("pms.sensors.base.datetime", mock_datetime)
+    sensor = Sensor[captured_data.name]
+    if hasattr(sensor.value, "PREHEAT"):
+        monkeypatch.setattr(sensor.value, "PREHEAT", 0)
 
-    return capture_data
+
+@pytest.fixture()
+def capture(captured_data: CapturedData, replay_time, replay_serial) -> CapturedData:
+    """replay onservations from captured data"""
+    return captured_data

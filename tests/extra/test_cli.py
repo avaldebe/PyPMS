@@ -26,7 +26,7 @@ def mock_mqtt_publisher(monkeypatch: pytest.MonkeyPatch):
 
 
 @pytest.fixture()
-def mock_mqtt_subscribe(capture_data, monkeypatch: pytest.MonkeyPatch):
+def mock_mqtt_subscribe(captured_data, monkeypatch: pytest.MonkeyPatch, replay_time):
     """mock ms.extra.mqtt.subscribe"""
     from pms.extra.mqtt import Data
 
@@ -39,7 +39,7 @@ def mock_mqtt_subscribe(capture_data, monkeypatch: pytest.MonkeyPatch):
         *,
         on_sensordata: Callable[[Data], None],
     ) -> None:
-        for obs in capture_data.obs:
+        for obs in captured_data.obs:
             for field in fields(obs):
                 if not field.metadata:
                     continue
