@@ -67,9 +67,9 @@ MHZ19B = "pms.sensors.winsen.mhz19b"
 ZH0xx = "pms.sensors.winsen.zh0xx"
 
 [project.entry-points."pypms.extras"]
-influxdb = "pms.extra.cli:influxdb [influxdb]"
-mqtt = "pms.extra.cli:mqtt [mqtt]"
-bridge = "pms.extra.cli:bridge [influxdb, mqtt]"
+influxdb = "pms.extra.cli:influxdb"
+mqtt = "pms.extra.cli:mqtt"
+bridge = "pms.extra.cli:bridge"
 
 [dependency-groups]
 dev = [
