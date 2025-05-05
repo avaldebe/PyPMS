@@ -1,94 +1,43 @@
 from __future__ import annotations
 
 from dataclasses import fields
-from typing import Any, Callable
+from typing import Callable
 
 import pytest
 from typer.testing import CliRunner
 
 from pms.cli import main
-from pms.extra.influxdb import PubFunction
-from pms.extra.mqtt import Data
 
 runner = CliRunner()
 
 
 @pytest.fixture()
-def mock_mqtt(monkeypatch):
-    """mock pms.extra.mqtt.client_pub/client_sub"""
+def mock_mqtt_publisher(monkeypatch: pytest.MonkeyPatch):
+    """mock pms.extra.mqtt.publisher"""
+    from pms.extra.mqtt import Publisher
 
-    def client_pub(
-        *, topic: str, host: str, port: int, username: str, password: str
-    ) -> Callable[[dict[str, int | str]], None]:
+    def publisher(*, topic: str, host: str, port: int, username: str, password: str) -> Publisher:
         def pub(data: dict[str, int | str]) -> None:
             pass
 
         return pub
 
-    def client_sub(
+    monkeypatch.setattr("pms.extra.mqtt.publisher", publisher)
+
+
+@pytest.fixture()
+def mock_mqtt_subscribe(capture_data, monkeypatch: pytest.MonkeyPatch):
+    """mock ms.extra.mqtt.subscribe"""
+    from pms.extra.mqtt import Data
+
+    def subscribe(
         topic: str,
         host: str,
         port: int,
         username: str,
         password: str,
         *,
-        on_sensordata: Callable[[Any], None],
-    ) -> None:
-        pass
-
-    monkeypatch.setattr("pms.extra.mqtt.client_pub", client_pub)
-    monkeypatch.setattr("pms.extra.mqtt.client_sub", client_sub)
-
-
-def test_mqtt(capture, mock_mqtt):
-    result = runner.invoke(main, capture.options("mqtt"))
-    assert result.exit_code == 0
-
-
-@pytest.fixture()
-def mock_influxdb(monkeypatch):
-    """mock pms.extra.influxdb.client_pub"""
-
-    def client_pub(
-        *, host: str, port: int, username: str, password: str, db_name: str
-    ) -> PubFunction:
-        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
-            pass
-
-        return pub
-
-    monkeypatch.setattr("pms.extra.influxdb.client_pub", client_pub)
-
-
-def test_influxdb(capture, mock_influxdb):
-    result = runner.invoke(main, capture.options("influxdb"))
-    assert result.exit_code == 0
-
-
-@pytest.fixture()
-def mock_bridge(monkeypatch, capture_data):
-    """mock pms.extra.bridge.client_pub/client_sub"""
-
-    def client_pub(
-        *, host: str, port: int, username: str, password: str, db_name: str
-    ) -> PubFunction:
-        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
-            tag = ",".join(f"{k},{v}" for k, v in tags.items())
-            for key, val in data.items():
-                print(f"{time},{tag},{key},{val}")
-
-        return pub
-
-    monkeypatch.setattr("pms.extra.bridge.client_pub", client_pub)
-
-    def client_sub(
-        topic: str,
-        host: str,
-        port: int,
-        username: str,
-        password: str,
-        *,
-        on_sensordata: Callable[[Any], None],
+        on_sensordata: Callable[[Data], None],
     ) -> None:
         for obs in capture_data.obs:
             for field in fields(obs):
@@ -99,12 +48,38 @@ def mock_bridge(monkeypatch, capture_data):
                 data = Data.decode(topic, payload, time=obs.time)
                 on_sensordata(data)
 
-    monkeypatch.setattr("pms.extra.bridge.client_sub", client_sub)
-
-    return capture_data
+    monkeypatch.setattr("pms.extra.mqtt.subscribe", subscribe)
 
 
-def test_bridge(mock_bridge):
-    capture = mock_bridge
+@pytest.fixture()
+def mock_influxdb_publisher(monkeypatch: pytest.MonkeyPatch):
+    """mock pms.extra.influxdb.publisher"""
+    from pms.extra.influxdb import Publisher
+
+    def publisher(*, host: str, port: int, username: str, password: str, db_name: str) -> Publisher:
+        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
+            tag = ",".join(f"{k},{v}" for k, v in tags.items())
+            for key, val in data.items():
+                print(f"{time},{tag},{key},{val}")
+
+        return pub
+
+    monkeypatch.setattr("pms.extra.influxdb.publisher", publisher)
+
+
+@pytest.mark.usefixtures("mock_mqtt_publisher")
+def test_mqtt(capture):
+    result = runner.invoke(main, capture.options("mqtt"))
+    assert result.exit_code == 0
+
+
+@pytest.mark.usefixtures("mock_influxdb_publisher")
+def test_influxdb(capture):
+    result = runner.invoke(main, capture.options("influxdb"))
+    assert result.exit_code == 0
+
+
+@pytest.mark.usefixtures("mock_influxdb_publisher", "mock_mqtt_subscribe")
+def test_bridge(capture):
     result = runner.invoke(main, capture.options("bridge"))
     assert result.exit_code == 0

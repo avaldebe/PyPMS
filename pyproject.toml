@@ -32,6 +32,7 @@ dependencies = [
     "typer-slim >=0.12.0",
     "loguru >=0.7.0",
     "importlib-metadata >=3.6 ; python_version < '3.10'",
+    "typing-extensions >=3.10.0.2; python_version < '3.10'",
 ]
 
 [project.optional-dependencies]
@@ -66,9 +67,9 @@ MHZ19B = "pms.sensors.winsen.mhz19b"
 ZH0xx = "pms.sensors.winsen.zh0xx"
 
 [project.entry-points."pypms.extras"]
-influxdb = "pms.extra.influxdb:cli [influxdb]"
-mqtt = "pms.extra.mqtt:cli [mqtt]"
-bridge = "pms.extra.bridge:cli [influxdb, mqtt]"
+influxdb = "pms.extra.cli:influxdb [influxdb]"
+mqtt = "pms.extra.cli:mqtt [mqtt]"
+bridge = "pms.extra.cli:bridge [influxdb, mqtt]"
 
 [dependency-groups]
 dev = [
