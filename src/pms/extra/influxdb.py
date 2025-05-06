@@ -6,7 +6,9 @@ from influxdb import InfluxDBClient as Client
 
 
 class Publisher(Protocol):
-    def __call__(self, *, time: int, tags: dict[str, str], data: dict[str, float]) -> None: ...
+    def __call__(
+        self, *, time: int, tags: dict[str, str], data: dict[str, int | float]
+    ) -> None: ...
 
 
 def publisher(*, host: str, port: int, username: str, password: str, db_name: str) -> Publisher:
@@ -16,7 +18,7 @@ def publisher(*, host: str, port: int, username: str, password: str, db_name: st
         c.create_database(db_name)
     c.switch_database(db_name)
 
-    def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
+    def pub(*, time: int, tags: dict[str, str], data: dict[str, int | float]) -> None:
         """publisg to DB"""
         c.write_points(
             [

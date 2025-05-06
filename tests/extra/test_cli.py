@@ -7,7 +7,7 @@ import pytest
 from loguru import logger
 from typer.testing import CliRunner
 
-from pms.extra.cli import mqtt_messages
+from pms.extra.cli import db_measurements, mqtt_messages
 from pms.main import main
 from pms.sensors.base import ObsData
 
@@ -79,16 +79,32 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("pms.extra.mqtt.Client", MockClient)
 
 
+class Measurement(NamedTuple):
+    field: str
+    value: str | int | float
+
+    def __str__(self):
+        return f"{self.field} = {self.value}"
+
+    @classmethod
+    def from_obs(cls, obs_iter: Iterator[ObsData]) -> Iterator[Measurement]:
+        for obs in obs_iter:
+            for field, value in db_measurements(obs):
+                yield cls(field, value)
+
+
 @pytest.fixture()
-def mock_influxdb_publisher(monkeypatch: pytest.MonkeyPatch):
+def mock_influxdb_publisher(captured_data, monkeypatch: pytest.MonkeyPatch):
     """mock pms.extra.influxdb.publisher"""
     from pms.extra.influxdb import Publisher
 
     def publisher(*, host: str, port: int, username: str, password: str, db_name: str) -> Publisher:
+        measurement = Measurement.from_obs(captured_data.obs)
+
         def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
-            tag = ",".join(f"{k},{v}" for k, v in tags.items())
-            for key, val in data.items():
-                logger.debug(f"{time},{tag},{key},{val}")
+            assert tags == {"location": "test"}
+            for field, value in data.items():
+                assert Measurement(field, value) == next(measurement)
 
         return pub
 

@@ -47,12 +47,17 @@ def influxdb(
         raise typer.Abort() from e
 
     pub = publisher(host=host, port=port, username=user, password=word, db_name=name)
-    tags = json.loads(jtag.replace("'", '"'))
+    tags = json.loads(jtag)
 
     with exit_on_fail(ctx.obj["reader"]) as reader:
         for obs in reader():
-            data = {field.name: getattr(obs, field.name) for field in fields(obs) if field.metadata}
-            pub(time=obs.time, tags=tags, data=data)
+            pub(time=obs.time, tags=tags, data=dict(db_measurements(obs)))
+
+
+def db_measurements(obs: ObsData) -> Iterator[tuple[str, Union[int, float]]]:
+    for field in fields(obs):
+        if field.metadata:
+            yield field.name, getattr(obs, field.name)
 
 
 MQTT_TOPIC: TypeAlias = Annotated[str, typer.Option("--mqtt-topic", help="mqtt root/topic")]
