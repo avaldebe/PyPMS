@@ -1,7 +1,8 @@
 import json
 import sys
+from collections.abc import Iterator
 from dataclasses import fields
-from typing import Annotated, Optional
+from typing import Annotated, Optional, Union
 
 if sys.version_info >= (3, 10):
     from typing import TypeAlias
@@ -83,25 +84,27 @@ def mqtt(
         typer.echo(missing_extras(ctx.command_path, "mqtt"))
         raise typer.Abort() from e
 
-    pub = publisher(topic=topic, host=host, port=port, username=user, password=word)
-
-    def publish(obs: ObsData, *, metadata: bool = False):
-        data = {}
-        for field in fields(obs):
-            if not field.metadata:
-                continue
-            if metadata:
-                data[f"{field.name}/$type"] = field.metadata["long_name"]
-                data[f"{field.name}/$properties"] = f"sensor,unit,{field.metadata['topic']}"
-                data[f"{field.name}/sensor"] = ctx.obj["reader"].sensor.name
-                data[f"{field.name}/unit"] = field.metadata["units"]
-            data[f"{field.name}/{field.metadata['topic']}"] = getattr(obs, field.name)
-        pub(data)
+    publish = publisher(topic=topic, host=host, port=port, username=user, password=word)
 
     with exit_on_fail(ctx.obj["reader"]) as reader:
-        publish(next(reader()), metadata=True)
+        publish(dict(mqtt_messages(next(reader()), sensor_name=ctx.obj["reader"].sensor.name)))
         for obs in reader():
-            publish(obs)
+            publish(dict(mqtt_messages(obs)))
+
+
+def mqtt_messages(
+    obs: ObsData, *, sensor_name: Optional[str] = None
+) -> Iterator[tuple[str, Union[str, int, float]]]:
+    for field in fields(obs):
+        if not field.metadata:
+            continue
+        if sensor_name is not None:
+            yield f"{field.name}/$type", field.metadata["long_name"]
+            yield f"{field.name}/$properties", f"sensor,unit,{field.metadata['topic']}"
+            yield f"{field.name}/sensor", sensor_name
+            yield f"{field.name}/unit", field.metadata["units"]
+            yield f"{field.name}/{field.metadata['topic']}", getattr(obs, field.name)
+        yield f"{field.name}/{field.metadata['topic']}", getattr(obs, field.name)
 
 
 def bridge(
