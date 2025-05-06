@@ -17,7 +17,7 @@ def publisher(
     """returns function to publish to `topic` at `host`"""
     c = Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
-    if username:
+    if username:  # pragma: no cover
         c.username_pw_set(username, password)
 
     c.on_connect = lambda client, userdata, flags, rc: client.publish(
@@ -41,11 +41,8 @@ class Data(NamedTuple):
     value: float
 
     def __str__(self):
-        return f"{self.date:%F %T},{self.location},{self.measurement},{self.value}"
-
-    @property
-    def date(self) -> datetime:
-        return datetime.fromtimestamp(self.time)
+        date = datetime.fromtimestamp(self.time)
+        return f"{date:%F %T},{self.location},{self.measurement},{self.value}"
 
     @staticmethod
     def now() -> int:
@@ -99,7 +96,7 @@ def subscribe(
 
     c = Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
-    if username:
+    if username:  # pragma: no cover
         c.username_pw_set(username, password)
 
     c.on_connect = lambda client, userdata, flags, rc: client.subscribe(topic)
