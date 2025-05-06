@@ -1,7 +1,7 @@
 import json
 import sys
 from dataclasses import fields
-from typing import Annotated
+from typing import Annotated, Optional
 
 if sys.version_info >= (3, 10):
     from typing import TypeAlias
@@ -58,11 +58,11 @@ MQTT_TOPIC: TypeAlias = Annotated[str, typer.Option("--mqtt-topic", help="mqtt r
 MQTT_HOST: TypeAlias = Annotated[str, typer.Option("--mqtt-host", help="mqtt server")]
 MQTT_PORT: TypeAlias = Annotated[int, typer.Option("--mqtt-port", help="server port")]
 MQTT_USER: TypeAlias = Annotated[
-    str,
+    Optional[str],
     typer.Option("--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False),
 ]
 MQTT_PASS: TypeAlias = Annotated[
-    str,
+    Optional[str],
     typer.Option("--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False),
 ]
 
@@ -72,8 +72,8 @@ def mqtt(
     topic: Annotated[str, typer.Option("--topic", "-t", help="mqtt root/topic")] = "homie/test",
     host: MQTT_HOST = "test.mosquitto.org",
     port: MQTT_PORT = 1883,
-    user: MQTT_USER = "",
-    word: MQTT_PASS = "",
+    user: MQTT_USER = None,
+    word: MQTT_PASS = None,
 ):
     """Read sensor and push PM measurements to a MQTT server"""
     try:
@@ -109,8 +109,8 @@ def bridge(
     mqtt_topic: MQTT_TOPIC = "homie/+/+/+",
     mqtt_host: MQTT_HOST = "test.mosquitto.org",
     mqtt_port: MQTT_PORT = 1883,
-    mqtt_user: MQTT_USER = "",
-    mqtt_pass: MQTT_PASS = "",
+    mqtt_user: MQTT_USER = None,
+    mqtt_pass: MQTT_PASS = None,
     db_host: DB_HOST = "influxdb",
     db_port: DB_PORT = 8086,
     db_user: DB_USER = "root",

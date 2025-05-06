@@ -64,12 +64,12 @@ class CapturedData(Enum):
     """Captured data from tests/captured_data"""
 
     _ignore_ = "name capt CapturedData reader"
+    value: tuple[RawData]
 
+    CapturedData = vars()
     with captured_data_reader(data=CAPTURED_DATA) as reader:
-        CapturedData = vars()
         for name in (s.name for s in Sensor):
-            capt = tuple(reader(name))
-            if capt:
+            if capt := tuple(reader(name)):
                 CapturedData[name] = capt
 
     def __str__(self) -> str:
@@ -106,6 +106,7 @@ class CapturedData(Enum):
                 yield message.hex
 
     def samples(self, command: str) -> int:
+        logger.debug(f"{self.name} {len(self.value)} obs")
         return len(self.value) - (command == "mqtt")
 
     def options(self, command: str, *, debug: bool = False) -> list[str]:
@@ -151,11 +152,10 @@ def captured_data(request: pytest.FixtureRequest) -> CapturedData:
 
 @pytest.fixture
 def replay_time(monkeypatch: pytest.MonkeyPatch, captured_data: CapturedData) -> None:
-    """mock datetime at `pms.core.sensor`, `pms.sensors.base` and `pms.sensors.mqtt`"""
-    captured_data = captured_data
+    """mock datetime at `pms.core.sensor` and `pms.sensors.base`"""
 
     class mock_datetime(datetime):
-        message_timestamp = captured_data.message_timestamp
+        _timestamp = captured_data.message_timestamp
 
         @classmethod
         def fromtimestamp(cls, t, tz=captured_data.tzinfo):
@@ -164,11 +164,10 @@ def replay_time(monkeypatch: pytest.MonkeyPatch, captured_data: CapturedData) ->
 
         @classmethod
         def now(cls, tz=captured_data.tzinfo):
-            return cls.fromtimestamp(next(cls.message_timestamp), tz)
+            return cls.fromtimestamp(next(cls._timestamp), tz)
 
     monkeypatch.setattr("pms.core.sensor.datetime", mock_datetime)
     monkeypatch.setattr("pms.sensors.base.datetime", mock_datetime)
-    monkeypatch.setattr("pms.extra.mqtt.datetime", mock_datetime)
 
 
 @pytest.fixture

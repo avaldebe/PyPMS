@@ -8,10 +8,12 @@ from paho.mqtt.client import Client
 
 
 class Publisher(Protocol):
-    def __call__(self, data: dict[str, int | str]) -> None: ...
+    def __call__(self, data: dict[str, int | float | str]) -> None: ...
 
 
-def publisher(*, topic: str, host: str, port: int, username: str, password: str) -> Publisher:
+def publisher(
+    *, topic: str, host: str, port: int, username: str | None, password: str | None
+) -> Publisher:
     """returns function to publish to `topic` at `host`"""
     c = Client(client_id=topic)
     c.enable_logger(logger)  # type:ignore[arg-type]
@@ -25,7 +27,7 @@ def publisher(*, topic: str, host: str, port: int, username: str, password: str)
     c.connect(host, port)
     c.loop_start()
 
-    def pub(data: dict[str, int | str]) -> None:
+    def pub(data: dict[str, int | float | str]) -> None:
         for k, v in data.items():
             c.publish(f"{topic}/{k}", v, 1, True)
 
@@ -37,6 +39,13 @@ class Data(NamedTuple):
     location: str
     measurement: str
     value: float
+
+    def __str__(self):
+        return f"{self.date:%F %T},{self.location},{self.measurement},{self.value}"
+
+    @property
+    def date(self) -> datetime:
+        return datetime.fromtimestamp(self.time)
 
     @staticmethod
     def now() -> int:
@@ -63,8 +72,8 @@ class Data(NamedTuple):
 
         try:
             value = float(payload)
-        except ValueError:
-            raise UserWarning(f"non numeric payload: {payload}")
+        except ValueError as e:
+            raise UserWarning(f"non numeric payload: {payload}") from e
         else:
             return cls(time, location, measurement, value)
 
@@ -73,8 +82,8 @@ def subscribe(
     topic: str,
     host: str,
     port: int,
-    username: str,
-    password: str,
+    username: str | None,
+    password: str | None,
     *,
     on_sensordata: Callable[[Data], None],
 ) -> None:
