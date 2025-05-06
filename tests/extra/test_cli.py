@@ -42,8 +42,7 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
             pass
 
         def username_pw_set(self, username: str | None, password: str | None = None):
-            assert username is None
-            assert password is None
+            assert (username, password) == (None, None)
 
         def will_set(self, topic, payload=None, qos=0, retain=False, properties=None):
             assert topic.endswith("$online")
@@ -79,36 +78,55 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("pms.extra.mqtt.Client", MockClient)
 
 
-class Measurement(NamedTuple):
-    field: str
+class PointValue(NamedTuple):
+    name: str
     value: str | int | float
 
     def __str__(self):
-        return f"{self.field} = {self.value}"
+        return f"{self.name} = {self.value}"
 
     @classmethod
-    def from_obs(cls, obs_iter: Iterator[ObsData]) -> Iterator[Measurement]:
+    def from_obs(cls, obs_iter: Iterator[ObsData]) -> Iterator[PointValue]:
         for obs in obs_iter:
-            for field, value in db_measurements(obs):
-                yield cls(field, value)
+            for name, value in db_measurements(obs):
+                yield cls(name, value)
 
 
 @pytest.fixture()
-def mock_influxdb_publisher(captured_data, monkeypatch: pytest.MonkeyPatch):
-    """mock pms.extra.influxdb.publisher"""
-    from pms.extra.influxdb import Publisher
+def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
+    class MockClient:
+        point_value = PointValue.from_obs(captured_data.obs)
 
-    def publisher(*, host: str, port: int, username: str, password: str, db_name: str) -> Publisher:
-        measurement = Measurement.from_obs(captured_data.obs)
+        def __init__(
+            self, host="localhost", port=8086, username="root", password="root", database=None
+        ):
+            assert (host, port, username, password) == ("influxdb", 8086, "root", "root")
+            assert database is None
 
-        def pub(*, time: int, tags: dict[str, str], data: dict[str, float]) -> None:
-            assert tags == {"location": "test"}
-            for field, value in data.items():
-                assert Measurement(field, value) == next(measurement)
+        def get_list_database(self):
+            return []
 
-        return pub
+        def create_database(self, dbname):
+            assert dbname == "homie"
+            return dbname
 
-    monkeypatch.setattr("pms.extra.influxdb.publisher", publisher)
+        def switch_database(self, database):
+            pass
+
+        def write_points(self, points, time_precision=None, database=None):
+            assert time_precision == "s"
+            assert database in {"homie", None}
+            assert isinstance(points, list)
+            for point in points:
+                assert isinstance(point, dict)
+                assert point.keys() == {"measurement", "tags", "time", "fields"}
+                assert isinstance(point["fields"], dict)
+                assert point["fields"].keys() == {"value"}
+                assert PointValue(point["measurement"], point["fields"]["value"]) == next(
+                    self.point_value
+                )
+
+    monkeypatch.setattr("pms.extra.influxdb.Client", MockClient)
 
 
 @pytest.mark.usefixtures("mock_mqtt_client")
@@ -117,13 +135,13 @@ def test_mqtt(capture):
     assert result.exit_code == 0
 
 
-@pytest.mark.usefixtures("mock_influxdb_publisher")
+@pytest.mark.usefixtures("mock_influxdb_client")
 def test_influxdb(capture):
     result = runner.invoke(main, capture.options("influxdb"))
     assert result.exit_code == 0
 
 
-@pytest.mark.usefixtures("mock_influxdb_publisher", "mock_mqtt_client")
+@pytest.mark.usefixtures("mock_influxdb_client", "mock_mqtt_client")
 def test_bridge(capture):
     result = runner.invoke(main, capture.options("bridge"))
     assert result.exit_code == 0
