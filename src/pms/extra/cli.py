@@ -1,5 +1,4 @@
 import json
-import re
 import sys
 from dataclasses import fields
 from typing import Annotated
@@ -145,23 +144,12 @@ def bridge(
 
 def missing_extras(sub_cmd: str, *extras: str, package: str = "pypms") -> str:  # pragma: no cover
     from functools import partial
-    from importlib import metadata
     from textwrap import dedent
 
     green = partial(typer.style, fg=typer.colors.GREEN)
     red = partial(typer.style, fg=typer.colors.RED)
-
-    required = metadata.requires(package)
-    assert required is not None
-    regex = re.compile(rf"extra == '({'|'.join(extras)})'")
-
-    dependencies = " ".join(
-        f'"{red(dep, bold=True)}"'
-        for dep, _, markers in (req.partition(";") for req in required)
-        if regex.search(markers)
-    )
-    extra = ",".join(red(extra, bold=True) for extra in extras)
     package = green(package, bold=True)
+    extra = ",".join(red(extra, bold=True) for extra in extras)
     msg = f"""
         {green(sub_cmd, bold=True)} require dependencies which are not installed.
 
@@ -169,7 +157,7 @@ def missing_extras(sub_cmd: str, *extras: str, package: str = "pypms") -> str:  
             {green("python3 -m pip install --upgrade")} {package}[{extra}]
 
         Or, if you installed {package} with {green("pipx")}
-            {green("pipx inject")} {package} {dependencies}
+            {green("pipx install --force")} {package}[{extra}]
 
         Or, if you installed {package} with {green("uv tool")}
             {green("uv tool install")} {package}[{extra}]
