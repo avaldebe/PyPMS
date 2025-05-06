@@ -70,7 +70,7 @@ MQTT_PASS: TypeAlias = Annotated[
 def mqtt(
     ctx: typer.Context,
     topic: Annotated[str, typer.Option("--topic", "-t", help="mqtt root/topic")] = "homie/test",
-    host: MQTT_HOST = "mqtt.eclipse.org",
+    host: MQTT_HOST = "test.mosquitto.org",
     port: MQTT_PORT = 1883,
     user: MQTT_USER = "",
     word: MQTT_PASS = "",
@@ -107,7 +107,7 @@ def mqtt(
 def bridge(
     ctx: typer.Context,
     mqtt_topic: MQTT_TOPIC = "homie/+/+/+",
-    mqtt_host: MQTT_HOST = "mqtt.eclipse.org",
+    mqtt_host: MQTT_HOST = "test.mosquitto.org",
     mqtt_port: MQTT_PORT = 1883,
     mqtt_user: MQTT_USER = "",
     mqtt_pass: MQTT_PASS = "",
