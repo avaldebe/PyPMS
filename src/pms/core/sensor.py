@@ -5,8 +5,8 @@ Access supported sensors from a single object
 from __future__ import annotations
 
 import sys
-from datetime import datetime
 from enum import Enum
+from time import time as seconds_since_epoch
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
@@ -64,11 +64,6 @@ class Sensor(Enum):
             return self.value.PREHEAT
         return 0
 
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())
-
     def command(self, cmd: str) -> Cmd:
         """Serial command for sensor"""
         return getattr(self.Commands, cmd)
@@ -89,7 +84,7 @@ class Sensor(Enum):
     def decode(self, buffer: bytes, *, time: int | None = None) -> ObsData:
         """Extract observations from serial buffer"""
         if not time:
-            time = self.now()
+            time = int(seconds_since_epoch())
 
         data = self.Message.decode(buffer, self.Commands.passive_read)
         return self.Data(time, *data)  # type: ignore[operator]

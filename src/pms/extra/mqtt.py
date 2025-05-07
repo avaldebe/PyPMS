@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from time import time as seconds_since_epoch
 from typing import Callable, NamedTuple, Protocol
 
 from loguru import logger
@@ -43,21 +43,16 @@ class Data(NamedTuple):
     def __str__(self):
         return ",".join(map(str, self))
 
-    @staticmethod
-    def now() -> int:
-        """current time as seconds since epoch"""
-        return int(datetime.now().timestamp())
-
     @classmethod
     def decode(cls, topic: str, payload: str, *, time: int | None = None) -> Data:
         """Decode MQTT message
 
         For example
         >>> decode("homie/test/pm10/concentration", "27")
-        Data(now(), "test", "pm10", 27)
+        Data(seconds_since_epoch(), "test", "pm10", 27)
         """
         if not time:
-            time = cls.now()
+            time = int(seconds_since_epoch())
 
         fields = topic.split("/")
         if len(fields) != 4:

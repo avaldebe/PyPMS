@@ -133,19 +133,18 @@ def captured_data(request: pytest.FixtureRequest) -> CapturedData:
 def replay_time(monkeypatch: pytest.MonkeyPatch, captured_data: CapturedData) -> None:
     """mock datetime at `pms.core.sensor` and `pms.sensors.base`"""
 
-    class mock_datetime(datetime):
-        _timestamp = captured_data.message_timestamp
+    timestamp = captured_data.message_timestamp
 
+    def seconds_since_epoch() -> float:
+        return float(next(timestamp))
+
+    class mock_datetime(datetime):
         @classmethod
         def fromtimestamp(cls, t, tz=captured_data.tzinfo):
             assert tz == captured_data.tzinfo
             return datetime.fromtimestamp(t, tz)
 
-        @classmethod
-        def now(cls, tz=captured_data.tzinfo):
-            return cls.fromtimestamp(next(cls._timestamp), tz)
-
-    monkeypatch.setattr("pms.core.sensor.datetime", mock_datetime)
+    monkeypatch.setattr("pms.core.sensor.seconds_since_epoch", seconds_since_epoch)
     monkeypatch.setattr("pms.sensors.base.datetime", mock_datetime)
 
 

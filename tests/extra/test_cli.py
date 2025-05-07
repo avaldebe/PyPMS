@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from datetime import datetime
 from typing import NamedTuple
 
 import pytest
@@ -132,22 +131,15 @@ def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
 
 
 @pytest.fixture
-def mock_mqtt_datetime(captured_data, monkeypatch: pytest.MonkeyPatch) -> None:
-    """mock datetime at `pms.core.sensor` and `pms.sensors.base`"""
+def mock_mqtt_time(captured_data, monkeypatch: pytest.MonkeyPatch) -> None:
+    """mock seconds_since_epoch at `pms.extra.mqtt`"""
 
-    class mock_datetime(datetime):
-        _timestamp = (p.time for p in DataPoint.from_obs(captured_data.obs))
+    data_point = DataPoint.from_obs(captured_data.obs)
 
-        @classmethod
-        def fromtimestamp(cls, t, tz=captured_data.tzinfo):
-            assert tz == captured_data.tzinfo
-            return datetime.fromtimestamp(t, tz)
+    def seconds_since_epoch() -> float:
+        return float(next(data_point).time)
 
-        @classmethod
-        def now(cls, tz=captured_data.tzinfo):
-            return cls.fromtimestamp(next(cls._timestamp), tz)
-
-    monkeypatch.setattr("pms.extra.mqtt.datetime", mock_datetime)
+    monkeypatch.setattr("pms.extra.mqtt.seconds_since_epoch", seconds_since_epoch)
 
 
 @pytest.mark.usefixtures("mock_mqtt_client")
@@ -162,7 +154,7 @@ def test_influxdb(capture):
     assert result.exit_code == 0
 
 
-@pytest.mark.usefixtures("mock_influxdb_client", "mock_mqtt_client", "mock_mqtt_datetime")
+@pytest.mark.usefixtures("mock_influxdb_client", "mock_mqtt_client", "mock_mqtt_time")
 def test_bridge(capture):
     result = runner.invoke(main, capture.options("bridge"))
     assert result.exit_code == 0
