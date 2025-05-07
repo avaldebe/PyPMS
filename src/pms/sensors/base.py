@@ -1,40 +1,24 @@
 from __future__ import annotations
 
 import warnings
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from dataclasses import asdict, dataclass
-from datetime import datetime
-from typing import NamedTuple
+from typing import ClassVar
 
 from loguru import logger
 
 from pms import WrongMessageFormat
+from pms.core.types import Cmd, Commands
+from pms.core.types import Message as MessageProtocol
+from pms.core.types import ObsData as ObsDataProtocol
+
+__all__ = ["Cmd", "Commands", "Message", "ObsData"]
 
 
-class Cmd(NamedTuple):
-    """Single command"""
+class Message(MessageProtocol):
+    """BaseClass for serial messages from PM sensors"""
 
-    command: bytes
-    answer_header: bytes
-    answer_length: int
-
-
-class Commands(NamedTuple):
-    """Required commands"""
-
-    passive_read: Cmd
-    passive_mode: Cmd
-    active_mode: Cmd
-    sleep: Cmd
-    wake: Cmd
-
-
-class Message(metaclass=ABCMeta):
-    """
-    Base class for serial messages from PM sensors
-    """
-
-    data_records: slice
+    data_records: ClassVar[slice]
 
     def __init__(self, message: bytes) -> None:
         logger.debug(f"message hex: {message.hex()}")
@@ -91,19 +75,13 @@ class Message(metaclass=ABCMeta):
 
 
 @dataclass
-class ObsData(metaclass=ABCMeta):
-    """Measurements
+class ObsData(ObsDataProtocol):
+    """
+    BaseClass for sensor measurements (decoded sensor messages)
 
     time: measurement time [seconds since epoch]
     date: measurement time [datetime object]
     """
-
-    time: int
-
-    @property
-    def date(self) -> datetime:
-        """measurement time as datetime object"""
-        return datetime.fromtimestamp(self.time)
 
     def subset(self, spec: str | None = None) -> dict[str, float]:  # pragma: no cover
         warnings.warn(
