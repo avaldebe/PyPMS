@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from datetime import datetime
 from typing import NamedTuple
 
 import pytest
@@ -78,7 +79,8 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("pms.extra.mqtt.Client", MockClient)
 
 
-class PointValue(NamedTuple):
+class DataPoint(NamedTuple):
+    time: int
     name: str
     value: str | int | float
 
@@ -86,16 +88,16 @@ class PointValue(NamedTuple):
         return f"{self.name} = {self.value}"
 
     @classmethod
-    def from_obs(cls, obs_iter: Iterator[ObsData]) -> Iterator[PointValue]:
+    def from_obs(cls, obs_iter: Iterator[ObsData]) -> Iterator[DataPoint]:
         for obs in obs_iter:
             for name, value in db_measurements(obs):
-                yield cls(name, value)
+                yield cls(obs.time, name, value)
 
 
 @pytest.fixture()
 def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
     class MockClient:
-        point_value = PointValue.from_obs(captured_data.obs)
+        data_point = DataPoint.from_obs(captured_data.obs)
 
         def __init__(
             self, host="localhost", port=8086, username="root", password="root", database=None
@@ -122,11 +124,30 @@ def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
                 assert point.keys() == {"measurement", "tags", "time", "fields"}
                 assert isinstance(point["fields"], dict)
                 assert point["fields"].keys() == {"value"}
-                assert PointValue(point["measurement"], point["fields"]["value"]) == next(
-                    self.point_value
-                )
+                assert DataPoint(
+                    point["time"], point["measurement"], point["fields"]["value"]
+                ) == next(self.data_point)
 
     monkeypatch.setattr("pms.extra.influxdb.Client", MockClient)
+
+
+@pytest.fixture
+def mock_mqtt_datetime(captured_data, monkeypatch: pytest.MonkeyPatch) -> None:
+    """mock datetime at `pms.core.sensor` and `pms.sensors.base`"""
+
+    class mock_datetime(datetime):
+        _timestamp = (p.time for p in DataPoint.from_obs(captured_data.obs))
+
+        @classmethod
+        def fromtimestamp(cls, t, tz=captured_data.tzinfo):
+            assert tz == captured_data.tzinfo
+            return datetime.fromtimestamp(t, tz)
+
+        @classmethod
+        def now(cls, tz=captured_data.tzinfo):
+            return cls.fromtimestamp(next(cls._timestamp), tz)
+
+    monkeypatch.setattr("pms.extra.mqtt.datetime", mock_datetime)
 
 
 @pytest.mark.usefixtures("mock_mqtt_client")
@@ -141,7 +162,7 @@ def test_influxdb(capture):
     assert result.exit_code == 0
 
 
-@pytest.mark.usefixtures("mock_influxdb_client", "mock_mqtt_client")
+@pytest.mark.usefixtures("mock_influxdb_client", "mock_mqtt_client", "mock_mqtt_datetime")
 def test_bridge(capture):
     result = runner.invoke(main, capture.options("bridge"))
     assert result.exit_code == 0

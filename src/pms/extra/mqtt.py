@@ -41,8 +41,7 @@ class Data(NamedTuple):
     value: float
 
     def __str__(self):
-        date = datetime.fromtimestamp(self.time)
-        return f"{date:%F %T},{self.location},{self.measurement},{self.value}"
+        return ",".join(map(str, self))
 
     @staticmethod
     def now() -> int:
