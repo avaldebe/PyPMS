@@ -14,7 +14,7 @@ import typer
 from loguru import logger
 
 from pms.core import exit_on_fail
-from pms.sensors.base import ObsData
+from pms.core.types import ObsData
 
 DB_HOST: TypeAlias = Annotated[str, typer.Option("--db-host", help="database server")]
 DB_PORT: TypeAlias = Annotated[int, typer.Option("--db-port", help="server port")]

@@ -34,6 +34,8 @@ class Message(metaclass=ABCMeta):
     Base class for serial messages from PM sensors
     """
 
+    data_records: slice
+
     def __init__(self, message: bytes) -> None:
         logger.debug(f"message hex: {message.hex()}")
         self.message = message
@@ -60,13 +62,7 @@ class Message(metaclass=ABCMeta):
     def decode(cls, message: bytes, command: Cmd) -> tuple[float, ...]:
         header = command.answer_header
         length = command.answer_length
-        return cls.unpack(message, header, length)[cls.data_records]  # type: ignore[call-overload]
-
-    @property  # type:ignore[misc]
-    @classmethod
-    @abstractmethod
-    def data_records(cls) -> slice:
-        pass
+        return cls.unpack(message, header, length)[cls.data_records]
 
     @property
     @abstractmethod

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
@@ -38,16 +41,14 @@ class Message(Protocol):
     """Message from sensor"""
 
     @classmethod
-    def decode(cls, message: bytes, command: Cmd) -> tuple[float, ...]: ...
+    def decode(cls, message: bytes, command: Cmd) -> tuple[int | float, ...]: ...
 
 
+@dataclass
 class ObsData(Protocol):
     """Decoded sensor message"""
 
-    def __init__(self, *data: float) -> None: ...
-
-    @property
-    def time(self) -> int: ...
+    time: int
 
     @property
     def date(self) -> datetime: ...

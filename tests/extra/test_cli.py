@@ -7,9 +7,9 @@ import pytest
 from loguru import logger
 from typer.testing import CliRunner
 
+from pms.core.types import ObsData
 from pms.extra.cli import db_measurements, mqtt_messages
 from pms.main import main
-from pms.sensors.base import ObsData
 
 runner = CliRunner()
 

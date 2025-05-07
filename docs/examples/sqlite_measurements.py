@@ -25,7 +25,7 @@ from typing import Annotated, Callable
 import typer
 
 from pms.core import Sensor, SensorReader
-from pms.core.reader import ObsData
+from pms.core.types import ObsData
 
 app = typer.Typer(add_completion=False)
 
@@ -104,7 +104,7 @@ def pypms_db(db_path: Path) -> Callable[[], AbstractContextManager[sqlite3.Conne
         for sensor in Sensor:
             view_fields = ",\n".join(
                 f"MAX(CASE WHEN field='{field.name}' THEN value ELSE NULL END) {field.name}"
-                for field in fields(sensor.Data)  # type:ignore[arg-type]
+                for field in fields(sensor.Data)
                 if field.name != "time"
             )
             sensor_view = f"""
@@ -135,7 +135,7 @@ def write_measurements(db: sqlite3.Connection, sensor: Sensor, obs: ObsData):
         """
     values = (
         (obs.time, sensor.name, field, value)
-        for field, value in asdict(obs).items()  # type:ignore[call-overload]
+        for field, value in asdict(obs).items()
         if field != "time"
     )
     with db, closing(db.cursor()) as cur:

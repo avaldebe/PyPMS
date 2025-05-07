@@ -22,7 +22,8 @@ from typing import Annotated, Callable
 import typer
 
 from pms.core import Sensor, SensorReader
-from pms.core.reader import ObsData, RawData
+from pms.core.reader import RawData
+from pms.core.types import ObsData
 
 app = typer.Typer(add_completion=False)
 
