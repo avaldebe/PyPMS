@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
+
+if TYPE_CHECKING:
+    from logging import Logger
 
 import pytest
 from loguru import logger
@@ -38,8 +41,8 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
         def __init__(self, *, client_id: str):
             assert client_id in {"homie/test", "homie/+/+/+"}
 
-        def enable_logger(self, logger):  # noqa: F811
-            pass
+        def enable_logger(self, logger: Logger | None = None):
+            assert logger is None
 
         def username_pw_set(self, username: str | None, password: str | None = None):
             assert (username, password) == (None, None)

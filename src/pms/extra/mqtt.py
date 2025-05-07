@@ -16,7 +16,7 @@ def publisher(
 ) -> Publisher:
     """returns function to publish to `topic` at `host`"""
     c = Client(client_id=topic)
-    c.enable_logger(logger)  # type:ignore[arg-type]
+    c.enable_logger()
     if username:  # pragma: no cover
         c.username_pw_set(username, password)
 
@@ -89,7 +89,7 @@ def subscribe(
             on_sensordata(data)
 
     c = Client(client_id=topic)
-    c.enable_logger(logger)  # type:ignore[arg-type]
+    c.enable_logger()
     if username:  # pragma: no cover
         c.username_pw_set(username, password)
 
