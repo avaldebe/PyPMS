@@ -42,7 +42,7 @@ def callback(
 ):
     """Data acquisition and logging for Air Quality Sensors with UART interface"""
     logger.enable("pms")
-    if not debug:
+    if not debug:  # pragma: no cover
         logger.configure(
             handlers=[
                 {"sink": sys.stderr, "format": "<level>{message}</level>", "level": "INFO"},

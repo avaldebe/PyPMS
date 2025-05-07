@@ -12,7 +12,6 @@ from zoneinfo import ZoneInfo
 import pytest
 from loguru import logger
 
-from pms import __version__
 from pms.core import Sensor
 from pms.core.reader import RawData
 from pms.core.types import ObsData
@@ -105,12 +104,9 @@ class CapturedData(Enum):
             else:
                 yield message.hex
 
-    def samples(self, command: str) -> int:
-        logger.debug(f"{self.name} {len(self.value)} obs")
-        return len(self.value) - (command == "mqtt")
-
     def options(self, command: str) -> list[str]:
-        capture = f"--debug -m {self.name} -n {self.samples(command)} -i 0"
+        samples = len(self.value) - (command == "mqtt")
+        capture = f"--debug -m {self} -n {samples} -i 0"
         cmd = dict(
             serial_csv="serial -f csv",
             serial_hexdump="serial -f hexdump",
@@ -125,21 +121,6 @@ class CapturedData(Enum):
             ending = "txt"
         path = CAPTURED_DATA.with_name(f"{self}.{ending}")
         return path.read_text()
-
-    def debug_messages(self, command: str) -> Iterator[str]:
-        yield f"PyPMS v{__version__}"
-        if command == "decode":
-            yield f"open {self}_pypms.csv"
-            yield f"close {self}_pypms.csv"
-            return
-
-        yield f"capture {self.samples(command)} {self.name} obs from /dev/ttyUSB0 every ? secs"
-        yield "open /dev/ttyUSB0"
-        yield f"wake {self.name}"
-        for hex in self.msg_hex:
-            yield f"message hex: {hex}"
-        yield f"sleep {self.name}"
-        yield "close /dev/ttyUSB0"
 
 
 @pytest.fixture(params=CapturedData, ids=str)
