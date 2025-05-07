@@ -32,24 +32,33 @@ and save observations to a csv file (`pms csv`).
 Additional packages are required for pushing observations to an mqtt server
 (`pms mqtt`), to an influxdb server (`pms influxdb`), or provide a bridge
 between mqtt and influxdb servers (`pms bridge`).
+These extras are powered by [paho-mqtt] and [influxdb-python].
+
+Also, [Rich] will provide a nicer looking `--help` option
+(thanks to [Typer] doing the work behind the scene).
 
 === "pip"
 
     ``` bash
-    python3 -m pip install pypms[mqtt,influxdb]
+    python3 -m pip install pypms[mqtt,influxdb,rich]
     ```
 
 === "pipx"
 
     ``` bash
-    pipx install pypms[mqtt,influxdb]
+    pipx install pypms[mqtt,influxdb,rich]
     ```
 
 === "uv tool"
 
     ``` bash
-    uv tool install pypms[mqtt,influxdb]
+    uv tool install pypms[mqtt,influxdb,rich]
     ```
+
+[paho-mqtt]: https://github.com/eclipse-paho/paho.mqtt.python
+[influxdb-python]: https://github.com/influxdata/influxdb-python
+[Rich]: https://rich.readthedocs.io/
+[Typer]: https://typer.tiangolo.com/
 
 ## Command line options
 

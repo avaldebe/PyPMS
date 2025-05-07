@@ -10,7 +10,12 @@ from loguru import logger
 from pms import __version__
 from pms.core import MessageReader, Sensor, SensorReader, Supported, exit_on_fail
 
-main = typer.Typer(add_completion=False, no_args_is_help=True)
+main = typer.Typer(
+    add_completion=False,
+    no_args_is_help=True,
+    pretty_exceptions_enable=True,
+    pretty_exceptions_show_locals=False,
+)
 
 
 def version_callback(value: bool):

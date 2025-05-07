@@ -36,6 +36,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+rich = ["typer-slim[standard]>=0.12.0"]
 mqtt = ["paho-mqtt >=2.1.0"]
 influxdb = ["influxdb >=5.2.0", "pytz >=2020", "requests>=2.32.0"]
 
