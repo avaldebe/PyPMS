@@ -31,7 +31,7 @@ def test_info(capture, logot: Logot):
 @pytest.mark.parametrize("format", (None, "csv", "hexdump"))
 def test_serial(capture, format: str | None, logot: Logot):
     cmd = "serial" if format is None else f"serial_{format}"
-    result = runner.invoke(main, capture.options(cmd, debug=True))
+    result = runner.invoke(main, capture.options(cmd))
     assert result.exit_code == 0
     assert result.stdout == capture.output(format)
 
@@ -40,7 +40,7 @@ def test_serial(capture, format: str | None, logot: Logot):
 
 
 def test_csv(capture, logot: Logot):
-    result = runner.invoke(main, capture.options("csv", debug=True))
+    result = runner.invoke(main, capture.options("csv"))
     assert result.exit_code == 0
 
     csv = Path(capture.options("csv")[-1])

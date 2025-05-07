@@ -131,7 +131,7 @@ def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
 
 @pytest.mark.usefixtures("mock_mqtt_client")
 def test_mqtt(capture):
-    result = runner.invoke(main, capture.options("mqtt", debug=True))
+    result = runner.invoke(main, capture.options("mqtt"))
     assert result.exit_code == 0
 
 
