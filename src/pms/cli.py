@@ -28,7 +28,7 @@ def callback(
         Supported, typer.Option("--sensor-model", "-m", help="sensor model")
     ] = Supported.default,
     port: Annotated[str, typer.Option("--serial-port", "-s", help="serial port")] = "/dev/ttyUSB0",
-    seconds: Annotated[
+    interval: Annotated[
         int, typer.Option("--interval", "-i", min=0, help="seconds to wait between updates")
     ] = 60,
     samples: Annotated[
@@ -50,15 +50,18 @@ def callback(
         )
 
     logger.debug(f"PyPMS v{__version__}")
+    logger.debug(f"{ctx.command_path} -m {model} ... {ctx.invoked_subcommand}")
     obj = ctx.ensure_object(dict)
-    obj.update(reader=SensorReader(model, port, seconds, samples))
+    if ctx.invoked_subcommand in {"info", "serial"}:
+        obj.update(sensor=Sensor[model], port=port, interval=interval, samples=samples)
+    else:
+        obj.update(reader=SensorReader(model, port, interval, samples))
 
 
 @main.command()
 def info(ctx: typer.Context):
     """Information about the sensor observations"""
-    sensor: Sensor = ctx.obj["reader"].sensor
-    typer.echo(sensor.Data.__doc__)
+    typer.echo(ctx.obj["sensor"].Data.__doc__)
 
 
 class Format(str, Enum):
@@ -87,9 +90,11 @@ def serial(
     decode: Annotated[Optional[Path], typer.Option(help="decode captured messages")] = None,
 ):
     """Read sensor and print formatted measurements"""
-    reader: Union[SensorReader, MessageReader] = ctx.obj["reader"]
+    reader: Union[SensorReader, MessageReader]
     if decode:
-        reader = MessageReader(decode, reader.sensor, reader.samples)
+        reader = MessageReader(decode, ctx.obj["sensor"], ctx.obj["samples"])
+    else:
+        reader = SensorReader(**ctx.obj)
 
     with exit_on_fail(reader):
         if format == "hexdump":
