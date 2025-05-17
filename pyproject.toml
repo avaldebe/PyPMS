@@ -168,7 +168,6 @@ dependency_groups =
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--ff"
-pythonpath = ["src"]
 testpaths = ["tests"]
 required_plugins = ["mock-serial"]
 filterwarnings = [
@@ -182,6 +181,8 @@ filterwarnings = [
     "ignore:datetime.datetime.utcfromtimestamp:DeprecationWarning:influxdb.*",
 ]
 
+[tool.coverage.paths]
+source = ["src", "**/site-packages"]
 
 [tool.coverage.run]
 source = ["pms"]
