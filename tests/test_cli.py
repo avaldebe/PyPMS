@@ -26,7 +26,7 @@ def caplog(caplog: pytest.LogCaptureFixture):
 def test_version(cmd: str, caplog: pytest.LogCaptureFixture):
     result = runner.invoke(main, cmd)
     assert result.exit_code == 0
-    assert result.stdout.strip() == f"PyPMS v{__version__}"
+    assert result.output.strip() == f"PyPMS v{__version__}"
 
     assert not caplog.text
 
@@ -34,7 +34,7 @@ def test_version(cmd: str, caplog: pytest.LogCaptureFixture):
 def test_info(capture, caplog: pytest.LogCaptureFixture):
     result = runner.invoke(main, capture.options("info"))
     assert result.exit_code == 0
-    assert dedent(result.stdout).strip() == capture.output("info").strip()
+    assert dedent(result.output).strip() == capture.output("info").strip()
 
     logs = caplog.text.splitlines()
     assert logs[0].endswith(f"PyPMS v{__version__}")
@@ -46,7 +46,7 @@ def test_serial(capture, format: str | None, caplog: pytest.LogCaptureFixture):
     cmd = "serial" if format is None else f"serial_{format}"
     result = runner.invoke(main, capture.options(cmd))
     assert result.exit_code == 0
-    assert result.stdout == capture.output(format)
+    assert result.output == capture.output(format)
 
     logs = caplog.text.splitlines()
     assert logs[0].endswith(f"PyPMS v{__version__}")
@@ -81,7 +81,7 @@ def test_capture_decode(capture, caplog: pytest.LogCaptureFixture):
     result = runner.invoke(main, capture.options("decode"))
     assert result.exit_code == 0
     csv.unlink()
-    assert result.stdout == capture.output("csv")
+    assert result.output == capture.output("csv")
 
     logs = caplog.text.splitlines()
     assert logs[0].endswith(f"PyPMS v{__version__}")
