@@ -15,7 +15,7 @@ repos:
       exclude: ^tests/captured_data/PMS5003T.hexdump$
       args: [--markdown-linebreak-ext=md]
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.11.8
+  rev: v0.11.10
   hooks:
     - id: ruff
     - id: ruff-format
@@ -25,7 +25,7 @@ repos:
   - id: mypy
     args: [--ignore-missing-imports, --no-warn-unused-ignores]
 - repo: https://github.com/astral-sh/uv-pre-commit
-  rev: 0.7.3
+  rev: 0.7.5
   hooks:
     - id: uv-lock
 - repo: local

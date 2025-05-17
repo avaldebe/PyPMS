@@ -93,11 +93,11 @@ class Sensor(Enum):
 class Supported(str, Enum):
     """Supported sensor names"""
 
-    _ignore_ = "s Supported"
+    _ignore_ = "name Supported"
 
     Supported = vars()
-    for s in Sensor:
-        Supported[s.name] = s.name
+    for name in Sensor.__members__:
+        Supported[name] = name
 
     default = "PMSx003"
 

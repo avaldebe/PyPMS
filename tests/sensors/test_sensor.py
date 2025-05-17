@@ -7,39 +7,42 @@ from typing import NamedTuple
 import pytest
 
 from pms import SensorWarning
-from pms.core import Sensor, Supported
+from pms.core import Sensor
 
 
-@pytest.mark.parametrize("sensor", Supported)
+@pytest.fixture(params=Sensor)
+def sensor(request: pytest.FixtureRequest) -> Sensor:
+    return request.param
+
+
 @pytest.mark.parametrize("attr", ["Message", "Data", "Commands"])
-def test_sensor_attrs(sensor, attr):
-    assert getattr(Sensor[sensor], attr)
+def test_sensor_attrs(sensor: Sensor, attr: str):
+    assert getattr(sensor, attr)
 
 
-@pytest.mark.parametrize("sensor", Supported)
-@pytest.mark.parametrize("command", "passive_mode passive_read active_mode sleep wake".split())
-def test_commands(sensor, command):
-    assert Sensor[sensor].command(command)
+@pytest.mark.parametrize(
+    "command", ["passive_mode", "passive_read", "active_mode", "sleep", "wake"]
+)
+def test_commands(sensor: Sensor, command: str):
+    assert sensor.command(command)
 
 
-@pytest.mark.parametrize("sensor", Supported)
-def test_baud(sensor):
-    baud = 9600 if sensor != "SPS30" else 115200
-    assert Sensor[sensor].baud == baud
+def test_baud(sensor: Sensor):
+    baud = 9600 if sensor.name != "SPS30" else 115200
+    assert sensor.baud == baud
 
 
-@pytest.mark.parametrize("sensor", Supported)
-def test_pre_heat(sensor):
-    if sensor == "MHZ19B":
+def test_pre_heat(sensor: Sensor):
+    if sensor.name == "MHZ19B":
         pre_heat = 180
-    elif sensor == "PMSx003":
+    elif sensor.name == "PMSx003":
         pre_heat = 10
     else:
         pre_heat = 0
-    assert Sensor[sensor].pre_heat == pre_heat
+    assert sensor.pre_heat == pre_heat
 
 
-@pytest.mark.parametrize("sensor", ["HPMA115S0", "HPMA115C0"])
+@pytest.mark.parametrize("sensor", [Sensor["HPMA115S0"], Sensor["HPMA115C0"]])
 @pytest.mark.parametrize("command", ["passive_mode", "wake"])
 @pytest.mark.parametrize(
     "buffer,check",
@@ -50,8 +53,8 @@ def test_pre_heat(sensor):
         pytest.param(b"\xa5\xa5\x40\x0d\x04", False, id="no ACK at end"),
     ],
 )
-def test_HPMA115xx_ACK_message(sensor, command, buffer, check):
-    assert Sensor[sensor].check(buffer, command) == check
+def test_HPMA115xx_ACK_message(sensor: Sensor, command: str, buffer: bytes, check: bool):
+    assert sensor.check(buffer, command) == check
 
 
 class RawData(NamedTuple):
