@@ -15,7 +15,6 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from csv import DictReader
 from pathlib import Path
-from textwrap import wrap
 from typing import Literal, NamedTuple, overload
 
 from loguru import logger
@@ -46,9 +45,9 @@ class RawData(NamedTuple):
     def hex(self) -> str:
         return self.data.hex()
 
-    def hexdump(self, line: int | None = None) -> str:
-        offset = time if line is None else line * len(self.data)
-        hex = " ".join(wrap(self.data.hex(), 2))  # raw.hex(" ") in python3.8+
+    def hexdump(self, line: int) -> str:
+        offset = line * len(self.data)
+        hex = self.data.hex(" ")
         dump = self.data.translate(HEXDUMP_TABLE).decode()
         return f"{offset:08x}: {hex}  {dump}"
 
