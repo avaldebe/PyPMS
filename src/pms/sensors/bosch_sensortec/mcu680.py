@@ -91,13 +91,13 @@ class ObsData(base.ObsData):
     IAQ_acc: int = field(metadata=base.metadata("IAQ acc", "1", "acc"))
     # on read IAQ_acc(4b)|IAQ(12b) packed into 16b
     IAQ: int = field(metadata=base.metadata("IAQ", "0-500", "iaq"))
-    gas: int = field(metadata=base.metadata("gas resistance", "kΩ", "resistance"))
+    gas: float = field(metadata=base.metadata("gas resistance", "kΩ", "resistance"))
     alt: int = field(metadata=base.metadata("altitude estimate", "m(a.s.l.)", "elevation"))
 
     def __post_init__(self):
         """Units conversion
         temp [°C]   read in [0.01 °C]
-        rhum [%]    read in [1/10 000]
+        rhum [%]    read in [1/10_000]
         pres [hPa]  read in [Pa] across 12b
         gas  [kΩ]   read in [Ω]
         """

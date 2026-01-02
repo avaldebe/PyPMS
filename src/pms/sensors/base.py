@@ -111,7 +111,7 @@ class ObsData(ObsDataProtocol):
             f"Unknown format code '{spec}' for object of type '{self.__class__.__qualname__}'"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__format__("pm")
 
 
