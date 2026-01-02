@@ -77,7 +77,7 @@ dev = [
     { include-group = "test" },
     "pytest-cov >=6.1.1",
     "pytest-sugar >=1.0.0",
-    "mypy >=1.15.0",
+    "mypy >=1.19.1",
     "types-pyserial",
 ]
 test = [
