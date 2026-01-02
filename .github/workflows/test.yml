@@ -3,7 +3,7 @@ name: Test
 on:
   push:
   schedule:
-    - cron:  '0 12 1 * *'  # 12:00, first day of the month
+    - cron:  '0 12 1 */3 *'  # 12:00, 1st Jan/Apr/Jul/Oct
   pull_request:
 
 jobs:
