@@ -24,30 +24,30 @@ Please visit [project site] for details.
 
 ## Particulate Matter Sensors
 
-| Sensor            | `--sensor-model` | PM1 | PM2.5 | PM4 | PM10 | size bins | Other                  | Tested |
-| ----------------- | ---------------- | :-: | :---: | :-: | :--: | :-------: | ---------------------- | :----: |
-| [Plantower]       |                  |     |       |     |      |           |                        |        |
-| PMS1003 (aka G1)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |        |
-| PMS3003 (aka G3)  | [PMS3003]        | ✔️  |  ✔️   |     |  ✔️  |           |                        |   ✔️   |
-| PMS5003 (aka G5)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |        |
-| PMS5003T          | [PMS5003T]       | ✔️  |  ✔️   |     |  ✔️  |     4     | temp. & rel.hum.       |   ✔️   |
-| PMS5003S          | [PMS5003S]       | ✔️  |  ✔️   |     |  ✔️  |     6     | HCHO concentration     |        |
-| PMS5003ST         | [PMS5003ST]      | ✔️  |  ✔️   |     |  ✔️  |     6     | HCHO, temp. & rel.hum. |        |
-| PMS7003 (aka G7)  | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |   ✔️   |
-| PMSA003 (aka G10) | [PMSx003]        | ✔️  |  ✔️   |     |  ✔️  |     6     |                        |   ✔️   |
-| [NovaFitness]     |                  |     |       |     |      |           |                        |        |
-| SDS011            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |   ✔️   |
-| SDS018            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |        |
-| SDS021            | [SDS01x]         |     |  ✔️   |     |  ✔️  |           |                        |        |
-| SDS198            | [SDS198]         |     |       |     |      |           | PM100                  |   ✔️   |
-| [Honeywell]       |                  |     |       |     |      |           |                        |        |
-| HPMA115S0         | [HPMA115S0]      |     |  ✔️   |     |  ✔️  |           |                        |        |
-| HPMA115C0         | [HPMA115C0]      | ✔️  |  ✔️   | ✔️  |  ✔️  |           |                        |   ✔️   |
-| [Sensirion]       |                  |     |       |     |      |           |                        |        |
-| SPS30             | [SPS30]          | ✔️  |  ✔️   | ✔️  |  ✔️  |     5     | typical particle size  |   ✔️   |
-| [Winsen]          |                  |     |       |     |      |           |                        |        |
-| ZH03B             | [ZH0xx]          | ✔️  |  ✔️   | ✔️  |      |           |                        |        |
-| ZH06-I            | [ZH0xx]          | ✔️  |  ✔️   | ✔️  |      |           |                        |        |
+| Sensor            | `--sensor-model` |  PM1  | PM2.5 |  PM4  | PM10  | size bins | Other                  | Tested |
+| ----------------- | ---------------- | :---: | :---: | :---: | :---: | :-------: | ---------------------- | :----: |
+| [Plantower]       |                  |       |       |       |       |           |                        |        |
+| PMS1003 (aka G1)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |        |
+| PMS3003 (aka G3)  | [PMS3003]        |   ✔️   |   ✔️   |       |   ✔️   |           |                        |   ✔️    |
+| PMS5003 (aka G5)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |        |
+| PMS5003T          | [PMS5003T]       |   ✔️   |   ✔️   |       |   ✔️   |     4     | temp. & rel.hum.       |   ✔️    |
+| PMS5003S          | [PMS5003S]       |   ✔️   |   ✔️   |       |   ✔️   |     6     | HCHO concentration     |        |
+| PMS5003ST         | [PMS5003ST]      |   ✔️   |   ✔️   |       |   ✔️   |     6     | HCHO, temp. & rel.hum. |        |
+| PMS7003 (aka G7)  | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |   ✔️    |
+| PMSA003 (aka G10) | [PMSx003]        |   ✔️   |   ✔️   |       |   ✔️   |     6     |                        |   ✔️    |
+| [NovaFitness]     |                  |       |       |       |       |           |                        |        |
+| SDS011            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |   ✔️    |
+| SDS018            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |        |
+| SDS021            | [SDS01x]         |       |   ✔️   |       |   ✔️   |           |                        |        |
+| SDS198            | [SDS198]         |       |       |       |       |           | PM100                  |   ✔️    |
+| [Honeywell]       |                  |       |       |       |       |           |                        |        |
+| HPMA115S0         | [HPMA115S0]      |       |   ✔️   |       |   ✔️   |           |                        |        |
+| HPMA115C0         | [HPMA115C0]      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |           |                        |   ✔️    |
+| [Sensirion]       |                  |       |       |       |       |           |                        |        |
+| SPS30             | [SPS30]          |   ✔️   |   ✔️   |   ✔️   |   ✔️   |     5     | typical particle size  |   ✔️    |
+| [Winsen]          |                  |       |       |       |       |           |                        |        |
+| ZH03B             | [ZH0xx]          |   ✔️   |   ✔️   |   ✔️   |       |           |                        |        |
+| ZH06-I            | [ZH0xx]          |   ✔️   |   ✔️   |   ✔️   |       |           |                        |        |
 
 ## Other Sensors
 
@@ -68,6 +68,8 @@ The [project site] contain some help for those brave enough to use its internals
 
 ## Changelog
 
+- 0.8.1
+  - add Python 3.14 support, drop Python 3.9 support
 - 0.8.0
   - add Python 3.12 and 3.13 support, drop Python 3.8 support
   - require typer-slim instead of full typer
