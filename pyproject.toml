@@ -18,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Natural Language :: English",
@@ -106,14 +107,14 @@ cache-keys = [{ file = "pyproject.toml" }, { file = "src/pms/_version.py" }]
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, docs, py39, py310, py311, py312, py313, report
+envlist = lint, docs, py39, py310, py311, py312, py313, py314, report
 skip_missing_interpreters = True
 isolated_build = True
 requires =
     tox >=4.22
     tox-uv >=1.25
 labels =
-    coverage = py39, py310, py311, py312, py313, report
+    coverage = py39, py310, py311, py312, py313, py314, report
 
 [testenv]
 description =
