@@ -1,0 +1,1052 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://avaldebe.github.io/PyPMS/sensors/Sensirion/">
+      
+      
+        <link rel="prev" href="../Honeywell/">
+      
+      
+        <link rel="next" href="../Winsen/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Sensirion - PyPMS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sensirion-sensors" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PyPMS" class="md-header__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPMS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sensirion
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PyPMS" class="md-nav__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPMS
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Senors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Senors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plantower/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plantower
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NovaFitness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NovaFitness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Honeywell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Honeywell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensirion
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensirion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sps30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPS30
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Winsen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Winsen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu680/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bosch Sensortec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library_usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sqlite_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sensirion-sensors"><a href="https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/">Sensirion</a> sensors</h1>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sensor</label><label for="__tabbed_1_2">datasheet</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Sensor</th>
+<th><code>--sensor-model</code></th>
+<th style="text-align: center;">PM1</th>
+<th style="text-align: center;">PM2.5</th>
+<th style="text-align: center;">PM4</th>
+<th style="text-align: center;">PM10</th>
+<th style="text-align: center;">size bins</th>
+<th>Other</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPS30</td>
+<td><a href="#sps30">SPS30</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">5</td>
+<td>typical particle size</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Sensor</th>
+<th>Datasheet</th>
+<th>Dimensions</th>
+<th>Connector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPS30</td>
+<td><a href="#sps30">en</a></td>
+<td></td>
+<td><a href="#connector">5 pin</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="connector">Connector</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">5 pin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>5 pin JST ZH (1.50mm pitch)</p>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Name</th>
+<th>Voltage</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>VDD</td>
+<td>5V±10%</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>RX/SDA</td>
+<td>3.3V/5V TTL</td>
+<td>serial port/I2C</td>
+</tr>
+<tr>
+<td>3</td>
+<td>TX/SCL</td>
+<td>3.3V/5V TTL</td>
+<td>serial port/I2C</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SEL</td>
+<td>floating/GND</td>
+<td>floating for UART, GND for I2C</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GND</td>
+<td>0V</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="protocol">Protocol</h2>
+<p>Serial protocol is UART 115200 8N1 5V TTL <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z"/></svg></span> 3.3V compatible.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">commands</label><label for="__tabbed_3_2">message</label><label for="__tabbed_3_3">SPS30</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a href="#sps30">SPS30</a> only support continuous operation, at about one measurement per second.
+However, new measurements are not streamed. Each measurement has to be requested.
+This behavior is consistent with <code>passive_mode</code>/single-shot operation in other sensors.</p>
+<p>The <code>sleep</code>/<code>wake</code> commands listed here (stop measurement/start measurement on the <a href="#sps30">datasheet</a>),
+behave consistently with the rest of the supported PM sensors.
+There are also <code>deep-sleep</code>/<code>wake-up</code> commands (sleep/wake-up on the <a href="#sps30">datasheet</a>),
+which are not implemented. As <code>deep-sleep</code> disable the UART interface and <code>wake-up</code> is a 2 stage procedure.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th><code>message</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>active_mode</code></td>
+<td>continuous operation</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>passive_mode</code></td>
+<td>single-shot operation</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>passive_read</code></td>
+<td>request last measurement</td>
+<td><code>7E 00 03 00 FC 7E</code></td>
+</tr>
+<tr>
+<td><code>sleep</code></td>
+<td>idle mode</td>
+<td><code>7E 00 01 00 FE 7E</code></td>
+</tr>
+<tr>
+<td><code>wake</code></td>
+<td>wake up from idle mode</td>
+<td><code>7E 00 00 02 01 03 F9 7E</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Messages containing measurements consist of floats.
+The second to last bit of the message should contain <code>0xFF-sum(message[1:-2])%0x100</code>.</p>
+<table>
+<thead>
+<tr>
+<th><code>message</code></th>
+<th><a href="#sps30">SPS30</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>47 bits</td>
+</tr>
+<tr>
+<td>header</td>
+<td>5 bits</td>
+</tr>
+<tr>
+<td></td>
+<td><code>7E 00 03 00 28</code></td>
+</tr>
+<tr>
+<td>body</td>
+<td>40 bits</td>
+</tr>
+<tr>
+<td></td>
+<td>10 values</td>
+</tr>
+<tr>
+<td>checksum</td>
+<td>1 bit</td>
+</tr>
+<tr>
+<td>tail</td>
+<td>1 bit</td>
+</tr>
+<tr>
+<td></td>
+<td><code>7E</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[5:-2]</code>) contains 10 values:</p>
+<ul>
+<li>pm01, pm25, pm04, pm10: PM1.0, PM2.5, PM4.0, PM10 [ug/m³]</li>
+<li>n0_5, n1_0, n2_5, n4_0, n10_0: number concentrations under X.Y um [#/cm³]</li>
+<li>diam: typical particle size [μm]</li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="sps30">SPS30</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">info</label><label for="__tabbed_4_2">serial</label><label for="__tabbed_4_3">csv</label><label for="__tabbed_4_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the SPS30 sensor (<code>-m SPS30</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>SPS30<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Sensirion SPS30 sensor observations
+
+time                                    measurement time [seconds since epoch]
+pm01, pm25, pm04, pm10                  PM1.0, PM2.5, PM4.0, PM10 [μg/m3]
+n0_5, n1_0, n2_5, n4_0, n10_0           number concentrations between 0.3 and X.Y um [#/cm3]
+diam                                    typical particle size [μm]
+
+String formats: pm (default), num, diam, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>SPS30<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2021-09-07 07:05:00: PM1 5.2, PM2.5 9.5, PM4 12.6, PM10 13.3 μg/m3
+2021-09-07 07:05:10: PM1 5.8, PM2.5 8.2, PM4 9.9, PM10 10.2 μg/m3
+2021-09-07 07:05:20: PM1 7.0, PM2.5 9.1, PM4 10.5, PM10 10.8 μg/m3
+2021-09-07 07:05:30: PM1 7.8, PM2.5 9.9, PM4 11.2, PM10 11.5 μg/m3
+2021-09-07 07:05:40: PM1 8.3, PM2.5 10.5, PM4 11.8, PM10 12.1 μg/m3
+2021-09-07 07:05:50: PM1 8.2, PM2.5 10.2, PM4 11.4, PM10 11.7 μg/m3
+2021-09-07 07:06:40: PM1 8.4, PM2.5 10.4, PM4 11.6, PM10 11.8 μg/m3
+2021-09-07 07:06:50: PM1 8.5, PM2.5 10.4, PM4 11.5, PM10 11.7 μg/m3
+2021-09-07 07:07:00: PM1 8.8, PM2.5 10.7, PM4 11.8, PM10 12.1 μg/m3
+2021-09-07 07:07:10: PM1 8.5, PM2.5 10.3, PM4 11.4, PM10 11.6 μg/m3
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>SPS30<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>time, pm01, pm25, pm04, pm10, n0_5, n1_0, n2_5, n4_0, n10_0, diam
+1630991100, 5.2, 9.5, 12.6, 13.3, 26.31, 37.00, 41.52, 42.41, 42.54, 0.8
+1630991110, 5.8, 8.2, 9.9, 10.2, 35.09, 43.75, 46.20, 46.67, 46.75, 0.8
+1630991120, 7.0, 9.1, 10.5, 10.8, 44.12, 53.44, 55.51, 55.91, 55.97, 0.8
+1630991130, 7.8, 9.9, 11.2, 11.5, 50.39, 60.42, 62.40, 62.78, 62.84, 0.7
+1630991140, 8.3, 10.5, 11.8, 12.1, 53.64, 64.24, 66.29, 66.68, 66.75, 0.7
+1630991150, 8.2, 10.2, 11.4, 11.7, 53.40, 63.68, 65.56, 65.91, 65.97, 0.7
+1630991200, 8.4, 10.4, 11.6, 11.8, 54.85, 65.26, 67.09, 67.44, 67.50, 0.7
+1630991210, 8.5, 10.4, 11.5, 11.7, 55.52, 65.91, 67.66, 68.00, 68.05, 0.7
+1630991220, 8.8, 10.7, 11.8, 12.1, 57.40, 68.09, 69.87, 70.21, 70.27, 0.7
+1630991230, 8.5, 10.3, 11.4, 11.6, 55.63, 65.90, 67.56, 67.88, 67.94, 0.7
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>SPS30<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nl">00000000</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">40</span><span class="w"> </span><span class="mh">a7</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">77</span><span class="w"> </span><span class="mh">bb</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">4a</span><span class="w"> </span><span class="mh">5f</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">54</span><span class="w"> </span><span class="mh">8d</span><span class="w"> </span><span class="mh">dd</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">d2</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">33</span><span class="w"> </span><span class="mh">fc</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">22</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">29</span><span class="w"> </span><span class="mh">a4</span><span class="w"> </span><span class="mh">d9</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">29</span><span class="w"> </span><span class="mh">bc</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">55</span><span class="w"> </span><span class="mh">b7</span><span class="w"> </span><span class="mh">e7</span><span class="w"> </span><span class="mh">9e</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(@..</span><span class="w"> </span><span class="err">A.w.AJ_.AT..A..&gt;B}3..B&amp;.&quot;B)..B*).?U....</span>
+<span class="nl">0000002f</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">40</span><span class="w"> </span><span class="mh">b9</span><span class="w"> </span><span class="mh">c6</span><span class="w"> </span><span class="mh">7f</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">6c</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">4a</span><span class="w"> </span><span class="mh">e2</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">aa</span><span class="w"> </span><span class="mh">92</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">0c</span><span class="w"> </span><span class="mh">5b</span><span class="w"> </span><span class="mh">7c</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">2e</span><span class="w"> </span><span class="mh">fd</span><span class="w"> </span><span class="mh">ba</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">38</span><span class="w"> </span><span class="mh">ca</span><span class="w"> </span><span class="mh">b3</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">3a</span><span class="w"> </span><span class="mh">b2</span><span class="w"> </span><span class="mh">c9</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">3a</span><span class="w"> </span><span class="mh">fd</span><span class="w"> </span><span class="mh">e9</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">4a</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">25</span><span class="w"> </span><span class="mh">d6</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(@...A.l.A.J.A#..B.[|B...</span><span class="mh">B8</span><span class="err">..B:..B:..?J.%..</span>
+<span class="nl">00000064</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">40</span><span class="w"> </span><span class="mh">df</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">da</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">31</span><span class="w"> </span><span class="mh">62</span><span class="w"> </span><span class="mh">ae</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">9e</span><span class="w"> </span><span class="mh">32</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">2c</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">30</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">d3</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">55</span><span class="w"> </span><span class="mh">c0</span><span class="w"> </span><span class="mh">4c</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5f</span><span class="w"> </span><span class="mh">a2</span><span class="w"> </span><span class="mh">8a</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5f</span><span class="w"> </span><span class="mh">e4</span><span class="w"> </span><span class="mh">43</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">40</span><span class="w"> </span><span class="mh">fa</span><span class="w"> </span><span class="mh">1f</span><span class="w"> </span><span class="mh">ff</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(@...A}</span><span class="mh">1b</span><span class="err">.A&#39;.</span><span class="mh">2A</span><span class="err">,.}^</span><span class="mh">B0</span><span class="err">}^.BU.LB^..B_..B_.C?@....</span>
+<span class="nl">00000090</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">40</span><span class="w"> </span><span class="mh">fa</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">ee</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">6a</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">33</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">33</span><span class="w"> </span><span class="mh">60</span><span class="w"> </span><span class="mh">81</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">37</span><span class="w"> </span><span class="mh">91</span><span class="w"> </span><span class="mh">cd</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">49</span><span class="w"> </span><span class="mh">8e</span><span class="w"> </span><span class="mh">c8</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">71</span><span class="w"> </span><span class="mh">b1</span><span class="w"> </span><span class="mh">18</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">79</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">b4</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">7b</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">1b</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">7b</span><span class="w"> </span><span class="mh">60</span><span class="w"> </span><span class="mh">21</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">a4</span><span class="w"> </span><span class="mh">c4</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(@...A.j}</span><span class="mh">3A</span><span class="err">3`.</span><span class="mh">A7</span><span class="err">..BI..Bq..By..B{</span><span class="w"> </span><span class="err">.B{`!?&lt;....</span>
+<span class="nl">000000c0</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">4c</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">38</span><span class="w"> </span><span class="mh">59</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">8e</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">56</span><span class="w"> </span><span class="mh">92</span><span class="w"> </span><span class="mh">6c</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">80</span><span class="w"> </span><span class="mh">79</span><span class="w"> </span><span class="mh">7c</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">84</span><span class="w"> </span><span class="mh">93</span><span class="w"> </span><span class="mh">12</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">5c</span><span class="w"> </span><span class="mh">b2</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5d</span><span class="w"> </span><span class="mh">fb</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">67</span><span class="w"> </span><span class="mh">ea</span><span class="w"> </span><span class="mh">31</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A..LA&#39;..A=8Y</span><span class="mh">AA</span><span class="err">.</span><span class="mh">5B</span><span class="err">V.lB.y|B...B.\.B.}].?&gt;g.1.</span>
+<span class="nl">000000f5</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">9e</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">0b</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">37</span><span class="w"> </span><span class="mh">29</span><span class="w"> </span><span class="mh">dc</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3b</span><span class="w"> </span><span class="mh">18</span><span class="w"> </span><span class="mh">f8</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">55</span><span class="w"> </span><span class="mh">95</span><span class="w"> </span><span class="mh">4a</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">ba</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">73</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">4c</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">f3</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">79</span><span class="w"> </span><span class="mh">76</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A...A#}^.</span><span class="mh">A7</span><span class="err">).A;..BU.JB}^..B..sB..LB...?&gt;.yv.</span>
+<span class="nl">00000120</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">b1</span><span class="w"> </span><span class="mh">47</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">5d</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">39</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">f6</span><span class="w"> </span><span class="mh">37</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5b</span><span class="w"> </span><span class="mh">61</span><span class="w"> </span><span class="mh">d6</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">82</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">77</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">86</span><span class="w"> </span><span class="mh">2d</span><span class="w"> </span><span class="mh">ad</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">86</span><span class="w"> </span><span class="mh">e0</span><span class="w"> </span><span class="mh">ca</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">86</span><span class="w"> </span><span class="mh">ff</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">e5</span><span class="w"> </span><span class="mh">5b</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A..</span><span class="mh">GA</span><span class="err">&amp;.}]</span><span class="mh">A9</span><span class="err">$.A&lt;.</span><span class="mh">7B</span><span class="err">[a.B..wB.-.B...B...?=..[.</span>
+<span class="nl">00000149</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">61</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">38</span><span class="w"> </span><span class="mh">4c</span><span class="w"> </span><span class="mh">cf</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3b</span><span class="w"> </span><span class="mh">f0</span><span class="w"> </span><span class="mh">1a</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">d0</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">d2</span><span class="w"> </span><span class="mh">21</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">52</span><span class="w"> </span><span class="mh">70</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">fd</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">88</span><span class="w"> </span><span class="mh">1a</span><span class="w"> </span><span class="mh">c2</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">47</span><span class="w"> </span><span class="mh">c7</span><span class="w"> </span><span class="mh">38</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A..</span><span class="mh">aA</span><span class="err">&amp;.*</span><span class="mh">A8</span><span class="err">L.A;..B^..B..!B.RpB...B...?&gt;G.8.</span>
+<span class="nl">00000178</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">0c</span><span class="w"> </span><span class="mh">43</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">2b</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">da</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">92</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">bc</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">65</span><span class="w"> </span><span class="mh">9c</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">88</span><span class="w"> </span><span class="mh">2f</span><span class="w"> </span><span class="mh">76</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">be</span><span class="w"> </span><span class="mh">32</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8c</span><span class="w"> </span><span class="mh">6c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">8c</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">b8</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3e</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A.C.A+..A=..</span><span class="mh">AA</span><span class="err">B.</span><span class="mh">Be</span><span class="err">..B./vB..</span><span class="mh">2B</span><span class="err">.l.B...?&gt;Z...</span>
+<span class="nl">000001a7</span><span class="p">:</span><span class="w"> </span><span class="mh">7e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">03</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">28</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">e5</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">a7</span><span class="w"> </span><span class="mh">bf</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">d7</span><span class="w"> </span><span class="mh">db</span><span class="w"> </span><span class="mh">41</span><span class="w"> </span><span class="mh">39</span><span class="w"> </span><span class="mh">47</span><span class="w"> </span><span class="mh">db</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">5e</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">cd</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">a7</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">c2</span><span class="w"> </span><span class="mh">f8</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">de</span><span class="w"> </span><span class="mh">e9</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">3d</span><span class="w"> </span><span class="mh">be</span><span class="w"> </span><span class="mh">a6</span><span class="w"> </span><span class="mh">ff</span><span class="w"> </span><span class="mh">7e</span><span class="w">  </span><span class="err">....(A...A$..</span><span class="mh">A5</span><span class="err">..</span><span class="mh">A9</span><span class="err">G.B^.</span><span class="mh">5B</span><span class="err">...B.</span><span class="w"> </span><span class="err">.B...B...?=....</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

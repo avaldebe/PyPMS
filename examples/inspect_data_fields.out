@@ -1,0 +1,26 @@
+HPMA115C0
+{'time': 'int', 'pm01': 'int', 'pm25': 'int', 'pm04': 'int', 'pm10': 'int'}
+HPMA115S0
+{'time': 'int', 'pm25': 'int', 'pm10': 'int'}
+MCU680
+{'time': 'int', 'temp': 'float', 'rhum': 'float', 'pres': 'float', 'IAQ_acc': 'int', 'IAQ': 'int', 'gas': 'int', 'alt': 'int'}
+MHZ19B
+{'time': 'int', 'CO2': 'int'}
+PMS3003
+{'time': 'int', 'raw01': 'int', 'raw25': 'int', 'raw10': 'int', 'pm01': 'int', 'pm25': 'int', 'pm10': 'int'}
+PMS5003S
+{'time': 'int', 'raw01': 'int', 'raw25': 'int', 'raw10': 'int', 'pm01': 'int', 'pm25': 'int', 'pm10': 'int', 'n0_3': 'float', 'n0_5': 'float', 'n1_0': 'float', 'n2_5': 'float', 'n5_0': 'float', 'n10_0': 'float', 'HCHO': 'float'}
+PMS5003ST
+{'time': 'int', 'raw01': 'int', 'raw25': 'int', 'raw10': 'int', 'pm01': 'int', 'pm25': 'int', 'pm10': 'int', 'n0_3': 'float', 'n0_5': 'float', 'n1_0': 'float', 'n2_5': 'float', 'n5_0': 'float', 'n10_0': 'float', 'HCHO': 'float', 'temp': 'float', 'rhum': 'float'}
+PMS5003T
+{'time': 'int', 'raw01': 'int', 'raw25': 'int', 'raw10': 'int', 'pm01': 'int', 'pm25': 'int', 'pm10': 'int', 'n0_3': 'float', 'n0_5': 'float', 'n1_0': 'float', 'n2_5': 'float', 'temp': 'float', 'rhum': 'float'}
+PMSx003
+{'time': 'int', 'raw01': 'int', 'raw25': 'int', 'raw10': 'int', 'pm01': 'int', 'pm25': 'int', 'pm10': 'int', 'n0_3': 'float', 'n0_5': 'float', 'n1_0': 'float', 'n2_5': 'float', 'n5_0': 'float', 'n10_0': 'float'}
+SDS01x
+{'time': 'int', 'pm25': 'float', 'pm10': 'float'}
+SDS198
+{'time': 'int', 'pm100': 'int'}
+SPS30
+{'time': 'int', 'pm01': 'float', 'pm25': 'float', 'pm04': 'float', 'pm10': 'float', 'n0_5': 'float', 'n1_0': 'float', 'n2_5': 'float', 'n4_0': 'float', 'n10_0': 'float', 'diam': 'float'}
+ZH0xx
+{'time': 'int', 'pm25': 'int', 'pm10': 'int', 'pm01': 'int'}

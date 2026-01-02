@@ -1,0 +1,1006 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://avaldebe.github.io/PyPMS/sensors/mcu680/">
+      
+      
+        <link rel="prev" href="../Winsen/">
+      
+      
+        <link rel="next" href="../../library_usage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Bosch Sensortec - PyPMS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bosch-sensortec-sensors" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PyPMS" class="md-header__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPMS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bosch Sensortec
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PyPMS" class="md-nav__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPMS
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Senors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Senors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plantower/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plantower
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NovaFitness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NovaFitness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Honeywell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Honeywell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sensirion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensirion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Winsen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Winsen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bosch Sensortec
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bosch Sensortec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bme680" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BME680
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcu680" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCU680
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library_usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sqlite_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="bosch-sensortec-sensors">Bosch Sensortec sensors</h1>
+<h2 id="bme680">BME680</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sensor</label><label for="__tabbed_1_2">module</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The <a href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf">BME680</a> sensor from Bosch Sensortec measures relative humidity, barometric pressure, ambient temperature and gas (VOC).
+The open source <a href="https://github.com/BoschSensortec/BME680_driver">driver</a> provides raw measurements, such as the resistance of the gas sensing element.</p>
+<p>The heater element of gas sensor affects the temperature and humidity measurements.
+Compensated temperature and humidity measurements are available trough a closed source integration library (<a href="https://www.bosch-sensortec.com/software-tools/software/bsec/">BSEC</a>).
+The <a href="https://www.bosch-sensortec.com/software-tools/software/bsec/">BSEC</a> provides three air quality estimates derived from raw measurements:</p>
+<ul>
+<li>index of air quality (IAQ, 0-500);</li>
+<li>CO2 equivalent (eCO2, ppm);</li>
+<li>breath VOC (bVOC), ppm).</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>For easy of use <a href="https://www.bosch-sensortec.com/software-tools/software/bsec/">BSEC</a> is also provided as an <a href="https://github.com/BoschSensortec/BSEC-Arduino-library">Arduino library</a>,
+which can be installed using the <a href="https://platformio.org/lib/show/6979/BSEC%20Software%20Library/installation">platformio library manager</a> as follows:</p>
+<div class="highlight"><pre><span></span><code>pio<span class="w"> </span>lib<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;BSEC Software Library&quot;</span>
+</code></pre></div>
+</div>
+</div>
+<div class="tabbed-block">
+<p>The <a href="https://www.banggood.com/GY-MCU680V1-BME680-Temperature-Humidity-Pressure-Indoor-Air-Quality-IAQ-Sensor-Module-p-1416437.html">GY-MCU680v1</a> is a chinese module with an <a href="https://www.st.com/en/microcontrollers-microprocessors/stm32f051k8.html">STM32F051K8</a> mirocontroller (μC) and 3.3V low-dropout regulator (LDO).
+The μC acts as UART bridge, providing <a href="https://www.bosch-sensortec.com/software-tools/software/bsec/">BSEC</a> outputs from the BME680 sensor.</p>
+<p>The μC and sensor operate at 3.3V, but the module can be interfaced at 5V as UART pins on the <a href="https://www.st.com/en/microcontrollers-microprocessors/stm32f051k8.html">STM32F051K8</a> are 5V tolerant.
+The module also breaks out the <a href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf">BME680</a> I2C pins, which are not 5V tolerant.</p>
+</div>
+</div>
+</div>
+<h2 id="protocol">Protocol</h2>
+<p>Under factory settings, the serial protocol is UART 9600 8N1 3.3V/5V TTL.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The alternative 115200 BAUD rate is not supported.</p>
+</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">commands</label><label for="__tabbed_2_2">MCU680</label><label for="__tabbed_2_3">extra config</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th><code>message</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>active_mode</code></td>
+<td>continuous operation</td>
+<td><code>A5 56 02 FD</code></td>
+</tr>
+<tr>
+<td><code>passive_mode</code></td>
+<td>single-shot operation</td>
+<td><code>A5 56 01 FC</code></td>
+</tr>
+<tr>
+<td><code>passive_read</code></td>
+<td>request last measurement</td>
+<td><code>A5 56 01 FC</code></td>
+</tr>
+<tr>
+<td><code>sleep</code></td>
+<td>sleep mode</td>
+<td></td>
+</tr>
+<tr>
+<td><code>wake</code></td>
+<td>wake up from sleep mode</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Under the factory settings, the module provides 7 values packed on a 20 bit message.</p>
+</div>
+<div class="tabbed-block">
+<p>The <a href="http://myosuploads3.banggood.com/products/20190218/20190218203950GYMPU680.rar">MCU680</a> can be further configured with the following commands:</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th><code>message</code></th>
+<th>note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>select output</td>
+<td><code>A5 55 XX YY</code></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x01</span></code></td>
+<td>temperature</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x02</span></code></td>
+<td>relative humidity</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x04</span></code></td>
+<td>atmospheric pressure</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x08</span></code></td>
+<td>IAQ accuracy</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x10</span></code></td>
+<td>gas resistance</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">XX</span> <span class="o">|=</span> <span class="mh">0x20</span></code></td>
+<td>altitude estimate</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="highlight"><span class="n">YY</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xA5</span> <span class="o">+</span> <span class="mh">0x55</span> <span class="o">+</span> <span class="n">XX</span><span class="p">)</span> <span class="o">%</span> <span class="mh">0x100</span></code></td>
+<td>message checksum</td>
+</tr>
+<tr>
+<td>output all data</td>
+<td><code>A5 55 3F 39</code></td>
+<td>factory setting</td>
+</tr>
+<tr>
+<td>115200 BAUD rate</td>
+<td><code>A5 58 01 FE</code></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z"/></svg></span>not supported</td>
+</tr>
+<tr>
+<td>9600 BAUD rate</td>
+<td><code>A5 58 02 FF</code></td>
+<td>factory setting</td>
+</tr>
+<tr>
+<td>save settings</td>
+<td><code>A5 5A 01 00</code></td>
+<td>save current settings to flash and reset</td>
+</tr>
+<tr>
+<td>reset settings</td>
+<td><code>A5 5A 02 01</code></td>
+<td>restore factory settings</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="mcu680">MCU680</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">info</label><label for="__tabbed_3_2">serial</label><label for="__tabbed_3_3">csv</label><label for="__tabbed_3_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the MCU680 sensor (<code>-m MCU680</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>MCU680<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Bosh Sensortec BME680 sensor observations
+
+time                                    measurement time [seconds since epoch]
+temp                                    temperature [°C]
+rhum                                    relative humidity [%]
+pres                                    atmospheric pressure [hPa]
+IAQ_acc                                 IAQ accuracy flag
+IAQ                                     index of air quality [0--500]
+gas                                     gas resistance [kΩ]
+alt                                     altitude estimate [m above sea level]
+
+String formats: atm, bme (default), bsec, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>MCU680<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2020-09-27 17:20:52: Temp. 24.3 °C, Rel.Hum. 27.6 %, Press 1012.57 hPa, 40.7 kΩ
+2020-09-27 17:21:02: Temp. 24.2 °C, Rel.Hum. 27.6 %, Press 1012.53 hPa, 42.1 kΩ
+2020-09-27 17:21:12: Temp. 24.2 °C, Rel.Hum. 27.6 %, Press 1012.53 hPa, 43.8 kΩ
+2020-09-27 17:21:22: Temp. 24.2 °C, Rel.Hum. 27.6 %, Press 1012.55 hPa, 45.1 kΩ
+2020-09-27 17:21:32: Temp. 24.2 °C, Rel.Hum. 27.6 %, Press 1012.55 hPa, 46.4 kΩ
+2020-09-27 17:21:42: Temp. 24.2 °C, Rel.Hum. 27.7 %, Press 1012.51 hPa, 47.6 kΩ
+2020-09-27 17:21:52: Temp. 24.1 °C, Rel.Hum. 27.7 %, Press 1012.51 hPa, 49.0 kΩ
+2020-09-27 17:22:02: Temp. 24.1 °C, Rel.Hum. 27.7 %, Press 1012.51 hPa, 50.0 kΩ
+2020-09-27 17:22:12: Temp. 24.1 °C, Rel.Hum. 27.7 %, Press 1012.53 hPa, 51.4 kΩ
+2020-09-27 17:22:22: Temp. 24.1 °C, Rel.Hum. 27.7 %, Press 1012.51 hPa, 52.4 kΩ
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv)</code></p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>MCU680<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>time, temp, rhum, pres, IAQ_acc, IAQ, gas, alt
+1601220052, 24.3, 27.6, 1012.57, 1, 25, 40.7, 5
+1601220062, 24.2, 27.6, 1012.53, 1, 25, 42.1, 5
+1601220072, 24.2, 27.6, 1012.53, 1, 25, 43.8, 5
+1601220082, 24.2, 27.6, 1012.55, 1, 25, 45.1, 5
+1601220092, 24.2, 27.6, 1012.55, 1, 25, 46.4, 5
+1601220102, 24.2, 27.7, 1012.51, 1, 25, 47.6, 6
+1601220112, 24.1, 27.7, 1012.51, 1, 25, 49.0, 6
+1601220122, 24.1, 27.7, 1012.51, 1, 25, 50.0, 6
+1601220132, 24.1, 27.7, 1012.53, 1, 25, 51.4, 5
+1601220142, 24.1, 27.7, 1012.51, 1, 25, 52.4, 6
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>MCU680<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nl">00000000</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">7d</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">c4</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">89</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">9e</span><span class="w"> </span><span class="mh">f2</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">19</span><span class="w">  </span><span class="s">ZZ?..}..............</span>
+<span class="nl">00000014</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">79</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">c5</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">a4</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">a9</span><span class="w">  </span><span class="s">ZZ?..y..............</span>
+<span class="nl">00000028</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">76</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">c8</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">ab</span><span class="w"> </span><span class="mh">32</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">5f</span><span class="w">  </span><span class="s">ZZ?..v..........2.._</span>
+<span class="nl">0000003c</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">74</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">c8</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b0</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">59</span><span class="w">  </span><span class="s">ZZ?..t..........&#39;..Y</span>
+<span class="nl">00000050</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">72</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">c9</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">87</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b5</span><span class="w"> </span><span class="mh">33</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">69</span><span class="w">  </span><span class="s">ZZ?..r..........3..i</span>
+<span class="nl">00000064</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">70</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">d0</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">ba</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">42</span><span class="w">  </span><span class="s">ZZ?..p.............B</span>
+<span class="nl">00000078</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">6f</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">d2</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">bf</span><span class="w"> </span><span class="mh">71</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">b4</span><span class="w">  </span><span class="s">ZZ?..o..........q...</span>
+<span class="nl">0000008c</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">6e</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">d0</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">c3</span><span class="w"> </span><span class="mh">6e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">b2</span><span class="w">  </span><span class="s">ZZ?..n..........n...</span>
+<span class="nl">000000a0</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">6c</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">cf</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">85</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">c8</span><span class="w"> </span><span class="mh">ee</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">35</span><span class="w">  </span><span class="s">ZZ?..l.............5</span>
+<span class="nl">000000b4</span><span class="p">:</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">09</span><span class="w"> </span><span class="mh">6a</span><span class="w"> </span><span class="mh">0a</span><span class="w"> </span><span class="mh">d0</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">8b</span><span class="w"> </span><span class="mh">83</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">19</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">cc</span><span class="w"> </span><span class="mh">b0</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">f9</span><span class="w">  </span><span class="s">ZZ?..j..............</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

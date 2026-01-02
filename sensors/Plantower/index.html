@@ -1,0 +1,1553 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://avaldebe.github.io/PyPMS/sensors/Plantower/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../NovaFitness/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Plantower - PyPMS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plantower-sensors" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PyPMS" class="md-header__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPMS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plantower
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PyPMS" class="md-nav__button md-logo" aria-label="PyPMS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPMS
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/avaldebe/PyPMS" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Senors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Senors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plantower
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plantower
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pms3003" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMS3003
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pmsx003" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMSx003
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pms5003t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMS5003T
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pms5003s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMS5003S
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pms5003st" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMS5003ST
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NovaFitness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NovaFitness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Honeywell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Honeywell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sensirion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensirion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Winsen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Winsen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu680/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bosch Sensortec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library_usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sqlite_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plantower-sensors"><a href="http://www.plantower.com/">Plantower</a> sensors</h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This sensors are 3.3V devices. They require 5V power to operate the laser and fan.
+However, the I/O pins are not 5V tolerant and the sensor will be damaged by 5V logic.</p>
+</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sensor</label><label for="__tabbed_1_2">datasheet</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Sensor</th>
+<th><code>--sensor-model</code></th>
+<th style="text-align: center;">PM1</th>
+<th style="text-align: center;">PM2.5</th>
+<th style="text-align: center;">PM10</th>
+<th style="text-align: center;">size bins</th>
+<th>Other</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PMS1003</td>
+<td><a href="#pmsx003">PMSx003</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td></td>
+</tr>
+<tr>
+<td>PMS3003</td>
+<td><a href="#pms3003">PMS3003</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"></td>
+<td>No passive mode read</td>
+</tr>
+<tr>
+<td>PMS5003</td>
+<td><a href="#pmsx003">PMSx003</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td></td>
+</tr>
+<tr>
+<td>PMS5003T</td>
+<td><a href="#pms5003t">PMS5003T</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">4</td>
+<td>temp. &amp; rel.hum.</td>
+</tr>
+<tr>
+<td>PMS5003S</td>
+<td><a href="#pms5003s">PMS5003S</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td>HCHO concentration</td>
+</tr>
+<tr>
+<td>PMS5003ST</td>
+<td><a href="#pms5003st">PMS5003ST</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td>HCHO, temp. &amp; rel.hum.</td>
+</tr>
+<tr>
+<td>PMS7003</td>
+<td><a href="#pmsx003">PMSx003</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td></td>
+</tr>
+<tr>
+<td>PMSA003</td>
+<td><a href="#pmsx003">PMSx003</a></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59z"/></svg></span></td>
+<td style="text-align: center;">6</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Sensor</th>
+<th>Datasheet</th>
+<th>Dimensions</th>
+<th>Connector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PMS1003</td>
+<td><a href="http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2">en</a>,  <a href="https://datasheet.lcsc.com/szlcsc/PMS1003_C89289.pdf">cn</a></td>
+<td>42x65x23 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS3003</td>
+<td><a href="https://github.com/avaldebe/AQmon/raw/master/Documents/PMS3003_LOGOELE.pdf">en</a>, <a href="https://datasheet.lcsc.com/szlcsc/PMS3003_C87024.pdf">cn</a></td>
+<td>43x50x21 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS5003</td>
+<td><a href="http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms5003-manual_v2-3.pdf?sfvrsn=2">en</a>,  <a href="https://datasheet.lcsc.com/szlcsc/PMS5003_C91431.pdf">cn</a></td>
+<td>38x50x21 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS5003T</td>
+<td></td>
+<td>38x50x21 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS5003S</td>
+<td></td>
+<td>38x50x21 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS5003ST</td>
+<td></td>
+<td>38x50x21 mm³</td>
+<td><a href="#connector">8 pin</a></td>
+</tr>
+<tr>
+<td>PMS7003</td>
+<td><a href="https://datasheet.lcsc.com/szlcsc/PMS7003_C84815.pdf">cn</a></td>
+<td>37x48x12 mm³</td>
+<td><a href="#connector">10 pin</a></td>
+</tr>
+<tr>
+<td>PMSA003</td>
+<td><a href="https://datasheet.lcsc.com/szlcsc/PMSA003-A_C132744.pdf">cn</a></td>
+<td></td>
+<td><a href="#connector">10 pin</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="connector">Connector</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">8 pin</label><label for="__tabbed_2_2">10 pin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>8 pin Molex 1.25mm "PicoBlade" 51021 compatible, found online as 1.25mm JST.</p>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Name</th>
+<th>Voltage</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>VCC</td>
+<td>5V</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>GND</td>
+<td>0V</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>SET</td>
+<td>3.3V TTL</td>
+<td>wake (hight)/sleep (low) mode</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RX</td>
+<td>3.3V TTL</td>
+<td>serial port</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TX</td>
+<td>3.3V TTL</td>
+<td>serial port</td>
+</tr>
+<tr>
+<td>6</td>
+<td>RESET</td>
+<td>3,3V TTL</td>
+<td>reset (low)</td>
+</tr>
+<tr>
+<td>7/8</td>
+<td>NC</td>
+<td></td>
+<td>not connected</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>5x2 1.27mm female header</p>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Name</th>
+<th>Voltage</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1/2</td>
+<td>VCC</td>
+<td>5V</td>
+<td></td>
+</tr>
+<tr>
+<td>3/4</td>
+<td>GND</td>
+<td>0V</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>RESET</td>
+<td>3,3V TTL</td>
+<td>reset (low)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>NC</td>
+<td></td>
+<td>not connected</td>
+</tr>
+<tr>
+<td>7</td>
+<td>RX</td>
+<td>3.3V TTL</td>
+<td>serial port</td>
+</tr>
+<tr>
+<td>8</td>
+<td>NC</td>
+<td></td>
+<td>not connected</td>
+</tr>
+<tr>
+<td>9</td>
+<td>TX</td>
+<td>3.3V TTL</td>
+<td>serial port</td>
+</tr>
+<tr>
+<td>10</td>
+<td>SET</td>
+<td>3.3V TTL</td>
+<td>wake (hight)/sleep (low) mode</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="protocol">Protocol</h2>
+<p>Serial protocol is UART 9600 8N1 <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z"/></svg></span> 3.3V TTL.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:7"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><input id="__tabbed_3_5" name="__tabbed_3" type="radio" /><input id="__tabbed_3_6" name="__tabbed_3" type="radio" /><input id="__tabbed_3_7" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">commands</label><label for="__tabbed_3_2">message</label><label for="__tabbed_3_3">PMS3003</label><label for="__tabbed_3_4">PMSx003</label><label for="__tabbed_3_5">PMS5003T</label><label for="__tabbed_3_6">PMS5003S</label><label for="__tabbed_3_7">PMS5003ST</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>With the exception of the <a href="#pms3003">PMS3003</a>, all the Plantower PM sensors
+can be fully controlled with serial commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th><code>message</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>active_mode</code></td>
+<td>continuous operation</td>
+<td><code>42 4D E1 00 01 01 71</code></td>
+</tr>
+<tr>
+<td><code>passive_mode</code></td>
+<td>single-shot operation</td>
+<td><code>42 4D E1 00 00 01 70</code></td>
+</tr>
+<tr>
+<td><code>passive_read</code></td>
+<td>trigger single-shot measurement</td>
+<td><code>42 4D E2 00 00 01 71</code></td>
+</tr>
+<tr>
+<td><code>sleep</code></td>
+<td>sleep mode</td>
+<td><code>42 4D E4 00 00 01 73</code></td>
+</tr>
+<tr>
+<td><code>wake</code></td>
+<td>wake up from sleep mode</td>
+<td><code>42 4D E4 00 01 01 74</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Messages containing measurements consist of unsigned short integers.
+The last 2 bits of the message should contain <code>sum(message[:2])</code>.</p>
+<table>
+<thead>
+<tr>
+<th><code>message</code></th>
+<th><a href="#pms3003">PMS3003</a></th>
+<th><a href="#pmsx003">PMSx003</a></th>
+<th><a href="#pms5003t">PMS5003T</a></th>
+<th><a href="#pms5003s">PMS5003S</a></th>
+<th><a href="#pms5003st">PMS5003ST</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>24 bits</td>
+<td>32 bits</td>
+<td>32 bits</td>
+<td>32 bits</td>
+<td>40 bits</td>
+</tr>
+<tr>
+<td>header</td>
+<td>4 bits</td>
+<td>4 bits</td>
+<td>4 bits</td>
+<td>4 bits</td>
+<td>4 bits</td>
+</tr>
+<tr>
+<td></td>
+<td><code>42 4d 00 14</code></td>
+<td><code>42 4d 00 1c</code></td>
+<td><code>42 4d 00 1c</code></td>
+<td><code>42 4d 00 1c</code></td>
+<td><code>42 4d 00 24</code></td>
+</tr>
+<tr>
+<td>body</td>
+<td>18 bits</td>
+<td>26 bits</td>
+<td>26 bits</td>
+<td>26 bits</td>
+<td>34 bits</td>
+</tr>
+<tr>
+<td></td>
+<td>6 values, 3 reserved</td>
+<td>12 values, 1 reserved</td>
+<td>13 values</td>
+<td>13 values</td>
+<td>15 values, 2 reserved</td>
+</tr>
+<tr>
+<td>checksum</td>
+<td>2 bits</td>
+<td>2 bits</td>
+<td>2 bits</td>
+<td>2 bits</td>
+<td>2 bits</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[4:16]</code>) contains 6 values:</p>
+<ul>
+<li>raw01, raw25, raw10: cf=1 PM estimates [μg/m³]</li>
+<li>pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[4:28]</code>) contains 12 values:</p>
+<ul>
+<li>raw01, raw25, raw10: cf=1 PM estimates [μg/m³]</li>
+<li>pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]</li>
+<li>n0_3, n0_5, n1_0, n2_5, n5_0, n10_0: number of particles under X_Y μm [#/cm³] (raw values [#/100 cm³])</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[4:28]</code>) contains 12 values:</p>
+<ul>
+<li>raw01, raw25, raw10: cf=1 PM estimates [μg/m³]</li>
+<li>pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]</li>
+<li>n0_3, n0_5, n1_0, n2_5: number of particles under X_Y um [#/cm³] (raw values [#/100 cm³])</li>
+<li>temp: temperature [°C]</li>
+<li>rhum: relative humidity [%]</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[4:30]</code>) contains 13 values:</p>
+<ul>
+<li>raw01, raw25, raw10: cf=1 PM estimates [μg/m³]</li>
+<li>pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]</li>
+<li>n0_3, n0_5, n1_0, n2_5, n5_0, n10_0: number of particles under X_Y um [#/cm³] (raw values [#/100 cm³])</li>
+<li>HCHO: concentration of formaldehyde [μg/m³]</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>The message body (<code>message[4:34]</code>) contains 15 values:</p>
+<ul>
+<li>raw01, raw25, raw10: cf=1 PM estimates [μg/m³]</li>
+<li>pm01, pm25, pm10: PM1.0, PM2.5, PM10 [μg/m³]</li>
+<li>n0_3, n0_5, n1_0, n2_5, n5_0, n10_0: number of particles under X_Y um [#/cm³] (raw values [#/100 cm³])</li>
+<li>HCHO: concentration of formaldehyde [μg/m³]</li>
+<li>temp: temperature [°C]</li>
+<li>rhum: relative humidity [%]</li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="pms3003">PMS3003</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This sensors does not support passive mode sampling</p>
+</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">info</label><label for="__tabbed_4_2">serial</label><label for="__tabbed_4_3">csv</label><label for="__tabbed_4_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the PMS3003 sensor (<code>-m PMS3003</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS3003<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Plantower PMS3003 sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+
+String formats: pm (default), raw, cf, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS3003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2020-09-27 17:16:10: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:16:20: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:16:30: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:16:40: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:16:50: PM1 1.0, PM2.5 1.0, PM10 1.0 μg/m3
+2020-09-27 17:17:00: PM1 1.0, PM2.5 1.0, PM10 1.0 μg/m3
+2020-09-27 17:17:10: PM1 1.0, PM2.5 1.0, PM10 1.0 μg/m3
+2020-09-27 17:17:20: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:17:30: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+2020-09-27 17:17:40: PM1 0.0, PM2.5 0.0, PM10 0.0 μg/m3
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS3003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>time, raw01, raw25, raw10, pm01, pm25, pm10
+1601219770, 0, 0, 0, 0.0, 0.0, 0.0
+1601219780, 0, 0, 0, 0.0, 0.0, 0.0
+1601219790, 0, 0, 0, 0.0, 0.0, 0.0
+1601219800, 0, 0, 0, 0.0, 0.0, 0.0
+1601219810, 1, 1, 1, 1.0, 1.0, 1.0
+1601219820, 1, 1, 1, 1.0, 1.0, 1.0
+1601219830, 1, 1, 1, 1.0, 1.0, 1.0
+1601219840, 0, 0, 0, 0.0, 0.0, 0.0
+1601219850, 0, 0, 0, 0.0, 0.0, 0.0
+1601219860, 0, 0, 0, 0.0, 0.0, 0.0
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS3003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nl">00000000</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000018</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000030</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000048</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000060</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">fa</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000078</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">fa</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">00000090</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">fa</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">000000a8</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">000000c0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+<span class="nl">000000d8</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">51</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">f4</span><span class="w">  </span><span class="err">BM...................Q..</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="pmsx003">PMSx003</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">info</label><label for="__tabbed_5_2">serial</label><label for="__tabbed_5_3">csv</label><label for="__tabbed_5_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the sensors supported by the PMSx003 protocol (<code>-m PMSx003</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMSx003<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Plantower PMS1003, PMS5003, PMS7003 and PMSA003 sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
+
+String formats: pm (default), raw, cf, num, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMSx003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2020-09-27 17:16:10: PM1 0.0, PM2.5 8.0, PM10 8.0 μg/m3
+2020-09-27 17:16:20: PM1 0.0, PM2.5 7.0, PM10 7.0 μg/m3
+2020-09-27 17:16:30: PM1 0.0, PM2.5 7.0, PM10 7.0 μg/m3
+2020-09-27 17:16:40: PM1 0.0, PM2.5 7.0, PM10 7.0 μg/m3
+2020-09-27 17:16:50: PM1 0.0, PM2.5 7.0, PM10 7.0 μg/m3
+2020-09-27 17:17:00: PM1 0.0, PM2.5 6.0, PM10 6.0 μg/m3
+2020-09-27 17:17:10: PM1 0.0, PM2.5 6.0, PM10 6.0 μg/m3
+2020-09-27 17:17:20: PM1 0.0, PM2.5 6.0, PM10 6.0 μg/m3
+2020-09-27 17:17:30: PM1 0.0, PM2.5 6.0, PM10 6.0 μg/m3
+2020-09-27 17:17:40: PM1 0.0, PM2.5 5.0, PM10 5.0 μg/m3
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMSx003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>time, raw01, raw25, raw10, pm01, pm25, pm10, n0_3, n0_5, n1_0, n2_5, n5_0, n10_0
+1601219770, 0, 8, 8, 0.0, 8.0, 8.0, 2.10, 0.70, 0.45, 0.30, 0.00, 0.00
+1601219780, 0, 7, 7, 0.0, 7.0, 7.0, 2.10, 0.70, 0.45, 0.30, 0.00, 0.00
+1601219790, 0, 7, 7, 0.0, 7.0, 7.0, 1.89, 0.63, 0.42, 0.27, 0.00, 0.00
+1601219800, 0, 7, 7, 0.0, 7.0, 7.0, 1.80, 0.60, 0.39, 0.24, 0.00, 0.00
+1601219810, 0, 7, 7, 0.0, 7.0, 7.0, 1.80, 0.60, 0.39, 0.24, 0.00, 0.00
+1601219820, 0, 6, 6, 0.0, 6.0, 6.0, 1.80, 0.60, 0.29, 0.21, 0.00, 0.00
+1601219830, 0, 6, 6, 0.0, 6.0, 6.0, 1.80, 0.60, 0.29, 0.21, 0.00, 0.00
+1601219840, 0, 6, 6, 0.0, 6.0, 6.0, 1.59, 0.53, 0.26, 0.18, 0.00, 0.00
+1601219850, 0, 6, 6, 0.0, 6.0, 6.0, 1.59, 0.53, 0.26, 0.18, 0.00, 0.00
+1601219860, 0, 5, 5, 0.0, 5.0, 5.0, 1.38, 0.46, 0.23, 0.15, 0.00, 0.00
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMSx003<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nl">00000000</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d2</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">46</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">c5</span><span class="w">  </span><span class="err">BM.................F.-..........</span>
+<span class="nl">00000020</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d2</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">46</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">c1</span><span class="w">  </span><span class="err">BM.................F.-..........</span>
+<span class="nl">00000040</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">bd</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">3f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1b</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">9f</span><span class="w">  </span><span class="err">BM.................?.*..........</span>
+<span class="nl">00000060</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">18</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">8d</span><span class="w">  </span><span class="err">BM.................&lt;.&#39;..........</span>
+<span class="nl">00000080</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">07</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">18</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">8d</span><span class="w">  </span><span class="err">BM.................&lt;.&#39;..........</span>
+<span class="nl">000000a0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">7c</span><span class="w">  </span><span class="err">BM.................&lt;...........|</span>
+<span class="nl">000000c0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">b4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">3c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">7c</span><span class="w">  </span><span class="err">BM.................&lt;...........|</span>
+<span class="nl">000000e0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">12</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">5a</span><span class="w">  </span><span class="err">BM.................5...........Z</span>
+<span class="nl">00000100</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">9f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">35</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">12</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">5a</span><span class="w">  </span><span class="err">BM.................5...........Z</span>
+<span class="nl">00000120</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">8a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">97</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">02</span><span class="w"> </span><span class="mh">34</span><span class="w">  </span><span class="err">BM.............................4</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="pms5003t">PMS5003T</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:4"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">info</label><label for="__tabbed_6_2">serial</label><label for="__tabbed_6_3">csv</label><label for="__tabbed_6_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the PMS5003T sensor (<code>-m PMS5003T</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003T<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Plantower PMS5003T sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+n0_3, n0_5, n1_0, n2_5                  number concentrations over X.Y um [#/cm3]
+temp                                    temperature [°C]
+rhum                                    relative humidity [%]
+
+String formats: pm (default), raw, cf, num, atm, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003T<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2021-02-02 07:27:57: PM1 22.0, PM2.5 35.0, PM10 41.0 μg/m3
+2021-02-02 07:28:07: PM1 20.0, PM2.5 33.0, PM10 36.0 μg/m3
+2021-02-02 07:28:17: PM1 20.0, PM2.5 34.0, PM10 38.0 μg/m3
+2021-02-02 07:28:27: PM1 19.0, PM2.5 32.0, PM10 42.0 μg/m3
+2021-02-02 07:28:37: PM1 22.0, PM2.5 35.0, PM10 38.0 μg/m3
+2021-02-02 07:28:47: PM1 21.0, PM2.5 34.0, PM10 39.0 μg/m3
+2021-02-02 07:28:57: PM1 21.0, PM2.5 33.0, PM10 42.0 μg/m3
+2021-02-02 07:29:07: PM1 22.0, PM2.5 34.0, PM10 45.0 μg/m3
+2021-02-02 07:29:17: PM1 20.0, PM2.5 32.0, PM10 44.0 μg/m3
+2021-02-02 07:29:27: PM1 19.0, PM2.5 32.0, PM10 43.0 μg/m3
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003T<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>time, raw01, raw25, raw10, pm01, pm25, pm10, n0_3, n0_5, n1_0, n2_5, temp, rhum
+1612247277, 23, 39, 41, 22.0, 35.0, 41.0, 41.04, 11.93, 2.78, 0.12, 21.2, 22.4
+1612247287, 21, 36, 36, 20.0, 33.0, 36.0, 35.28, 10.55, 2.28, 0.14, 21.2, 22.4
+1612247297, 21, 37, 38, 20.0, 34.0, 38.0, 38.40, 11.26, 2.50, 0.22, 21.2, 22.4
+1612247307, 20, 35, 42, 19.0, 32.0, 42.0, 37.50, 10.79, 2.62, 0.30, 21.2, 22.3
+1612247317, 23, 38, 38, 22.0, 35.0, 38.0, 38.16, 11.22, 2.86, 0.14, 21.2, 22.4
+1612247327, 22, 37, 39, 21.0, 34.0, 39.0, 38.37, 11.14, 2.88, 0.20, 21.2, 22.3
+1612247337, 22, 36, 42, 21.0, 33.0, 42.0, 37.59, 11.10, 2.82, 0.22, 21.2, 22.3
+1612247347, 23, 37, 45, 22.0, 34.0, 45.0, 38.37, 11.35, 2.92, 0.22, 21.3, 22.2
+1612247357, 21, 35, 44, 20.0, 32.0, 44.0, 37.86, 11.14, 2.86, 0.24, 21.3, 22.2
+1612247367, 20, 34, 43, 19.0, 32.0, 43.0, 36.03, 10.44, 2.72, 0.30, 21.3, 22.3
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003T<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nl">00000000</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">29</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">29</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">08</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">a9</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">0c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e0</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">aa</span><span class="w">  </span><span class="err">BM.....&#39;.)...#.)................</span>
+<span class="nl">00000020</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">21</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">0d</span><span class="w"> </span><span class="mh">c8</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">1f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e0</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">99</span><span class="w">  </span><span class="err">BM.....$.$...!.$................</span>
+<span class="nl">00000040</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">25</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">22</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">0f</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">66</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">fa</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e0</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">3e</span><span class="w">  </span><span class="err">BM.....%.&amp;...&quot;.&amp;...f...........&gt;</span>
+<span class="nl">00000060</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">13</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">a6</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">37</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">06</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">df</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">ca</span><span class="w">  </span><span class="err">BM.....#.*...</span><span class="w"> </span><span class="err">.*...7............</span>
+<span class="nl">00000080</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">26</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">e8</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">62</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">e0</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">44</span><span class="w">  </span><span class="err">BM.....&amp;.&amp;...#.&amp;...b...........D</span>
+<span class="nl">000000a0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">25</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">22</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">27</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">fd</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">df</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">56</span><span class="w">  </span><span class="err">BM.....%.&#39;...&quot;.&#39;...Z.</span><span class="w"> </span><span class="err">.........V</span>
+<span class="nl">000000c0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">21</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2a</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">af</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">56</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">1a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d4</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">df</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">04</span><span class="w">  </span><span class="err">BM.....$.*...!.*...V............</span>
+<span class="nl">000000e0</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">17</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">25</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">22</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2d</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">fd</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">6f</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">24</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">16</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d5</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">de</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">7f</span><span class="w">  </span><span class="err">BM.....%.-...&quot;.-...o.$..........</span>
+<span class="nl">00000100</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">15</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">23</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2c</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">ca</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">5a</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">18</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d5</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">de</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">05</span><span class="w"> </span><span class="mh">29</span><span class="w">  </span><span class="err">BM.....#.,...</span><span class="w"> </span><span class="err">.,...Z...........)</span>
+<span class="nl">00000120</span><span class="p">:</span><span class="w"> </span><span class="mh">42</span><span class="w"> </span><span class="mh">4d</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1c</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">22</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2b</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">13</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">20</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">2b</span><span class="w"> </span><span class="mh">0e</span><span class="w"> </span><span class="mh">13</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">14</span><span class="w"> </span><span class="mh">01</span><span class="w"> </span><span class="mh">10</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">1e</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">d5</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">df</span><span class="w"> </span><span class="mh">9a</span><span class="w"> </span><span class="mh">00</span><span class="w"> </span><span class="mh">04</span><span class="w"> </span><span class="mh">20</span><span class="w">  </span><span class="err">BM.....&quot;.+...</span><span class="w"> </span><span class="err">.+...............</span><span class="w"> </span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="pms5003s">PMS5003S</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:4"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><input id="__tabbed_7_4" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">info</label><label for="__tabbed_7_2">serial</label><label for="__tabbed_7_3">csv</label><label for="__tabbed_7_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the PMS5003S sensor (<code>-m PMS5003S</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003S<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Plantower PMS5003S sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
+HCHO                                    formaldehyde concentration [mg/m3]
+
+String formats: pm (default), raw, cf, num, hcho, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003S<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003S<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003S<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="pms5003st">PMS5003ST</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:4"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><input id="__tabbed_8_3" name="__tabbed_8" type="radio" /><input id="__tabbed_8_4" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">info</label><label for="__tabbed_8_2">serial</label><label for="__tabbed_8_3">csv</label><label for="__tabbed_8_4">hexdump</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>About the PMS5003ST sensor (<code>-m PMS5003ST</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003ST<span class="w"> </span>info
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Plantower PMS5003ST sensor observations
+
+time                                    measurement time [seconds since epoch]
+raw01, raw25, raw10                     cf=1 PM estimates [μg/m3]
+pm01, pm25, pm10                        PM1.0, PM2.5, PM10 [μg/m3]
+n0_3, n0_5, n1_0, n2_5, n5_0, n10_0     number concentrations over X.Y um [#/cm3]
+HCHO                                    formaldehyde concentration [mg/m3]
+temp                                    temperature [°C]
+rhum                                    relative humidity [%]
+
+String formats: pm (default), raw, cf, num, hcho, atm, csv and header
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Read 10 samples (<code>-n 10</code>), one sample every 10 seconds (<code>-i 10</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003ST<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on CSV format (<code>-f csv</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003ST<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Print on hexdump format (<code>-f hexdump</code>)</p>
+<div class="highlight"><pre><span></span><code>pms<span class="w"> </span>-m<span class="w"> </span>PMS5003ST<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>serial<span class="w"> </span>-f<span class="w"> </span>hexdump
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
