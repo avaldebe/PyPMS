@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Optional, Union
+from typing import Annotated
 
 import typer
 from loguru import logger
@@ -37,7 +37,7 @@ def callback(
         int, typer.Option("--interval", "-i", min=0, help="seconds to wait between updates")
     ] = 60,
     samples: Annotated[
-        Optional[int], typer.Option("--samples", "-n", min=1, help="stop after N samples")
+        int | None, typer.Option("--samples", "-n", min=1, help="stop after N samples")
     ] = None,
     debug: Annotated[
         bool,
@@ -90,12 +90,12 @@ class Format(str, Enum):
 def serial(
     ctx: typer.Context,
     format: Annotated[
-        Optional[Format], typer.Option("--format", "-f", help="formatted output")
+        Format | None, typer.Option("--format", "-f", help="formatted output")
     ] = None,
-    decode: Annotated[Optional[Path], typer.Option(help="decode captured messages")] = None,
+    decode: Annotated[Path | None, typer.Option(help="decode captured messages")] = None,
 ):
     """Read sensor and print formatted measurements"""
-    reader: Union[SensorReader, MessageReader]
+    reader: SensorReader | MessageReader
     if decode:
         reader = MessageReader(decode, ctx.obj["sensor"], ctx.obj["samples"])
     else:

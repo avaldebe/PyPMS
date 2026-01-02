@@ -631,7 +631,7 @@ requires-dist = [
     { name = "pyserial", specifier = ">=3.5" },
     { name = "pytz", marker = "extra == 'influxdb'", specifier = ">=2020" },
     { name = "requests", marker = "extra == 'influxdb'", specifier = ">=2.32.0" },
-    { name = "typer-slim", specifier = ">=0.12.0" },
+    { name = "typer-slim", specifier = ">=0.12.4" },
     { name = "typer-slim", extras = ["standard"], marker = "extra == 'rich'", specifier = ">=0.12.0" },
     { name = "typing-extensions", marker = "python_full_version < '3.10'", specifier = ">=3.10.0.2" },
     { name = "urllib3", marker = "extra == 'influxdb'", specifier = ">=1.23" },

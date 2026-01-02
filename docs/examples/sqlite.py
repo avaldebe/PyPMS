@@ -9,10 +9,10 @@ After reading the sensor, decode all messages on DB and print them.
 """
 
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import AbstractContextManager, closing, contextmanager
 from pathlib import Path
-from typing import Annotated, Callable
+from typing import Annotated
 
 import typer
 

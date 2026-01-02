@@ -14,10 +14,10 @@ In this example, the second sensor will be read right after the first sensor.
 """
 
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import AbstractContextManager, closing, contextmanager
 from pathlib import Path
-from typing import Annotated, Callable
+from typing import Annotated
 
 import typer
 

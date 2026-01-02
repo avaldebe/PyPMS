@@ -2,12 +2,7 @@
 Load extra cli commands from plugins from plugins (entry points) advertized as `"pypms.extras"`
 """
 
-import sys
-
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
+from importlib import metadata
 
 from loguru import logger
 

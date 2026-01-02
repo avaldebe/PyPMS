@@ -29,7 +29,7 @@ classifiers = [
 ]
 dependencies = [
     "pyserial >=3.5",
-    "typer-slim >=0.12.0",
+    "typer-slim >=0.12.4",
     "loguru >=0.7.0",
     "importlib-metadata >=3.6 ; python_version < '3.10'",
     "typing-extensions >=3.10.0.2; python_version < '3.10'",

@@ -16,11 +16,11 @@ Please open an issue or submit a PR i you know of a cleaner way to achieve this.
 """
 
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import AbstractContextManager, closing, contextmanager
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
-from typing import Annotated, Callable
+from typing import Annotated
 
 import typer
 

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from time import time as seconds_since_epoch
-from typing import Callable, NamedTuple, Protocol
+from typing import NamedTuple, Protocol
 
 from loguru import logger
 from paho.mqtt.client import Client

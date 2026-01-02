@@ -1,14 +1,7 @@
 import json
-import sys
 from collections.abc import Iterator
 from dataclasses import fields
-from typing import Annotated, Optional, Union
-
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
-
+from typing import Annotated, TypeAlias
 
 import typer
 from loguru import logger
@@ -54,7 +47,7 @@ def influxdb(
             pub(time=obs.time, tags=tags, data=dict(db_measurements(obs)))
 
 
-def db_measurements(obs: ObsData) -> Iterator[tuple[str, Union[int, float]]]:
+def db_measurements(obs: ObsData) -> Iterator[tuple[str, int | float]]:
     for field in fields(obs):
         if field.metadata:
             yield field.name, getattr(obs, field.name)
@@ -64,11 +57,11 @@ MQTT_TOPIC: TypeAlias = Annotated[str, typer.Option("--mqtt-topic", help="mqtt r
 MQTT_HOST: TypeAlias = Annotated[str, typer.Option("--mqtt-host", help="mqtt server")]
 MQTT_PORT: TypeAlias = Annotated[int, typer.Option("--mqtt-port", help="server port")]
 MQTT_USER: TypeAlias = Annotated[
-    Optional[str],
+    str | None,
     typer.Option("--mqtt-user", envvar="MQTT_USER", help="server username", show_default=False),
 ]
 MQTT_PASS: TypeAlias = Annotated[
-    Optional[str],
+    str | None,
     typer.Option("--mqtt-pass", envvar="MQTT_PASS", help="server password", show_default=False),
 ]
 
@@ -98,8 +91,8 @@ def mqtt(
 
 
 def mqtt_messages(
-    obs: ObsData, *, sensor_name: Optional[str] = None
-) -> Iterator[tuple[str, Union[str, int, float]]]:
+    obs: ObsData, *, sensor_name: str | None = None
+) -> Iterator[tuple[str, str | int | float]]:
     for field in fields(obs):
         if not field.metadata:
             continue

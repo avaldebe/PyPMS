@@ -4,14 +4,9 @@ Access supported sensors from a single object
 
 from __future__ import annotations
 
-import sys
 from enum import Enum
+from importlib import metadata
 from time import time as seconds_since_epoch
-
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
 
 from loguru import logger
 
