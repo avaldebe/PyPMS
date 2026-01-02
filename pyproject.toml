@@ -7,13 +7,12 @@ name = "pypms"
 dynamic = ["version"]
 description = "Data acquisition and logging for Air Quality Sensors with UART interface"
 authors = [{ name = "Alvaro Valdebenito", email = "avaldebe@gmail.com" }]
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 readme = "README.md"
 keywords = ["air quality", "particulate matter"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -39,7 +38,12 @@ dependencies = [
 [project.optional-dependencies]
 rich = ["typer-slim[standard]>=0.12.0"]
 mqtt = ["paho-mqtt >=2.1.0"]
-influxdb = ["influxdb >=5.2.0", "pytz >=2020", "requests>=2.32.0"]
+influxdb = [
+    "influxdb >=5.2.0",
+    "pytz >=2020",
+    "requests >=2.32.0",
+    "urllib3 >=1.23",
+]
 
 [project.urls]
 Homepage = "https://avaldebe.github.io/PyPMS"
@@ -107,21 +111,21 @@ cache-keys = [{ file = "pyproject.toml" }, { file = "src/pms/_version.py" }]
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = lint, docs, py39, py310, py311, py312, py313, py314, report
+envlist = lint, docs, py310, py311, py312, py313, py314, report
 skip_missing_interpreters = True
 isolated_build = True
 requires =
     tox >=4.22
     tox-uv >=1.25
 labels =
-    coverage = py39, py310, py311, py312, py313, py314, report
+    coverage = py310, py311, py312, py313, py314, report
 
 [testenv]
 description =
-     py39: test with lowest dependency versions
-    !py39: test with {base_python}
+     py310: test with lowest dependency versions
+    !py310: test with {base_python}
 uv_resolution =
-     py39: lowest
+     py310: lowest
 set_env =
     !report: COVERAGE_FILE={env:COVERAGE_FILE:.coverage/coverage.{envname}}
 commands =
@@ -142,7 +146,7 @@ commands =
 dependency_groups =
     coverage
 depends =
-    py39, py310, py311, py312, py313
+    py310, py311, py312, py313, py314
 
 [testenv:lint]
 description = code quality
@@ -214,7 +218,7 @@ lint.select = ["E", "F", "I", "UP", "FA"]
 ]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 warn_unused_configs = true
 warn_unused_ignores = true
 warn_no_return = true
