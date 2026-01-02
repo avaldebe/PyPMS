@@ -78,7 +78,8 @@ def mock_mqtt_client(captured_data, monkeypatch: pytest.MonkeyPatch):
             for msg in self._message:
                 self.on_message(self, None, msg)
 
-    monkeypatch.setattr("pms.extra.mqtt.Client", MockClient)
+    mqtt = pytest.importorskip("pms.extra.mqtt")
+    monkeypatch.setattr(mqtt, "Client", MockClient)
 
 
 class DataPoint(NamedTuple):
@@ -130,7 +131,8 @@ def mock_influxdb_client(captured_data, monkeypatch: pytest.MonkeyPatch):
                     point["time"], point["measurement"], point["fields"]["value"]
                 ) == next(self.data_point)
 
-    monkeypatch.setattr("pms.extra.influxdb.Client", MockClient)
+    influxdb = pytest.importorskip("pms.extra.influxdb")
+    monkeypatch.setattr(influxdb, "Client", MockClient)
 
 
 @pytest.fixture

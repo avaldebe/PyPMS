@@ -1,6 +1,6 @@
 import pytest
 
-from pms.extra import mqtt
+mqtt = pytest.importorskip("pms.extra.mqtt")
 
 
 @pytest.mark.parametrize(
