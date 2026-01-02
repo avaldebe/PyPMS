@@ -284,7 +284,7 @@ def test_decode_error(sensor, hex, error):
             sps30.Message,
             sps30.commands.passive_read.answer_header,
             pmsx003.commands.passive_read.answer_length,
-            "wrong payload length 32 != 4||47",
+            "wrong payload length 32 != 7||47",
             id="SPS30 wrong payload length",
         ),
     ],

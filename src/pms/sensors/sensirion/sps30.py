@@ -74,7 +74,7 @@ class Message(base.Message):
         # consistency check: bug in message singnature
         assert len(header) == 5, f"wrong header length {len(header)}"
         assert header[:2] == b"\x7e\x00", f"wrong header start {header!r}"
-        assert length in [7, 47], f"wrong payload length {length} != 4||47"
+        assert length in {7, 47}, f"wrong payload length {length} != 7||47"
         len_payload = header[-1]
         assert length == len_payload + 7, f"wrong payload length {length} != {len_payload + 7}"
 
