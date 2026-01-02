@@ -6,6 +6,7 @@ Plantower PMS5003ST sensors
 
 import struct
 from dataclasses import dataclass, field
+from typing import Literal
 
 from .. import base
 from . import pms3003, pms5003s, pmsx003
@@ -64,11 +65,14 @@ class ObsData(pms5003s.ObsData):
         self.temp /= 10
         self.rhum /= 10
 
-    def __format__(self, spec: str) -> str:
-        if spec == "csv":
-            csv = super().__format__(spec)
-            return f"{csv}, {self.temp:.1f}, {self.rhum:.1f}"
-        if spec == "atm":
-            return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
+    def __format__(
+        self, spec: Literal["pm", "raw", "cf", "num", "hcho", "atm", "csv", "header"] | str
+    ) -> str:
+        match spec:
+            case "csv":
+                csv = super().__format__(spec)
+                return f"{csv}, {self.temp:.1f}, {self.rhum:.1f}"
+            case "atm":
+                return f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %"
 
         return super().__format__(spec)

@@ -8,6 +8,7 @@ Sensirion SPS30 sensors
 
 import struct
 from dataclasses import dataclass, field
+from typing import Literal
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -133,25 +134,26 @@ class ObsData(base.ObsData):
     def pm4(self) -> float:
         return self.pm04
 
-    def __format__(self, spec: str) -> str:
-        if spec == "pm":
-            return (
-                f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, "
-                f"PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
-            )
-        if spec == "csv":
-            pm = f"{self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
-            num = (
-                f"{self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, "
-                f"{self.n4_0:.2f}, {self.n10_0:.2f}"
-            )
-            return f"{self.time}, {pm}, {num}, {self.diam:.1f}"
-        if spec == "num":
-            return (
-                f"{self.date:%F %T}: N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, "
-                f"N2.5 {self.n2_5:.2f}, N4.0 {self.n4_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
-            )
-        if spec == "diam":
-            return f"{self.date:%F %T}: Ø {self.diam:.1f} μm"
+    def __format__(self, spec: Literal["pm", "num", "diam", "csv", "header"] | str) -> str:
+        match spec:
+            case "pm":
+                return (
+                    f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, "
+                    f"PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
+                )
+            case "csv":
+                pm = f"{self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
+                num = (
+                    f"{self.n0_5:.2f}, {self.n1_0:.2f}, {self.n2_5:.2f}, "
+                    f"{self.n4_0:.2f}, {self.n10_0:.2f}"
+                )
+                return f"{self.time}, {pm}, {num}, {self.diam:.1f}"
+            case "num":
+                return (
+                    f"{self.date:%F %T}: N0.5 {self.n0_5:.2f}, N1.0 {self.n1_0:.2f}, "
+                    f"N2.5 {self.n2_5:.2f}, N4.0 {self.n4_0:.2f}, N10 {self.n10_0:.2f} #/cm3"
+                )
+            case "diam":
+                return f"{self.date:%F %T}: Ø {self.diam:.1f} μm"
 
         return super().__format__(spec)

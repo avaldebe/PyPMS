@@ -3,7 +3,7 @@ from __future__ import annotations
 import warnings
 from abc import abstractmethod
 from dataclasses import asdict, dataclass
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from loguru import logger
 
@@ -65,7 +65,7 @@ class Message(MessageProtocol):
 
     @classmethod
     @abstractmethod
-    def _validate(self, message: bytes, header: bytes, length: int) -> Message:
+    def _validate(cls, message: bytes, header: bytes, length: int) -> Message:
         pass
 
     @staticmethod
@@ -101,11 +101,12 @@ class ObsData(ObsDataProtocol):
         )
 
     @abstractmethod
-    def __format__(self, spec: str) -> str:
-        if spec == "header":  # header for csv file
-            return ", ".join(asdict(self).keys())
-        if spec == "":
-            return str(self)
+    def __format__(self, spec: Literal["header"] | str) -> str:
+        match spec:
+            case "header":  # header for csv file
+                return ", ".join(asdict(self).keys())
+            case "":
+                return str(self)
 
         raise ValueError(
             f"Unknown format code '{spec}' for object of type '{self.__class__.__qualname__}'"

@@ -6,6 +6,7 @@ Honeywell HPMA115S0 sensors
 
 import struct
 from dataclasses import dataclass, field
+from typing import Literal
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -91,12 +92,11 @@ class ObsData(base.ObsData):
     def pm2_5(self) -> int:
         return self.pm25
 
-    def __format__(self, spec: str) -> str:
-        if spec == "pm":
-            return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
-        if spec == "csv":
-            return f"{self.time}, {self.pm25:.1f}, {self.pm10:.1f}"
-        if spec == "":
-            return str(self)
+    def __format__(self, spec: Literal["pm", "csv", "header"] | str) -> str:
+        match spec:
+            case "pm":
+                return f"{self.date:%F %T}: PM2.5 {self.pm25:.1f}, PM10 {self.pm10:.1f} μg/m3"
+            case "csv":
+                return f"{self.time}, {self.pm25:.1f}, {self.pm10:.1f}"
 
         return super().__format__(spec)

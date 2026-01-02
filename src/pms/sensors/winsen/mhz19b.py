@@ -6,6 +6,7 @@ Winsen MH-Z19B sensors
 
 import struct
 from dataclasses import dataclass, field
+from typing import Literal
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -77,11 +78,12 @@ class ObsData(base.ObsData):
 
     CO2: int = field(metadata=base.metadata("CO2", "ppm", "concentration"))
 
-    def __format__(self, spec: str) -> str:
-        if spec == "co2":
-            return f"{self.date:%F %T}: CO2 {self.CO2} ppm"
-        if spec == "csv":
-            return f"{self.time}, {self.CO2}"
+    def __format__(self, spec: Literal["co2", "csv", "header"] | str) -> str:
+        match spec:
+            case "co2":
+                return f"{self.date:%F %T}: CO2 {self.CO2} ppm"
+            case "csv":
+                return f"{self.time}, {self.CO2}"
 
         return super().__format__(spec)
 

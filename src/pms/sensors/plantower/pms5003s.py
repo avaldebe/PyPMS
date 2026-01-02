@@ -5,6 +5,7 @@ Plantower PMS5003S sensors
 """
 
 from dataclasses import dataclass, field
+from typing import Literal
 
 from .. import base
 from . import pms3003, pmsx003
@@ -43,11 +44,14 @@ class ObsData(pmsx003.ObsData):
         super().__post_init__()
         self.HCHO /= 1000
 
-    def __format__(self, spec: str) -> str:
-        if spec == "csv":
-            csv = super().__format__(spec)
-            return f"{csv}, {self.HCHO:.3f}"
-        if spec == "hcho":
-            return f"{self.date:%F %T}: HCHO {self.HCHO:.3f} mg/m3"
+    def __format__(
+        self, spec: Literal["pm", "raw", "cf", "num", "hcho", "csv", "header"] | str
+    ) -> str:
+        match spec:
+            case "csv":
+                csv = super().__format__(spec)
+                return f"{csv}, {self.HCHO:.3f}"
+            case "hcho":
+                return f"{self.date:%F %T}: HCHO {self.HCHO:.3f} mg/m3"
 
         return super().__format__(spec)

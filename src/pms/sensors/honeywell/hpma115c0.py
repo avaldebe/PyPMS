@@ -5,6 +5,7 @@ Honeywell HPMA115C0 sensors
 """
 
 from dataclasses import dataclass, field
+from typing import Literal
 
 from .. import base
 from . import hpma115s0
@@ -50,15 +51,17 @@ class ObsData(base.ObsData):
     def pm4(self) -> int:
         return self.pm04
 
-    def __format__(self, spec: str) -> str:
-        if spec == "pm":
-            return (
-                f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, "
-                f"PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
-            )
-        if spec == "csv":
-            return (
-                f"{self.time}, {self.pm01:.1f}, {self.pm25:.1f}, {self.pm04:.1f}, {self.pm10:.1f}"
-            )
+    def __format__(self, spec: Literal["pm", "csv", "header"] | str) -> str:
+        match spec:
+            case "pm":
+                return (
+                    f"{self.date:%F %T}: PM1 {self.pm01:.1f}, PM2.5 {self.pm25:.1f}, "
+                    f"PM4 {self.pm04:.1f}, PM10 {self.pm10:.1f} μg/m3"
+                )
+            case "csv":
+                return (
+                    f"{self.time}, {self.pm01:.1f}, {self.pm25:.1f}, "
+                    f"{self.pm04:.1f}, {self.pm10:.1f}"
+                )
 
         return super().__format__(spec)

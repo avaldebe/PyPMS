@@ -5,6 +5,7 @@ Bosh Sensortec sensors on MCU bridge modules
 
 import struct
 from dataclasses import dataclass, field
+from typing import Literal
 
 from pms import SensorWarmingUp, WrongMessageChecksum, WrongMessageFormat
 
@@ -108,27 +109,28 @@ class ObsData(base.ObsData):
         self.IAQ &= 0x0FFF
         self.gas /= 1000
 
-    def __format__(self, spec: str) -> str:
-        if spec == "atm":
-            return (
-                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
-                f"Press {self.pres:.2f} hPa"
-            )
-        if spec == "bme":
-            return (
-                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
-                f"Press {self.pres:.2f} hPa, {self.gas:.1f} kΩ"
-            )
-        if spec == "bsec":
-            return (
-                f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
-                f"Press {self.pres:.2f} hPa, {self.IAQ} IAQ"
-            )
-        if spec == "csv":
-            return (
-                f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, "
-                f"{self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
-            )
+    def __format__(self, spec: Literal["atm", "bme", "bsec", "csv", "header"] | str) -> str:
+        match spec:
+            case "atm":
+                return (
+                    f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                    f"Press {self.pres:.2f} hPa"
+                )
+            case "bme":
+                return (
+                    f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                    f"Press {self.pres:.2f} hPa, {self.gas:.1f} kΩ"
+                )
+            case "bsec":
+                return (
+                    f"{self.date:%F %T}: Temp. {self.temp:.1f} °C, Rel.Hum. {self.rhum:.1f} %, "
+                    f"Press {self.pres:.2f} hPa, {self.IAQ} IAQ"
+                )
+            case "csv":
+                return (
+                    f"{self.time}, {self.temp:.1f}, {self.rhum:.1f}, {self.pres:.2f}, "
+                    f"{self.IAQ_acc}, {self.IAQ}, {self.gas:.1f}, {self.alt}"
+                )
 
         return super().__format__(spec)
 
