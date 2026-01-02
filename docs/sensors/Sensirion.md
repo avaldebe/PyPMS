@@ -8,12 +8,12 @@
 
 === "datasheet"
 
-    | Sensor | Datasheet   | Dimensions | Connector |
-    | ------ | ----------- | ---------- | --------- |
-    | SPS30  | [en][sps30] |            | [5 pin]   |
+    | Sensor | Datasheet       | Dimensions   | Connector |
+    | ------ | --------------- | ------------ | --------- |
+    | SPS30  | [en][datasheet] | 41x41x12 mm³ | [5 pin]   |
 
-[Sensirion]: https://www.sensirion.com/en/environmental-sensors/particulate-matter-sensors-pm25/
-[sps30]: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.6_Particulate_Matter/Datasheets/Sensirion_PM_Sensors_Datasheet_SPS30.pdf
+[Sensirion]: https://sensirion.com/products/catalog/particulate-matter-sensors/
+[datasheet]: https://sensirion.com/media/documents/8600FF88/64A3B8D6/Sensirion_PM_Sensors_Datasheet_SPS30.pdf
 
 [SPS30]: #sps30
 [5 pin]: #connector
@@ -43,9 +43,9 @@ Serial protocol is UART 115200 8N1 5V TTL :material-alert: 3.3V compatible.
         However, new measurements are not streamed. Each measurement has to be requested.
         This behavior is consistent with `passive_mode`/single-shot operation in other sensors.
 
-        The `sleep`/`wake` commands listed here (stop measurement/start measurement on the [datasheet][sps30]),
+        The `sleep`/`wake` commands listed here (stop measurement/start measurement on the [datasheet]),
         behave consistently with the rest of the supported PM sensors.
-        There are also `deep-sleep`/`wake-up` commands (sleep/wake-up on the [datasheet][sps30]),
+        There are also `deep-sleep`/`wake-up` commands (sleep/wake-up on the [datasheet]),
         which are not implemented. As `deep-sleep` disable the UART interface and `wake-up` is a 2 stage procedure.
 
     | Command        | Description              | `message`                 |
